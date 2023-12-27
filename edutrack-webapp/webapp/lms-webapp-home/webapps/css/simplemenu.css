@@ -1,0 +1,40 @@
+ul.menu { /*CSS for Simple Tree Menu*/
+	margin: 0;
+	padding: 0;
+	color:#000000;
+}
+
+.menu ul{ /*CSS for Simple Tree Menu*/
+	color:#000000;
+	margin: 0;
+	padding: 0;
+}
+
+.menu li{ /* 폴더 관련 */
+	color:#000000;
+	valign:bottom;
+	height:24;
+}
+
+.menu li span{ /* 폴더 관련 */
+	color:#000000;
+	padding-top:4px;
+	height:24px;
+	width:100%;
+	cursor: pointer ;
+}
+
+.menu li span.over{ /* 폴더 관련 */
+	color:#000000;
+	background: #C2D4FA ;
+}
+
+.menu li ul{
+	color:#000000;
+	cursor:pointer;
+	display: none;	
+}
+
+.menu li ul li span{
+	color:#000000;
+}

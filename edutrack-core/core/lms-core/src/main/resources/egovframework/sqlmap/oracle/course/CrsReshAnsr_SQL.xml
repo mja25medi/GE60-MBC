@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.creCrsResh.service.impl.CrsReshAnsrMapper">	
+	<sql id="selectColumnQuery">
+				 CRS_CRE_CD 							
+		       , RESH_SN 								
+		       , STD_NO 								
+		       , RESH_ITEM_SN 							
+		       , RESH_ANSR 							
+		       , REG_NO 								
+			    , (SELECT FN_GET_USER_NAME(A.REG_NO) 	
+		            FROM DUAL ) AS REG_NM				
+		       , REG_DTTM 								
+		       , MOD_NO 								
+			    , (SELECT FN_GET_USER_NAME(A.MOD_NO) 	
+		            FROM DUAL ) AS MOD_NM				
+		       , MOD_DTTM 								
+	</sql>
+	<sql id="selectQuery">
+		  SELECT
+		  <include refid="selectColumnQuery" />				
+		  FROM TB_CRS_RESH_ANSR 						
+		  WHERE CRS_CRE_CD = #{crsCreCd}				
+		     AND RESH_SN = #{reshSn}						
+		     AND STD_NO = #{stdNo}	
+	</sql>
+	<sql id="selectSearchQuery">
+		  SELECT A.CRS_CRE_CD 							
+		       , A.RESH_SN 							
+		       , A.STD_NO 								
+		       , A.RESH_ITEM_SN 						
+		       , A.RESH_ANSR 							
+		       , C.USER_NM								
+		       , D.USER_ID								
+		       , A.REG_NO 								
+			    , (SELECT FN_GET_USER_NAME(A.REG_NO) 	
+		            FROM DUAL ) AS REG_NM				
+		       , A.REG_DTTM 							
+		       , A.MOD_NO 								
+			    , (SELECT FN_GET_USER_NAME(A.MOD_NO) 	
+		            FROM DUAL ) AS MOD_NM				
+		       , A.MOD_DTTM 							
+		    FROM TB_CRS_RESH_ANSR A, TB_STD_STD B		
+		       , TB_USR_USER_INFO C, TB_USR_LOGIN D	
+		   WHERE A.CRS_CRE_CD = #{crsCreCd}				
+		     AND A.RESH_SN = #{reshSn}					
+		     AND A.RESH_ITEM_SN = #{reshItemSn}			
+		     AND A.STD_NO = B.STD_NO					
+		     AND B.USER_NO = C.USER_NO					
+		     AND B.USER_NO = D.USER_NO		
+	</sql>
+ 	<select id="list" parameterType="crsReshAnsrVO" resultType="crsReshAnsrVO">
+	    <include refid="selectQuery" />
+	</select>
+	<select id="count" parameterType="crsReshAnsrVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM TB_CRS_RESH_ANSR 						
+		WHERE CRS_CRE_CD = #{crsCreCd}				
+		     AND RESH_SN = #{reshSn}						
+		     AND STD_NO = #{stdNo}	
+	</select>
+	
+     <select id="listPageing" parameterType="crsReshAnsrVO" resultType="crsReshAnsrVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectQuery" />
+		ORDER BY SBJ_ODR
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	<select id="select" parameterType="crsReshAnsrVO" resultType="crsReshAnsrVO">
+	    <include refid="selectQuery" />
+	     AND  A.RESH_ITEM_SN = #{reshItemSn}
+	</select>
+
+    <insert id="insert" parameterType="crsReshAnsrVO">
+		  INSERT INTO TB_CRS_RESH_ANSR (				
+		         CRS_CRE_CD 							
+		       , RESH_SN 								
+		       , STD_NO 								
+		       , RESH_ITEM_SN 							
+		       , RESH_ANSR 							
+		       , REG_NO 								
+		       , REG_DTTM 								
+		       , MOD_NO 								
+		       , MOD_DTTM 								
+		  ) VALUES (                                   
+		         #{crsCreCd} 							
+		       , #{reshSn} 								
+		       , #{stdNo} 								
+		       , #{reshItemSn} 							
+		       , #{reshAnsr} 							
+		       , #{regNo} 								
+		       , TO_CHAR(SYSDATE,'yyyymmddhh24miss') 	
+		       , #{modNo} 								
+		       , TO_CHAR(SYSDATE,'yyyymmddhh24miss') 	
+		  )	
+    </insert>
+   <update id="update" parameterType="crsReshAnsrVO">
+		  UPDATE TB_CRS_RESH_ANSR									
+		     SET RESH_ANSR = #{reshAnsr} 							
+		       , MOD_NO = #{modNo} 									
+		       , MOD_DTTM = TO_CHAR(SYSDATE,'yyyymmddhh24miss')	
+		   WHERE CRS_CRE_CD = #{crsCreCd} 							
+		     AND RESH_SN = #{reshSn} 								
+		     AND STD_NO = #{stdNo} 									
+		     AND RESH_ITEM_SN = #{reshItemSn} 	 
+    </update>
+
+
+	<delete id="delete" parameterType="crsReshAnsrVO">
+		 	DELETE  FROM TB_CRS_RESH_ANSR		    	
+		   WHERE CRS_CRE_CD = #{crsCreCd} 				
+		     AND RESH_SN = #{reshSn} 					
+		     AND STD_NO = #{stdNo} 						
+		     AND RESH_ITEM_SN = #{reshItemSn}   			
+    </delete>
+
+
+ 	<select id="listOpinion" parameterType="crsReshAnsrVO" resultType="crsReshAnsrVO">
+	    <include refid="selectSearchQuery" />
+		<if test = "reshAnsr != null and reshAnsr != ''">                          			
+	    	AND A.RESH_ANSR = #{reshAnsr}	
+	    </if>	
+  
+		<choose>
+			<when test = "sortKey != null and sortKey == 'USER_NM_ASC'">
+				 ORDER BY C.USER_NM ASC 	
+			</when>
+			<when test = "sortKey != null and sortKey == 'USER_NM_DESC'">
+			 	ORDER BY C.USER_NM DESC
+			</when>
+			<when test = "sortKey != null and sortKey == 'USER_ID_ASC'">
+			 	ORDER BY D.USER_ID ASC
+			</when>
+			<when test = "sortKey != null and sortKey == 'USER_ID_DESC'">
+			 	ORDER BY D.USER_ID DESC 	
+			</when>
+			<otherwise>
+			   ORDER BY A.REG_DTTM
+			</otherwise>
+		</choose>
+	</select>
+ 	<select id="listExcel" parameterType="crsReshAnsrVO" resultType="crsReshAnsrVO">
+		 SELECT E.USER_ID  
+		      , ( SELECT FN_GET_USER_NAME(E.USER_NO) FROM DUAL ) AS USER_NM  
+		      , B.STD_NO  
+		      , D.RESH_SN  
+		      , C.RESH_ITEM_SN  
+		      , A.RESH_ANSR  
+		   FROM TB_CRS_RESH_ANSR A, TB_STD_STD B  
+		      , TB_CRS_RESH_ITEM C, tb_crs_cre_crs_resh D  
+		      , TB_USR_LOGIN E  
+		  WHERE A.STD_NO = B.STD_NO  
+		    AND B.USER_NO = E.USER_NO  
+		    AND A.RESH_SN = C.RESH_SN  
+		    AND A.RESH_ITEM_SN = C.RESH_ITEM_SN  
+		    AND C.RESH_SN = D.RESH_SN  
+		    AND D.CRS_CRE_CD = #{crsCreCd}  
+		    AND D.RESH_SN = #{reshSn}  
+		  ORDER BY A.STD_NO, C.ITEM_ODR  
+	</select>
+ 	<select id="listNoReshSn" parameterType="crsReshAnsrVO" resultType="crsReshAnsrVO">
+		  SELECT CRS_CRE_CD 							
+		       , RESH_SN 								
+		       , STD_NO 								
+		    FROM TB_CRS_RESH_ANSR 						
+		   WHERE CRS_CRE_CD = #{crsCreCd}				
+		     AND STD_NO = #{stdNo 
+	</select>
+
+	<select id="listCount" parameterType="crsReshAnsrVO" resultType="crsReshAnsrVO">
+		 SELECT count(*) AS RESH_CNT					
+		    FROM TB_CRS_RESH_ANSR 						
+		   WHERE CRS_CRE_CD = #{crsCreCd}				
+		     AND RESH_SN = #{reshSn}	
+	</select>
+
+
+</mapper>	

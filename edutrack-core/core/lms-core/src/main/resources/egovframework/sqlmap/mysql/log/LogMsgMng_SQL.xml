@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.log.message.service.impl.LogMsgMngMapper">	
+
+	<sql id="selectColumnQuery">
+		 A.MSG_SN
+		,A.MSG_DIV_CD
+		,CASE WHEN A.MSG_DIV_CD = 'SMS' THEN '문자'
+		 	WHEN A.MSG_DIV_CD = 'MSG' THEN '쪽지'
+			WHEN A.MSG_DIV_CD = 'EMAIL' THEN '이메일'
+			ELSE A.MSG_DIV_CD
+		 END MSG_DIV_NM
+		,A.TITLE
+		,A.SEND_NM
+		,CASE WHEN (SELECT COUNT(1) FROM tb_log_msg_trans_log B WHERE B.MSG_SN = A.MSG_SN) > 1 THEN	
+			CONCAT((SELECT RECV_NM FROM tb_log_msg_trans_log B WHERE B.MSG_SN = A.MSG_SN ORDER BY MSG_TRANS_SN LIMIT 1), ' 외 ', (SELECT COUNT(1)-1 FROM tb_log_msg_trans_log B WHERE B.MSG_SN = A.MSG_SN),'명')
+		 ELSE (SELECT RECV_NM FROM tb_log_msg_trans_log B WHERE B.MSG_SN = A.MSG_SN ORDER BY MSG_TRANS_SN LIMIT 1)
+		 END RECV_NM
+		,SEND_STS
+		,CONCAT(CAST((SELECT COUNT(1) FROM tb_log_msg_trans_log B WHERE B.MSG_SN = A.MSG_SN) AS CHAR), ' 명') AS RECV_CNT
+		,A.REG_DTTM
+		,A.CTS
+	</sql>
+	<sql id="selectQuery">
+		SELECT 
+		<include refid="selectColumnQuery" />
+		FROM tb_log_msg_log A  
+	</sql>	
+	
+	<sql id="whereQuery">
+		<where>
+			<if test = 'msgDivType != null and msgDivType != ""'>
+				AND A.MSG_DIV_CD = #{msgDivType}
+			</if>
+			<if test = 'searchKey != null and searchKey != "" and searchType == "title"'>
+				AND A.TITLE LIKE CONCAT('%', IFNULL(#{searchKey}, ''), '%')
+			</if>
+			<if test = 'searchKey != null and searchKey != "" and searchType == "sendNm"'>
+				AND A.SEND_NM LIKE CONCAT('%', IFNULL(#{searchKey}, ''), '%')
+			</if>
+			<if test="msgSn != null and msgSn >= 0">
+				AND A.MSG_SN = #{msgSn}		
+			</if>
+		</where>
+	</sql>
+
+	<select id="listMessageMainPageingCount" parameterType="logMsgMngVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM tb_log_msg_log A
+		<include refid="whereQuery" />
+	</select>	
+			
+	<select id="listMessageMain" parameterType="logMsgMngVO" resultType="logMsgMngVO">
+	    <include refid="selectQuery" />
+	    <include refid="whereQuery" />
+	    ORDER BY REG_DTTM DESC
+	</select>
+	<select id="listMessageMainPageing" parameterType="logMsgMngVO" resultType="logMsgMngVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectQuery" />
+	    <include refid="whereQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+	    ORDER BY REG_DTTM DESC
+	    <include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="select" parameterType="logMsgMngVO" resultType="logMsgMngVO">
+	    <include refid="selectQuery" />
+	    <include refid="whereQuery" />
+	</select>
+	
+	<select id="listRecvStudent" parameterType="logMsgMngVO" resultType="egovMap">
+	    SELECT
+			 RECV_NM
+			,RECV_ADDR
+		FROM tb_log_msg_trans_log A
+	    WHERE 1=1 
+	    AND A.MSG_SN = #{msgSn}
+	</select>
+
+	<select id="listMsgTrans" parameterType="logMsgMngVO" resultType="logMsgMngVO">
+		SELECT 
+			A.MSG_TRANS_SN as msgTransSn
+		     , A.MSG_SN as msgSn
+		     , A.RECV_NM as recvNm
+		     , A.RECV_ADDR as recvAddr
+		     , A.TRANS_STS as sendSts
+		     , A.TRANS_DTTM as regDttm
+		     , (SELECT USER_ID FROM tb_usr_login WHERE USER_NO = A.USER_NO) as recvId
+		     , A.USER_NO as userNo
+		FROM tb_log_msg_trans_log A
+		WHERE A.MSG_SN = #{msgSn}
+	</select>
+</mapper>	

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.subject.service.impl.SubjectOnlineMapper">	
+
+	<select id="selectKey" resultType="String">
+		SELECT 'NSC'||LPAD(SQ_CRS_ONLN_SBJ.nextVal,7,'0') AS SBJ_CD FROM DUAL
+	</select>
+	
+	<sql id="selectColumnQuery">
+		 		   A.ORG_CD															
+		        ,  A.SBJ_CD															
+		        ,  A.SBJ_NM															
+		        ,  A.WIN_WIDTH															
+		        ,  A.WIN_HEIGHT														
+		        ,  A.WIN_MENU_USE_YN													
+		        ,  A.WIN_SKIN_CD														
+		        ,  A.SBJ_DESC															
+		        ,  A.SBJ_CTGR_CD														
+		        ,  B.SBJ_CTGR_NM 														
+		        ,  A.USE_YN															
+		        ,  ( SELECT COUNT(*) 													
+		               FROM TB_CRS_SBJ_CNTS											
+		              WHERE SBJ_CD = A.SBJ_CD											
+		           ) AS CONTENTS_CNT													
+		        ,  A.REG_NO															
+		        ,  A.REG_DTTM															
+		        ,  A.MOD_NO															
+		        ,  A.MOD_DTTM															
+			    ,  (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) AS MOD_NM				
+		        ,  (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) AS REG_NM				
+		        , (SELECT COUNT(SBJ_CD) FROM TB_CRS_CRS_ONLN_SBJ C WHERE C.SBJ_CD = A.SBJ_CD) AS CRS_SUB_CNT				
+		        , (SELECT COUNT(SBJ_CD) FROM TB_CRS_CRE_CRS_ONLN_SBJ D WHERE D.SBJ_CD = A.SBJ_CD) AS CRE_CRS_SUB_CNT				
+		        , (SELECT COUNT(SBJ_CD) FROM TB_CRO_OPEN_CRS_SBJ E WHERE E.SBJ_CD = A.SBJ_CD) AS OPEN_CRS_SUB_CNT				
+	</sql>
+	
+	<sql id="selectQuery">
+		SELECT 
+		<include refid="selectColumnQuery" />
+		FROM  TB_CRS_ONLN_SBJ A, TB_CRS_SBJ_CTGR B								
+		WHERE  A.SBJ_CTGR_CD = B.SBJ_CTGR_CD
+	</sql>
+	
+	<select id="count" parameterType="onlineSubjectVO" resultType="Integer">
+		SELECT
+			COUNT(*)
+		FROM  TB_CRS_ONLN_SBJ A, TB_CRS_SBJ_CTGR B								
+		WHERE  A.SBJ_CTGR_CD = B.SBJ_CTGR_CD
+	    	AND  A.USE_YN = 'Y'
+		<if test = "sbjCtgrCd != null and sbjCtgrCd != ''">
+			AND 
+			<foreach collection="sbjCtgrArr" item="item" separator="OR" open="(" close=")"  index="index">
+				B.SBJ_CTGR_PATH like '%'||#{item}||'%'
+			</foreach>
+		</if>
+		<if test = "orgCd != null and orgCd != ''">                          			
+	    	AND A.ORG_CD = #{orgCd}	
+	    </if>	
+		<if test = "sbjNm != null and sbjNm != ''">                          			
+	    	 AND A.SBJ_NM||A.SBJ_CD like '%'||#{sbjNm}||'%'	
+	    </if>
+	    
+	    			
+	</select>
+		
+ 	<select id="list" parameterType="onlineSubjectVO" resultType="onlineSubjectVO">
+	    <include refid="selectQuery" />
+	    	AND  A.USE_YN = 'Y'
+		<if test = "sbjCtgrCd != null and sbjCtgrCd != ''">
+			AND 
+			<foreach collection="sbjCtgrArr" item="item" separator="OR" open="(" close=")"  index="index">
+				B.SBJ_CTGR_PATH like '%'||#{item}||'%'
+			</foreach>
+		</if>
+		<if test = "orgCd != null and orgCd != ''">                          			
+	    	AND A.ORG_CD = #{orgCd}	
+	    </if>	
+		<if test = "sbjNm != null and sbjNm != ''">                          			
+	    	 AND A.SBJ_NM||A.SBJ_CD like '%'||#{sbjNm}||'%'	
+	    </if>
+	    ORDER  BY A.SBJ_NM 	
+	</select>
+
+    <select id="listPageing" parameterType="onlineSubjectVO" resultType="onlineSubjectVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectQuery" />
+		<if test = "sbjCtgrCd != null and sbjCtgrCd != ''">
+			AND 
+			<foreach collection="sbjCtgrArr" item="item" separator="OR" open="(" close=")"  index="index">
+				B.SBJ_CTGR_PATH like '%'||#{item}||'%'
+			</foreach>
+		</if>
+		<if test = "orgCd != null and orgCd != ''">                          			
+	    	AND A.ORG_CD = #{orgCd}	
+	    </if>	
+		<if test = "sbjNm != null and sbjNm != ''">                          			
+	    	 AND A.SBJ_NM||A.SBJ_CD like '%'||#{sbjNm}||'%'	
+	    </if>
+		<if test = "useYn != null and useYn != ''">                          			
+	    	 AND A.USE_YN = #{useYn}
+	    </if>
+		<choose>
+			<when test = "sortKey != null and sortKey == 'SBJ_CD_ASC'">
+				 ORDER BY A.SBJ_CD	ASC
+			</when>
+			<when test = "sortKey != null and sortKey == 'SBJ_CD_DESC'">
+			 	ORDER BY A.SBJ_CD	DESC	
+			</when>
+			<when test = "sortKey != null and sortKey == 'SBJ_CTGR_CD_ASC'">
+			 	ORDER BY A.SBJ_CTGR_CD	ASC
+			</when>
+			<when test = "sortKey != null and sortKey == 'SBJ_CTGR_CD_DESC'">
+			 	 ORDER BY A.SBJ_CTGR_CD	DESC	
+			</when>
+			<when test = "sortKey != null and sortKey == 'SBJ_NM_ASC'">
+			 	ORDER BY A.SBJ_NM ASC
+			</when>
+			<when test = "sortKey != null and sortKey == 'SBJ_NM_DESC'">
+				ORDER BY A.SBJ_NM DESC
+			</when>
+			<otherwise>
+			   ORDER  BY A.SBJ_NM 
+			</otherwise>
+		</choose> 	
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+
+	<select id="select" parameterType="onlineSubjectVO" resultType="onlineSubjectVO">
+	    <include refid="selectQuery" />
+	     AND A.SBJ_CD = #{sbjCd}		
+	</select>
+
+ 	<select id="listSearch" parameterType="onlineSubjectVO" resultType="onlineSubjectVO">
+	    <include refid="selectQuery" />
+			AND  A.USE_YN = 'Y'	
+		<if test = "orgCd != null and orgCd != ''">                          			
+	    	AND A.ORG_CD = #{orgCd}	
+	    </if>	
+		<if test = "sbjNm != null and sbjNm != ''">                          			
+	    	 AND A.SBJ_NM||A.SBJ_CD like '%'||#{sbjNm}||'%'	
+	    </if>
+			AND  A.SBJ_CTGR_CD =  #{sbjCtgrCd}  						
+
+			AND  A.SBJ_CD NOT IN 									
+		   			( SELECT SBJ_CD										
+		   			  FROM TB_CRS_CRE_CRS_ONLN_SBJ					
+		   			  WHERE CRS_CRE_CD = #{crsCreCd} )					
+		 ORDER   BY SBJ_NM 										
+	</select>
+
+ 	<select id="listSearchOpen" parameterType="onlineSubjectVO" resultType="onlineSubjectVO">
+	    <include refid="selectQuery" />
+			AND  A.USE_YN = 'Y'													
+		   	AND  A.SBJ_NM LIKE  '%'||NVL(#{sbjNm},'')||'%'						
+		   	AND  A.SBJ_CD NOT IN 												
+		   		( SELECT SBJ_CD												
+		   		  FROM TB_CRO_OPEN_CRS_SBJ									
+		   		  WHERE CRS_CD = #{crsCd} )										
+		ORDER  BY A.SBJ_NM									
+	</select>
+
+   <insert id="insert" parameterType="onlineSubjectVO">
+  
+	 	INSERT  INTO TB_CRS_ONLN_SBJ (				
+	       	ORG_CD								
+	        ,  SBJ_CD								
+	        ,  SBJ_NM								
+	        ,  WIN_WIDTH							
+	        ,  WIN_HEIGHT							
+	        ,  WIN_MENU_USE_YN						
+	        ,  WIN_SKIN_CD							
+	        ,  SBJ_DESC							
+	        ,  SBJ_CTGR_CD							
+	        ,  USE_YN								
+	        ,  REG_NO								
+	        ,  REG_DTTM 							
+		) VALUES (									
+	       	#{orgCd}								
+	 	    , #{sbjCd}
+	        ,  #{sbjNm}								
+	        ,  #{winWidth}							
+	        ,  #{winHeight}							
+	        ,  #{winMenuUseYn}						
+	        ,  #{winSkinCd}							
+	        ,  #{sbjDesc}							
+	        ,  #{sbjCtgrCd}							
+	        ,  #{useYn}								
+	        ,  #{regNo}								
+	        ,  TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')	
+		) 											
+							
+   </insert>
+
+   <update id="update" parameterType="onlineSubjectVO">
+	 	UPDATE  TB_CRS_ONLN_SBJ 											
+	      SET  SBJ_NM 				= #{sbjNm}								
+	        ,  WIN_WIDTH 			= #{winWidth}								
+	        ,  WIN_HEIGHT 			= #{winHeight}							
+	        ,  WIN_MENU_USE_YN 	= #{winMenuUseYn}							
+	        ,  WIN_SKIN_CD 		= #{winSkinCd}							
+	        ,  SBJ_DESC 			= #{sbjDesc}								
+	        ,  SBJ_CTGR_CD 		= #{sbjCtgrCd}							
+	        ,  USE_YN				= #{useYn}								
+	        ,  MOD_NO				= #{modNo}								
+	        ,  MOD_DTTM 			= TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')	
+	    WHERE  SBJ_CD 				= #{sbjCd}
+    </update>
+
+
+	<delete id="delete" parameterType="onlineSubjectVO">
+		 DELETE  FROM TB_CRS_ONLN_SBJ
+		 WHERE  SBJ_CD = #{sbjCd}		
+    </delete>
+
+</mapper>	

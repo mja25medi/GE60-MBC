@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.crstch.service.impl.CrsTchMapper">	
+	<sql id="selectColumnQuery">
+		  		 A.CRS_CD 													
+		       , A.USER_NO 												
+		       , A.TCH_TYPE 												
+		       , A.TCH_ODR													
+		       , A.REG_NO 													
+			    , (SELECT FN_GET_USER_NAME(A.REG_NO)) AS REG_NM	
+		       , A.REG_DTTM 												
+		       , A.MOD_NO 													
+			    , (SELECT FN_GET_USER_NAME(A.MOD_NO)) AS MOD_NM	
+		       , A.MOD_DTTM 												
+		       , B.USER_NM 												
+		       , B.MOBILE_NO												
+		       , B.EMAIL	 												
+		       , C.USER_ID 												
+	</sql>
+
+	<sql id="selectQuery">
+		  SELECT 
+		  <include refid="selectColumnQuery" />										
+		  FROM tb_crs_crs_tch A, tb_usr_user_info B, tb_usr_login C		
+		  WHERE A.USER_NO = B.USER_NO										
+		  	AND B.USER_NO = C.USER_NO										
+		  	AND A.CRS_CD = #{crsCd}	
+	</sql>
+	<sql id="selectUserQuery">
+		 SELECT A.USER_NO 														
+		       , A.USER_DIV_CD														
+		       , A.USER_NM 														
+		       , A.PHOTO_FILE_SN 													
+		       , A.BIRTH 															
+		       , A.SEX_CD 															
+		       , A.HOME_POST_NO 													
+		       , A.HOME_ADDR_1 													
+		       , A.HOME_ADDR_2 													
+		       , A.HOME_PHONENO 													
+		       , A.MOBILE_NO														
+		       , A.EMAIL 															
+		       , A.COMP_NM 														
+		       , A.DEPT_NM 														
+		       , A.AREA_CD 														
+		       , A.ORG_CD 															
+		       , ( SELECT ORG_NM FROM tb_org_org_info 								
+		            WHERE ORG_CD = A.ORG_CD) AS ORG_NM								
+		       , A.COMP_PHONENO 													
+		       , A.COMP_FAX_NO 													
+		       , A.COMP_POST_NO 													
+		       , A.COMP_ADDR_1 													
+		       , A.COMP_ADDR_2 													
+		       , B.USER_ID															
+		       , B.USER_STS														
+		       , B.REG_NO															
+		       , B.REG_DTTM														
+		       , B.MOD_NO															
+		       , B.MOD_DTTM														
+		FROM tb_usr_user_info A, tb_usr_login B						
+		WHERE A.USER_NO = B.USER_NO	
+	</sql>
+
+	<select id="count" parameterType="crsTchVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM tb_crs_crs_tch A, tb_usr_user_info B, tb_usr_login C			
+		WHERE A.USER_NO = B.USER_NO										
+			AND B.USER_NO = C.USER_NO										
+			AND A.CRS_CD = #{crsCd}	
+		<if test = "tchType != null and tchType != ''">                          			
+	    	AND TCH_TYPE = #{tchType}	
+	    </if>			
+	</select>
+		
+ 	<select id="list" parameterType="crsTchVO" resultType="crsTchVO">
+	    <include refid="selectQuery" />
+		<if test = "tchType != null and tchType != ''">                          			
+	    	AND TCH_TYPE = #{tchType}	
+	    </if>
+	    ORDER BY TCH_TYPE, TCH_ODR	
+	</select>
+ 	<select id="listPageing" parameterType="crsTchVO" resultType="crsTchVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectQuery" />
+		<if test = "tchType != null and tchType != ''">                          			
+	    	AND TCH_TYPE = #{tchType}	
+	    </if>
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		ORDER BY TCH_TYPE, TCH_ODR
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+
+	<select id="select" parameterType="crsTchVO" resultType="crsTchVO">
+	    <include refid="selectQuery" />
+	     AND CRS_CD = #{crsCd}
+	     AND USER_NO = #{userNo}
+	</select>
+
+    <insert id="insert" parameterType="crsOflnSbjVO">
+		  INSERT INTO tb_crs_crs_tch (						
+		         CRS_CD 									
+		       , USER_NO 									
+		       , TCH_TYPE 									
+		       , TCH_ODR 									
+		       , REG_NO 									
+		       , REG_DTTM 									
+		       , MOD_NO 									
+		       , MOD_DTTM	 								
+		 ) VALUES (										
+		         #{crsCd} 									
+		       , #{userNo} 									
+		       , #{tchType} 									
+		       , NVL(( SELECT MAX(NVL((TCH_ODR),0)) + 1 		
+		                 FROM tb_crs_crs_tch AS SUBQUERY				
+		                WHERE CRS_CD = #{crsCd}				
+		                  AND TCH_TYPE = #{tchType}),1)		
+		       , #{regNo} 									
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')		
+		       , #{modNo} 									
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+		 ) 	
+    </insert>
+	<update id="updateBatch" parameterType="list" >
+		<foreach collection="list" item="item" index="index" open="DECLARE BEGIN" close="; END;" separator=";">
+		  UPDATE tb_crs_crs_tch  
+		  SET
+			     TCH_TYPE = #{item.tchType} 								
+		       , TCH_ODR = #{item.tchOdr} 								
+		       , REG_NO = #{item.regNo} 									
+		       , REG_DTTM = #{item.regDttm} 								
+		       , MOD_NO = #{item.modNo} 									
+		       , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		   WHERE CRS_CD = #{item.crsCd} 									
+		     AND USER_NO = #{item.userNo} 	 
+		</foreach>	     
+	</update>
+   <update id="update" parameterType="crsTchVO">
+		  UPDATE tb_crs_crs_tch 									
+		     SET TCH_TYPE = #{tchType} 								
+		       , TCH_ODR = #{tchOdr} 								
+		       , REG_NO = #{regNo} 									
+		       , REG_DTTM = #{regDttm} 								
+		       , MOD_NO = #{modNo} 									
+		       , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+		   WHERE CRS_CD = #{crsCd} 									
+		     AND USER_NO = #{userNo} 	 
+    </update>
+  	<delete id="delete" parameterType="crsTchVO">
+		 DELETE FROM tb_crs_crs_tch  
+		  WHERE CRS_CD = #{crsCd}  
+		    AND USER_NO = #{userNo}   			
+    </delete>
+  	<delete id="deleteAll" parameterType="crsTchVO">
+		 DELETE FROM tb_crs_crs_tch  
+		  WHERE CRS_CD = #{crsCd}  
+    </delete>
+	<select id="listSearch" parameterType="crsTchVO" resultType="usrUserInfoVO">
+	    <include refid="selectUserQuery" />
+			AND ( SELECT COUNT(*) FROM tb_usr_user_auth_grp					
+				  WHERE USER_NO = A.USER_NO									
+		   				AND MENU_TYPE = 'HOME'	 								
+		   				AND AUTH_GRP_CD = #{tchType} ) > 0							
+		    AND A.USER_NO NOT IN ( SELECT USER_NO FROM tb_crs_crs_tch			
+		   						   WHERE CRS_CD = #{crsCd} )					
+		<if test = "userNm != null and userNm != ''">                          			
+		    	 AND CONCAT(A.USER_NM, B.USER_ID) LIKE CONCAT('%',#{userNm},'%')
+	    </if>	
+		<if test = "orgCd != null and orgCd != ''">                          			
+		    	AND A.ORG_CD = #{orgCd}		  	
+	    </if>	
+		<choose>
+			<when test = "sortKey != null and sortKey == 'REG_DTTM'">
+				 ORDER BY B.REG_DTTM			
+			</when>
+			<when test = "sortKey != null and sortKey == 'USER_ID'">
+			 	ORDER BY A.USER_NM	
+			</when>
+			<otherwise>
+			   ORDER BY A.USER_NM
+			</otherwise>
+		</choose>
+	</select>
+
+
+</mapper>	

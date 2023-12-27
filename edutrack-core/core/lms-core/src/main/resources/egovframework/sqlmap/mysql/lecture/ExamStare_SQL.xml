@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.lecture.exam.service.impl.ExamStareMapper">
+
+	<sql id="selectColumnQuery">
+		A.STD_NO  
+      , A.CRS_CRE_CD  
+      , A.USER_NO  
+      , B.USER_NM  
+      , C.USER_ID  
+      , B.EMAIL  
+      , B.BIRTH  
+      , A.ENRL_STS  
+      , A.EDU_NO  
+      , D.AGREE_YN
+      , NVL(D.QSTN_NOS,'') AS QSTN_NOS  
+      , NVL(D.STARE_ANSS,'') AS STARE_ANSS  
+      , NVL(D.GET_SCORES,'') AS GET_SCORES
+      , NVL(D.QSTN_SCORES,'') AS QSTN_SCORES
+      , NVL((D.TOT_GET_SCORE),0) AS TOT_GET_SCORE  
+      , NVL((D.STARE_CNT),0) AS STARE_CNT  
+      , NVL(D.START_DTTM,'') AS START_DTTM  
+      , NVL(D.END_DTTM,'') AS END_DTTM  
+      , NVL(D.RATE_YN,'') AS RATE_YN  		      
+      , (SELECT FN_GET_CODE_NAME('RATE_YN',NVL((D.RATE_YN),'N'))) AS RATE_YN_NM  
+      , (SELECT Z.EXAM_TYPE_CD FROM tb_lec_exam Z WHERE Z.CRS_CRE_CD = D.CRS_CRE_CD AND Z.EXAM_SN = D.EXAM_SN) AS EXAM_TYPE_CD	</sql>
+
+	<sql id="listQuery">
+		SELECT 
+		<include refid="selectColumnQuery" />
+		FROM tb_std_std A
+		LEFT OUTER JOIN
+			tb_lec_exam_stare D
+		ON
+			(
+		    	A.CRS_CRE_CD 	= D.CRS_CRE_CD  
+		    AND A.STD_NO 		= D.STD_NO 			
+		    AND D.EXAM_SN 		= #{examSn}
+			)
+		, tb_usr_user_info B
+		, tb_usr_login C
+		WHERE A.USER_NO	 	= B.USER_NO  
+		    AND B.USER_NO 		= C.uSER_NO  
+		    AND A.CRS_CRE_CD  	= #{crsCreCd}  
+		    AND A.ENRL_STS IN('S','C','F')  
+		<if test = "declsNo != null and declsNo > 0">
+			AND A.DECLS_NO      = #{declsNo}
+		</if>
+		<if test = "userNm != null and userNm != ''">
+			AND B.USER_NM      LIKE CONCAT('%', #{userNm}, '%') 
+		</if>
+		<if test = 'stareYn != null and stareYn != "" and stareYn == "Y"'>
+			<![CDATA[
+			  AND NVL((D.STARE_CNT),0) > 0 
+			 ]]>
+			 
+		</if>
+		<if test = 'stareYn != null and stareYn != "" and stareYn == "N"'>
+			<![CDATA[
+			  AND NVL((D.STARE_CNT),0) = 0 
+			 ]]>
+		</if>
+		<if test = 'stdNoObjArr != null and stdNoObjArr.length > 0'>
+			AND D.STD_NO IS NOT NULL -- 응시한 수강생 조회
+			AND A.STD_NO IN 
+			<foreach collection="stdNoObjArr" item="item" index="index" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+			<![CDATA[
+		    AND C.USER_STS 		= 'U'  
+		    AND CASE WHEN NVL((D.STARE_CNT), 0) > 0 THEN 'Y' ELSE 'N' END  =	 
+		        (CASE WHEN #{stareYn} = 'Y' THEN 'Y' WHEN #{stareYn} ='N' THEN 'N' ELSE (CASE WHEN NVL((D.STARE_CNT), 0) > 0 THEN 'Y' ELSE 'N' END)END)  		    
+		  
+		  ]]>
+	</sql>
+	
+	<select id="list" parameterType="examVO" resultType="examStareVO">
+		<!-- 학습자의 목록을 조회하여 반환한다.  -->
+		<include refid="listQuery" />
+		ORDER BY B.USER_NM
+	</select>
+
+	<select id="count" parameterType="examVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM tb_std_std A
+		LEFT OUTER JOIN
+			tb_lec_exam_stare D
+		ON
+			(
+		    	A.CRS_CRE_CD 	= D.CRS_CRE_CD
+		    AND A.STD_NO 		= D.STD_NO
+		    AND D.EXAM_SN	 	= #{examSn} 			
+			)
+		, tb_usr_user_info B
+		, tb_usr_login C
+		WHERE A.USER_NO	 		= B.USER_NO  
+		    AND B.USER_NO 		= C.uSER_NO  
+		    AND A.CRS_CRE_CD  	= #{crsCreCd}  
+		    AND A.ENRL_STS IN('S','C','F')  
+		<if test = "declsNo != null and declsNo > 0">
+			AND A.DECLS_NO      = #{declsNo}
+		</if>
+		<if test = "userNm != null and userNm != ''">
+			AND B.USER_NM      LIKE CONCAT('%', #{userNm}, '%') 
+		</if>
+		<if test = 'stareYn != null and stareYn != "" and stareYn == "Y"'>
+			<![CDATA[
+			 AND NVL((D.STARE_CNT),0) > 0 
+			 ]]>
+			 
+		</if>
+		<if test = 'stareYn != null and stareYn != "" and stareYn == "N"'>
+			<![CDATA[
+			 AND NVL((D.STARE_CNT),0) = 0 
+			 ]]>
+		</if>
+			<![CDATA[
+		    AND C.USER_STS 		= 'U'  
+		    AND CASE WHEN NVL((D.STARE_CNT), 0) > 0 THEN 'Y' ELSE 'N' END  =	 
+		        (CASE WHEN #{stareYn} = 'Y' THEN 'Y' WHEN #{stareYn} ='N' THEN 'N' ELSE (CASE WHEN NVL((D.STARE_CNT), 0) > 0 THEN 'Y' ELSE 'N' END)END)  		    
+		  
+		  ]]>			
+	</select>
+		
+	<select id="listPageing"  parameterType="examVO" resultType="examStareVO">
+		<!-- 학습자 조회 쿼리  -->
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+			<include refid="listQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>	
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="select" parameterType="examStareVO" resultType="examStareVO">
+		<!-- 시험응시의 단일항목을 조회하여 반환한다.  -->
+		SELECT CRS_CRE_CD  
+		      , STD_NO  
+		      , EXAM_SN  
+		      , QSTN_NOS  
+		      , QSTN_RGT_ANSRS  
+		      , QSTN_SCORES  
+		      , STARE_ANSS  
+		      , GET_SCORES  
+		      , NVL((TOT_GET_SCORE),0) AS TOT_GET_SCORE 
+		      , STARE_CNT  
+		      , STARE_TM  
+		      , START_DTTM  
+		      , END_DTTM  
+		      , ATCH_CTS  
+		      , RATE_YN  
+		      , AGREE_YN
+		      , REG_NO  
+		      , (SELECT FN_GET_USER_NAME(MOD_NO)) AS MOD_NM  
+		      , REG_DTTM  
+		      , MOD_NO  
+		      , (SELECT FN_GET_USER_NAME(REG_NO)) AS REG_NM  
+		      , MOD_DTTM  
+		   FROM tb_lec_exam_stare  
+		  WHERE CRS_CRE_CD  = #{crsCreCd}  
+		    AND STD_NO = #{stdNo}  
+		    AND EXAM_SN = #{examSn}
+	</select>
+	
+	<select id="selectCopyRatio" parameterType="examStareVO" resultType="examStareVO">
+		<!-- 시험응시의 단일항목을 조회하여 반환한다.  -->
+		SELECT  URI AS COPY_RATIO_URI,
+		        TOTAL_COPY_RATIO,
+		        DISP_TOTAL_COPY_RATIO, 
+		        COMPLETE_STATUS,
+		        complete_date
+		   FROM tb_copykiller_copyratio_exam  
+		  WHERE URI  = #{copyRatioUri}  
+		   and check_type = 'report'
+	</select>
+	
+	<insert id="insert" parameterType="examStareVO">
+		<!-- 시험응시 정보를 등록하고 결과를 반환한다.  -->
+		INSERT INTO tb_lec_exam_stare (  
+		        CRS_CRE_CD  
+		      , STD_NO  
+		      , EXAM_SN  
+		      , QSTN_NOS  
+		      , QSTN_RGT_ANSRS  
+		      , QSTN_SCORES  
+		      , STARE_ANSS  
+		      , GET_SCORES  
+		      , TOT_GET_SCORE  
+		      , STARE_CNT  
+		      , STARE_TM  
+		      , START_DTTM  
+		      , END_DTTM  
+		      , ATCH_CTS  
+		      , RATE_YN  
+		      , AGREE_YN
+		      , REG_NO  
+		      , REG_DTTM  
+		      , MOD_NO  
+		      , MOD_DTTM  
+		 ) VALUES (  
+		        #{crsCreCd}  
+		      , #{stdNo}  
+		      , #{examSn}
+		      , #{qstnNos}  
+		      , #{qstnRgtAnsrs}  
+		      , #{qstnScores}  
+		      , #{stareAnss}  
+		      , #{getScores}  
+		      , #{totGetScore}  
+		      , #{stareCnt}  
+		      , #{stareTm}  
+		      , #{startDttm}  
+		      , #{endDttm}  
+		      , #{atchCts}  
+		      , #{rateYn}  
+		      , #{agreeYn}
+		      , #{regNo}  
+		      , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')   
+		      , #{modNo}  
+		      , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 
+		 ) 
+	</insert>
+	
+	<update id="update" parameterType="examStareVO">
+		<!-- 시험응시 정보릐 단일 항목을 반환한다. -->
+		UPDATE tb_lec_exam_stare  
+		    SET QSTN_NOS = #{qstnNos}  
+		      , QSTN_RGT_ANSRS	= #{qstnRgtAnsrs}  
+		      , QSTN_SCORES = #{qstnScores}  
+		      , STARE_ANSS = #{stareAnss}  
+		      , GET_SCORES = #{getScores}  
+		      , TOT_GET_SCORE = #{totGetScore}  
+		      , STARE_CNT = #{stareCnt}  
+		      , STARE_TM = #{stareTm}  
+		      , START_DTTM = #{startDttm}  
+		      , END_DTTM = #{endDttm}  
+		      , ATCH_CTS = #{atchCts}  
+		      , RATE_YN = #{rateYn}  
+		      , MOD_NO = #{modNo}  
+		      , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')  
+		  WHERE CRS_CRE_CD	= #{crsCreCd}	 
+		    AND STD_NO = #{stdNo}  
+		    AND EXAM_SN = #{examSn}
+	</update>
+	
+	<delete id="delete" parameterType="examStareVO">
+		<!-- 시험응시 정보 단일 항목을 삭제한다.  -->
+		 DELETE FROM tb_lec_exam_stare  
+		  WHERE CRS_CRE_CD = #{crsCreCd}  
+		    AND STD_NO = #{stdNo}  
+		    AND EXAM_SN = #{examSn}
+	</delete>
+	
+	<delete id="deleteAll" parameterType="examVO">
+		<!--  해당 시험의 모든 응시 정보를 삭제한다. -->
+		DELETE FROM tb_lec_exam_stare  
+		  WHERE CRS_CRE_CD = #{crsCreCd}  
+		    AND EXAM_SN = #{examSn}
+	</delete>
+	
+	<select id="selectStareExamSn" resultType="examStareVO">
+	<!-- 시험응시 고유번호를 검색한다. -->
+		SELECT nextval('SQ_LEC_EXAM_STARE') AS EXAM_SN 
+	</select>
+
+	<select id="listExamNum" parameterType="examStareVO" resultType="examStareVO">
+	<!-- 시험문제 정보에 등록되어 있는 시험의 고유번호를 목록으로 반환한다. -->
+		SELECT A.QSTN_NO
+		FROM (SELECT DISTINCT(QSTN_NO) FROM tb_lec_exam_qstn  
+			  WHERE CRS_CRE_CD = #{crsCreCd}  
+			    AND EXAM_SN = #{examSn}
+			  ORDER BY RAND()  
+			  ) A
+		LIMIT #{examSetCnt}
+	</select>
+	
+	<select id="listExamRandomTypeNum" parameterType="examStareVO" resultType="examStareVO">
+	<!-- 시험문제 정보에 등록되어 있는 객관식(선택형,진위형),단답식,서술형에 맞게 시험을 랜덤으로 가져온다. -->
+		SELECT A.QSTN_NO
+		FROM (SELECT DISTINCT(QSTN_NO) FROM tb_lec_exam_qstn  
+			  WHERE CRS_CRE_CD = #{crsCreCd}  
+			    AND EXAM_SN = #{examSn}	
+			    <if test="searchKey != null and searchKey eq 'QSTN'">
+					<choose>
+				    	<when test='searchValue eq "SK"'>
+				    		AND QSTN_TYPE IN ('K', 'S')
+				    	</when>
+				    	<when test='searchValue eq "D"'>
+				    		AND QSTN_TYPE = 'D'
+				    	</when>
+				    	<when test='searchValue eq "J"'>
+				    		AND QSTN_TYPE = 'J'
+				    	</when>
+				    	<otherwise></otherwise>
+				    </choose>			    	
+			    </if>
+			  ORDER BY RAND()  
+			  ) A
+		LIMIT #{examSetCnt}
+	</select>
+	
+	<select id="getStare" parameterType="examStareVO" resultType="examStareVO">
+	<!-- 시험문제에 등록되어 있는 시험중 하나를 렌덤으로 가져온다. -->
+	SELECT EXAM_QSTN_SN  
+		      , QSTN_TYPE,RGT_ANSR  
+		      , QSTN_SCORE  
+		   FROM ( SELECT A.*  
+		      	    FROM tb_lec_exam_qstn A  
+		      	   WHERE A.CRS_CRE_CD = #{crsCreCd}  
+		       	     AND A.EXAM_SN =#{examSn}  
+		       	     AND A.QSTN_NO = #{qstnNo}
+		      	   ORDER BY RAND()  
+		      	)  AS A
+		  LIMIT 1	
+	</select>
+	
+	<insert id="addPaper" parameterType="examStareVO">
+	<!-- 학습자의 시험응시를 저장한다. -->
+	INSERT INTO tb_lec_exam_stare (  
+		        CRS_CRE_CD  
+		      , STD_NO  
+		      , EXAM_SN  
+		      , QSTN_NOS  
+		      , QSTN_RGT_ANSRS  
+		      , QSTN_SCORES  
+		      , RATE_YN  
+			   , STARE_CNT  
+		      , STARE_TM  
+		      , START_DTTM  
+		      , AGREE_YN
+		      , REG_IP
+		      , REG_NO  
+		      , REG_DTTM  
+		 ) VALUES (  
+		        #{crsCreCd}  
+		      , #{stdNo}  
+		      , #{examSn}
+		      , #{qstnNos}  
+		      , #{qstnRgtAnsrs}  
+		      , #{qstnScores}  
+		      , 'N'  
+		      , 1  
+		      , ( SELECT EXAM_STARE_TM  
+		            FROM tb_lec_exam AS SUBQUERY 
+		           WHERE CRS_CRE_CD = #{crsCreCd}  
+		             AND EXAM_SN = #{examSn})  
+		      , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 
+		      , #{agreeYn}
+		      , #{regIp}
+		      , #{regNo}  
+		      , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 
+		 )
+		 
+	</insert>
+	
+	<select id="selectExamQstnNo" parameterType="examStareVO" resultType="examStareVO">
+	<!-- 시험 응시 정보 조회 -->
+	SELECT  CRS_CRE_CD						
+		        ,  STD_NO							
+		        ,  EXAM_SN							
+		        ,  STARE_TM						
+		        ,  QSTN_NOS		
+		        ,  QSTN_SCORES				
+		        ,  NVL((STARE_CNT),0) AS STARE_CNT 	
+		     FROM  tb_lec_exam_stare				
+		    WHERE  CRS_CRE_CD  = #{crsCreCd}			
+		      AND  STD_NO      = #{stdNo}			
+		      AND  EXAM_SN     = #{examSn}
+	</select>
+	
+	<update id="addPaperSubmit" parameterType="examStareVO">
+		UPDATE  tb_lec_exam_stare										
+		      SET  STARE_ANSS 		= #{stareAnss}							
+		        ,  GET_SCORES 		= #{getScores}							
+		        ,  TOT_GET_SCORE 	= #{totGetScore}							
+		        ,  STARE_CNT 		= #{stareCnt}								
+		        ,  STARE_TM 		= ROUND(#{stareTm}/60)
+		        <if test='startFlagYn == "Y"'>
+		        	,  START_DTTM 		= DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		        	, REG_IP = #{regIp}
+		        	, END_DTTM = null
+		        </if>
+		        <if test='startFlagYn == "N"'>
+			        ,  END_DTTM 		= DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 	
+		        </if>					
+		        ,  MOD_NO 			= #{modNo}							
+		        ,  MOD_DTTM 		= DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 	
+		    WHERE  CRS_CRE_CD  	= #{crsCreCd}								
+		      AND  STD_NO      	= #{stdNo}								
+		      AND  EXAM_SN     	= #{examSn}
+	</update>
+	
+	<update id="updateExamComplete" parameterType="examStareVO">
+	<!-- 시험 평가 완료 -->
+		UPDATE tb_lec_exam_stare  
+		    SET ATCH_CTS = 'Complete!'	 
+		      , RATE_YN = 'Y'  
+		  WHERE CRS_CRE_CD = #{crsCreCd}  
+		    AND EXAM_SN = #{examSn}
+	</update>
+	
+	<delete id="deleteMulti" parameterType="examStareVO">
+	<!-- 시험 평가 정보를 삭제한다. -->
+	
+		DELETE FROM tb_lec_exam_stare  
+		  WHERE CRS_CRE_CD 	= #{crsCreCd}  
+		    AND EXAM_SN = #{examSn}  
+		    AND STD_NO IN 
+					    <foreach collection="userNoObjArr" item="item" index="index" open="(" separator="," close=")">
+							#{item}
+						</foreach>
+		    
+	</delete>
+
+</mapper>

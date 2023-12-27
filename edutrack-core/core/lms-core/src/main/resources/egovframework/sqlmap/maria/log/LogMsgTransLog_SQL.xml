@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.log.message.service.impl.LogMsgTransLogMapper">	
+
+	<sql id="selectQuery">
+		SELECT A.MSG_TRANS_SN as msgTransSn
+		     , A.MSG_SN as msgSn
+		     , A.RECV_NM as recvNm
+		     , A.RECV_ADDR as recvAddr
+		     , A.TRANS_STS as transSts
+		     , A.TRANS_DTTM as transDttm
+		     , A.ERROR_MSG as errorMsg
+		     , A.USER_NO as userNo
+		     , A.KNOW_SN as knowSn
+		  FROM tb_log_msg_trans_log A
+		 WHERE A.MSG_SN = #{msgSn}
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		<if test = "transSts != null and transSts != ''">
+		   AND A.TRANS_STS = #{transSts}
+		</if>
+	</sql>		
+
+	<select id="list" parameterType="logMsgTransLogVO" resultType="logMsgTransLogVO">
+		/*
+			 SQL ID : list
+			 설  명 : 메시지 전송의 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	</select>
+	
+	<select id="listPageing" parameterType="logMsgTransLogVO" resultType="logMsgTransLogVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 메시지 전송의 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+	 	ORDER BY msgTransSn DESC
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="logMsgTransLogVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 메시지 전송의 전체 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>	
+	
+	<select id="select" parameterType="logMsgTransLogVO" resultType="logMsgTransLogVO">
+		/*
+			 SQL ID : select
+			 설  명 : 메시지 전송의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+           AND A.MSG_TRANS_SN = #{msgTransSn}	 	
+	</select>
+	
+	<select id="selectKey" resultType="Integer">
+		/*
+			 SQL ID : selectKey
+			 설  명 : 메시지 전송의 키 생성
+	 	*/
+	 	SELECT nextval(SQ_LOG_MSG_TRANS_LOG) FROM DUAL
+	</select>	
+	
+	<insert id="insert" parameterType="logMsgTransLogVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 메시지 전송의 정보 등록
+	 	*/
+		INSERT INTO tb_log_msg_trans_log (
+		       MSG_TRANS_SN
+		     , MSG_SN
+		     , RECV_NM
+		     , RECV_ADDR
+		     , TRANS_STS
+		     , TRANS_DTTM
+		     , ERROR_MSG
+		     , USER_NO
+		     , KNOW_SN
+		) VALUES (
+		       #{msgTransSn}
+		     , #{msgSn}
+		     , #{recvNm}
+		     , #{recvAddr}
+		     , (CASE WHEN #{recvYn} = 'Y' THEN  'R' ELSE 'D' END) /* 'R' : 전송대기, 'D' : 수신거부 */
+		     , #{transDttm}
+		     , #{errorMsg}
+		     , #{userNo}
+		     , #{knowSn}
+		)
+	</insert>
+	
+	<insert id="reinsert" parameterType="logMsgTransLogVO" >
+		/*
+			 SQL ID : reinsert
+			 설  명 : 메시지 전송의 정보 등록 (재전송)
+	 	*/
+		INSERT INTO tb_log_msg_trans_log (
+		       MSG_TRANS_SN
+		     , MSG_SN
+		     , RECV_NM
+		     , RECV_ADDR
+		     , TRANS_STS )
+		SELECT nextval(SQ_LOG_MSG_TRANS_LOG_SN)
+		     , #{msgSn}
+		     , RECV_NM
+		     , RECV_ADDR
+		     , TRANS_STS
+		  FROM tb_log_msg_trans_log
+		 WHERE MSG_SN = #{prevMsgSn}
+		   AND TRANS_STS = 'F'
+	</insert>	
+	
+	<update id="update" parameterType="logMsgTransLogVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 메시지 전송의 정보 수정
+	 	*/
+	 	UPDATE tb_log_msg_trans_log
+		   SET TRANS_STS = #{transSts}
+		     , TRANS_DTTM = IFNULL( FN_GET_NULL(#{transDttm}), TRANS_DTTM)
+		     , ERROR_MSG = #{errorMsg}
+		 WHERE MSG_TRANS_SN = #{msgTransSn}
+	</update>
+
+	<delete id="delete" parameterType="logMsgTransLogVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 메시지 전송의 정보 삭제
+	 	*/
+		DELETE FROM tb_log_msg_trans_log
+		 WHERE MSG_TRANS_SN = #{msgTransSn}
+	</delete>
+	
+	<delete id="deleteByRecvAddr" parameterType="logMsgTransLogVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 메시지 전송의 정보 삭제
+	 	*/
+		DELETE FROM tb_log_msg_trans_log
+		 WHERE MSG_TRANS_SN = #{msgTransSn}
+		 	AND RECV_ADDR = #{recvAddr}
+	</delete>
+
+	<select id="listReceiver" parameterType="logMsgLogVO" resultType="logMsgTransLogVO">
+		/*
+			 SQL ID : listReceiver
+			 설  명 : 여러 테이블에서 사용자 연락처를 조회해온다.
+	 	*/
+		SELECT A.USER_NM as recvNm
+		     , (CASE WHEN #{msgDivCd} = 'SMS' THEN A.MOBILE_NO WHEN #{msgDivCd} = 'EMAIL' THEN A.EMAIL ELSE A.USER_NO END) as recvAddr
+		     , (CASE WHEN #{msgDivCd} = 'SMS' THEN NVL((A.SMS_RECV),'N') WHEN #{msgDivCd} = 'EMAIL' THEN  NVL((A.EMAIL_RECV),'N') ELSE NVL((MSG_RECV),'N') END) as recvYn		     
+		     , A.USER_NO as userNo
+		  FROM tb_usr_user_info A
+		     , tb_usr_login B
+		 WHERE A.USER_NO = B.USER_NO
+		   AND A.USER_NO IN
+		    <foreach item="item" index="index" collection="userNoListArr" open="(" close=")" separator=",">
+		            #{item}
+		    </foreach>
+	</select>
+	
+	<select id="listReceiverStd" parameterType="logMsgLogVO" resultType="logMsgTransLogVO">
+		SELECT A.USER_NM as recvNm
+		     , (CASE WHEN #{msgDivCd} = 'SMS' THEN A.MOBILE_NO WHEN #{msgDivCd} = 'EMAIL' THEN A.EMAIL ELSE A.USER_NO END) as recvAddr
+		     , (CASE WHEN #{msgDivCd} = 'SMS' THEN IFNULL( FN_GET_NULL(A.SMS_RECV),'N') WHEN #{msgDivCd} = 'EMAIL' THEN  IFNULL(FN_GET_NULL(A.EMAIL_RECV),'N') ELSE IFNULL( FN_GET_NULL(MSG_RECV),'N') END) as recvYn		     
+		     , A.USER_NO as userNo
+		  FROM tb_usr_user_info A
+		     , tb_usr_login B
+		 WHERE A.USER_NO = B.USER_NO
+		   AND A.USER_NO IN (
+		   						SELECT USER_NO 
+		   						FROM tb_std_std
+		   						WHERE STD_NO IN 
+							    <foreach item="item" index="index" collection="stdNoListArr" open="(" close=")" separator=",">
+							            #{item}
+							    </foreach>
+				    		)
+	</select>
+	
+	<update id="updateRead" parameterType="logMsgTransLogVO" >
+		/*
+			 SQL ID : updateRead
+			 설  명 : 메시지 읽음 표시
+	 	*/
+		UPDATE tb_log_msg_trans_log
+		   SET TRANS_STS = 'C'
+		     , TRANS_DTTM = IFNULL( FN_GET_NULL(TRANS_DTTM), DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'))
+		     , ERROR_MSG = ''
+		 WHERE MSG_TRANS_SN = #{msgTransSn}	 	
+	</update>	
+	
+</mapper>

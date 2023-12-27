@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.board.faq.service.impl.BrdFaqAtclMapper">	
+
+	
+	<sql id="selectQuery">
+		<![CDATA[
+			SELECT A.ATCL_SN as atclSn
+			     , A.CTGR_CD as ctgrCd
+			     , B.CTGR_NM as ctgrNm
+			     , A.ATCL_TITLE as atclTitle
+			     , A.ATCL_CTS as atclCts
+			     , A.ATCL_ODR as atclOdr
+			     , A.USE_YN as useYn
+			     , A.EDITOR_YN as editorYn
+			     , A.REG_NO as regNo
+			     , ( SELECT FN_GET_USER_NAME(A.REG_NO)) AS regNm
+			     , A.REG_DTTM as regDttm
+			     , A.MOD_NO as modNo
+			     , ( SELECT FN_GET_USER_NAME(A.MOD_NO)) AS modNm
+			     , A.MOD_DTTM as modDttm
+			  FROM tb_brd_faq_atcl A, tb_brd_faq_ctgr B
+			 WHERE A.CTGR_CD = B.CTGR_CD
+			   AND A.ORG_CD = B.ORG_CD
+			   AND A.ORG_CD = #{orgCd}
+		]]>
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		<if test = "ctgrCd != null and ctgrCd != ''">
+		  AND A.CTGR_CD = #{ctgrCd}
+		</if>
+		<if test = "searchValue != null and searchValue != ''">
+			<if test = "searchKey != null and searchKey == 'cts'">
+			   AND A.ATCL_CTS LIKE CONCAT('%',IFNULL(#{searchValue}, ''),'%') 
+			</if>
+			<if test = "searchKey != null and searchKey == 'title'">
+			   AND A.ATCL_TITLE LIKE CONCAT('%',IFNULL(#{searchValue}, ''),'%')
+			</if>
+			<if test = "searchKey != null and searchKey == 'ALL'">
+			   AND ( A.ATCL_TITLE LIKE CONCAT('%', IFNULL(#{searchValue}, ''), '%')
+					OR A.ATCL_CTS LIKE CONCAT('%', IFNULL(#{searchValue}, ''), '%'))			   
+			</if>	
+			   AND A.ATCL_CTS LIKE CONCAT('%',IFNULL(#{searchValue}, ''),'%')
+					
+
+		</if>
+	</sql>		
+
+	<select id="list" parameterType="brdFaqAtclVO" resultType="brdFaqAtclVO">
+		/*
+			 SQL ID : list
+			 설  명 : FAQ 게시물의 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	 	ORDER BY A.ATCL_ODR, A.ATCL_SN DESC
+	</select>
+	
+	<select id="listPageing" parameterType="brdFaqAtclVO" resultType="brdFaqAtclVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : FAQ 게시물의 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		ORDER BY ATCLODR, ATCLSN DESC
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="brdFaqAtclVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : FAQ 게시물의 전체 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>	
+	
+	<select id="select" parameterType="brdFaqAtclVO" resultType="brdFaqAtclVO">
+		/*
+			 SQL ID : select
+			 설  명 : FAQ 게시물의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+		   AND B.CTGR_CD = #{ctgrCd}	 
+		   AND A.ATCL_SN = #{atclSn}	
+	</select>
+	
+	<select id="selectKey" resultType="Integer">
+		/*
+			 SQL ID : selectKey
+			 설  명 : FAQ 게시물키 생성
+	 	*/
+		SELECT nextval(SQ_BRD_FAQ_ATCL)
+	</select>	
+	
+	<insert id="insert" parameterType="brdFaqAtclVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : FAQ 게시물의 정보 등록
+	 	*/
+		INSERT INTO tb_brd_faq_atcl (
+		       ATCL_SN
+		     , ORG_CD
+		     , CTGR_CD
+		     , ATCL_TITLE
+		     , ATCL_CTS
+		     , ATCL_ODR
+		     , USE_YN
+		     , EDITOR_YN
+		     , REG_NO
+		     , REG_DTTM
+		     , MOD_NO
+		     , MOD_DTTM
+		) VALUES (
+		       #{atclSn}
+		     , #{orgCd}
+		     , #{ctgrCd}
+		     , #{atclTitle}
+		     , #{atclCts}
+		     , IFNULL(( SELECT MAX(IFNULL( FN_GET_NULL(ATCL_ODR),0)) + 1
+		               FROM tb_brd_faq_atcl AS SUBQUERY
+		              WHERE CTGR_CD = #{ctgrCd} ),1)
+		     , #{useYn}
+		     , #{editorYn}
+		     , #{regNo}
+		     , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		     , #{modNo}
+		     , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		)	 	
+	</insert>
+	
+	<update id="update" parameterType="brdFaqAtclVO" >
+		/*
+			 SQL ID : update
+			 설  명 : FAQ 게시물의 정보 수정
+	 	*/
+		UPDATE tb_brd_faq_atcl
+		   SET ATCL_TITLE = #{atclTitle}
+		     , ATCL_CTS = #{atclCts}
+		     , ATCL_ODR = #{atclOdr}
+		     , USE_YN = #{useYn}
+		     , EDITOR_YN = #{editorYn}
+		     , MOD_NO = #{modNo}
+		     , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		 WHERE ATCL_SN = #{atclSn}	 	
+	</update>	
+
+	<delete id="delete" parameterType="brdFaqAtclVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : FAQ 게시물의 정보 삭제
+	 	*/
+		DELETE FROM tb_brd_faq_atcl
+		 WHERE ATCL_SN = #{atclSn}
+	</delete>
+	
+</mapper>

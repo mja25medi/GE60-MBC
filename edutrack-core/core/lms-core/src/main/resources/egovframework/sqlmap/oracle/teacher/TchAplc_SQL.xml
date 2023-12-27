@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.teacher.aplc.service.impl.TchAplcMapper">
+	
+	<!-- // TODO : 페이징 관련 기능은 현재 미구현 상태임. -->
+	<select id="listTeacherAplcResult" parameterType="tchAplcVO" resultType="tchAplcVO">
+		 SELECT '0' AS CHK_USER, APL.USER_NO,                
+		        APL.APLC_DT,		                          
+		        APL.TCH_DIV_CD,                                
+		        FN_GET_CODE_NAME('TCH_DIV_CD',APL.TCH_DIV_CD) AS TCH_DIV_CD_NM, 
+		        APL.APRV_STS,                                
+		        COD.CODE_NM AS APRV_STS_NM,	              
+		        USE.USER_NM,                                 
+		        ECL_DECRPART(USE.MOBILE_NO,4) as MOBILE_NO,                               
+		        USE.EMAIL,                                   
+		        LOG.USER_ID,                                 
+		        DECODE(USE.SEX,'M','남','여') AS SEX         
+		   FROM TB_TCH_TCH_APLC APL,                         
+		        TB_USR_USER_INFO USE,                        
+		        TB_USR_LOGIN LOG , TB_SYS_CODE COD           
+		  WHERE APL.USER_NO      = USE.USER_NO               
+		    AND APL.USER_NO      = LOG.USER_NO               
+		    AND APL.APRV_STS     = COD.CODE_CD               
+		    AND COD.CODE_CTGR_CD = 'APRV_STS'                
+	        AND APL.APLC_DT BETWEEN replace(#{searchFrom},'.','') AND replace(#{searchTo},'.','')
+            AND APL.APRV_STS LIKE NVL(#{searchSts},'')||'%'                
+		    ORDER BY APL.APLC_DT DESC  
+	</select>
+
+	<select id="selectProfReg" parameterType="tchAplcVO" resultType="tchAplcVO">
+			SELECT                                                               
+				nvl((SELECT A.APRV_STS FROM TB_TCH_TCH_APLC A  WHERE A.USER_NO = #{userNo ),'0')APRV_STS                                                 
+			FROM DUAL                             			   
+	</select>
+	
+	<insert id="insertTeacherInfo" parameterType="tchAplcVO">
+		 INSERT INTO TB_TCH_TCH_INFO (     
+		   USER_NO,TCH_CTGR_CD,TCH_DIV_CD, MOD_NO, MOD_DTTM)     
+		 VALUES                   
+		 ( #{userNo},#{tchCtgrCd}, #{tchDivCd}, #{modNo},  TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  )
+	</insert>
+	
+	<insert id="insertTeacherAplc" parameterType="tchAplcVO">
+		 INSERT INTO TB_TCH_TCH_APLC (                                  
+            USER_NO, APLC_DT, APRV_STS, TCH_DIV_CD,                     
+            REG_DTTM, REG_NO, MOD_DTTM,                                 
+            MOD_NO)                                                     
+         VALUES (#{userNo},TO_CHAR(SYSDATE,'YYYYMMDD'), #{aprvSts}, #{tchDivCd}, \n")
+                 TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'),                   
+                 #{regNo}, TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'),           
+                 #{modNo})                                                
+	</insert>
+	
+	<update id="updateTeacherAplc" parameterType="tchAplcVO">
+		 UPDATE TB_TCH_TCH_APLC                              
+		 SET    APRV_STS            = #{aprvSts},              
+		        TCH_DIV_CD          = #{tchDivCd},             
+		        MOD_NO              = #{modNo},                
+		        MOD_DTTM            = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 
+		 WHERE  USER_NO             = #{userNo}               
+	</update>
+	
+	
+</mapper>

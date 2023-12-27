@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.board.qna.service.impl.BrdQnaQstnMapper">	
+	
+	<sql id="selectQuery">
+		<![CDATA[
+			SELECT QNA_SN
+			    , ORG_CD
+			    , USER_NO
+			    , (SELECT FN_GET_USER_NAME(USER_NO) FROM DUAL) AS USER_NM
+			    , STS_CD
+			    , QNA_TITLE
+			    , QNA_CTS
+			    , QNA_TAG
+			    , OPEN_YN
+			    , EDITOR_YN
+			    , (SELECT COUNT(*)
+			         FROM TB_BRD_QNA_ANSR
+			        WHERE QNA_SN = A.QNA_SN) AS ANSR_CNT
+			    , (SELECT FN_GET_USER_NAME(REG_NO) FROM DUAL) AS REG_NM
+			    , REG_NO
+			    , REG_DTTM
+			    , MOD_NO
+			    , (SELECT FN_GET_USER_NAME(MOD_NO) FROM DUAL) AS MOD_NM
+			    , MOD_DTTM
+			 FROM TB_BRD_QNA_QSTN A
+			WHERE ORG_CD = #{orgCd}	
+		]]>
+	</sql>	
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		<if test = "viewMode != 'admin' and viewMode != '' ">
+			AND USER_NO = #{userNo}
+		</if>
+		
+		<if test = "searchValue != null and searchValue != ''">
+			<if test = "searchKey != null and searchKey == 'title'">
+				AND QNA_TITLE LIKE '%'||NVL(#{searchValue}, '')||'%'
+			</if>
+			<if test = "searchKey != null and searchKey == 'regNm'">
+				AND (SELECT FN_GET_USER_NAME(REG_NO) FROM DUAL) LIKE '%'||NVL(#{searchValue}, '')||'%'
+			</if>
+			<if test = "searchKey != null and searchKey == 'regDttm'">
+				AND FN_GET_DATE_FORMAT(REG_DTTM , 'YYYY.MM.DD') LIKE '%'||NVL(#{searchValue}, '')||'%'
+			</if>
+		</if>
+		ORDER BY QNA_SN DESC
+	</sql>		
+	<select id="list" parameterType="brdQnaQstnVO" resultType="brdQnaQstnVO">
+		/*
+			 SQL ID : list
+			 설  명 : 상담게시물
+	 	*/
+	 	<include refid="listQuery"/>
+	</select>	
+	
+
+</mapper>

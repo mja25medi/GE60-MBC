@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.olc.olccart.service.impl.OlcCartrgMapper">
+	<select id="selectKey" resultType="String">
+		SELECT CONCAT('LC',LPAD(nextval(SQ_OLC_LESN_CARTRG),8,'0')) AS CARTRG_CD
+	</select>
+	<sql id="selectColumnQuery">
+				 ORG_CD 
+		       , USER_NO 
+		       , CTGR_CD 
+		       , ( SELECT CTGR_NM 
+		             FROM tb_olc_cartrg_ctgr 
+		            WHERE ORG_CD = A.ORG_CD 
+		              AND USER_NO = A.USER_NO 
+		              AND CTGR_CD = A.CTGR_CD ) AS CTGR_NM 
+		       , CARTRG_NM 
+		       , CARTRG_TAG 
+		       , CARTRG_ODR 
+		       , USE_YN 
+		       , OPEN_YN 
+		       , REG_NO 
+		       , REG_DTTM 
+		       , MOD_NO 
+		       , MOD_DTTM 
+		       , ( SELECT COUNT(*) 
+		             FROM tb_olc_lesn_cnts 
+		            WHERE ORG_CD = A.ORG_CD 
+		              AND USER_NO = A.USER_NO 
+		              AND CARTRG_CD = A.CARTRG_CD ) AS CNTS_CNT 
+		       , ( SELECT COUNT(*) 
+		             FROM tb_olc_share_ctgr_relation 
+		            WHERE ORG_CD = A.ORG_CD 
+		              AND CARTRG_CD = A.CARTRG_CD ) AS SHARE_CNT 
+		       , ( SELECT COUNT(*) 
+		             FROM tb_crs_sbj_cnts 
+		            WHERE UNIT_FILE_PATH = A.CARTRG_CD ) AS USE_CNT 
+		       , ( SELECT FN_GET_USER_NAME(A.REG_NO) 
+		             ) AS REG_NM 
+		       , ( SELECT FN_GET_USER_NAME(A.MOD_NO) 
+		             ) AS MOD_NM 
+		       , KNOW_SHARE_CD 
+		       , CNTS_SHARE_CD 
+		       , KNOW_OPEN_YN 
+		       , OLC_NAME_COLOR 
+		       , LIST_BG_COLOR  
+		       , CONTENT_BG_COLOR  
+		       , PAGE_NO_LOCATION  
+		       , LIST_LOCATION  
+		       , TOP_LOGO_IMG_SN  
+		       , SUB_LOGO_IMG_SN  
+		       , BKG_IMG_SN  
+		       , LIST_FONT_COLOR  
+		       , BKG_IMG_TYPE  
+		       , SHARE_APLC_DTTM  
+		
+	</sql>
+		
+	<sql id="selectQuery">
+		  SELECT 
+		  <include refid="selectColumnQuery" />
+		  FROM tb_olc_lesn_cartrg A 
+		  WHERE ORG_CD = #{orgCd} 
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery" />
+	</sql>
+
+	<select id="count" parameterType="OlcCartrgVO" resultType="Integer">
+		  SELECT 
+		 	COUNT(*)
+		  FROM tb_olc_lesn_cartrg A 
+		  WHERE ORG_CD = #{orgCd} 
+		  AND (KNOW_SHARE_CD IS NOT NULL OR CNTS_SHARE_CD IS NOT NULL)
+		  <if test = "cntsShareCd != null and cntsShareCd != '' and cntsShareCd == '01' and knowShareCd != null knowShareCd != '' and knowShareCd == '01'">
+		   AND (CNTS_SHARE_CD = #{cntsShareCd} OR KNOW_SHARE_CD = #{knowShareCd) 
+		  </if>
+		  <if test = "searchValue != null and searchValue != ''">
+			<if test = "searchKey != null and searchKey != '' and searchKey == 'OLC'">	
+				AND CARTRG_NM LIKE CONCAT('%',#{searchValue},'%') 
+			</if>
+			<if test = "searchKey != null and searchKey != '' and searchKey == 'NAME'">
+				AND EXISTS ( SELECT USER_NO FROM tb_usr_user_info				
+			                 WHERE USER_NO = A.USER_NO							
+			                 AND USER_NM LIKE CONCAT('%',#{searchValue},'%'))	
+			</if>
+		</if>
+	</select>
+		
+	<select id="list" parameterType="OlcCartrgVO" resultType="OlcCartrgVO">
+		<!-- OLC의 모든 목록을 조회하여 반환한다.  -->
+		<include refid="listQuery" />
+	</select>
+	
+	<select id="listPageing"  parameterType="OlcCartrgVO" resultType="OlcCartrgVO">
+		<!-- OLC의 페이징된 목록을 조회하여 반환한다.  -->
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+			<include refid="listQuery" />
+			AND (KNOW_SHARE_CD IS NOT NULL OR CNTS_SHARE_CD IS NOT NULL)
+			<if test = "cntsShareCd != null and cntsShareCd != '' and cntsShareCd == '01' and knowShareCd != null knowShareCd != '' and knowShareCd == '01'">
+			 AND (CNTS_SHARE_CD = #{cntsShareCd} OR KNOW_SHARE_CD = #{knowShareCd) 
+			</if>
+			<if test = "searchValue != null and searchValue != ''">
+				<if test = "searchKey != null and searchKey != '' and searchKey == 'OLC'">	
+					AND CARTRG_NM LIKE CONCAT('%',#{searchValue},'%')  
+				</if>
+				<if test = "searchKey != null and searchKey != '' and searchKey == 'NAME'">
+					AND EXISTS ( SELECT USER_NO FROM tb_usr_user_info				
+				                 WHERE USER_NO = A.USER_NO							
+				                 AND USER_NM LIKE CONCAT('%',#{searchValue},'%') )	
+				</if>
+			</if>
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		<choose>
+				<when test = "sortKey != null and sortKey == 'CARTRG_NM_ASC'">
+					 ORDER BY CARTRG_NM_ASC	ASC		
+				</when>
+				<when test = "sortKey != null and sortKey == 'CARTRG_NM_DESC'">
+				 	ORDER BY CARTRG_NM_DESC	DESC	
+				</when>
+				<when test = "sortKey != null and sortKey == 'REG_NM_ASC'">
+				 	ORDER BY REG_NM_ASC	ASC		
+				</when>
+				<when test = "sortKey != null and sortKey == 'REG_NM_DESC'">
+				 	ORDER BY REG_NM_DESC	DESC		
+				</when>
+				<when test = "sortKey != null and sortKey == 'SHARE_APLC_DTTM_ASC'">
+				 	ORDER BY SHARE_APLC_DTTM_ASC ASC
+				</when>
+				<when test = "sortKey != null and sortKey == 'SHARE_APLC_DTTM_DESC'">
+					ORDER BY SHARE_APLC_DTTM_DESC DESC
+				</when>
+				<when test = "sortKey != null and sortKey == 'CNTS_SHARE_CD_ASC'">
+					ORDER BY CNTS_SHARE_CD_ASC DESC
+				</when>
+				<when test = "sortKey != null and sortKey == 'CNTS_SHARE_CD_DESC'">
+					ORDER BY CNTS_SHARE_CD_DESC DESC
+				</when>
+				<when test = "sortKey != null and sortKey == 'KNOW_SHARE_CD_ASC'">
+					ORDER BY KNOW_SHARE_CD_ASC DESC
+				</when>
+				<when test = "sortKey != null and sortKey == 'KNOW_SHARE_CD_DESC'">
+					ORDER BY KNOW_SHARE_CD_DESC DESC
+				</when>
+				<otherwise>
+				   ORDER BY REG_DTTM DESC
+				</otherwise>
+			</choose>		
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="select" parameterType="OlcCartrgVO" resultType="OlcCartrgVO">
+		<!-- OLC 정보 단일 레코드를 조회하여 반환한다.  -->
+		<include refid="selectQuery" />
+	</select>
+	
+	<insert id="insert" parameterType="OlcCartrgVO">
+
+		<!-- OLC 정보 단일 레코드를 DB에 Insert하고 결과를 반환한다.  -->
+		 INSERT INTO tb_olc_lesn_cartrg ( 
+		         CARTRG_CD 
+		       , ORG_CD 
+		       , USER_NO 
+		       , CTGR_CD 
+		       , CARTRG_NM 
+		       , CARTRG_TAG 
+		       , CARTRG_ODR 
+		       , USE_YN 
+		       , OPEN_YN 
+		       , REG_NO 
+		       , REG_DTTM 
+		       , MOD_NO 
+		       , MOD_DTTM 
+		       , CNTS_SHARE_CD 
+		       , KNOW_SHARE_CD 
+		 ) VALUES ( 
+	 			 #{cartrgCd}
+		       , #{orgCd} 
+		       , #{userNo} 
+		       , #{ctgrCd} 
+		       , #{cartrgNm} 
+		       , #{cartrgTag} 
+		       , ( SELECT IFNULL(FN_GET_NULL(MAX(CARTRG_ODR)),0) + 1
+		             FROM tb_olc_lesn_cartrg AS SUBQUERY 
+		            WHERE ORG_CD = #{orgCd 
+		              AND USER_NO = #{userNo 
+		              AND CTGR_CD = #{ctgrCd} ) 
+		       , #{useYn} 
+		       , #{openYn} 
+		       , #{regNo} 
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		       , #{modNo} 
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		       , #{cntsShareCd} 
+		       , #{knowShareCd} 
+		 )	
+	</insert>
+	
+	<update id="update" parameterType="OlcCartrgVO">
+		<!-- OLC 정보 단일 레코드를 Update하고 결과를 반환한다. -->
+		UPDATE tb_olc_lesn_cartrg 
+		     SET CTGR_CD = #{ctgrCd} 
+		       , CARTRG_NM = #{cartrgNm} 
+		       , CARTRG_TAG = #{cartrgTag} 
+		       , CARTRG_ODR = #{cartrgOdr} 
+		       , USE_YN = #{useYn} 
+		       , OPEN_YN = #{openYn}
+		       , MOD_NO = #{modNo}
+		       , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		       , KNOW_OPEN_YN = #{knowOpenYn} 
+		   WHERE CARTRG_CD = #{cartrgCd} 
+		     AND ORG_CD = #{orgCd} 
+	</update>
+	
+	<update id="updateBatch" parameterType="list">
+	<!-- OLC 정보의 다중 목록을 Update하고 결과를 반환한다.  -->
+	<!-- List<OlcCartrgVO> olcArray  -->
+		<foreach collection="list" item="item" index="index" open="DECLARE BEGIN" close="; END;" separator=";">
+		     UPDATE tb_olc_lesn_cartrg
+		     SET
+		     	 CTGR_CD = #{item.ctgrCd} 
+		       , CARTRG_NM = #{item.cartrgNm} 
+		       , CARTRG_TAG = #{item.cartrgTag} 
+		       , CARTRG_ODR = #{item.cartrgOdr} 
+		       , USE_YN = #{item.useYn} 
+		       , OPEN_YN = #{item.openYn}
+		       , MOD_NO = #{item.modNo}
+		       , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		       , KNOW_OPEN_YN = #{item.knowOpenYn} 
+		      WHERE CARTRG_CD = #{item.cartrgCd}  
+		</foreach>
+	</update>
+	
+	<delete id="delete" parameterType="OlcCartrgVO">
+		<!-- OLC 정보 단일 레코드를 Delete하고 결과를 반환한다.  -->
+		 DELETE FROM tb_olc_lesn_cartrg 
+		   WHERE CARTRG_CD = #{cartrgCd} 
+		     AND ORG_CD = #{orgCd} 
+	</delete>
+	
+	<update id="updateShare" parameterType="OlcCartrgVO">
+	<!-- OLC 공유 정보 단일 레코드를 Update하고 결과를 반환한다. -->
+		UPDATE tb_olc_lesn_cartrg 
+		     SET MOD_NO = #{modNo} 
+		       , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		       , CNTS_SHARE_CD = #{cntsShareCd} 
+		       , KNOW_SHARE_CD = #{knowShareCd}
+		       , OPEN_YN	   = #{openYn} 	  
+		       , KNOW_OPEN_YN  = #{knowOpenYn}  
+		   WHERE CARTRG_CD = #{cartrgCd} 		  
+		     AND ORG_CD = #{orgCd} 	
+	</update>
+	
+	<update id="updateShareCd" parameterType="OlcCartrgVO">
+	<!-- OLC 정보 단일 레코드를 Update하고 결과를 반환한다. -->
+		UPDATE tb_olc_lesn_cartrg 
+		     SET MOD_NO = #{modNo} 
+		       , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		       , CNTS_SHARE_CD = #{cntsShareCd} 
+		       , KNOW_SHARE_CD = #{knowShareCd} 
+		       , SHARE_APLC_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		   WHERE CARTRG_CD = #{cartrgCd} 		  
+		     AND ORG_CD = #{orgCd} 	
+	</update>
+	
+	<update id="hitsup" parameterType="OlcCartrgVO">
+	<!-- 해당글의 조회수를 1 증가시킨다. -->
+		UPDATE	tb_olc_lesn_cartrg			
+			   SET	HITS  =	 IFNULL(FN_GET_NULL(HITS),0) + 1 		
+			 WHERE	CARTRG_CD = #{cartrgCd} 	
+	</update>
+	
+	<update id="updateDesing" parameterType="OlcCartrgVO">
+	<!-- OLC 정보 단일 레코드를 Update하고 결과를 반환한다. - 디자인수정 -->
+		UPDATE tb_olc_lesn_cartrg 
+		     SET MOD_NO = #{modNo} 
+		       , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 
+		       , OLC_NAME_COLOR = #{olcNameColor} 
+		       , LIST_BG_COLOR = #{listBgColor} 
+		       , CONTENT_BG_COLOR = #{contentBgColor} 
+		       , PAGE_NO_LOCATION = #{pageNoLocation} 
+		       , LIST_LOCATION = #{listLocation} 
+		       , TOP_LOGO_IMG_SN = #{topLogoImgSn} 
+		       , SUB_LOGO_IMG_SN = #{subLogoImgSn} 
+		       , BKG_IMG_SN = #{bkgImgSn} 
+		       , LIST_FONT_COLOR = #{listFontColor}  
+		       , BKG_IMG_TYPE = #{bkgImgType}  
+		   WHERE CARTRG_CD = #{cartrgCd} 		  
+		     AND ORG_CD = #{orgCd} 	
+	</update>
+	
+	<update id="updateShareContents" parameterType="OlcCartrgVO">
+	<!-- OLC 정보 단일 레코드를 Update하고 결과를 반환한다. - 콘텐츠공유 -->
+		UPDATE tb_olc_lesn_cartrg 
+		     SET MOD_NO = #{modNo} 
+		       , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		       , OLC_NAME_COLOR = #{olcNameColor} 
+		       , LIST_BG_COLOR = #{listBgColor} 
+		       , CONTENT_BG_COLOR = #{contentBgColor} 
+		       , PAGE_NO_LOCATION = #{pageNoLocation} 
+		       , LIST_LOCATION = #{listLocation} 
+		       , TOP_LOGO_IMG_SN = #{topLogoImgSn} 
+		       , SUB_LOGO_IMG_SN = #{subLogoImgSn} 
+		       , BKG_IMG_SN = #{bkgImgSn} 
+		       , LIST_FONT_COLOR = #{listFontColor}  
+		       , BKG_IMG_TYPE = #{bkgImgType}  
+		   WHERE CARTRG_CD = #{cartrgCd} 		  
+		     AND ORG_CD = #{orgCd} 	
+	</update>
+	
+	<update id="updateShareKnow" parameterType="OlcCartrgVO">
+	<!-- OLC 정보 단일 레코드를 Update하고 결과를 반환한다. - 지식공유 -->
+		UPDATE tb_olc_lesn_cartrg 
+		     SET MOD_NO = #{modNo} 
+		       , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		       , OLC_NAME_COLOR = #{olcNameColor} 
+		       , LIST_BG_COLOR = #{listBgColor} 
+		       , CONTENT_BG_COLOR = #{contentBgColor} 
+		       , PAGE_NO_LOCATION = #{pageNoLocation} 
+		       , LIST_LOCATION = #{listLocation} 
+		       , TOP_LOGO_IMG_SN = #{topLogoImgSn} 
+		       , SUB_LOGO_IMG_SN = #{subLogoImgSn} 
+		       , BKG_IMG_SN = #{bkgImgSn} 
+		       , LIST_FONT_COLOR = #{listFontColor}  
+		       , BKG_IMG_TYPE = #{bkgImgType}  
+		   WHERE CARTRG_CD = #{cartrgCd} 		  
+		     AND ORG_CD = #{orgCd} 	
+	</update>
+	
+</mapper>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.lecture.assignment.service.impl.AssignmentSubMapper">
+	<select id="selectKey" resultType="Integer">
+		SELECT nextval(SQ_LEC_ASMT_SUB)
+	</select>
+	
+	<select id="list" parameterType="assignmentVO" resultType="assignmentSubVO">
+		<!--   -->
+		SELECT  CRS_CRE_CD												
+		        ,  ASMT_SN													
+		        ,  ASMT_SUB_SN												
+		        ,  ASMT_TITLE												
+		        ,  DIFF_LVL_CD												
+		        ,  DEV_LANG_CD												
+		        ,  ASMT_CTS												
+		        ,  EDITOR_YN												
+		        ,  REG_NO													
+		        ,  REG_DTTM												
+		        ,  MOD_NO													
+		        ,  MOD_DTTM												
+			     ,  (SELECT FN_GET_USER_NAME(MOD_NO)) AS MOD_NM	
+			     ,  (SELECT FN_GET_USER_NAME(REG_NO)) AS REG_NM	
+		     FROM  tb_lec_asmt_sub											
+		    WHERE  CRS_CRE_CD 	= #{crsCreCd}									
+		      AND  ASMT_SN 	= #{asmtSn}									
+		    ORDER  BY REG_DTTM
+	</select>
+	
+	<select id="select" parameterType="assignmentSubVO" resultType="assignmentSubVO">
+		<!--   -->
+		SELECT  CRS_CRE_CD												
+		        ,  ASMT_SN													
+		        ,  ASMT_SUB_SN												
+		        ,  ASMT_TITLE	
+		        ,  DIFF_LVL_CD												
+		        ,  DEV_LANG_CD												
+		        ,  ASMT_CTS												
+		        ,  EDITOR_YN												
+		        ,  REG_NO													
+		        ,  REG_DTTM												
+		        ,  MOD_NO													
+		        ,  MOD_DTTM												
+			     ,  (SELECT FN_GET_USER_NAME(MOD_NO)) AS MOD_NM	
+			     ,  (SELECT FN_GET_USER_NAME(REG_NO)) AS REG_NM	
+		     FROM  tb_lec_asmt_sub											
+		    WHERE  CRS_CRE_CD = #{crsCreCd}									
+		      AND  ASMT_SN = #{asmtSn}										
+		      AND  ASMT_SUB_SN = #{asmtSubSn}
+	</select>
+	
+	<insert id="insert" parameterType="assignmentSubVO">
+		<!--   -->
+		INSERT  INTO tb_lec_asmt_sub (					
+		           CRS_CRE_CD								
+		        ,  ASMT_SN									
+		        ,  ASMT_SUB_SN								
+		        ,  ASMT_TITLE
+		        ,  DIFF_LVL_CD												
+		        ,  DEV_LANG_CD			        								
+		        ,  ASMT_CTS								
+		        ,  EDITOR_YN								
+		        ,  REG_NO									
+		        ,  REG_DTTM								
+		        ,  MOD_NO									
+		        ,  MOD_DTTM								
+			) VALUES (										
+		           #{crsCreCd}								
+		        ,  #{asmtSn}									
+		        ,  #{asmtSubSn}								
+		        ,  #{asmtTitle}								
+		        ,  IFNULL(FN_GET_NULL(#{diffLvlCd}) , DIFF_LVL_CD)							
+		        ,  IFNULL(FN_GET_NULL(#{devLangCd}) , DEV_LANG_CD)							
+		        ,  #{asmtCts}								
+		        ,  #{editorYn}
+		        ,  #{regNo}									
+		        ,  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 	
+		        ,  #{modNo}									
+		        ,  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 	
+			)
+	</insert>
+	
+	<update id="update" parameterType="assignmentSubVO">
+		<!--  -->
+		UPDATE  tb_lec_asmt_sub                                     	
+		  	   SET  CRS_CRE_CD    =  #{crsCreCd}                           	
+		        ,   ASMT_SN       =  #{asmtSn}                             	
+		        ,   ASMT_SUB_SN   =  #{asmtSubSn}                          	
+		        ,   ASMT_TITLE    =  #{asmtTitle}    
+	          <if test = 'diffLvlCd != null and diffLvlCd != ""'>   
+		        ,   DIFF_LVL_CD   =  #{diffLvlCd}                          	
+		        ,   DEV_LANG_CD   =  #{devLangCd}               
+		      </if>
+		        ,   ASMT_CTS      =  #{asmtCts}                            	
+		        ,   EDITOR_YN     =  #{editorYn}                            	
+		        ,   MOD_NO        =  #{modNo}     							
+		        ,   MOD_DTTM      =  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 
+		    WHERE  CRS_CRE_CD     =  #{crsCreCd}                           	
+		      AND  ASMT_SN        =  #{asmtSn}                              	
+		      AND  ASMT_SUB_SN    =  #{asmtSubSn}
+	</update>
+	
+	<delete id="delete" parameterType="assignmentSubVO">
+		<!--   -->
+		DELETE  FROM tb_lec_asmt_sub              		
+		  	 WHERE  CRS_CRE_CD   = 		#{crsCreCd}         	
+		      AND  ASMT_SN      = 		#{asmtSn}       
+		      AND  ASMT_SUB_SN  = 		#{asmtSubSn}    	
+	</delete>
+	
+	<delete id="deleteAll" parameterType="assignmentVO">
+		<!--   -->
+		DELETE  FROM tb_lec_asmt_sub              		
+		  	 WHERE  CRS_CRE_CD   = 		#{crsCreCd}         	
+		      AND  ASMT_SN      = 		#{asmtSn}           	
+	</delete>
+	
+	<select id="listCodeSub" parameterType="assignmentVO" resultType="assignmentSubVO">
+		<!--   -->
+		SELECT  A.CRS_CRE_CD												
+		        ,  A.ASMT_SN													
+		        ,  A.ASMT_SUB_SN												
+		        ,  A.ASMT_TITLE												
+		        ,  A.DIFF_LVL_CD												
+		        ,  A.DEV_LANG_CD												
+		        ,  A.ASMT_CTS												
+		        ,  A.EDITOR_YN												
+		        ,  A.REG_NO													
+		        ,  A.REG_DTTM												
+		        ,  A.MOD_NO													
+		        ,  A.MOD_DTTM												
+			    ,  (SELECT FN_GET_USER_NAME(A.MOD_NO)) AS MOD_NM	
+			    ,  (SELECT FN_GET_USER_NAME(A.REG_NO)) AS REG_NM
+			    ,  B.STD_NO
+			    ,  B.SEND_TITLE
+			    ,  B.SEND_CTS
+			    ,  B.GPT_RESULT
+			    ,  B.SCORE	
+		     FROM  tb_lec_asmt_sub A
+		     LEFT JOIN tb_lec_asmt_send_dtl B on A.CRS_CRE_CD = B.CRS_CRE_CD and A.ASMT_SN = B.ASMT_SN and A.ASMT_SUB_SN = B.ASMT_SUB_SN and B.STD_NO = #{stdNo}									
+		    WHERE  A.CRS_CRE_CD 	= #{crsCreCd}									
+		      AND  A.ASMT_SN 	= #{asmtSn}									
+		    ORDER  BY REG_DTTM
+	</select>
+	
+	<insert id="saveAsmtSubScore" parameterType="assignmentSendVO" >
+		INSERT INTO tb_lec_asmt_send_dtl
+			(
+			  CRS_CRE_CD
+			, STD_NO
+			, ASMT_SN
+			, ASMT_SUB_SN
+			, SCORE
+			, MOD_NO
+			, MOD_DTTM
+			)VALUES (
+			#{crsCreCd}
+			, #{stdNo}
+			, #{asmtSn}
+			, #{asmtSubSn}
+			, #{score}
+			, #{modNo}
+			, DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+			)ON DUPLICATE KEY UPDATE
+			   SCORE = #{score}
+			 , MOD_NO = #{modNo}
+			 , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+	</insert>
+	
+</mapper>

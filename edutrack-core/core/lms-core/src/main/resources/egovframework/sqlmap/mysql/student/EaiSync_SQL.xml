@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.student.sync.service.impl.EaiSyncMapper">
+
+	<sql id="selectColumnQuery">
+		 		   EAINUM 										
+		        ,  LINKID		 								
+		        ,  EAICIVILDOCNUM								
+		        ,  NM											
+		        ,  RESIDREGISTNUM								
+		        ,  EDUCOMPDATE									
+		        ,  EDUCLASS									
+		        ,  VISITAREACD									
+		        ,  PURPOSELARGEGROUP							
+		        ,  CELL										
+		        ,  ADDR1							 			
+		        ,  ADDR2										
+		        ,  POSTNO										
+		        ,  TEL											
+		        ,  COMPANYTELNUM								
+		        ,  TURNINPERSID						 		
+		        ,  LINKSTATUS									
+	</sql>
+
+	<sql id="listQuery">
+		  SELECT 
+		  <include refid="selectColumnQuery" />									
+		     FROM  EAI_NKOREDUCOMPSEND				  			
+		    WHERE  NM like CONCAT('%',IFNLL(#{nm},''),'%')
+		      AND  LINKSTATUS = NVL((#{linkstatus}), LINKSTATUS)
+	</sql>
+		
+	<select id="count" parameterType="eaiNkoreducompsendVO" resultType="Integer">
+		SELECT 
+	 		COUNT(*)
+	 	FROM  EAI_NKOREDUCOMPSEND	
+	     WHERE  NM like CONCAT('%',IFNLL(#{nm},''),'%')
+	      AND  LINKSTATUS = NVL((#{linkstatus}), LINKSTATUS)	 	
+	</select>	
+	<select id="list" parameterType="eaiNkoreducompsendVO" resultType="eaiNkoreducompsendVO">
+		<!--  Eai 연동 목록 조회  -->
+		<include refid="listQuery" />
+		ORDER  BY EDUCOMPDATE DESC		
+	</select>
+		
+	<select id="listPageing"  parameterType="eaiNkoreducompsendVO" resultType="eaiNkoreducompsendVO">
+		<!-- Eai 연동 목록 조회 (페이징 처리)  -->
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+			<include refid="listQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>	
+		ORDER  BY EDUCOMPDATE DESC
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<update id="updateNkoreducompsend" parameterType="eaiNkoreducompsendVO">
+		<!-- EAI 전송 초기화(EAI_NKOREDUCOMPSEND)  -->
+		 	UPDATE 	EAI_NKOREDUCOMPSEND 							
+		      SET	LINKSTATUS = 'N'								
+		    WHERE 	EAINUM = #{eainum}								
+	</update>
+	
+	<update id="updateEaisendrecvstsmt" parameterType="eaiNkoreducompsendVO">
+		<!-- EAI 전송 초기화(TBEAISENDRECVSTSMT)  -->
+		 	UPDATE 	TBEAISENDRECVSTSMT 							
+		      SET  LINKSTATUS = 'N'							
+		  	 WHERE  LINKID = #{linkid}							
+	</update>
+	
+</mapper>

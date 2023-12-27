@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.createcoursesubject.service.impl.CreateCourseOfflineSubjectMapper">	
+
+	<sql id="selectQuery">
+		SELECT	A.CRS_CRE_CD														
+	        ,  A.SBJ_CD															
+	      	 ,  B.SBJ_NM															
+	      	 ,  B.SBJ_CTGR_CD														
+	      	 ,  C.SBJ_CTGR_NM														
+	        ,  A.EDU_MTHD_CD														
+	        ,  ( SELECT FN_GET_CODE_NAME('LEC_KIND_CD',A.EDU_MTHD_CD)				
+	                ) AS EDU_MTHD_NM										
+	      	 ,  NVL((A.EXAM_RATIO),0) AS EXAM_RATIO									
+	      	 ,  NVL((A.ASMT_RATIO),0) AS ASMT_RATIO	      	 
+	      	 ,  A.ETC_1_RATIO_NM													
+	      	 ,  NVL((A.ETC_1_RATIO),0) AS ETC_1_RATIO							
+	      	 ,  A.ETC_2_RATIO_NM													
+	      	 ,  NVL((A.ETC_2_RATIO),0) AS ETC_2_RATIO								
+	      	 ,  A.ETC_3_RATIO_NM													
+	      	 ,  NVL((A.ETC_3_RATIO),0) AS ETC_3_RATIO								
+	      	 ,  A.PLUS_SCORE_USE_YN													
+	      	 ,  A.REG_NO															
+	      	 ,  A.REG_DTTM															
+	      	 ,  A.MOD_NO															
+	      	 ,  A.MOD_DTTM															
+		  	 ,  (SELECT FN_GET_USER_NAME(A.MOD_NO) ) AS MOD_NM				
+		 	 ,  (SELECT FN_GET_USER_NAME(A.REG_NO) ) AS REG_NM				
+	     FROM  tb_crs_cre_crs_ofln_sbj A, tb_crs_ofln_sbj B, tb_crs_sbj_ctgr C		
+	    WHERE  A.SBJ_CD = B.SBJ_CD													
+	      AND  B.SBJ_CTGR_CD = C.SBJ_CTGR_CD										
+	      AND  A.CRS_CRE_CD = #{crsCreCd}   
+	</sql>
+	
+	<sql id="selectSearchColumnQuery">
+				 A.SBJ_CD 																	
+		       , A.SBJ_NM	 																
+		       , A.SBJ_CTGR_CD																
+		       , B.SBJ_CTGR_NM																
+		       , ( SELECT COUNT(*) FROM tb_crs_sbj_cnts 									
+		            WHERE SBJ_CD = A.SBJ_CD ) AS UNIT_CNT					
+	</sql>
+	<sql id="selectSearchQuery">
+		  SELECT 
+		  <include refid="selectSearchColumnQuery" />			
+		  FROM tb_crs_ofln_sbj A, tb_crs_sbj_ctgr B						
+		  WHERE A.SBJ_CTGR_CD = B.SBJ_CTGR_CD				
+	</sql>
+	
+	<select id="list" parameterType="createOfflineSubjectVO" resultType="createOfflineSubjectVO">
+	    <include refid="selectQuery" />
+	    ORDER  BY A.SBJ_ODR	
+	</select>
+	<select id="select" parameterType="createOfflineSubjectVO" resultType="createOfflineSubjectVO">
+	    <include refid="selectQuery" />
+	     AND  A.SBJ_CD = #{sbjCd}		
+	</select>
+
+     <insert id="insert" parameterType="createOfflineSubjectVO">
+	 	INSERT  INTO tb_crs_cre_crs_ofln_sbj (				
+	 		    CRS_CRE_CD                               	
+	        ,  SBJ_CD                                     	
+	        ,  SBJ_ODR										
+	        ,  EDU_MTHD_CD									
+	        ,  EXAM_RATIO									
+	        ,  ASMT_RATIO									
+	        ,  ETC_1_RATIO_NM								
+	        ,  ETC_1_RATIO									
+	        ,  ETC_2_RATIO_NM								
+	        ,  ETC_2_RATIO									
+	        ,  ETC_3_RATIO_NM								
+	        ,  ETC_3_RATIO									
+	        ,  PLUS_SCORE_USE_YN							
+	        ,  REG_NO                                     	
+	        ,  REG_DTTM                                   	
+	           )											
+		SELECT  #{crsCreCd}                                  	
+	        ,  #{sbjCd}                                     	
+	        ,  NVL((MAX(SBJ_ODR)),0) + 1					
+	        ,  #{eduMthdCd}									
+	        ,  #{examRatio}									
+	        ,  #{asmtRatio}									
+	        ,  #{etc1RatioNm}								
+	        ,  #{etc1Ratio}									
+	        ,  #{etc2RatioNm}								
+	        ,  #{etc2Ratio}									
+	        ,  #{etc3RatioNm}								
+	        ,  #{etc3Ratio}									
+	        ,  #{plusScoreUseYn}								
+	        ,  #{regNo}                                     	
+	        ,  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')    	
+	     FROM  tb_crs_cre_crs_ofln_sbj						
+	    WHERE  CRS_CRE_CD = #{crsCreCd} 
+    </insert>
+
+	<delete id="delete" parameterType="createOfflineSubjectVO">
+	 	DELETE  FROM tb_crs_cre_crs_ofln_sbj		
+	  	WHERE  CRS_CRE_CD	= #{crsCreCd}				
+	      		AND  SBJ_CD 		= #{sbjCd}      
+    </delete>
+
+	<update id="updateBatch" parameterType="list" >
+		<foreach collection="list" item="item" index="index" open="DECLARE BEGIN" close="; END;" separator=";">
+		  UPDATE  tb_crs_cre_crs_ofln_sbj
+		  SET
+			       SBJ_ODR 			= #{item.sbjOdr}							  	
+		        ,  EDU_MTHD_CD			= #{item.eduMthdCd}							
+		        ,  EXAM_RATIO 			= #{item.examRatio}							
+		        ,  ASMT_RATIO 			= #{item.asmtRatio}							
+		        ,  ETC_1_RATIO_NM 		= #{item.etc1RatioNm}							
+		        ,  ETC_1_RATIO 		= #{item.etc1Ratio}							
+		        ,  ETC_2_RATIO_NM 		= #{item.etc2RatioNm}							
+		        ,  ETC_2_RATIO 		= #{item.etc2Ratio}							
+		        ,  ETC_3_RATIO_NM 		= #{item.etc3RatioNm}							
+		        ,  ETC_3_RATIO 		= #{item.etc3Ratio}							
+		        ,  PLUS_SCORE_USE_YN 	= #{item.plusScoreUseYn}						
+		        ,  MOD_NO  			= #{item.modNo}                             	
+		        ,  MOD_DTTM 			= DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+		   WHERE  CRS_CRE_CD 			= #{item.crsCreCd}						  		
+      				AND  SBJ_CD 				= #{item.sbjCd}			
+		</foreach>	     
+	</update>
+
+   <update id="update" parameterType="createOfflineSubjectVO">
+			UPDATE  tb_crs_cre_crs_ofln_sbj 		              				
+		      SET  SBJ_ODR 			= #{sbjOdr}							  	
+		        ,  EDU_MTHD_CD			= #{eduMthdCd}							
+		        ,  EXAM_RATIO 			= #{examRatio}							
+		        ,  ASMT_RATIO 			= #{asmtRatio}							
+		        ,  ETC_1_RATIO_NM 		= #{etc1RatioNm}							
+		        ,  ETC_1_RATIO 		= #{etc1Ratio}							
+		        ,  ETC_2_RATIO_NM 		= #{etc2RatioNm}							
+		        ,  ETC_2_RATIO 		= #{etc2Ratio}							
+		        ,  ETC_3_RATIO_NM 		= #{etc3RatioNm}							
+		        ,  ETC_3_RATIO 		= #{etc3Ratio}							
+		        ,  PLUS_SCORE_USE_YN 	= #{plusScoreUseYn}						
+		        ,  MOD_NO  			= #{modNo}                             	
+		        ,  MOD_DTTM 			= DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+		    WHERE  CRS_CRE_CD 			= #{crsCreCd}						  		
+		      AND  SBJ_CD 				= #{sbjCd}	
+    </update>
+
+     <insert id="insertCopy" parameterType="createOfflineSubjectVO">
+			INSERT  INTO tb_crs_cre_crs_ofln_sbj (			
+		 		    CRS_CRE_CD                              
+		        ,  SBJ_CD                                  
+		        ,  SBJ_ODR									
+		        ,  EDU_MTHD_CD								
+		        ,  EXAM_RATIO								
+		        ,  ASMT_RATIO								
+		        ,  ETC_1_RATIO_NM							
+		        ,  ETC_1_RATIO								
+		        ,  ETC_2_RATIO_NM							
+		        ,  ETC_2_RATIO								
+		        ,  ETC_3_RATIO_NM							
+		        ,  ETC_3_RATIO								
+		        ,  PLUS_SCORE_USE_YN						
+		        ,  REG_NO                                  
+		        ,  REG_DTTM                                
+		           )										
+			SELECT  #{crsCreCd}                               
+		        ,  SBJ_CD                                  
+		        ,  SBJ_ODR									
+		        ,  EDU_MTHD_CD					
+		        ,  null									
+		        ,  null									
+		        ,  null									
+		        ,  null									
+		        ,  null									
+		        ,  null									
+		        ,  null									
+		        ,  null									
+		        ,  null									
+		        ,  #{regNo}                                  
+		        ,  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')  
+		     FROM  tb_crs_crs_ofln_sbj						
+		    WHERE  CRS_CD = #{crsCd}
+    </insert>
+
+	<select id="count" parameterType="createOfflineSubjectVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM tb_crs_ofln_sbj A, tb_crs_sbj_ctgr B						
+		WHERE A.SBJ_CTGR_CD = B.SBJ_CTGR_CD	
+     		AND A.SBJ_CD NOT IN (SELECT SBJ_CD FROM tb_crs_cre_crs_ofln_sbj	
+		                          WHERE CRS_CRE_CD = #{crsCreCd} )	
+		<if test = "sbjCtgrCd != null and sbjCtgrCd != ''">                          			
+	    	AND A.SBJ_CTGR_CD = #{sbjCtgrCd}		
+	    </if>	
+	    <if test = "orgCd != null and orgCd != ''">       						
+	    	AND A.ORG_CD = #{orgCd}	
+	    </if>										
+	    <if test = "sbjNm != null and sbjNm != ''">       						
+	    	AND A.SBJ_NM like CONCAT('%',#{sbjNm},'%')	
+	    </if>				
+	</select>
+	
+	<select id="listSearch" parameterType="createOfflineSubjectVO" resultType="offlineSubjectVO">
+	    <include refid="selectSearchQuery" />
+     		AND A.SBJ_CD NOT IN (SELECT SBJ_CD FROM tb_crs_cre_crs_ofln_sbj	
+		                          WHERE CRS_CRE_CD = #{crsCreCd} )	
+		<if test = "sbjCtgrCd != null and sbjCtgrCd != ''">                          			
+	    	AND A.SBJ_CTGR_CD = #{sbjCtgrCd}		
+	    </if>	
+	    <if test = "orgCd != null and orgCd != ''">       						
+	    	AND A.ORG_CD = #{orgCd}	
+	    </if>										
+	    <if test = "sbjNm != null and sbjNm != ''">       						
+	    	AND A.SBJ_NM like CONCAT('%',#{sbjNm},'%')	
+	    </if>										
+						
+   		ORDER BY SBJ_NM		
+   </select>
+	<select id="listSearchPageing" parameterType="createOfflineSubjectVO" resultType="offlineSubjectVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectSearchQuery" />
+     		AND A.SBJ_CD NOT IN (SELECT SBJ_CD FROM tb_crs_cre_crs_ofln_sbj	
+		                          WHERE CRS_CRE_CD = #{crsCreCd} )	
+		<if test = "sbjCtgrCd != null and sbjCtgrCd != ''">                          			
+	    	AND A.SBJ_CTGR_CD = #{sbjCtgrCd}		
+	    </if>	
+	    <if test = "orgCd != null and orgCd != ''">       						
+	    	AND A.ORG_CD = #{orgCd}	
+	    </if>										
+	    <if test = "sbjNm != null and sbjNm != ''">       						
+	    	AND A.SBJ_NM like CONCAT('%', #{sbjNm}, '%')		
+	    </if>										
+						
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>			
+		ORDER BY SBJ_NM	
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+
+</mapper>	

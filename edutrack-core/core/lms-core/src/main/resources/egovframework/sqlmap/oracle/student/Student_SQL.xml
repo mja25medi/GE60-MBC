@@ -1,0 +1,1095 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.student.student.service.impl.StudentMapper">
+	<select id="selectKey" resultType="String">
+		SELECT 'EN'||LPAD(SQ_STD_STD.nextVal,10,'0') AS crsCd FROM DUAL
+	</select>
+	
+	<sql id="getListStudentQuery">
+		 SELECT T.*																																		
+		      FROM (																																		
+		     SELECT A.STD_NO 																	
+		          , A.CRS_CRE_CD 																
+		          , A.DECLS_NO 																
+		          , A.USER_NO 																	
+		          , A.ENRL_STS 																
+		          , A.ENRL_START_DTTM 															
+		          , A.ENRL_END_DTTM 															
+		          , A.AUDIT_END_DTTM 															
+		          , A.ENRL_APLC_DTTM 															
+		          , A.ENRL_CANCEL_DTTM 														
+		          , A.ENRL_CERT_DTTM 															
+		          , A.ENRL_CPLT_DTTM 															
+		          , A.CERT_APLC_DTTM 															
+		          , A.EDU_NO 																	
+		          , A.CPLT_NO 																	
+		          , A.CERT_STS 																	
+		          , A.CERT_SCORE																	
+		          , A.CERT_PASS_YN																	
+		          , A.GET_CREDIT 																
+		          , A.STAY_APLC_YN 															
+		          , A.PAYM_MTHD_CD 															
+		          , A.PAYM_PRICE 																
+		          , A.PAYM_STS_CD 																
+		          , A.PAYM_DTTM																
+		          , A.PAYM_NO																	
+		          , A.PAYM_BANK_NM																
+		          , A.UEINS_APLC_YN															
+		          , A.UEINS_APLY_YN															
+		          , A.REFUND_PRICE																
+		          , A.DOC_RECEIPT_YN															
+		          , A.DOC_RECEIPT_NO															
+		          , A.RECEIPT_DT																
+		          , A.RECEIPT_USER_NM															
+		          , A.REPAY_PRICE																
+		          , A.REPAY_MTHD_CD															
+		          , A.REPAY_STS_CD 															
+		          , A.REPAY_REQ_DTTM															
+		          , A.REPAY_DTTM																
+		          , A.REPAY_BANK_NM															
+		          , A.REPAY_ACNT_NO															
+		          , A.REPAY_USER_NM															
+		          , A.REPAY_REASON																
+		          , A.COMP_NM 																	
+		          , A.BIZZ_NO 																	
+		          , A.AREA_CD 																	
+		          , A.ORG_CD 																	
+		          , ( SELECT ORG_NM FROM TB_ORG_ORG_INFO 										
+		               WHERE ORG_CD = A.ORG_CD) AS ORG_NM										
+		          , A.EMP_NO 																	
+		          , A.REG_NO 																	
+		          , (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) AS REG_NM 					
+		          , A.REG_DTTM 																
+		          , A.MOD_NO 																	
+		          , (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) AS MOD_NM 					
+		          , A.MOD_DTTM 																
+		          , A.PAYM_ITGY_DIV 															
+		          , A.PAYM_OID_NO 																
+		          , A.SCORE_ECLT_YN															
+		          , A.REPAY_RSLT_CD															
+		          , B.USER_NM															
+		          , B.BIRTH															
+		          , B.USER_NM_GANA															
+	              , B.USER_NM_ENG															
+	              , B.SEX_CD															
+	              , B.AREA_CD AS USER_AREA_CD															
+	              , B.USER_DIV_CD															
+	              , B.EMAIL															
+	              , B.DEPT_CD															
+	              , (SELECT DEPT.DEPT_NM FROM TB_USR_DEPT_INFO DEPT WHERE DEPT.ORG_CD = B.ORG_CD AND DEPT.DEPT_CD = B.DEPT_CD) AS DEPT_NM	
+	              , B.MOBILE_NO															
+	              , B.HOME_PHONENO															
+	              , B.COMP_FAX_NO															
+	              , B.COMP_PHONENO															
+	              , B.ETC_PHONENO															
+	              , B.COMP_ADDR_1															
+	              , B.HOME_ADDR_1															
+	              , B.DISABLILITY_YN															
+	              , B.INTEREST_FIELD_CD															
+	              , (SELECT CMNT.CMNT_CTS FROM TB_USR_USER_CMNT CMNT WHERE CMNT.USER_NO = B.USER_NO) AS MEMO   	
+		          , C.USER_ID																	
+		          , (SELECT FN_GET_CRS_STD_PRGR(A.CRS_CRE_CD, A.STD_NO) FROM DUAL) AS TOT_RATIO			
+		          , NVL(( SELECT TOT_SCORE FROM TB_STD_EDU_RSLT								
+		                   WHERE STD_NO = A.STD_NO ), 0) AS TOT_SCORE							
+		       FROM TB_STD_STD A, TB_USR_USER_INFO B, TB_USR_LOGIN C							
+		      WHERE A.CRS_CRE_CD = NVL(#{crsCreCd}, A.CRS_CRE_CD)								
+		        AND A.USER_NO = B.USER_NO														
+		        AND B.USER_NO = C.USER_NO														
+		        AND C.USER_STS = 'U'															
+		        AND NVL(DECODE(#{dateSearchType},'CPLT',A.ENRL_CPLT_DTTM, A.ENRL_APLC_DTTM), A.REG_DTTM)								
+		            BETWEEN DECODE(#{startDate}, null, '19900101000001', '', '19900101000001', REPLACE(#{startDate},'.','')||'000001')	
+		            AND  DECODE(#{endDate}, null, '99991231235959', '', '99991231235959', REPLACE(#{endDate},'.','')||'235959')		
+		        AND NVL(#{enrlSts}, '|E|S|N|C|F|') like '%'||A.ENRL_STS||'%'						
+		<if test = "declsNo != null and declsNo != ''">
+			  AND A.DECLS_NO = DECODE(#{declsNo}, null, A.DECLS_NO, 0, A.DECLS_NO, #{declsNo})				
+		</if>
+		<if test = "declsNo != null and searchValue != ''">
+			AND A.DECLS_NO = DECODE(#{declsNo}, null, A.DECLS_NO, 0, A.DECLS_NO, #{declsNo})	
+		</if>
+		<if test = "userNm != null and userNm != ''">
+		  	AND B.USER_NM||C.USER_ID like '%'||NVL(#{userNm}, '')||'%'		
+		</if>
+		<if test = "ueinsAplcYn != null and ueinsAplcYn != ''">
+		  	  AND A.UEINS_APLC_YN = #{ueinsAplcYn}		
+		</if>
+		<if test = "ueinsAplyYn != null and ueinsAplyYn != ''">
+		  	AND A.UEINS_APLY_YN = #{ueinsAplyYn}			
+		</if>
+		<if test = "searchMode != null and searchMode == 'REPAY'">
+		  	AND A.REPAY_STS_CD is not null					
+		</if>
+		<if test = "repayStsCd != null and repayStsCd != ''">
+		  	 AND A.REPAY_STS_CD = #{repayStsCd}		
+		</if>
+		<if test = "certSts != null and certSts != ''">
+		  	 AND A.CERT_STS = #{certSts}		
+		</if>
+		<if test = "certPassYn != null and certPassYn != ''">
+		  	 AND A.CERT_PASS_YN = #{certPassYn}		
+		</if>
+		<if test = "orgCd != null and orgCd != ''">
+		   	AND B.ORG_CD = #{orgCd}														
+		</if>
+		       ) T			
+		<choose>
+		<when test = "sortKey != null and sortKey == 'EDU_NO_ASC'">
+			 ORDER BY EDU_NO ASC
+		</when>
+		<when test = "sortKey != null and sortKey == 'EDU_NO_DESC'">
+			 ORDER BY EDU_NO DESC
+		</when>
+		<when test = "sortKey != null and sortKey == 'DECLS_NO_ASC'">
+			 ORDER BY DECLS_NO ASC
+		</when>
+		<when test = "sortKey != null and sortKey == 'DECLS_NO_DESC'">
+			 ORDER BY DECLS_NO DESC
+		</when>
+		<when test = "sortKey != null and sortKey == 'USER_NM_ASC'">
+			 ORDER BY USER_NM ASC	
+		</when>
+		<when test = "sortKey != null and sortKey == 'USER_NM_DESC'">
+			 ORDER BY USER_NM DESC
+		</when>
+		<when test = "sortKey != null and sortKey == 'USER_ID_ASC'">
+			 ORDER BY USER_ID ASC		
+		</when>
+		<when test = "sortKey != null and sortKey == 'USER_ID_DESC'">
+			 ORDER BY USER_ID DESC
+		</when>
+		<when test = "sortKey != null and sortKey == 'COMP_NM_ASC'">
+			   ORDER BY COMP_NM ASC	
+		</when>
+		<when test = "sortKey != null and sortKey == 'COMP_NM_DESC'">
+			 ORDER BY COMP_NM DESC
+		</when>
+		<when test = "sortKey != null and sortKey == 'ENRL_APLC_DTTM_ASC'">
+			  ORDER BY ENRL_APLC_DTTM ASC
+		</when>
+		<when test = "sortKey != null and sortKey == 'ENRL_APLC_DTTM_DESC'">
+			   ORDER BY ENRL_APLC_DTTM DESC	
+		</when>
+		<otherwise>
+			ORDER BY DECODE(#{sort1}, 'DECLS_NO', LPAD(DECLS_NO,3,'0'), 'ORG_NM', ORG_NM, 'USER_NM', USER_NM, 'EDU_NO', LPAD(EDU_NO,4,'0'), 'ENRL_STS', ENRL_STS, LPAD(DECLS_NO,4,'0')) ASC	
+		                 , DECODE(#{sort2}, 'DECLS_NO', LPAD(DECLS_NO,3,'0'), 'ORG_NM', ORG_NM, 'USER_NM', USER_NM, LPAD(EDU_NO,3,'0') ) ASC 														
+		                 , DECODE(#{sort3}, 'DECLS_NO', LPAD(DECLS_NO,3,'0'), 'ORG_NM', ORG_NM, 'USER_NM', USER_NM, TO_CHAR('99991231235959' - ENRL_APLC_DTTM) ) ASC								
+		</otherwise>
+	</choose>
+	</sql>
+	
+	<sql id="getStudentMergeQuery">
+	 		MERGE  INTO TB_STD_STD STD															
+		 		USING  (																			
+		 				SELECT C.CRS_CRE_CD, C.USER_NO												
+		 				  FROM (SELECT #{crsCreCd} as CRS_CRE_CD, #{userNo} as USER_NO FROM DUAL ) C	
+		 			    ) S																			
+		 		   ON  (																			
+		 				S.CRS_CRE_CD 	= STD.CRS_CRE_CD											
+		 				AND S.USER_NO 	= STD.USER_NO												
+		 			   )																			
+		 		 WHEN  MATCHED THEN																	
+		 	   UPDATE																				
+		 		  SET  STD.ENRL_STS 		= #{enrlSts}												
+		 	   		,  STD.STAY_APLC_YN 	= #{stayAplcYn}											
+		 	   		,  STD.STAY_APLC_YN_2 	= #{stayAplcYn2	}										
+		      		,  STD.MOD_NO 			= #{regNo}												
+		      		,  STD.MOD_DTTM 		= TO_CHAR(SYSDATE,'yyyymmddhh24miss')					
+		 		WHERE  '|N|D|' like '%'||STD.ENRL_STS||'%'											
+		 		 WHEN  NOT MATCHED THEN																
+		 	   INSERT  (																			
+		        	   STD_NO																		
+		      		,  CRS_CRE_CD																	
+		      		,  USER_NO																		
+		      		,  ENRL_STS																		
+		     		,  ENRL_START_DTTM																
+		      		,  ENRL_END_DTTM																
+		     		,  AUDIT_END_DTTM																
+					,  ENRL_APLC_DTTM																
+					,  ENRL_CANCEL_DTTM																
+					,  ENRL_CERT_DTTM																
+					,  ENRL_CPLT_DTTM																
+					,  EDU_NO																		
+					,  CPLT_NO																		
+					,  GET_CREDIT																	
+					,  TRAINING_NOMI_NO																
+					,  STAY_APLC_YN																	
+					,  STAY_APLC_YN_2																
+					,  REG_NO																		
+					,  REG_DTTM																		
+				) VALUES (																			
+		        	   #{stdNo}																		
+					,  #{crsCreCd}																	
+					,  #{userNo	}																	
+					,  #{enrlSts}																		
+					,  #{enrlStartDttm}																
+					,  #{enrlEndDttm}																	
+					,  NVL(#{auditEndDttm}, #{enrlEndDttm})												
+					,  NVL(#{enrlAplcDttm}, TO_CHAR(SYSDATE,'yyyymmddhh24miss'))						
+					,  #{enrlCancelDttm}																
+					,  #{enrlCertDttm}																
+					,  #{enrlCpltDttm}																
+					,  #{eduNo	}																	
+					,  #{cpltNo	}																	
+					,  #{getCredit	}																
+					,  #{trainingNomiNo	}															
+					,  #{stayAplcYn}																	
+					,  #{stayAplcYn2}																	
+					,  #{regNo}																		
+					,  TO_CHAR(SYSDATE,'yyyymmddhh24miss')											
+				) 					
+	</sql>
+	
+	<sql id="getUpdateStudentQuery">
+		  UPDATE TB_STD_STD										
+		     SET DECLS_NO = #{declsNo} 								
+		       , USER_NO = #{userNo} 								
+		       , ENRL_STS = #{enrlSts} 								
+		       , ENRL_START_DTTM = #{enrlStartDttm} 					
+		       , ENRL_END_DTTM = #{enrlEndDttm} 						
+		       , AUDIT_END_DTTM = NVL(#{auditEndDttm}, #{enrlEndDttm})	
+		       , ENRL_APLC_DTTM = #{enrlAplcDttm }					
+		       , ENRL_CANCEL_DTTM = #{enrlCancelDttm} 				
+		       , ENRL_CERT_DTTM = #{enrlCertDttm} 					
+		       , ENRL_CPLT_DTTM = #{enrlCpltDttm} 					
+		       , EDU_NO = #{eduNo} 									
+		       , CPLT_NO = #{cpltNo} 								
+		       , GET_CREDIT = #{getCredit} 							
+		       , STAY_APLC_YN = #{stayAplcYn} 						
+		       , PAYM_MTHD_CD = #{paymMthdCd} 						
+		       , PAYM_PRICE = #{paymPrice} 							
+		       , PAYM_STS_CD = #{paymStsCd} 							
+		       , PAYM_NO = #{paymNo}									
+		       , PAYM_BANK_NM = #{paymBankNm}						
+		       , PAYM_DTTM = #{paymDttm}								
+		       , UEINS_APLC_YN = #{ueinsAplcYn}						
+		       , UEINS_APLY_YN = #{ueinsAplyYn}						
+		       , REFUND_PRICE = #{refundPrice}						
+		       , DOC_RECEIPT_YN = #{docReceiptYn}					
+		       , DOC_RECEIPT_NO = #{docReceiptNo}					
+		       , RECEIPT_DT = #{receiptDt}							
+		       , RECEIPT_USER_NM = #{receiptUserNm}					
+		       , REPAY_PRICE = #{repayPrice}							
+		       , REPAY_MTHD_CD = #{repayMthdCd}						
+		       , REPAY_STS_CD = #{repayStsCd}						
+		       , REPAY_REQ_DTTM = #{repayReqDttm}					
+		       , REPAY_DTTM = #{repayDttm}							
+		       , REPAY_BANK_NM = #{repayBankNm}						
+		       , REPAY_ACNT_NO = #{repayAcntNo}						
+		       , REPAY_USER_NM = #{repayUserNm}						
+		       , REPAY_REASON = #{repayReason}						
+		       , COMP_NM = #{compNm} 								
+		       , BIZZ_NO = #{bizzNo} 								
+		       , DEPT_NM = #{deptNm} 								
+		       , AREA_CD = #{areaCd} 								
+		       , ORG_CD = #{orgCd} 									
+		       , EMP_NO = #{empNo} 									
+		       , REPAY_RSLT_CD = #{repayRsltCd}						
+		       , MOD_NO = #{modNo} 									
+		       , MOD_DTTM = TO_CHAR(SYSDATE,'yyyymmddhh24miss')	
+		   WHERE STD_NO = #{stdNo} 									
+	</sql>
+	
+	<sql id="getConfirmStudentSQuery">
+	<!-- 상시과정 수강 승인용 쿼리 -->
+	<![CDATA[ 	
+		 	UPDATE 	TB_STD_STD 																	
+		      SET	ENRL_STS 			= #{enrlSts}			 									
+		        ,  ENRL_START_DTTM 	= TO_CHAR(SYSDATE,'yyyymmdd')||'000001'					
+		        ,  ENRL_END_DTTM 		= TO_CHAR(SYSDATE + #{enrlDaycnt, 'yyyymmdd')||'235959'	
+		        ,  AUDIT_END_DTTM 		= TO_CHAR(SYSDATE + #{enrlDaycnt, 'yyyymmdd')||'235959'	
+		        ,  ENRL_CERT_DTTM		= TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')					
+		        ,  ENRL_CANCEL_DTTM 	= ''													
+		        ,  MOD_NO 				= #{modNo}												
+		        ,  MOD_DTTM 			= TO_CHAR(SYSDATE,'yyyymmddhh24miss')					
+		  	WHERE  STD_NO 				= #{stdNo}												
+		   AND (																
+		       SELECT                                              			
+		         count(std_no) AS cnt                              			
+		       FROM TB_STD_STD a,                                  			
+		         (SELECT                                           			
+		           user_no                                         			
+		           ,crs_cre_cd                                     			
+		           ,decls_no                                       			
+		           ,enrl_sts                                       			
+		         FROM TB_STD_STD                                   			
+		         WHERE std_no = #{stdNo}		                     				
+		         ) b                                               			
+		       WHERE a.crs_cre_cd = b.crs_cre_cd                   			
+		       AND a.user_no = b.user_no                           			
+		       AND a.enrl_sts = 'S'                                			
+		       ) < 1 
+	]]>                                              			
+	</sql>
+	
+	<sql id="getConfirmStudentRQuery">
+		<![CDATA[ 	
+		 	UPDATE 	TB_STD_STD 													
+		      SET	ENRL_STS 		= #{enrlSts}			 						
+		        ,  ENRL_START_DTTM = #{enrlStartDttm}							
+		        ,  ENRL_END_DTTM 	= #{enrlEndDttm}								
+		        ,  AUDIT_END_DTTM 	= #{enrlEndDttm}								
+		        ,  ENRL_CERT_DTTM	= TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')		
+		        ,  MOD_NO 			= #{modNo}									
+		        ,  MOD_DTTM 		= TO_CHAR(SYSDATE,'yyyymmddhh24miss')		
+		  	 WHERE  STD_NO 			= #{stdNo}									
+		   AND (																
+		       SELECT                                              			
+		         count(std_no) AS cnt                              			
+		       FROM TB_STD_STD a,                                  			
+		         (SELECT                                           			
+		           user_no                                         			
+		           ,crs_cre_cd                                     			
+		           ,decls_no                                       			
+		           ,enrl_sts                                       			
+		         FROM TB_STD_STD                                   			
+		         WHERE std_no = #{stdNo}		                     				
+		         ) b                                               			
+		       WHERE a.crs_cre_cd = b.crs_cre_cd                   			
+		       AND a.user_no = b.user_no                           			
+		       AND a.enrl_sts = 'S'                                			
+		       ) < 1  
+		 ]]>                                             			
+	</sql>	
+	
+	<select id="listStudent" parameterType="studentVO" resultType="studentVO">
+		<include refid="getListStudentQuery" />
+	</select>
+	
+	<!-- 
+	<if test = "searchValue != null and searchValue != ''">
+	</if> 
+	<choose>
+		<when test = "sortKey != null and sortKey == 'CARTRG_NM_ASC'">
+			 
+		</when>
+		<otherwise>
+			
+		</otherwise>
+	</choose>
+	-->
+
+	<select id="count"  parameterType="studentVO" resultType="Integer">
+		<!--   -->
+		SELECT COUNT(*) FROM (
+			<include refid="getListStudentQuery" />
+		) T
+	</select>
+
+	
+	<select id="listStudentPageing"  parameterType="studentVO" resultType="studentVO">
+		<!--   -->
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+			<include refid="getListStudentQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+
+
+	
+	<select id="selectStudent" parameterType="studentVO" resultType="studentVO">
+		  SELECT A.STD_NO 																		
+		          , A.CRS_CRE_CD 																
+		          , A.DECLS_NO 																
+		          , A.USER_NO 																	
+		          , A.ENRL_STS 																
+		          , A.ENRL_START_DTTM 															
+		          , A.ENRL_END_DTTM 															
+		          , A.AUDIT_END_DTTM 															
+		          , A.ENRL_APLC_DTTM 															
+		          , A.ENRL_CANCEL_DTTM 														
+		          , A.ENRL_CERT_DTTM 															
+		          , A.ENRL_CPLT_DTTM 															
+		          , A.CERT_APLC_DTTM 															
+		          , A.EDU_NO 																	
+		          , A.CPLT_NO 																	
+		          , A.CERT_STS 																	
+		          , A.CERT_SCORE 																	
+		          , A.CERT_PASS_YN 																	
+		          , A.GET_CREDIT 																
+		          , A.STAY_APLC_YN 															
+		          , A.PAYM_MTHD_CD 															
+		          , A.PAYM_PRICE 																
+		          , A.PAYM_STS_CD 																
+		          , A.PAYM_NO																	
+		          , A.PAYM_BANK_NM																
+		          , A.PAYM_DTTM																
+		          , A.UEINS_APLC_YN															
+		          , A.UEINS_APLY_YN															
+		          , A.REFUND_PRICE																
+		          , A.DOC_RECEIPT_YN															
+		          , A.DOC_RECEIPT_NO															
+		          , A.RECEIPT_DT																
+		          , A.RECEIPT_USER_NM															
+		          , A.REPAY_PRICE																
+		          , A.REPAY_MTHD_CD															
+		          , A.REPAY_STS_CD 															
+		          , A.REPAY_REQ_DTTM															
+		          , A.REPAY_DTTM																
+		          , A.REPAY_BANK_NM															
+		          , A.REPAY_ACNT_NO															
+		          , A.REPAY_USER_NM															
+		          , A.REPAY_REASON																
+		          , A.COMP_NM 																	
+		          , A.BIZZ_NO 																	
+		          , A.DEPT_NM 																	
+		          , A.AREA_CD 																	
+		          , A.ORG_CD 																	
+		          , ( SELECT ORG_NM FROM TB_ORG_ORG_INFO 										
+		               WHERE ORG_CD = A.ORG_CD) AS ORG_NM										
+		          , A.EMP_NO 																	
+		          , A.REG_NO 																	
+		          , (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) AS REG_NM 					
+		          , A.REG_DTTM 																
+		          , A.MOD_NO 																	
+		          , (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) AS MOD_NM 					
+		          , A.MOD_DTTM 																
+		          , A.PAYM_ITGY_DIV 															
+		          , A.PAYM_OID_NO																
+		          , B.USER_NM	 																
+		          , B.EMAIL	 																
+		          , B.HOME_PHONENO																
+		          , B.MOBILE_NO	
+		          , B.BIRTH 															
+		          , C.USER_ID																	
+		          , NVL(( SELECT TOT_SCORE FROM TB_STD_EDU_RSLT								
+		                   WHERE STD_NO = A.STD_NO ), 0) AS TOT_SCORE							
+		          , A.PAYM_NO																	
+		          , A.REPAY_RSLT_CD															
+		       FROM TB_STD_STD A, TB_USR_USER_INFO B, TB_USR_LOGIN C							
+		      WHERE A.CRS_CRE_CD = NVL(#{crsCreCd}, A.CRS_CRE_CD)								
+		        AND A.USER_NO = B.USER_NO														
+		        AND B.USER_NO = C.USER_NO														
+		        AND A.STD_NO =  #{stdNo}															
+	</select>
+	
+	<select id="selectStudentInfo" parameterType="studentVO" resultType="studentVO">
+		   SELECT A.STD_NO 
+		        , A.CRS_CRE_CD 
+		        , A.USER_NO 
+		        , B.USER_NM 
+		        , ( SELECT USER_ID 
+		              FROM TB_USR_LOGIN 
+		             WHERE USER_NO = A.USER_NO) AS USER_ID 
+		        , A.ENRL_STS 
+		        , A.ENRL_START_DTTM 
+		        , A.ENRL_END_DTTM 
+		        , TO_CHAR(TO_DATE(A.ENRL_START_DTTM,'YYYYMMDDHH24MISS'),'MM.DD')||'~'||TO_CHAR(TO_DATE(A.ENRL_END_DTTM,'YYYYMMDDHH24MISS'),'MM.DD') AS ENRL_DURATION 
+		        , A.ENRL_APLC_DTTM 
+		        , A.ENRL_CANCEL_DTTM 
+		        , A.ENRL_CERT_DTTM 
+		        , A.ENRL_CPLT_DTTM 
+		        , A.CERT_APLC_DTTM 
+		        , A.EDU_NO 
+		        , A.CPLT_NO 
+		        , A.CERT_STS 
+		        , A.CERT_SCORE 
+		        , A.CERT_PASS_YN 
+		        , A.GET_CREDIT 
+		        , A.REG_NO 
+			    , (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) AS REG_NM 
+		        , A.REG_DTTM 
+		        , A.MOD_NO 
+			    , (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) AS MOD_NM 
+		        , A.MOD_DTTM 
+	            , A.PAYM_ITGY_DIV 
+		        , A.PAYM_OID_NO 
+		        , (SELECT FN_GET_CRS_STD_PRGR(A.CRS_CRE_CD, A.STD_NO) FROM DUAL) AS PRGR_RATIO 
+		        , ROUND((SELECT FN_GET_CRS_STD_BMKTIME(A.CRS_CRE_CD, A.STD_NO) FROM DUAL)/60) AS PRGR_TIME 
+		     FROM TB_STD_STD A, TB_USR_USER_INFO B 
+		    WHERE A.USER_NO = B.USER_NO 
+		      AND A.STD_NO = #{stdNo} 
+	</select>
+
+	<select id="listUser" parameterType="studentVO" resultType="studentVO">
+		      SELECT  B.USER_NO 												
+	 	           ,  B.USER_NM												
+		           ,  C.USER_ID												
+		           ,  B.EMAIL													
+		           ,  B.HOME_PHONENO											
+		           ,  B.MOBILE_NO												
+		           ,  B.ORG_CD													
+		           ,  ( SELECT ORG_NM FROM TB_ORG_ORG_INFO						
+		                 WHERE ORG_CD = B.ORG_CD) AS ORG_NM					
+		        FROM  TB_USR_USER_INFO B, TB_USR_LOGIN C						
+		       WHERE  B.USER_NO = C.USER_NO									
+		         AND  DECODE(NVL(#{searchKey},''), 'userNm', B.USER_NM, 			
+		   		   'userId', C.USER_ID, B.USER_NM)  like '%'||NVL(#{userNm}, '')||'%'	
+		         AND  NVL(C.USER_STS,'D') = 'U'								
+		<if test = "orgCd != null and orgCd != ''">
+		 AND  B.ORG_CD = #{orgCd}									
+		      AND  B.USER_NO NOT IN ( SELECT USER_NO						
+		                                   FROM TB_STD_STD						
+		                                  WHERE CRS_CRE_CD = #{crsCreCd}			
+		                                    AND ENRL_STS NOT IN ('N','D') )	
+		     	 ORDER  BY B.USER_NM							
+		</if>
+	</select>	
+	
+	<update id="insertStudentSp" statementType="CALLABLE" parameterType="studentVO">
+		{ call SP_INSERT_STUDENT( #{crsCreCd}, #{userNo}, #{enrlSts}, #{stayAplcYn}, #{paymMthdCd}, #{paymPrice}, #{paymStsCd}, #{paymDttm},	
+		                         #{paymNo}, #{ueinsAplcYn}, #{ueinsAplyYn}, #{refundPrice}, #{docReceiptYn}, 	
+		                         #{docReceiptNo}, #{receiptDt}, #{receiptUserNm}, #{certScore}, #{certPassYn}, #{regNo}, #{errcode} ) }		
+	</update>
+	
+	<update id="updateBatch" parameterType="list">
+	<!--   -->
+	<!--   -->
+		<foreach collection="list" item="item" index="index" open="DECLARE BEGIN" close="; END;" separator=";">
+
+		</foreach>
+	</update>
+	
+
+	
+	<update id="updateEnrlDuration" parameterType="studentVO">
+			UPDATE 	TB_STD_STD
+		      SET	ENRL_START_DTTM = #{enrlStartDttm}						
+		        ,  ENRL_END_DTTM 	= #{enrlEndDttm}							
+		        ,  AUDIT_END_DTTM 	= #{auditEndDttm}							
+		        ,  MOD_NO			= #{modNo}								
+		        ,  MOD_DTTM 		= TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')	
+		    WHERE  CRS_CRE_CD 		= #{crsCreCd}								
+		      AND  ENRL_STS in ('S','C','F')								
+	</update>
+
+	
+	<update id="updateDecls" parameterType="studentVO">
+		 	UPDATE 	TB_STD_STD									
+		       SET	DECLS_NO = #{declsNo}					
+		    WHERE  STD_NO 	 = #{stdNo}							
+	</update>
+	
+	<update id="updateScoreEclt" parameterType="studentVO">
+		 	UPDATE 	TB_STD_STD									
+		      SET	SCORE_ECLT_YN = #{scoreEcltYn}				
+		    WHERE  STD_NO 	 = #{stdNo}							
+	</update>
+	
+	<update id="getConfirmDepositStudentQuery" parameterType="studentVO">
+		<![CDATA[ 
+		 	UPDATE 	TB_STD_STD 												
+		      SET	PAYM_PRICE 		= #{paymPrice}							
+		        ,  PAYM_STS_CD     = #{paymStsCd}							
+		        ,  PAYM_DTTM 	    = #{paymDttm}								
+		        ,  MOD_NO 			= #{modNo}								
+		        ,  MOD_DTTM 		= TO_CHAR(SYSDATE,'yyyymmddhh24miss')	
+		  	 WHERE  STD_NO 			= #{stdNo}								
+		  	   and  ENRL_STS <> 'N'											
+		  	   and  PAYM_MTHD_CD IN ('PAYM003', 'PAYM004')					
+		  	   and  NVL(PAYM_STS_CD,'N') != 'Y'	
+		 ]]>							
+	</update>
+	
+	<select id="selectCrsRatio" parameterType="studentVO" resultType="studentVO">
+		  SELECT FN_GET_CRS_AVG_PRGR(#{crsCreCd}) AS CRS_RATIO FROM DUAL  
+	</select>
+	
+
+	<select id="getCompleteNo" parameterType="studentVO" resultType="studentVO">
+		  SELECT LPAD(MAX(NVL(SUBSTR(CPLT_NO,-3),0))+1,3,'0') AS CPLT_NO  
+		    FROM TB_STD_STD  
+		   WHERE CRS_CRE_CD = #{crsCreCd}  
+	</select>
+	
+	<update id="completeSuccess" parameterType="studentVO">
+		  UPDATE TB_STD_STD  
+		     SET ENRL_STS = 'C'  
+		       , CPLT_NO = #{cpltNo}  
+		       , ENRL_CPLT_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+		       , MOD_NO = #{modNo}  
+		       , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+		   WHERE STD_NO = #{stdNo}  
+	</update>
+	
+	<update id="completeFailed" parameterType="studentVO">
+		  UPDATE TB_STD_STD  
+		     SET ENRL_STS = 'F'  
+		       , CPLT_NO = ''  
+		       , ENRL_CPLT_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+		       , MOD_NO = #{modNo}  
+		       , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+		   WHERE STD_NO = #{stdNo}  
+	</update>
+	
+	
+	<insert id="insertStudent">
+		  INSERT INTO TB_STD_STD  (										
+		         STD_NO 													
+		       , CRS_CRE_CD 												
+		       , DECLS_NO 													
+		       , USER_NO 													
+		       , ENRL_STS 													
+		       , ENRL_START_DTTM 											
+		       , ENRL_END_DTTM 											
+		       , AUDIT_END_DTTM 											
+		       , ENRL_APLC_DTTM 											
+		       , ENRL_CANCEL_DTTM 											
+		       , ENRL_CERT_DTTM 											
+		       , ENRL_CPLT_DTTM 											
+		       , CERT_APLC_DTTM 											
+		       , EDU_NO 													
+		       , CPLT_NO 													
+		       , CERT_STS 													
+		       , CERT_SCORE 													
+		       , CERT_PASS_YN													
+		       , GET_CREDIT 												
+		       , STAY_APLC_YN 												
+		       , PAYM_MTHD_CD 												
+		       , PAYM_PRICE 												
+		       , PAYM_STS_CD 												
+		       , PAYM_NO													
+		       , PAYM_ITGY_DIV												
+		       , PAYM_OID_NO												
+		       , PAYM_BANK_NM												
+		       , PAYM_DTTM 												
+		       , UEINS_APLC_YN												
+		       , UEINS_APLY_YN												
+		       , REFUND_PRICE												
+		       , DOC_RECEIPT_YN											
+		       , DOC_RECEIPT_NO											
+		       , RECEIPT_DT												
+		       , RECEIPT_USER_NM											
+		       , REPAY_PRICE												
+		       , REPAY_MTHD_CD												
+		       , REPAY_STS_CD 												
+		       , REPAY_REQ_DTTM											
+		       , REPAY_DTTM												
+		       , REPAY_BANK_NM												
+		       , REPAY_ACNT_NO												
+		       , REPAY_USER_NM												
+		       , REPAY_REASON												
+		       , COMP_NM 													
+		       , BIZZ_NO 													
+		       , DEPT_NM 													
+		       , AREA_CD 													
+		       , ORG_CD 													
+		       , EMP_NO 													
+		       , REG_NO 													
+		       , REG_DTTM 													
+		       , MOD_NO 													
+		       , MOD_DTTM 													
+		 ) VALUES (														
+		         #{stdNo} 													
+		       , #{crsCreCd }												
+		       , #{declsNo} 													
+		       , #{userNo} 													
+		       , #{enrlSts} 													
+		       , #{enrlStartDttm} 											
+		       , #{enrlEndDttm} 												
+		       , NVL(#{auditEndDttm}, #{enrlEndDttm})							
+		       , NVL(#{enrlAplcDttm}, TO_CHAR(SYSDATE,'yyyymmddhh24miss'))	
+		       , #{enrlCancelDttm} 											
+		       , #{enrlCertDttm} 											
+		       , #{enrlCpltDttm} 											
+		       , #{certAplcDttm} 											
+		       , #{eduNo} 													
+		       , #{cpltNo} 													
+		       , #{certSts} 													
+		       , #{certScore} 													
+		       , #{certPassYn} 													
+		       , #{getCredit} 												
+		       , #{stayAplcYn} 												
+		       , #{paymMthdCd} 												
+		       , #{paymPrice} 												
+		       , #{paymStsCd} 												
+		       , #{paymNo}													
+		       , #{paymItgyDiv}												
+		       , #{paymOidNo}												
+		       , #{paymBankNm}												
+		       , #{paymDttm} 												
+		       , #{ueinsAplcYn}												
+		       , #{ueinsAplyYn}												
+		       , #{refundPrice}												
+		       , #{docReceiptYn}												
+		       , #{docReceiptNo}												
+		       , #{receiptDt}												
+		       , #{receiptUserNm}											
+		       , #{repayPrice}												
+		       , #{repayMthdCd}												
+		       , #{repayStsCd}												
+		       , #{repayReqDttm}												
+		       , #{repayDttm}												
+		       , #{repayBankNm}												
+		       , #{repayAcntNo}												
+		       , #{repayUserNm}												
+		       , #{repayReason}												
+		       , #{compNm }													
+		       , #{bizzNo} 													
+		       , #{deptNm} 													
+		       , #{areaCd} 													
+		       , #{orgCd} 													
+		       , #{empNo} 													
+		       , #{regNo} 													
+		       , TO_CHAR(SYSDATE,'yyyymmddhh24miss')						
+		       , #{modNo} 													
+		       , TO_CHAR(SYSDATE,'yyyymmddhh24miss')						
+		 ) 							
+	</insert>
+
+
+	<update id="addMergeStudent">
+		<include refid="getStudentMergeQuery" />
+	</update>
+	
+	
+	<update id="insertStudentBatch" parameterType="list">
+	<!--  수강생 일괄등록 -->
+		  INSERT INTO TB_STD_STD  (										
+		         STD_NO 													
+		       , CRS_CRE_CD 												
+		       , DECLS_NO 													
+		       , USER_NO 													
+		       , ENRL_STS 													
+		       , ENRL_START_DTTM 											
+		       , ENRL_END_DTTM 											
+		       , AUDIT_END_DTTM 											
+		       , ENRL_APLC_DTTM 											
+		       , ENRL_CANCEL_DTTM 											
+		       , ENRL_CERT_DTTM 											
+		       , ENRL_CPLT_DTTM 											
+		       , CERT_APLC_DTTM 											
+		       , EDU_NO 													
+		       , CPLT_NO 													
+		       , CERT_STS 													
+		       , CERT_SCORE 													
+		       , CERT_PASS_YN 													
+		       , GET_CREDIT 												
+		       , STAY_APLC_YN 												
+		       , PAYM_MTHD_CD 												
+		       , PAYM_PRICE 												
+		       , PAYM_STS_CD 												
+		       , PAYM_NO													
+		       , PAYM_ITGY_DIV												
+		       , PAYM_OID_NO												
+		       , PAYM_BANK_NM												
+		       , PAYM_DTTM 												
+		       , UEINS_APLC_YN												
+		       , UEINS_APLY_YN												
+		       , REFUND_PRICE												
+		       , DOC_RECEIPT_YN											
+		       , DOC_RECEIPT_NO											
+		       , RECEIPT_DT												
+		       , RECEIPT_USER_NM											
+		       , REPAY_PRICE												
+		       , REPAY_MTHD_CD												
+		       , REPAY_STS_CD 												
+		       , REPAY_REQ_DTTM											
+		       , REPAY_DTTM												
+		       , REPAY_BANK_NM												
+		       , REPAY_ACNT_NO												
+		       , REPAY_USER_NM												
+		       , REPAY_REASON												
+		       , COMP_NM 													
+		       , BIZZ_NO 													
+		       , DEPT_NM 													
+		       , AREA_CD 													
+		       , ORG_CD 													
+		       , EMP_NO 													
+		       , REG_NO 													
+		       , REG_DTTM 													
+		       , MOD_NO 													
+		       , MOD_DTTM 													
+		 ) VALUES 
+		 <foreach collection="list" item="item" index="index" separator=",">
+		 (														
+		         #{item.stdNo} 													
+		       , #{item.crsCreCd }												
+		       , #{item.declsNo} 													
+		       , #{item.userNo} 													
+		       , #{item.enrlSts} 													
+		       , #{item.enrlStartDttm} 											
+		       , #{item.enrlEndDttm} 												
+		       , NVL(#{item.auditEndDttm}, #{item.enrlEndDttm})							
+		       , NVL(#{item.enrlAplcDttm}, TO_CHAR(SYSDATE,'yyyymmddhh24miss'))	
+		       , #{item.enrlCancelDttm} 											
+		       , #{item.enrlCertDttm} 											
+		       , #{item.enrlCpltDttm} 											
+		       , #{item.certAplcDttm} 											
+		       , #{item.eduNo} 													
+		       , #{item.cpltNo} 													
+		       , #{item.certSts} 													
+		       , #{item.certScore} 													
+		       , #{item.certPassYn} 													
+		       , #{item.getCredit} 												
+		       , #{item.stayAplcYn} 												
+		       , #{item.paymMthdCd} 												
+		       , #{item.paymPrice} 												
+		       , #{item.paymStsCd} 												
+		       , #{item.paymNo}													
+		       , #{item.paymItgyDiv}												
+		       , #{item.paymOidNo}												
+		       , #{item.paymBankNm}												
+		       , #{item.paymDttm} 												
+		       , #{item.ueinsAplcYn}												
+		       , #{item.ueinsAplyYn}												
+		       , #{item.refundPrice}												
+		       , #{item.docReceiptYn}												
+		       , #{item.docReceiptNo}												
+		       , #{item.receiptDt}												
+		       , #{item.receiptUserNm}											
+		       , #{item.repayPrice}												
+		       , #{item.repayMthdCd}												
+		       , #{item.repayStsCd}												
+		       , #{item.repayReqDttm}												
+		       , #{item.repayDttm}												
+		       , #{item.repayBankNm}												
+		       , #{item.repayAcntNo}												
+		       , #{item.repayUserNm}												
+		       , #{item.repayReason}												
+		       , #{item.compNm }													
+		       , #{item.bizzNo} 													
+		       , #{item.deptNm} 													
+		       , #{item.areaCd} 													
+		       , #{item.orgCd} 													
+		       , #{item.empNo} 													
+		       , #{item.regNo} 													
+		       , TO_CHAR(SYSDATE,'yyyymmddhh24miss')
+		       , #{item.modNo} 													
+		       , TO_CHAR(SYSDATE,'yyyymmddhh24miss')			
+		 ) 	
+		</foreach>
+	</update>
+
+	<update id="updateStudent">
+	<!--  수강 신청 정보 수정 -->
+		<include refid="getUpdateStudentQuery" />
+	</update>
+	
+	<update id="confirmStudentBatch" parameterType="java.util.Map">
+		<!-- 수강 신청 일괄 인증 -->
+		<choose>
+		<when test = "crsOperType == 'R'">
+			 <foreach collection="list" item="item" index="index" open="DECLARE BEGIN" close="; END;" separator=";">
+			 <![CDATA[ 
+				 UPDATE 	TB_STD_STD 													
+			     SET	
+			      	   ENRL_STS 		= #{item.enrlSts}			 						
+			        ,  ENRL_START_DTTM = #{item.enrlStartDttm}							
+			        ,  ENRL_END_DTTM 	= #{item.enrlEndDttm}								
+			        ,  AUDIT_END_DTTM 	= #{item.enrlEndDttm}								
+			        ,  ENRL_CERT_DTTM	= TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')		
+			        ,  MOD_NO 			= #{item.modNo}									
+			        ,  MOD_DTTM 		= TO_CHAR(SYSDATE,'yyyymmddhh24miss')		
+			  	 WHERE  STD_NO 			= #{item.stdNo}									
+			   AND (																
+			       SELECT                                              			
+			         count(std_no) AS cnt                              			
+			       FROM TB_STD_STD a,                                  			
+			         (SELECT                                           			
+			           user_no                                         			
+			           ,crs_cre_cd                                     			
+			           ,decls_no                                       			
+			           ,enrl_sts                                       			
+			         FROM TB_STD_STD                                   			
+			         WHERE std_no = #{item.stdNo}		                     				
+			         ) b                                               			
+			       WHERE a.crs_cre_cd = b.crs_cre_cd                   			
+			       AND a.user_no = b.user_no                           			
+			       AND a.enrl_sts = 'S'                                			
+			       ) < 1 
+			]]> 
+			</foreach>
+		</when>
+		<otherwise>
+			<foreach collection="list" item="item" index="index" open="DECLARE BEGIN" close="; END;" separator=";">
+		
+				UPDATE 	TB_STD_STD 																	
+			    SET
+			      	   ENRL_STS 			= #{item.enrlSts}			 									
+			        ,  ENRL_START_DTTM 	= TO_CHAR(SYSDATE,'yyyymmdd')||'000001'					
+			        ,  ENRL_END_DTTM 		= TO_CHAR(SYSDATE + #{item.enrlDaycnt}, 'yyyymmdd')||'235959'	
+			        ,  AUDIT_END_DTTM 		= TO_CHAR(SYSDATE + #{item.enrlDaycnt}, 'yyyymmdd')||'235959'	
+			        ,  ENRL_CERT_DTTM		= TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')					
+			        ,  ENRL_CANCEL_DTTM 	= ''													
+			        ,  MOD_NO 				= #{item.modNo}												
+			        ,  MOD_DTTM 			= TO_CHAR(SYSDATE,'yyyymmddhh24miss')	
+			  	WHERE  STD_NO 				= #{item.stdNo}
+			  	 <![CDATA[ 												
+			   AND (																
+			       SELECT                                              			
+			         count(std_no) AS cnt                              			
+			       FROM TB_STD_STD a,                                  			
+			         (SELECT                                           			
+			           user_no                                         			
+			           ,crs_cre_cd                                     			
+			           ,decls_no                                       			
+			           ,enrl_sts                                       			
+			         FROM TB_STD_STD                                   			
+			         WHERE std_no = #{item.stdNo}		                     				
+			         ) b                                               			
+			       WHERE a.crs_cre_cd = b.crs_cre_cd                   			
+			       AND a.user_no = b.user_no                           			
+			       AND a.enrl_sts = 'S'                                			
+			       ) < 1 
+			  ]]>
+			</foreach>
+		</otherwise>
+	</choose>
+	</update>
+	
+	<update id="confirmStudent" parameterType="studentVO" >
+	<choose>
+		<when test='crsOperType == "R"'>
+			 <include refid="getConfirmStudentRQuery" />
+		</when>
+		<otherwise>
+			 <include refid="getConfirmStudentSQuery" />
+		</otherwise>
+	</choose>
+	</update>
+
+	
+	<update id="cancelStudent" parameterType="list">
+	<!-- 수강 신청 일괄 취소  -->
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+			 UPDATE TB_STD_STD 												
+		        SET ENRL_STS = #{item.enrlSts}			 							
+		          , ENRL_CANCEL_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')		
+		          , REPAY_STS_CD = NVL(#{item.repayStsCd}, REPAY_STS_CD)				
+		          , REPAY_REQ_DTTM = DECODE(#{item.repayStsCd},'REFUND001', 			
+		                             DECODE(NVL(REPAY_REQ_DTTM,'1'),'1',		
+		                             TO_CHAR(SYSDATE,'yyyymmddhh24miss')		
+		                             ,REPAY_REQ_DTTM) ,REPAY_REQ_DTTM)			
+		          , MOD_NO	= #{item.modNo}											
+		          , MOD_DTTM = TO_CHAR(SYSDATE,'yyyymmddhh24miss')				
+		      WHERE STD_NO = #{item.stdNo}					
+		</foreach>
+	</update>
+	
+
+
+	
+	<update id="deleteStudent" parameterType="list">
+	<!-- 수강 신청 일괄 삭제  -->
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+			 	UPDATE 	TB_STD_STD 														
+		      SET	ENRL_STS 			= #{item.enrlSts}			 						
+		        ,  ENRL_CERT_DTTM		= ''										
+		        ,  ENRL_CANCEL_DTTM 	= ''										
+		        ,  MOD_NO 				= #{item.modNo}									
+		        ,  MOD_DTTM 			= TO_CHAR(SYSDATE,'yyyymmddhh24miss')		
+		  	 WHERE 	STD_NO 				= #{item.stdNo}						
+		</foreach>
+	</update>
+
+ 
+		
+	<update id="cancelComplete" parameterType="list">
+	<!-- 수료 처리 일괄 취소  -->
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+				UPDATE 	TB_STD_STD 													
+		      SET	ENRL_STS 		= 'S'					 					
+		        ,  ENRL_CPLT_DTTM 	= ''										
+		        ,  CPLT_NO 		= ''										
+		        ,  GET_CREDIT 		= 0											
+		        ,  MOD_NO 			= #{item.modNo}									
+		        ,  MOD_DTTM 		= TO_CHAR(SYSDATE,'yyyymmddhh24miss')		
+		  	 WHERE  STD_NO 			= #{item.stdNo}						
+		</foreach>
+	</update>
+
+	
+	<update id="cancelRsltComplete" parameterType="list">
+	<!-- 수료 처리 일괄 취소(교육결과)  -->
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+				UPDATE 	TB_STD_EDU_RSLT 										
+		      SET	CONV_SCORE 	= 0					 						
+		        ,  MOD_NO 		= #{item.modNo}									
+		        ,  MOD_DTTM 	= TO_CHAR(SYSDATE,'yyyymmddhh24miss')		
+		  	 WHERE  STD_NO 		= #{item.stdNo}					
+		</foreach>
+	</update>
+	
+
+
+	<update id="updateEduNo" parameterType="list">
+	<!-- 교번 일괄 저장  -->
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+			UPDATE 	TB_STD_STD 											
+		      SET	EDU_NO = #{item.eduNo}				 						
+		    WHERE  STD_NO = #{item.stdNo}				
+		</foreach>
+	</update>
+
+	
+	<select id ="isStudent" parameterType="studentVO" resultType="studentVO"> 
+	<!-- 수강생 검색 -->
+	<![CDATA[ 	
+				SELECT 	CASE WHEN COUNT(*) > 0 THEN 'Y' ELSE 'N' END STD_YN 	
+		     FROM 	TB_STD_STD												
+		    WHERE  CRS_CRE_CD 	= #{crsCreCd}									
+		      AND  STD_NO 		= #{stdNo}									
+		      AND  ENRL_STS IN ('S','C','F')
+	]]>				
+	</select>
+	
+	<select id ="isEnroll" parameterType="studentVO" resultType="studentVO"> 
+	<!-- 수강신청 검색 -->
+	<![CDATA[ 	
+			SELECT 	CASE WHEN COUNT(*) > 0 THEN 'Y' ELSE 'N' END STD_YN 	
+		     FROM 	TB_STD_STD												
+		    WHERE  CRS_CRE_CD 	= #{crsCreCd}									
+		      AND  USER_NO 	= #{userNo}									
+		      AND  ENRL_STS IN ('E','S','C','F')	
+	]]>				
+	</select>
+
+
+	<select id ="enrollCnt" parameterType="studentVO" resultType="studentVO"> 
+	<!-- 수강신청자수 검색 -->
+		SELECT 	COUNT(*) AS ENRL_CNT								 	
+		     FROM  TB_STD_STD												
+		    WHERE  CRS_CRE_CD = #{crsCreCd}									
+		      AND  ENRL_STS IN ('E','S','C','F')			
+	</select>
+
+	
+	<update id="autoCompleteSp" statementType="CALLABLE" parameterType="studentVO">
+	<!-- 수강생 자동 수료 처리 (프로시저 이용) -->
+		{  call SP_AUTO_COMPLETE( #{crsCreCd}, #{regNo} )  ") }
+	</update>
+
+	<update id="reshAutoCompleteSp" statementType="CALLABLE" parameterType="studentVO">
+	<!-- 수강생 수료처리 -->
+		{ call SP_AUTO_COMPLETE_RESH_STD( #{crsCreCd} , #{stdNo})  ") }
+	</update>
+	
+
+
+	 <update id="checkCompleteSp" statementType="CALLABLE" parameterType="studentVO">
+		{ call SP_AUTO_COMPLETE_STD( #{crsCreCd} , #{stdNo}, #{regNo}) ") }
+	</update>
+
+
+	<update id="updateDateForMigration" parameterType="list">
+	<!-- 수강신청 마이그래에선용 업데이트 쿼리  -->
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+		 	UPDATE 	TB_STD_STD 											
+		      SET  ENRL_APLC_DTTM 	= #{item.enrlAplcDttm}	 					
+		        ,  REG_DTTM 		= #{item.regDttm}			 				
+		        ,  MOD_DTTM	 	= #{item.modDttm}			 				
+		    WHERE  STD_NO 			= #{item.stdNo}		
+		</foreach>
+	</update>
+
+
+	<update id="confirmDepositStudent" parameterType="list">
+	<!-- 수강생 입금 확인 일괄 처리  -->
+		<foreach collection="list" item="item" index="index" open="DECLARE BEGIN" close="; END;" separator=";">
+		 	UPDATE 	TB_STD_STD 
+		 	SET											
+		     	PAYM_PRICE 		= #{item.paymPrice}							
+		        ,  PAYM_STS_CD     = #{item.paymStsCd}							
+		        ,  PAYM_DTTM 	    = #{item.paymDttm}								
+		        ,  MOD_NO 			= #{item.modNo}								
+		        ,  MOD_DTTM 		= TO_CHAR(SYSDATE,'yyyymmddhh24miss')	
+		  	 WHERE  
+		  	 <![CDATA[ 
+		  		 STD_NO = #{item.stdNo}								
+		  	   and  ENRL_STS <> 'N'											
+		  	   and  PAYM_MTHD_CD IN ('PAYM003', 'PAYM004')					
+		  	   and  NVL(PAYM_STS_CD,'N') != 'Y'	
+		 ]]>			
+		</foreach>
+	</update>
+	
+	
+</mapper>

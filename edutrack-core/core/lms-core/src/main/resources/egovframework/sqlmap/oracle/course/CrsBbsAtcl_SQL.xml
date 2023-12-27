@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.crsbbs.atcl.service.impl.CrsBbsAtclMapper">	
+	<select id="selectKey" resultType="Integer">
+	    SELECT SQ_CRS_CRS_BBS_ATCL.nextVal AS ATCL_SN FROM DUAL
+	</select>
+
+	<sql id="selectColumnQuery">
+				 CRS_CD 												
+		       , BBS_CD 												
+		       , ATCL_SN 												
+		       , PAR_ATCL_SN 											
+		       , ATCL_LVL 												
+		       , ATCL_ODR 												
+		       , TITLE 												
+		       , CTS 													
+		       , HITS 													
+		       , EDITOR_YN												
+		       , REG_NO 												
+		       , REG_NM 												
+		       , REG_DTTM 												
+		       , MOD_NO 												
+			    , (SELECT FN_GET_USER_NAME(MOD_NO) FROM DUAL) AS MOD_NM			
+		       , MOD_DTTM 												
+		       , (SELECT COUNT(*) 										
+		            FROM TB_CRS_CRS_BBS_CMNT							
+		           WHERE CRS_CD = A.CRS_CD								
+		             AND BBS_CD = A.BBS_CD								
+		             AND ATCL_SN = A.ATCL_SN ) AS CMNT_CNT				
+	</sql>
+	
+	<sql id="selectQuery">
+		  SELECT 
+		  <include refid="selectColumnQuery" />			
+		  FROM TB_CRS_CRS_BBS_ATCL A									
+		  WHERE CRS_CD = #{crsCd}										
+		  	AND BBS_CD = #{bbsCd}
+	</sql>
+
+	<select id="list" parameterType="crsBbsAtclVO" resultType="crsBbsAtclVO">
+	    <include refid="selectQuery" />
+		<if test = "searchValue != null and searchValue != ''">                          			
+	    	AND DECODE(#{searchKey}, 'regNm', REG_NM, TITLE)	 LIKE '%'||#{searchValue}||'%'			
+	    </if>	
+		START WITH PAR_ATCL_SN IS	NULL
+		CONNECT BY PAR_ATCL_SN = PRIOR ATCL_SN
+		ORDER SIBLINGS BY ATCL_SN DESC
+	</select>
+
+	<select id="count" parameterType="crsBbsAtclVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM TB_CRS_CRS_BBS_ATCL A									
+		WHERE CRS_CD = #{crsCd}										
+		  AND BBS_CD = #{bbsCd}
+		<if test = "searchValue != null and searchValue != ''">                          			
+	      AND DECODE(#{searchKey}, 'regNm', REG_NM, TITLE)	 LIKE '%'||#{searchValue}||'%'			
+	    </if>			  
+	</select>
+	
+   <select id="listPageing" parameterType="crsBbsAtclVO" resultType="crsBbsAtclVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectQuery" />
+		<if test = "searchValue != null and searchValue != ''">                          			
+	    	AND DECODE(#{searchKey}, 'regNm', REG_NM, TITLE)	 LIKE '%'||#{searchValue}||'%'			
+	    </if>	
+		START WITH PAR_ATCL_SN IS	NULL
+		CONNECT BY PAR_ATCL_SN = PRIOR ATCL_SN
+		ORDER SIBLINGS BY ATCL_SN DESC
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+
+	<select id="select" parameterType="crsBbsAtclVO" resultType="crsBbsAtclVO">
+	    <include refid="selectQuery" />
+	     AND ATCL_SN = #{atclSn}	
+	</select>
+
+	
+   <insert id="insert" parameterType="crsBbsAtclVO">
+  		
+		  INSERT INTO TB_CRS_CRS_BBS_ATCL (								
+		         CRS_CD 													
+		       , BBS_CD 													
+		       , ATCL_SN 													
+		       , PAR_ATCL_SN 												
+		       , ATCL_LVL 													
+		       , ATCL_ODR 													
+		       , TITLE 													
+		       , CTS 														
+		       , HITS 														
+		       , EDITOR_YN													
+		       , REG_NO 													
+		       , REG_NM 													
+		       , REG_DTTM 													
+		       , MOD_NO 													
+		       , MOD_DTTM 													
+		 ) VALUES (														
+		         #{crsCd} 													
+		       , #{bbsCd} 													
+		       , #{atclSn} 													
+		       , #{parAtclSn}												
+		       , #{atclLvl} 													
+		       , NVL(( SELECT MAX(NVL(ATCL_ODR,0)) + 1						
+		                 FROM TB_CRS_CRS_BBS_ATCL							
+		                WHERE CRS_CD = #{crsCd}								
+		                  AND BBS_CD = #{bbsCd}								
+		                  AND NVL(PAR_ATCL_SN,1) = NVL(#{parAtclSn},1) ),1)	
+		       , #{title} 													
+		       , #{cts} 														
+		       , 0 														
+		       , #{editorYn}													
+		       , #{regNo} 													
+		       , #{regNm} 													
+		       , TO_CHAR(SYSDATE,'yyyymmddhh24miss') 						
+		       , #{modNo} 													
+		       , TO_CHAR(SYSDATE,'yyyymmddhh24miss') 						
+		 )	
+    </insert>
+	
+   <update id="update" parameterType="crsBbsAtclVO">
+		  UPDATE TB_CRS_CRS_BBS_ATCL									
+		     SET ATCL_LVL = #{atclLvl} 									
+		       , ATCL_ODR = #{atclOdr} 									
+		       , TITLE = #{title} 										
+		       , CTS = #{cts} 											
+		       , MOD_NO = #{modNo} 										
+		       , MOD_DTTM = TO_CHAR(SYSDATE,'yyyymmddhh24miss') 		
+		   WHERE CRS_CD = #{crsCd} 										
+		     AND BBS_CD = #{bbsCd} 										
+		     AND ATCL_SN = #{atclSn} 
+    </update>
+	
+
+	<delete id="delete" parameterType="crsBbsAtclVO">
+		  DELETE FROM TB_CRS_CRS_BBS_ATCL							
+		  WHERE CRS_CD = #{crsCd} 									
+		     AND BBS_CD = #{bbsCd} 									
+		     AND ATCL_SN = #{atclSn} 		
+    </delete>
+
+   <update id="hitsup" parameterType="crsBbsAtclVO">
+		  UPDATE TB_CRS_CRS_BBS_ATCL		
+			  SET HITS  =	 HITS +	1		
+		   WHERE CRS_CD = #{crsCd} 			
+		     AND BBS_CD = #{bbsCd} 			
+		     AND ATCL_SN = #{atclSn} 	
+    </update>	
+
+
+</mapper>		

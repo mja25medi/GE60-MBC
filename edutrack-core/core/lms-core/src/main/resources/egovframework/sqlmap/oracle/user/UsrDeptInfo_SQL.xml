@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.user.dept.service.impl.UsrDeptInfoMapper">	
+
+	<select id="selectKey" resultType="String">
+		/*
+			 SQL ID : selectKey
+			 설  명 : 부서 정보 키 코드 생성
+	 	*/
+	 	SELECT 'DEPT'||LPAD(SQ_USR_USER_INFO.nextVal, 6, '0') FROM DUAL
+	</select>
+	
+	<sql id="selectQuery">
+		SELECT ORG_CD as orgCd
+             , DEPT_CD as deptCd
+		     , AREA_CD as areaCd
+		     , DEPT_NM as deptNm
+		     , DEPT_ADDR as deptAddr
+		     , PHONENO as phoneno
+		     , FAX_NO as faxNo
+		     , DEPT_ODR as deptOdr
+		     , USE_YN as useYn
+		     , REG_NO as regNo
+		     , (SELECT FN_GET_USER_NAME(REG_NO) FROM DUAL) AS regNm
+		     , REG_DTTM as regDttm
+		     , MOD_NO as modNo
+		     , (SELECT FN_GET_USER_NAME(MOD_NO) FROM DUAL) AS modNm
+		     , MOD_DTTM as modDttm
+		  FROM TB_USR_DEPT_INFO A
+         WHERE 1=1
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		<if test = "useYn != null and useYn != ''">
+           AND USE_YN = #{useYn}
+		</if>
+		<if test = "searchKey != null and searchKey == 'NAME'">
+		   AND DEPT_NM like '%'||#{searchValue}||'%'
+		</if>
+		<if test = "searchKey != null and searchKey == 'PHONE'">
+		   AND PHONENO like '%'||#{searchValue}||'%'
+		</if>
+		<if test = "searchKey != null and searchKey == 'FAX'">
+		   AND FAX_NO like '%'||#{searchValue}||'%'
+		</if>
+		<if test = "areaCd != null and areaCd != ''">
+		   AND AREA_CD = #{areaCd}
+		</if>
+		<if test = "typeCd != null and typeCd != ''">
+		   AND TYPE_CD = #{typeCd}
+		</if>
+		 ORDER BY DEPT_ODR DESC
+	</sql>		
+
+	<select id="list" parameterType="usrDeptInfoVO" resultType="usrDeptInfoVO">
+		/*
+			 SQL ID : list
+			 설  명 : 부서 정보의 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	</select>
+	
+	<select id="listPageing" parameterType="usrDeptInfoVO" resultType="usrDeptInfoVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 부서 정보의 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="usrDeptInfoVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 부서 정보의 전체 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>	
+	
+	<select id="select" parameterType="usrDeptInfoVO" resultType="usrDeptInfoVO">
+		/*
+			 SQL ID : select
+			 설  명 : 부서 정보의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+           AND DEPT_CD = #{deptCd}	 	
+	</select>
+
+
+	<insert id="insert" parameterType="usrDeptInfoVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 부서 정보의 정보 등록
+	 	*/
+		INSERT INTO TB_USR_DEPT_INFO (
+		       ORG_CD
+		     , DEPT_CD
+		     , AREA_CD
+		     , DEPT_NM
+		     , DEPT_ADDR
+		     , PHONENO
+		     , FAX_NO
+		     , DEPT_ODR
+		     , USE_YN
+		     , REG_NO
+		     , REG_DTTM
+		     , MOD_NO
+		     , MOD_DTTM
+		) VALUES (
+		       #{orgCd}
+		     , #{deptCd}
+		     , #{areaCd}
+		     , #{deptNm}
+		     , #{deptAddr}
+		     , #{phoneno}
+		     , #{faxNo}
+		     , NVL((SELECT MAX(DEPT_ODR)
+		              FROM TB_USR_DEPT_INFO ),0)+1
+		     , #{useYn}
+		     , #{regNo}
+		     , TO_CHAR(SYSDATE,'yyyymmddhh24miss')
+		     , #{modNo}
+		     , TO_CHAR(SYSDATE,'yyyymmddhh24miss')
+		)	 	
+	</insert>
+	
+	<update id="update" parameterType="usrDeptInfoVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 부서 정보의 정보 수정
+	 	*/
+		UPDATE TB_USR_DEPT_INFO
+		   SET AREA_CD = #{areaCd}
+		     , DEPT_NM = #{deptNm}
+		     , DEPT_ADDR = #{deptAddr}
+		     , PHONENO = #{phoneno}
+		     , FAX_NO = #{faxNo}
+		     , USE_YN = #{useYn}
+		     , MOD_NO = #{modNo}
+		     , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		 WHERE DEPT_CD = #{deptCd}
+	</update>	
+
+	<delete id="delete" parameterType="usrDeptInfoVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 부서 정보의 정보 삭제
+	 	*/
+		DELETE FROM TB_USR_DEPT_INFO
+		 WHERE DEPT_CD = #{deptCd}
+	</delete>
+	 
+</mapper>

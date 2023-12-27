@@ -1,0 +1,136 @@
+@charset "utf-8";
+/* CSS Document */
+
+#loading_page {position:fixed; top:0px; bottom:0px;width:100%; height:100%; background:#fff; z-index:10000;}
+#loading_page p {position:absolute; top:50%; left:50%; margin:-30px 0 0 -30px; font-size:48px; z-index:auto;}
+#wrap {min-height: 100vh; display: flex; display: -ms-flexbox; flex-direction: column; -ms-flex-direction: column; background: #eee;}
+header {position: relative;  padding:10px 0; background: #fff;}
+header:after {content:''; display:block; clear:both;}
+header .ui.action {margin-left: 240px;}
+header ul.util {float: right; margin-right: 40px;}
+header ul.util > li {display: inline-block; margin-right: 12px; vertical-align: middle;}
+header ul.util > li a {display: inline-block; width: 30px; height: 30px; text-indent: -9999px; vertical-align: middle;}
+header ul.util > li.home a {background: url(../img/util_icon_home.png) no-repeat; background-size: cover;}
+header ul.util > li.message a {background: url(../img/util_icon_message.png) no-repeat; background-size: cover;}
+header ul.util > li.logout a {background: url(../img/util_icon_logout.png) no-repeat; background-size: cover;}
+header ul.util > li:last-child {margin-right: 0;}
+header ul.util > li:first-child:before {display:none;}
+header ul.util > li:before {content:""; display:inline-block; vertical-align: middle; width:1px; height:30px; margin:0 15px 0 0; background: #d7d7d7;}
+
+.location-wrap {position: fixed; top: 60px; width: 100%; background: #304b7a; z-index: 9;}
+.location-wrap .ui.menu {font-size: 1.125em; border: none; background: transparent;}
+.location-wrap .ui.menu > a {padding: 10px 21.5px;}
+.location-wrap .ui.menu > a.home {border-right: 1px solid rgba(255, 255, 255, 0.4);}
+.location-wrap .ui.menu .item {width: 200px;}
+.location-wrap .ui.menu .item .arrow {position: absolute; right: 20px; top: 50%; width: 16px; height: 16px; margin-top: -8px; background: url(../img/location_arrow_down.png) 90% 50% no-repeat;}
+.location-wrap .ui.menu .item:before {background: rgba(255, 255, 255, 0.4);}
+.location-wrap .ui.menu > a,
+.location-wrap .ui.menu .item,
+.location-wrap .ui.menu .dropdown.item:hover,
+.location-wrap .ui.menu .dropdown > .text > a,
+.location-wrap .ui.menu .active.item {color: #fff !important;}
+.location-wrap .ui.menu .item > a {color: #333;}
+.location-wrap .ui.menu .active.item:hover {}
+
+#container {position: relative; padding-top: 140px; flex: 1; -ms-flex: 1; flex-basis: auto; display: flex; display: -ms-flexbox; flex-direction: column; -ms-flex-direction: column;}
+h2.page-title {margin-bottom: 20px; color: #333;}
+h2.page-title span {margin-left: 10px; font-size: .75em; font-weight: normal; color: #86a0aa;}
+#container > .content {margin: calc(1em - 1px); padding: 1em; border-radius: 5px; border: 1px solid #d7d7d7; background: #fff; flex: 1; -ms-flex: 1; flex-basis: auto;}
+.dashboard {padding: 0; border: none !important; background: none !important;}
+.option-content .head-txt {font-size: 18px; font-weight: 500; color: #333; vertical-align: middle;}
+.option-content .head-txt-sm {font-weight: 500; color: #333; line-height: 36px; vertical-align: middle;}
+.option-content .inline-box {display: inline-block;}
+.option-content .inline-box .field {display: inline-block;}
+.bottom-content {margin-top: 20px; text-align: right;}
+
+footer {width: 100%; background: #19161c;}
+footer:after {display:block; clear:both; content:''}
+footer .foot-link {background:#d5e0e6;}
+footer .foot-link ul {}
+footer .foot-link ul li {display:inline-block; padding:10px; color:#cad2db;}
+footer .foot-link ul li a {color:#667a93;}
+footer .foot-link ul li a:hover {color:#3d526b;}
+footer .foot-link ul li:first-child a:before {display:none;}
+footer .foot-link ul li a:before {content:""; display:inline-block; vertical-align: middle; width:1px; height:11px; margin:0 20px 0 0; background:#97a6b7;}
+footer .inner-wrap {position:relative; padding: 1em 2em;}
+footer .inner-wrap:after {display:block; clear:both; content:''}
+footer .inner-wrap ul.sub-util {}
+footer .inner-wrap ul.sub-util li {display:inline-block; padding:10px; font-size:12px;}
+footer .inner-wrap ul.sub-util li a {}
+footer .inner-wrap ul.sub-util li a:hover {color:#333;}
+footer .inner-wrap ul.sub-util li:first-child a:before {display:none;}
+footer .inner-wrap ul.sub-util li a:before {content:""; display:inline-block; vertical-align: middle; width:1px; height:11px; margin:0 20px 0 0; background:#97a6b7;}
+footer .inner-wrap .logo-b {clear:both; float:left; width:142px; height:46px; margin-top:15px; margin-right:-160px; text-indent:-9999px; background:url(../img/logo_b.png); background-size:cover;}
+footer .inner-wrap ul.copy {text-align: center;}
+footer .inner-wrap ul.copy li {padding:2px 0; font-size:13px; color:#acacac;}
+footer .inner-wrap ul.copy li address {font-style:normal;}
+footer .inner-wrap .expand-link {position:absolute; top:8px; right:0; z-index:auto;}
+footer .inner-wrap .expand-link .chosen-drop {margin-bottom:-11px; border-bottom:0; border-top:1px solid #aaa; top:auto; bottom:40px;}
+footer .inner-wrap .expand-link .chosen-single {color:#ccc !important; background:none;}
+
+/* 로그인 레이아웃 */
+.loginBox {width: 980px; min-width: 768px; margin: 0 auto; margin-top: 120px; overflow: hidden;}
+.loginBox h1 {font-size: 28px; font-weight: 600; color: #333;}
+.loginBox h1 span {padding-left: 10px; text-indent: 56px; font-weight: 400;}
+.loginBox p {margin-top: 20px; font-size: 16px; color: #999; line-height: 24px;}
+.loginBox .login {}
+.loginBox .login input[type="text"],
+.loginBox .login input[type="password"] {width: 100%; height: 50px; text-indent: 20px; line-height: 48px; font-size: 14px; border: 1px solid #999; border-radius: 4px;}
+.loginBox .login input[type="text"]::placeholder,
+.loginBox .login input[type="password"]::placeholder {color: #999;}
+.loginBox .login a {display: block; width: 100%; height: 50px; margin-top: 10px; line-height: 48px; font-size: 16px; text-align: center; color: #fff; border-radius: 4px; box-sizing: border-box; background: #e5002c;}
+.loginBox .login a:hover {border:1px solid #e5002c; color: #e5002c; background: #fff;}
+.login_bg {width: 100%; min-width: 768px; height: 280px; margin-top: 40px; background: url(../img/login_bg.jpg) no-repeat; background-size:cover;}
+
+
+/* TOP SCROLL 요소 */
+#toTop {display:none; position:fixed; right:10px; bottom:10px; width:40px; height:40px; font-size:0; text-indent:-1000px; text-align:center; color:#fff; background:url('../img/toTop.png') center center no-repeat #777; opacity:0.8; border-radius:20px; z-index:1001;}
+#toTop:hover, #toTop:focus, #toTop.hover {background-color:#CD8F47;}
+
+#pageSliderDescription {position:absolute; left:-999em; display:inline-block; width:0; height:0;}
+
+/* 검색 및 준비중인 페이지 CSS */
+.page_none {width:740px; margin:200px auto; border:5px solid #e3e4e9; background:#f3f3f3 url(../img/page_none.png) 10% 50% no-repeat; background-size:20%; overflow:hidden;}
+.page_none ul {float:right; width:500px; padding-bottom:20px;}
+.page_none ul li {padding:5px 8px; background:url(../img/icon_dot.gif) left 14px no-repeat;}
+.page_none ul li:first-child {padding:20px 0; font-size:24px; font-weight:500; background:none;}
+.page_none ul li span {color:#ff540e;}
+.page_none a {display:block; width:100px; margin:0 auto; margin-bottom:20px; padding:5px 10px; font-size:15px; text-align:center; color:#fff; background:#7684a0;}
+
+/* GNB 색상 CSS */
+/*
+.no-touch .gn-menu-main .gn-trigger > a:hover {background: #006eb6 !important; border-right: 1px solid #006eb6;}
+.gn-menu-wrapper {background: #006eb6;}
+.no-touch .gn-icon-menu:hover::before,
+.no-touch .gn-icon-menu.gn-selected:hover::before {background: white; box-shadow: 0 3px #006eb6, 0 -6px white, 0 -9px #006eb6, 0 -12px white;}
+.gn-icon-menu.gn-selected::before {background: #006eb6; box-shadow: 0 3px white, 0 -6px #006eb6, 0 -9px white, 0 -12px #006eb6;}
+.gn-menu {border-bottom: 1px solid rgba(255, 255, 255, .3);}
+.gn-menu li:not(:first-child),
+.gn-menu li li {box-shadow: inset 0 1px rgba(255, 255, 255, .3)}
+*/
+
+@media all and (max-width:1280px){
+    body {font-size: 13px;}
+    header .ui.action {margin-left: 40px;}
+    #container {margin: 0; padding-left: 0;}
+    .option-content > .ui.dropdown,
+    .option-content .ui.input,
+    .option-content .ui.buttons,
+    .option-content > .ui.button,
+    .button-area > .ui.button,
+    .half-box {margin: 2px 0;}
+    .location-wrap .ui.menu {padding-left: 0;}
+}
+
+@media all and (max-width:768px){
+    .location-wrap .ui.menu .item {margin: 0 !important;}
+    .loginBox {width: 100%; margin-top: 20px;}
+}
+
+@media all and (max-width:767px){
+
+}
+
+@media all and (max-width:480px){
+
+}

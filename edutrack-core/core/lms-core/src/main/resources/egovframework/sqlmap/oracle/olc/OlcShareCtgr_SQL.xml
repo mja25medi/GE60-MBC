@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.olc.sharectgr.service.impl.OlcShareCtgrMapper">
+	
+	<sql id="selectQuery">
+		SELECT CTGR_CD 
+		       , PAR_CTGR_CD 
+		       , ORG_CD 
+		       , CTGR_NM 
+		       , CTGR_LVL 
+		       , CTGR_ODR 
+		       , CTGR_PATH 
+		       , CTGR_PATH_NM 
+		       , CTGR_DESC 
+		       , REG_NO 
+			   , (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) REG_NM 
+		       , REG_DTTM 
+		       , MOD_NO 
+			   , (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) MOD_NM 
+		       , MOD_DTTM 
+		       , NVL(( SELECT CTGR_NM 
+		                 FROM TB_OLC_SHARE_CTGR 
+		                WHERE CTGR_CD = A.PAR_CTGR_CD 
+		                  AND ORG_CD = A.ORG_CD ),'ROOT') AS PAR_CTGR_NM 
+		       , ( SELECT COUNT(*) 
+		             FROM TB_OLC_SHARE_CTGR 
+		            WHERE PAR_CTGR_CD = A.CTGR_CD 
+		              AND ORG_CD = A.ORG_CD ) AS SUB_CNT 
+		       , CTGR_DIV_CD 
+		    FROM TB_OLC_SHARE_CTGR A 
+		   WHERE ORG_CD = #{orgCd} 
+		   AND CTGR_DIV_CD = #{ctgrDivCd} 
+	</sql>
+	
+	<select id="listTree" parameterType="olcShareCtgrVO" resultType="olcShareCtgrVO">
+		<!-- OLC 공유 분류를 TREE 형 목록으로 조회 
+			@param OlcShareCtgrVO.orgCd
+			@param OlcShareCtgrVO.userNo
+			@param OlcShareCtgrVO.parCtgrCd (선택적으로 입력, 최상위 분류부터 조회시는 입력이 없어야 한다.)
+		 -->
+		<include refid="selectQuery" />
+		START WITH NVL(PAR_CTGR_CD,'1') = DECODE(#{parCtgrCd},'','1',#{parCtgrCd}) 
+		 CONNECT BY PRIOR CTGR_CD = PAR_CTGR_CD	
+		   ORDER SIBLINGS BY CTGR_ODR
+	</select>
+	
+	<select id="listSub" parameterType="olcShareCtgrVO" resultType="olcShareCtgrVO">
+		<!-- OLC 공유 분류의 하위 분류를 목록으로 가져온다.
+			 @param OlcShareCtgrVO.orgCd
+			 @param OlcShareCtgrVO.userNo
+			 @param OlcShareCtgrVO.parCtgrCd (최상위 분류를 조회시는 입력이 없어야 한다.)
+	   -->
+		<include refid="selectQuery" />
+		AND NVL(PAR_CTGR_CD,'1') = NVL(#{parCtgrCd,'1') 
+		   ORDER BY CTGR_ODR
+	</select>
+	
+	<select id="listSubAll"  parameterType="olcShareCtgrVO" resultType="olcShareCtgrVO">
+		<!-- 
+			OLC 공유 분류의 전체 목록으로 가져온다.
+			 @param OlcShareCtgrVO.orgCd
+			 @param OlcShareCtgrVO.userNo
+			 @param OlcShareCtgrVO.parCtgrCd (최상위 분류를 조회시는 입력이 없어야 한다.)
+		  -->
+		<include refid="selectQuery" />
+		 START WITH A.CTGR_LVL = '1' 
+		   CONNECT BY PRIOR A.CTGR_CD = A.PAR_CTGR_CD 
+		   ORDER SIBLINGS BY A.CTGR_ODR 
+	</select>
+	
+	<select id="select" parameterType="olcShareCtgrVO" resultType="olcShareCtgrVO">
+		<!-- 공유 분류 정보를 조회한다.  -->
+		<include refid="selectQuery" />
+		AND CTGR_CD = #{ctgrCd}
+	</select>
+	
+	<select id="selectCtgrCd" resultType="olcShareCtgrVO">
+		<!-- 공유 분류 코드 조회를 생성해서 반환한다.  -->
+		SELECT 'OSC'||LPAD(SQ_OLC_SHARE_CTGR.nextVal,7,'0') AS CTGR_CD FROM DUAL 
+	</select>
+	
+	<insert id="insert" parameterType="olcShareCtgrVO">
+		<!-- 공유 분류를 등록하고 결과를 반환한다.  -->
+		INSERT INTO TB_OLC_SHARE_CTGR ( 
+		         CTGR_CD 
+		       , PAR_CTGR_CD 
+		       , ORG_CD 
+		       , CTGR_NM 
+		       , CTGR_LVL 
+		       , CTGR_ODR 
+		       , CTGR_PATH 
+		       , CTGR_PATH_NM 
+		       , CTGR_DESC 
+		       , REG_NO 
+		       , REG_DTTM 
+		       , MOD_NO 
+		       , MOD_DTTM 
+		       , CTGR_DIV_CD 
+		 ) VALUES ( 
+		         #{ctgrCd} 
+		       , #{parCtgrCd} 
+		       , #{orgCd} 
+		       , #{ctgrNm} 
+		       , #{ctgrLvl} 
+		       , ( SELECT NVL(MAX(CTGR_ODR),0) + 1 
+		             FROM TB_OLC_SHARE_CTGR 
+		            WHERE ORG_CD = #{orgCd} 
+		              AND NVL(PAR_CTGR_CD,'1') = NVL(#{parCtgrCd},'1') ) 
+		       , #{ctgrPath} 
+		       , #{ctgrPathNm} 
+		       , #{ctgrDesc} 
+		       , #{regNo} 
+		       , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 
+		       , #{modNo} 
+		       , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 
+		       , #{ctgrDivCd} 
+		 )
+	</insert>
+	
+	<update id="update" parameterType="olcShareCtgrVO">
+		<!-- 공유 분류를 수정하고 결과를 반환한다. -->
+		UPDATE TB_OLC_SHARE_CTGR SET 
+		         PAR_CTGR_CD = #{parCtgrCd}
+		       , CTGR_NM = #{ctgrNm} 
+		       , CTGR_LVL = #{ctgrLvl} 
+		       , CTGR_ODR = #{ctgrOdr} 
+		       , CTGR_PATH = #{ctgrPath} 
+		       , CTGR_PATH_NM = #{ctgrPathNm} 
+		       , CTGR_DESC = #{ctgrDesc} 
+		       , MOD_NO = #{modNo} 
+		       , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 
+		   WHERE ORG_CD = #{orgCd} 
+		     AND CTGR_CD = #{ctgrCd} 
+	</update>
+	
+	<update id="updateBatch" parameterType="list">
+	<!-- 공유 분류 정보의 다중 목록을 Update하고 결과를 반환한다.  -->
+	<!-- List<OlcShareCtgrVO> itemArray  -->
+		<foreach collection="list" item="item" index="index" open="DECLARE BEGIN" close="; END;" separator=";">
+			UPDATE TB_OLC_SHARE_CTGR
+		    SET
+				PAR_CTGR_CD = #{item.parCtgrCd}
+		       , CTGR_NM = #{item.ctgrNm} 
+		       , CTGR_LVL = #{item.ctgrLvl} 
+		       , CTGR_ODR = #{item.ctgrOdr} 
+		       , CTGR_PATH = #{item.ctgrPath} 
+		       , CTGR_PATH_NM = #{item.ctgrPathNm} 
+		       , CTGR_DESC = #{item.ctgrDesc} 
+		       , MOD_NO = #{item.modNo} 
+		       , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+			WHERE ORG_CD = #{item.orgCd} 
+		     AND CTGR_CD = #{item.ctgrCd}
+		</foreach>
+	</update>
+	
+	<delete id="delete" parameterType="olcShareCtgrVO">
+		<!-- 공유 분류를 삭제하고 결과를 반환한다.  -->
+		DELETE FROM TB_OLC_SHARE_CTGR 
+		   WHERE ORG_CD = #{orgCd} 
+		     AND CTGR_CD = #{ctgrCd}
+	</delete>
+	
+	<delete id="deleteSub" parameterType="olcShareCtgrVO">
+		<!-- 공유 분류를 삭제하고 결과를 반환한다.  -->
+		DELETE FROM TB_OLC_SHARE_CTGR 
+		   WHERE ORG_CD = #{orgCd} 
+		     AND PAR_CTGR_CD = #{parCtgrCd}
+	</delete>
+	
+</mapper>

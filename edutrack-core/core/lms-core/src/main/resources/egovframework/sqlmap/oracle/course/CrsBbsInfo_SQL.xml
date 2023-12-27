@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.crsbbs.info.service.impl.CrsBbsInfoMapper">	
+	<sql id="selectColumnQuery">
+				 CRS_CD 												
+		       , BBS_CD 												
+		       , BBS_NM 												
+		       , BBS_DESC 												
+		       , ANSR_USE_YN 											
+		       , CMNT_USE_YN 											
+		       , REG_NO 												
+			    , (SELECT FN_GET_USER_NAME(REG_NO) FROM DUAL) AS REG_NM	
+		       , REG_DTTM 												
+		       , MOD_NO 												
+			    , (SELECT FN_GET_USER_NAME(MOD_NO) FROM DUAL) AS MOD_NM	
+		       , MOD_DTTM 												
+	</sql>
+	<sql id="selectQuery">
+		  SELECT 
+		  <include refid="selectColumnQuery" />										
+		  FROM TB_CRS_CRS_BBS										
+		  WHERE '1' = '1'	   
+	</sql>
+
+	<select id="count" parameterType="crsBbsInfoVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM TB_CRS_CRS_BBS										
+		WHERE '1' = '1'	
+		<if test = "crsCd != null and CrsCd != ''">                          			
+	    AND CRS_CD = #{crsCd}		
+	    </if>			  
+	</select>
+			
+ 	<select id="list" parameterType="crsBbsInfoVO" resultType="crsBbsInfoVO">
+	    <include refid="selectQuery" />
+		<if test = "crsCd != null and CrsCd != ''">                          			
+	    	AND CRS_CD = #{crsCd}		
+	    </if>	
+		ORDER BY CRS_CD, BBS_NM
+	</select>
+     <select id="listPageing" parameterType="crsBbsInfoVO" resultType="crsBbsInfoVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectQuery" />
+		<if test = "crsCd != null and CrsCd != ''">                          			
+	    	AND CRS_CD = #{crsCd}		
+	    </if>	
+		ORDER BY CRS_CD, BBS_NM
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select> 
+	<select id="select" parameterType="crsBbsInfoVO" resultType="crsBbsInfoVO">
+	    <include refid="selectQuery" />
+	     AND CRS_CD = #{crsCd}
+	     AND BBS_CD = #{bbsCd}
+	</select>
+
+    <insert id="insert" parameterType="crsBbsInfoVO">
+		 INSERT INTO TB_CRS_CRS_BBS (					
+		         CRS_CD 								
+		       , BBS_CD 								
+		       , BBS_NM 								
+		       , BBS_DESC 								
+		       , ANSR_USE_YN 							
+		       , CMNT_USE_YN 							
+		       , REG_NO 								
+		       , REG_DTTM 								
+		       , MOD_NO 								
+		       , MOD_DTTM 								
+		 ) VALUES (									
+		         #{crsCd} 								
+		       , #{bbsCd} 								
+		       , #{bbsNm} 								
+		       , #{bbsDesc} 								
+		       , #{ansrUseYn} 							
+		       , #{cmntUseYn} 							
+		       , #{regNo} 								
+		      	, TO_CHAR(SYSDATE,'yyyymmddhh24miss')	
+		       , #{modNo} 								
+		      	, TO_CHAR(SYSDATE,'yyyymmddhh24miss')	
+		 )			
+    </insert>
+	
+   <update id="update" parameterType="crsBbsInfoVO">
+		  UPDATE TB_CRS_CRS_BBS 									
+		     SET BBS_NM = #{bbsNm} 									
+		       , BBS_DESC = #{bbsDesc} 								
+		       , ANSR_USE_YN = #{ansrUseYn} 							
+		       , CMNT_USE_YN = #{cmntUseYn} 							
+		       , MOD_NO = #{modNo} 									
+		       , MOD_DTTM = TO_CHAR(SYSDATE,'yyyymmddhh24miss') 	
+		   WHERE CRS_CD = #{crsCd} 									
+		     AND BBS_CD = #{bbsCd} 
+    </update>
+
+	
+	<delete id="delete" parameterType="crsBbsInfoVO">
+		 	DELETE  FROM TB_CRS_CRS_BBS		        
+		  	 WHERE  CRS_CD = #{crsCd}			
+		      AND  BBS_CD = #{bbsCd} 
+    </delete>
+
+	<delete id="deleteAll" parameterType="crsBbsInfoVO">
+		 	DELETE  FROM TB_CRS_CRS_BBS		        
+		  	 WHERE  CRS_CD = #{crsCd}			
+    </delete>
+	
+
+	
+</mapper>	

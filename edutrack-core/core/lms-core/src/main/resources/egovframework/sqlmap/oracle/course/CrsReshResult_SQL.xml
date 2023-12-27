@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.creCrsResh.service.impl.CrsReshResultMapper">	
+	<sql id="selectQuery">
+		  SELECT RESH_SN 									
+		       , RESH_ITEM_SN 								
+		       , RESH_ITEM_TYPE_CD 						
+		       , ( SELECT FN_GET_CODE_NAME('RESH_ITEM_TYPE_CD', RESH_ITEM_TYPE_CD )	
+		             FROM DUAL ) AS RESH_ITEM_TYPE_NM		
+		       , RESH_ITEM_CTS 							
+		       , ITEM_ODR 									
+		       , EMPL_1 									
+		       , EMPL_2 									
+		       , EMPL_3 									
+		       , EMPL_4 									
+		       , EMPL_5 									
+		       , EMPL_6 									
+		       , EMPL_7 									
+		       , EMPL_8 									
+		       , EMPL_9 									
+		       , EMPL_10 AS EMPL_1_0  									
+		       , EMPL_11 AS EMPL_1_1 									
+		       , EMPL_12 AS EMPL_1_2 									
+		       , EMPL_13 AS EMPL_1_3  									
+		       , EMPL_14 AS EMPL_1_4  									
+		       , EMPL_15 AS EMPL_1_5  									
+		       , EMPL_16 AS EMPL_1_6  									
+		       , EMPL_17 AS EMPL_1_7  									
+		       , EMPL_18 AS EMPL_1_8  									
+		       , EMPL_19 AS EMPL_1_9  									
+		       , EMPL_20 AS EMPL_2_0  									
+		       , EMPL_CNT 									
+		       , EMPL_VIEW_TYPE 							
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN )	
+		         AS EMPL_TOT_CNT							
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '1'	)				
+		         AS EMPL_1_CNT								
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '2'	)				
+		         AS EMPL_2_CNT								
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '3'	)				
+		         AS EMPL_3_CNT								
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '4'	)				
+		         AS EMPL_4_CNT								
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '5'	)				
+		         AS EMPL_5_CNT								
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '6'	)				
+		         AS EMPL_6_CNT								
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '7'	)				
+		         AS EMPL_7_CNT								
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '8'	)				
+		         AS EMPL_8_CNT								
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '9'	)				
+		         AS EMPL_9_CNT								
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '10'	)				
+		         AS EMPL_1_0_CNT							
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '11'	)				
+		         AS EMPL_1_1_CNT							
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '12'	)				
+		         AS EMPL_1_2_CNT							
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '13'	)				
+		         AS EMPL_1_3_CNT							
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '14'	)				
+		         AS EMPL_1_4_CNT							
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '15'	)				
+		         AS EMPL_1_5_CNT							
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '16'	)				
+		         AS EMPL_1_6_CNT							
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '17'	)				
+		         AS EMPL_1_7_CNT							
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '18'	)				
+		         AS EMPL_1_8_CNT							
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '19'	)				
+		         AS EMPL_1_9_CNT							
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '20'	)				
+		         AS EMPL_2_0_CNT							
+		    FROM TB_CRS_RESH_ITEM A						
+		   WHERE RESH_SN = #{reshSn}							
+		   ORDER BY ITEM_ODR		
+	</sql>
+ 	<select id="list" parameterType="crsReshResultVO" resultType="crsReshResultVO">
+	    <include refid="selectQuery" />
+		ORDER BY SBJ_ODR	
+	</select>
+
+
+</mapper>	

@@ -1,0 +1,143 @@
+.navbar-custom {
+	background-color:#3F4553;
+	border-color:#1D2026;
+}
+
+.navbar-custom .navbar-top-links li a {
+	color : #ffffff;
+}
+
+.navbar-custom .navbar-top-links li a:hover,
+.navbar-custom .navbar-top-links li a:focus {
+	color : #23527c;
+}
+
+.navbar-custom .navbar-top-links li ul li a {
+	color : #262626;
+}
+
+.navbar-custom .navbar-top-links li ul li a:hover,
+.navbar-custom .navbar-top-links li ul li a:focus {
+	color : #262626;
+}
+
+.navbar-custom .navbar-toggle .icon-bar {
+	background-color:#ffffff;
+}
+
+
+.table_detail {
+	min-height:34px;
+	line-height:30px;
+	padding-top:2px;
+	padding-bottom:2px;
+}
+
+.table_detail th {
+	text-align    : right;
+	text-weight   : bold;
+	padding-right : 10px;
+}
+
+.table_detail td {
+	text-align   : left;
+	font-weight  : normal;
+	padding-left : 10px;
+}
+
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th {
+	vertical-align: middle;
+	font-weight: normal;
+	text-align: center;
+}
+
+label {
+	font-weight: normal;
+}
+
+.wordbreak {
+	word-break: break-all;
+}
+
+/* html5 form attibutre required 관련 */
+input:required {
+  border: 1px solid orange;
+  outline: none;
+}
+
+/**
+ * style input elements that have a required
+ * attribute and a focus state
+ */
+input:required:focus {
+  border: 1px solid blue;
+  outline: none;
+}
+
+/**
+ * style input elements that have a required
+ * attribute and a hover state
+ */
+input:required:hover {
+  opacity: 1;
+}
+
+/* html5 form attibutre required 관련 */
+textarea:required {
+  border: 1px solid orange;
+  outline: none;
+}
+
+/**
+ * style input elements that have a required
+ * attribute and a focus state
+ */
+textarea:required:focus {
+  border: 1px solid blue;
+  outline: none;
+}
+
+/**
+ * style input elements that have a required
+ * attribute and a hover state
+ */
+textarea:required:hover {
+  opacity: 1;
+}
+
+
+/* jquery 파일 업로더 */
+.upload {width:100%; margin:0 auto;}
+.upload_inbox {overflow:hidden;}
+.upload_inbox .btn {float:left; margin-right:-100px;}
+.progress {margin:7px 0; margin-left:100px;}
+
+.multi_inbox {min-height:30px; margin-top:10px; padding: 5px 10px; border:1px dashed #ccc; border-radius:4px; background:#f5f5f5;}
+.multi_inbox p {position:relative; margin:5px 0; padding:10px; border-radius:4px; background:#666;}
+.multi_inbox p a {color:#fff;}
+.multi_inbox p span {position:absolute; top:50%; right:10px; margin-top:-10px; color:#fff; z-index:auto;}
+.multi_inbox i {color:#fff;}
+
+/* page-top-menu */
+#page-menu-tab {
+	margin:0 -30px;
+	height:42px;
+	background-color: #f3f3f3;
+}
+
+#page-menu-tab ul {
+	margin-top:5px;
+	line-style:none;
+	padding-left:0px;
+	border-left:1px solid gray;
+	border-bottom:1px solid gray;	
+}
+
+#page-menu-tab ul li {
+	float:left;
+	border-top:1px solid gray;
+	border-right:1px solid gray; 
+	padding:8px 15px;
+}

@@ -1,0 +1,786 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.user.info.service.impl.UsrUserInfoMapper">	
+	
+	<sql id="selectQuery">
+		<![CDATA[
+		SELECT A.USER_NO as userNo
+		     , A.USER_NM as userNm
+             , A.USER_NM_GANA as userNmGana
+             , A.USER_NM_ENG as userNmEng
+		     , NVL((A.PHOTO_FILE_SN),0) AS photoFileSn
+		     ,A.BIRTH as BIRTH
+             , A.SEX_CD AS sexCd
+              ,A.DUP_INFO AS dupInfo
+              ,A.HOME_POST_NO AS homePostNo
+              ,A.HOME_ADDR_1 AS homeAddr1
+              ,A.HOME_ADDR_2 AS homeAddr2
+              ,A.HOME_PHONENO as homePhoneno
+              ,A.ETC_PHONENO as etcPhoneno
+              ,A.MOBILE_NO as mobileNo
+              ,A.EMAIL as email
+		     , A.ORG_CD as orgCd
+		     , ( SELECT ORG_NM
+		           FROM tb_org_org_info
+		          WHERE ORG_CD = A.ORG_CD ) AS orgNm
+		     , A.COMP_NM as compNm
+		     , A.DEPT_CD as deptCd
+		     , ( SELECT DEPT_NM FROM tb_usr_dept_info WHERE ORG_CD = A.ORG_CD AND DEPT_CD = A.DEPT_CD ) AS deptNm
+		     , A.AREA_CD as areaCd
+		     , ( SELECT CODE_NM FROM tb_org_code WHERE ORG_CD = A.ORG_CD AND CODE_CD = A.AREA_CD ) AS areaNm
+		     , A.COMP_PHONENO as compPhoneno
+		     , A.COMP_FAX_NO as compFaxNo
+		     , A.COMP_POST_NO as compPost
+		     , A.COMP_ADDR_1 as compAddr1
+		     , A.COMP_ADDR_2 as compAddr2
+		     , A.EMAIL_RECV as emailRecv
+		     , A.SMS_RECV as smsRecv
+		     , A.MSG_RECV as msgRecv
+		     , A.INTEREST_FIELD as interestField
+		     , A.INTEREST_FIELD_CD as InterestFieldCd
+		     , A.DISABLILITY_YN as disablilityYn
+		     , A.FOREIGN_YN as foreignYn
+		     , A.USER_DIV_CD as userDivCd
+		     , ( SELECT CODE_NM FROM tb_org_code WHERE ORG_CD = A.ORG_CD AND CODE_CD = A.USER_DIV_CD ) AS userDivNm
+		     , A.JOB_CD as jobCd
+		     , ( SELECT CODE_NM FROM tb_org_code WHERE ORG_CD = A.ORG_CD AND CODE_CD = A.JOB_CD) as jobNm
+		     , B.USER_ID as userId
+		     , B.USER_PASS as userPass
+		     , B.ADMIN_LOGIN_ACPT_DIV_CD as adminLoginAcptDivCd
+		     , B.GPKI_INFO as gpkiInfo
+		     , B.LOGIN_FAIL_DTTM as loginFailDttm
+		     , B.LOGIN_FAIL_CNT as loginFailCnt
+		     , B.LAST_LOGIN_DTTM as lastLoginDttm
+		     , B.LOGIN_CNT as loginCnt
+		     , B.APLC_DTTM as aplcDttm
+		     , B.APRV_DTTM as aprvDttm
+		     , B.SECEDE_DTTM as secedeDttm
+		     , B.USER_STS as userSts
+		     , B.REG_NO as regNo
+		     , B.REG_DTTM as regDttm
+		     , B.MOD_NO as modNo
+		     , B.MOD_DTTM as modDttm
+		     , B.SNS_DIV as snsDiv
+		     , B.SNS_KEY as snsKey
+		     , A.JUMIN_NO as juminNo
+		     , A.STD_DIV_CD as stdDivCd
+		     , A.NON_REGU_DIV_CD as nonReguDivCd
+		     , A.COST_COMP_NO as costCompNo
+		     , B.EXCEPT_YN as exceptYn
+          FROM tb_usr_user_info A, tb_usr_login B
+         WHERE A.USER_NO = B.USER_NO
+		]]>
+	</sql>
+	<sql id="selectCountQuery">
+		<![CDATA[
+		SELECT COUNT(*)
+          FROM tb_usr_user_info A, tb_usr_login B
+         WHERE A.USER_NO = B.USER_NO
+		]]>
+	</sql>
+	<sql id="whereQuery">
+		<if test='searchAuthGrp == "ADMIN"'>
+		   AND EXISTS ( SELECT USER_NO FROM tb_usr_user_auth_grp
+		                 WHERE USER_NO = A.USER_NO
+		                   AND MENU_TYPE = 'ADMIN'
+		                   AND AUTH_GRP_CD != 'ORGMNG' )
+		</if>
+		<if test = 'searchAuthGrp !=  "ADMIN"'>
+          AND A.ORG_CD IS NOT NULL
+			<if test = '(searchAuthGrp !=  null and  searchAuthGrp !=  "") and searchAuthGrp != "ALL"'>
+				<if test = 'userSts !=  null and  userSts !=  ""'>
+					<if test = 'userSts !=  "D"'>
+	           		AND EXISTS ( SELECT USER_NO FROM tb_usr_user_auth_grp
+			                 WHERE AUTH_GRP_CD = #{searchAuthGrp}
+			                   AND USER_NO = A.USER_NO )
+					</if>
+				</if>
+				<if test = 'userSts ==  null or  userSts ==  ""'>
+	           		AND EXISTS ( SELECT USER_NO FROM tb_usr_user_auth_grp
+			                 WHERE AUTH_GRP_CD = #{searchAuthGrp}
+			                   AND USER_NO = A.USER_NO )
+				</if>
+			</if>
+		</if>
+		<if test = 'orgCd != null and orgCd != ""'>
+		   AND A.ORG_CD = #{orgCd}
+		</if>
+		<if test = 'searchValue != null and searchValue != ""'>
+		   AND (CASE WHEN #{searchKey} = 'userId' THEN B.USER_ID ELSE A.USER_NM END) like CONCAT('%',#{searchValue},'%')
+		</if>
+		<if test = 'userSts != null and userSts != ""'>
+		   AND B.USER_STS  = #{userSts}
+		</if>
+		<if test = 'deptCd != null and deptCd != ""'>
+		   AND A.DEPT_CD = #{deptCd}
+		</if>
+		<if test = 'exceptYn != null and exceptYn != ""'>
+			AND B.EXCEPT_YN = #{exceptYn}
+		</if>
+	</sql>
+	<sql id="orderbyQuery">
+		<if test = 'sortKey != null and sortKey != ""'>
+			<if test = 'sortKey == "USER_ID_ASC"'>
+			 ORDER BY B.USER_ID ASC
+			</if>
+			<if test = 'sortKey == "USER_ID_DESC"'>
+			 ORDER BY B.USER_ID DESC
+			</if>
+			<if test = 'sortKey == "USER_NM_ASC"'>
+			 ORDER BY A.USER_NM ASC
+			</if>
+			<if test = 'sortKey == "USER_NM_DESC"'>
+			 ORDER BY A.USER_NM DESC
+			</if>
+			<if test = 'sortKey == "MOBILENO_ASC"'>
+			 ORDER BY A.MOBILE_NO ASC
+			</if>
+			<if test = 'sortKey == "MOBILENO_DESC"'>
+			 ORDER BY A.MOBILE_NO DESC
+			</if>
+			<if test = 'sortKey == "EMAIL_ASC"'>
+			 ORDER BY A.EMAIL ASC
+			</if>
+			<if test = 'sortKey == "EMAIL_DESC"'>
+			 ORDER BY A.EMAIL DESC
+			</if>
+			<if test = 'sortKey == "REGDATE_ASC"'>
+			 ORDER BY B.REG_DTTM ASC
+			</if>
+			<if test = 'sortKey == "REGDATE_DESC"'>
+			 ORDER BY B.REG_DTTM DESC
+			</if>
+			<if test = 'sortKey == "USER_STS_ASC"'>
+			 ORDER BY B.USER_STS ASC
+			</if>
+			<if test = 'sortKey == "USER_STS_DESC"'>
+			 ORDER BY B.USER_STS DESC
+			</if>
+		</if>
+		<if test = 'sortKey == null or sortKey == ""'>
+		   ORDER BY B.USER_ID ASC
+		</if>
+	</sql>		
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		<include refid="whereQuery"/>
+	</sql>
+	
+	<select id="list" parameterType="usrUserInfoVO" resultType="usrUserInfoVO">
+		/*
+			 SQL ID : list
+			 설  명 : 사용자의 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	 	<include refid="orderbyQuery"/>
+	</select>
+	
+	<sql id="selectConsultQuery">
+	 	<![CDATA[
+	 	SELECT CNST_CD 
+	 		 , CNST_ID					
+         	 , CNST_USER  									
+		   	 , CNST_DESC  							
+         	 , REG_NO 	   							
+      		 , REG_DTTM	  						
+        	 , USER_NO	   
+		  FROM tb_usr_cnst
+		  WHERE USER_NO = #{userNo}
+		 ]]>
+	</sql>
+	
+	
+	<sql id="selectCountConsultQuery">
+		<![CDATA[
+		SELECT COUNT(*)
+          FROM tb_usr_cnst
+         WHERE USER_NO = #{userNo}
+		]]>
+	</sql>
+	
+	<select id="countConsult" parameterType="usrUserInfoVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 사용자의 전체 카운트
+	 	*/
+		<include refid="selectCountConsultQuery"/>
+	</select>		
+	
+	<select id="listConsultPaging" parameterType="usrUserInfoVO" resultType="usrUserInfoVO">
+	 	/*
+			 SQL ID : listConsultPaging
+			 설  명 : 사용자의 상담 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="selectConsultQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="listPageing" parameterType="usrUserInfoVO" resultType="usrUserInfoVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 사용자의 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+	 	<if test = 'sortKey != null and sortKey != ""'>
+			<if test = 'sortKey == "USER_ID_ASC"'>
+			 ORDER BY USERID ASC
+			</if>
+			<if test = 'sortKey == "USER_ID_DESC"'>
+			 ORDER BY USERID DESC
+			</if>
+			<if test = 'sortKey == "USER_NM_ASC"'>
+			 ORDER BY USERNM ASC
+			</if>
+			<if test = 'sortKey == "USER_NM_DESC"'>
+			 ORDER BY USERNM DESC
+			</if>
+			<if test = 'sortKey == "MOBILENO_ASC"'>
+			 ORDER BY MOBILENO ASC
+			</if>
+			<if test = 'sortKey == "MOBILENO_DESC"'>
+			 ORDER BY MOBILENO DESC
+			</if>
+			<if test = 'sortKey == "EMAIL_ASC"'>
+			 ORDER BY EMAIL ASC
+			</if>
+			<if test = 'sortKey == "EMAIL_DESC"'>
+			 ORDER BY EMAIL DESC
+			</if>
+			<if test = 'sortKey == "REGDATE_ASC"'>
+			 ORDER BY REGDTTM ASC
+			</if>
+			<if test = 'sortKey == "REGDATE_DESC"'>
+			 ORDER BY REGDTTM DESC
+			</if>
+			<if test = 'sortKey == "USER_STS_ASC"'>
+			 ORDER BY USERSTS ASC
+			</if>
+			<if test = 'sortKey == "USER_STS_DESC"'>
+			 ORDER BY USERSTS DESC
+			</if>
+		</if>
+		<if test = 'sortKey == null or sortKey == ""'>
+		   ORDER BY USERID ASC
+		</if>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="usrUserInfoVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 사용자의 전체 카운트
+	 	*/
+		<include refid="selectCountQuery"/>
+		<include refid="whereQuery"/>
+	</select>		
+
+	<select id="select" parameterType="usrUserInfoVO" resultType="usrUserInfoVO">
+		/*
+			 SQL ID : select
+			 설  명 : 사용자의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+           AND A.USER_NO = #{userNo}	 	
+	</select>
+	
+	<select id="selectUserSns" parameterType="usrUserInfoVO" resultType="usrUserInfoVO">
+		/*
+			 SQL ID : select
+			 설  명 : 사용자의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+ 		AND A.ORG_CD = #{orgCd}
+		AND B.SNS_KEY = #{snsKey}
+		AND B.SNS_DIV = #{snsDiv}
+	</select>
+	
+	<select id="selectForLogin" parameterType="usrUserInfoVO" resultType="usrUserInfoVO">
+		/*
+			 SQL ID : selectForLogin
+			 설  명 : 사용자의 정보 조회
+	 	*/
+	 	<![CDATA[
+		SELECT A.USER_NO as userNo
+             , A.USER_NM as userNm
+             , A.USER_NM_GANA as userNmGana
+             , A.USER_NM_ENG as userNmEng
+             , A.ORG_CD as orgCd
+             , A.DEPT_CD as deptCd
+             , B.USER_ID as userId
+		     , B.USER_PASS as userPass
+		     , B.ADMIN_LOGIN_ACPT_DIV_CD as adminLoginAcptDivCd
+		     , B.GPKI_INFO as gpkiInfo
+		     , B.LOGIN_FAIL_DTTM as loginFailDttm
+		     , B.LOGIN_FAIL_CNT as loginFailCnt
+		     , B.LAST_LOGIN_DTTM as lastLoginDttm
+		     , B.LOGIN_CNT as loginCnt
+		     , B.USER_STS as userSts
+		     , CASE WHEN NOW() >= STR_TO_DATE(NVL((B.PSWD_CHG_REQ_DTTM),FN_GET_NULL(B.MOD_DTTM)),'%Y%m%d%H%i%s') 
+		            THEN 'Y' ELSE 'N' END as pswdChgReqYn
+		     , CASE WHEN B.LOGIN_FAIL_CNT >= FN_GET_CONFIG_VALUE('LOGIN','FAILCNT') THEN
+		            CASE WHEN DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') - NVL((B.LOGIN_FAIL_DTTM), '19900101000001') < fn_get_config_value('LOGIN','GAPTIME')
+		                 THEN 'N' ELSE 'Y' END
+		            ELSE 'Y' END AS loginUseYn
+		     , CASE WHEN (SELECT ITGRT_MBR_USE_YN
+                            FROM tb_org_org_info
+                            WHERE ORG_CD = #{orgCd}) = 'Y' 
+                    THEN 
+                        CASE WHEN (SELECT ITGRT_MBR_USE_YN
+                                    FROM tb_org_org_info
+                                    WHERE ORG_CD = A.ORG_CD) = 'Y' 
+                             THEN 'Y'
+                             ELSE 'N'
+                        END    
+                    ELSE 'N'
+               END AS itgrtMbrUseYn        
+             , B.PHONE_VERI_YN
+          FROM tb_usr_user_info A, tb_usr_login B
+         WHERE A.USER_NO = B.USER_NO
+           AND B.USER_STS = 'U'
+		]]>
+		<if test = "snsKey == null or snsKey == ''">
+        	AND B.USER_ID = #{userId}
+			<if test = "orgCd != null and orgCd != ''">
+        		AND A.ORG_CD = #{orgCd}	
+			</if>
+		</if>
+		<if test = "snsKey != null and snsKey != ''">
+			<if test = "itgrtMbrUseYn == null or itgrtMbrUseYn == ''">
+				<if test = "orgCd != null and orgCd != ''">
+	        		AND A.ORG_CD = #{orgCd}	
+				</if>
+			   	AND B.SNS_KEY = #{snsKey}
+			   	AND B.SNS_DIV = #{snsDiv}
+			</if>
+			<if test = "itgrtMbrUseYn != null and itgrtMbrUseYn != ''">
+			   	AND B.SNS_KEY = #{snsKey}
+			   	AND B.SNS_DIV = #{snsDiv}
+			   	AND A.ORG_CD IN (SELECT ORG_CD
+                            		FROM tb_org_org_info
+                            		WHERE ITGRT_MBR_USE_YN = 'Y' 
+                            	 )
+                AND ROWNUM = 1            		
+			</if>
+		</if>
+
+	</select>	
+	
+	<select id="selectForLoginCheck" parameterType="usrUserInfoVO" resultType="usrUserInfoVO">
+		/*
+			 SQL ID : selectForLogin
+			 설  명 : 사용자의 정보 조회
+	 	*/
+	 	<![CDATA[
+		SELECT A.USER_NO as userNo
+             , A.USER_NM as userNm
+             , A.USER_NM_GANA as userNmGana
+             , A.USER_NM_ENG as userNmEng
+             , A.ORG_CD as orgCd
+             , B.USER_ID as userId
+		     , B.USER_PASS as userPass
+		     , B.ADMIN_LOGIN_ACPT_DIV_CD as adminLoginAcptDivCd
+		     , B.GPKI_INFO as gpkiInfo
+		     , B.LOGIN_FAIL_DTTM as loginFailDttm
+		     , B.LOGIN_FAIL_CNT as loginFailCnt
+		     , B.LAST_LOGIN_DTTM as lastLoginDttm
+		     , B.LOGIN_CNT as loginCnt
+		     , B.USER_STS as userSts
+		     , CASE WHEN NOW() >= STR_TO_DATE(NVL((B.PSWD_CHG_REQ_DTTM),FN_GET_NULL(B.MOD_DTTM)),'%Y%m%d%H%i%s') 
+		            THEN 'Y' ELSE 'N' END as pswdChgReqYn
+		     , CASE WHEN B.LOGIN_FAIL_CNT >= FN_GET_CONFIG_VALUE('LOGIN','FAILCNT') THEN
+		            CASE WHEN DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') - NVL((B.LOGIN_FAIL_DTTM), '19900101000001') < fn_get_config_value('LOGIN','GAPTIME')
+		                 THEN 'N' ELSE 'Y' END
+		            ELSE 'Y' END AS loginUseYn
+		     , CASE WHEN (SELECT ITGRT_MBR_USE_YN
+                            FROM tb_org_org_info
+                            WHERE ORG_CD = #{orgCd}) = 'Y' 
+                    THEN 
+                        CASE WHEN (SELECT ITGRT_MBR_USE_YN
+                                    FROM tb_org_org_info
+                                    WHERE ORG_CD = A.ORG_CD) = 'Y' 
+                             THEN 'Y'
+                             ELSE 'N'
+                        END    
+                    ELSE 'N'
+               END AS itgrtMbrUseYn        
+          FROM tb_usr_user_info A, tb_usr_login B
+         WHERE A.USER_NO = B.USER_NO
+           AND B.USER_STS = 'U'
+		]]>
+		<if test = "snsKey == null or snsKey == ''">
+        	AND B.USER_ID = #{userId}
+			<if test = "orgCd != null and orgCd != ''">
+        		AND A.ORG_CD = #{orgCd}	
+			</if>
+		</if>
+		<if test = "snsKey != null and snsKey != ''">
+			<if test = "itgrtMbrUseYn == null or itgrtMbrUseYn == ''">
+				<if test = "orgCd != null and orgCd != ''">
+	        		AND A.ORG_CD = #{orgCd}	
+				</if>
+			   	AND B.SNS_KEY = #{snsKey}
+			   	AND B.SNS_DIV = #{snsDiv}
+			</if>
+			<if test = "itgrtMbrUseYn != null and itgrtMbrUseYn != ''">
+			   	AND B.SNS_KEY = #{snsKey}
+			   	AND B.SNS_DIV = #{snsDiv}
+			   	AND A.ORG_CD IN (SELECT ORG_CD
+                            		FROM tb_org_org_info
+                            		WHERE ITGRT_MBR_USE_YN = 'Y' 
+                            	 )
+                AND ROWNUM = 1            		
+			</if>
+		</if>
+		<if test = "userPass != null and userPass != ''">
+		   	AND B.USER_PASS = PASSWORD(#{userPass})
+		</if>
+	</select>	
+	
+	<select id="selectKey" resultType="String">
+		/*
+			 SQL ID : selectKey
+			 설  명 : 사용자의 주키 생성
+	 	*/
+	 	SELECT CONCAT('USR',LPAD(nextval('SQ_USR_USER_INFO'), 9, '0')) FROM DUAL
+	</select>
+	
+	<select id="selectConsultKey" resultType="String">
+		/*
+			 SQL ID : selectConsultKey
+			 설  명 : 상담 키 생성
+	 	*/
+	 	SELECT CONCAT('CNST',LPAD(nextval('SQ_USR_CNST'), 9, '0')) FROM DUAL
+	</select>
+	
+	<insert id="insert" parameterType="usrUserInfoVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 사용자의 정보 등록
+	 	*/
+		INSERT INTO tb_usr_user_info (
+		       USER_NO
+		     , USER_DIV_CD
+		     , USER_NM
+             , USER_NM_GANA
+             , USER_NM_ENG
+		     , PHOTO_FILE_SN
+		     , BIRTH
+		     , SEX_CD
+		     , DUP_INFO
+		     , HOME_POST_NO
+		     , HOME_ADDR_1
+		     , HOME_ADDR_2
+		     , HOME_PHONENO
+		     , ETC_PHONENO
+		     , MOBILE_NO
+		     , EMAIL
+		     , ORG_CD
+		     , COMP_NM
+		     , DEPT_CD
+		     , DEPT_NM
+		     , AREA_CD
+		     , COMP_PHONENO
+		     , COMP_FAX_NO
+		     , COMP_POST_NO
+		     , COMP_ADDR_1
+		     , COMP_ADDR_2
+		     , EMAIL_RECV
+		     , SMS_RECV
+		     , MSG_RECV
+		     , INTEREST_FIELD
+		     , INTEREST_FIELD_CD
+		     , DISABLILITY_YN
+		     , FOREIGN_YN
+		     , USER_DIV_NM
+		     , JOB_CD
+		     , JUMIN_NO
+		     , STD_DIV_CD
+		     , NON_REGU_DIV_CD
+		     , COST_COMP_NO
+		) VALUES (
+		       #{userNo}
+		     , #{userDivCd}
+		     , #{userNm}
+             , #{userNmGana}
+             , #{userNmEng}
+		     , #{photoFileSn}
+		     , #{birth}
+		     , #{sexCd}
+		     , #{dupInfo}
+		     , #{homePostNo}
+		     , #{homeAddr1}
+		     , #{homeAddr2}
+		     , #{homePhoneno}
+		     , #{etcPhoneno}
+		     , #{mobileNo}
+		     , #{email}
+		     , FN_GET_NULL(#{orgCd})
+		     , #{compNm}
+		     , #{deptCd}
+		     , #{deptNm}
+		     , #{areaCd}
+		     , #{compPhoneno}
+		     , #{compFaxNo}
+		     , #{compPostNo}
+		     , #{compAddr1}
+		     , #{compAddr2}
+		     , #{emailRecv}
+		     , #{smsRecv}
+		     , #{msgRecv}
+		     , #{interestField}
+		     , #{interestFieldCd}
+		     , #{disablilityYn}
+		     , #{foreignYn}
+		     , #{userDivNm}
+		     , #{jobCd}
+		     , #{juminNo}
+		     , #{stdDivCd}
+		     , #{nonReguDivCd}
+		     , #{costCompNo}
+		)	 	
+	</insert>
+	
+	<insert id="ssoinsert" parameterType="usrUserInfoVO" >
+		/*
+			 SQL ID : ssoinsert
+			 설  명 : 사용자의 정보 등록
+	 	*/
+		INSERT INTO tb_usr_user_info (
+		       USER_NO
+		     , USER_NM
+		     , ORG_CD
+		) VALUES (
+		       #{userNo}
+		     , #{userNo}
+		     , #{orgCd}
+		)	 	
+	</insert>
+	
+	<insert id="insertConsult" parameterType="usrUserInfoVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 사용자의 상담 등록
+	 	*/
+		INSERT INTO tb_usr_cnst (
+		       CNST_CD
+		     , CNST_ID
+		     , CNST_USER
+		     , CNST_DESC
+             , REG_NO
+             , REG_DTTM
+		     , USER_NO
+		) VALUES (
+		       #{cnstCd}
+		     , #{cnstId}
+		     , #{cnstUser}
+		     , #{cnstDesc}
+             , #{regNo}
+             , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		     , #{userNo}
+		)	 	
+	</insert>
+	
+	<update id="update" parameterType="usrUserInfoVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 사용자의 정보 수정
+	 	*/
+		UPDATE tb_usr_user_info
+		   SET USER_NM = #{userNm}
+             , USER_NM_GANA = #{userNmGana}
+             , USER_NM_ENG = #{userNmEng}
+		     , USER_DIV_CD = #{userDivCd}
+		     , PHOTO_FILE_SN = #{photoFileSn}
+		     , BIRTH = #{birth}
+		     , SEX_CD = #{sexCd}
+		     , HOME_POST_NO = #{homePostNo}
+		     , HOME_ADDR_1 = #{homeAddr1}
+		     , HOME_ADDR_2 = #{homeAddr2}
+		     , HOME_PHONENO = #{homePhoneno}
+		     , ETC_PHONENO = #{etcPhoneno}
+		     , MOBILE_NO = #{mobileNo}
+		     , EMAIL = #{email}
+		     , COMP_NM = #{compNm}
+		     , DEPT_CD = #{deptCd}
+		     , DEPT_NM = #{deptNm}
+		     , AREA_CD = #{areaCd}
+		     , COMP_PHONENO = #{compPhoneno}
+		     , COMP_FAX_NO = #{compFaxNo}
+		     , COMP_POST_NO = #{compPostNo}
+		     , COMP_ADDR_1 = #{compAddr1}
+		     , COMP_ADDR_2 = #{compAddr2}
+		     , EMAIL_RECV = #{emailRecv}
+		     , SMS_RECV = #{smsRecv}
+		     , MSG_RECV = #{msgRecv}
+		     , INTEREST_FIELD = #{interestField}
+		     , INTEREST_FIELD_CD = #{interestFieldCd}
+		     , DISABLILITY_YN = #{disablilityYn}
+		     , USER_DIV_NM = #{userDivNm}
+		     , JOB_CD = #{jobCd}
+		     , JUMIN_NO = #{juminNo}
+		     , STD_DIV_CD = #{stdDivCd}
+		     , NON_REGU_DIV_CD = #{nonReguDivCd}
+		     , COST_COMP_NO = #{costCompNo}
+		 WHERE USER_NO = #{userNo}	 
+	</update>	
+
+	<delete id="delete" parameterType="usrUserInfoVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 사용자의 정보 삭제
+	 	*/
+		DELETE FROM tb_usr_user_info
+		 WHERE USER_NO = #{userNo}
+	</delete>
+	
+	<select id="selectSearchId" parameterType="usrUserInfoVO" resultType="usrUserInfoVO">
+		/*
+			 SQL ID : selectSearchId
+			 설  명 : 사용자의 이름과 이메일로 사용자 정보 검색
+	 	*/
+        SELECT B.USER_ID as userId
+             , A.USER_NO as userNo
+             , A.USER_NM as userNm
+             , A.USER_NM_GANA as userNmGana
+             , A.USER_NM_ENG as userNmEng
+             , A.EMAIL as email
+          FROM tb_usr_user_info A, tb_usr_login B
+         WHERE A.USER_NO = B.USER_NO
+           AND B.USER_STS = 'U'
+		<if test = "userNm != null and userNm != ''">
+		   AND A.USER_NM = #{userNm}
+		</if>
+		<if test = "userId != null and userId != ''">
+           AND B.USER_ID = #{userId}
+		</if>
+		<if test = "orgCd != null and orgCd != ''">
+		   AND A.ORG_CD = #{orgCd}
+		</if>
+
+           AND A.EMAIL = #{email}
+          	LIMIT 1;
+	</select>
+	
+	
+	<select id="selectSearchPass" parameterType="usrUserInfoVO" resultType="usrUserInfoVO">
+		/*
+			 SQL ID : selectSearchPass
+			 설  명 : 사용자의 패스워드를 조회한다.
+	 	*/
+	 	SELECT TB.userPass
+	 	FROM (SELECT B.USER_PASS as userPass
+		        	,  @row_num := @row_num + 1 as ROWNUM
+		          FROM tb_usr_user_info A, tb_usr_login B, (select @row_num := 0) as C
+		         WHERE A.USER_NO = B.USER_NO
+		           AND B.USER_STS = 'U'
+				<if test = "userNo != null and userNo != ''">
+				   AND A.USER_NO = #{userNo}
+				</if>
+				<if test = "orgCd != null and orgCd != ''">
+				   AND A.ORG_CD = #{orgCd}
+				</if>
+		           AND B.USER_PASS = PASSWORD(#{userPass})) as TB
+        WHERE
+          	TB.ROWNUM = 1
+	</select>
+	
+	<select id="selectDuplicate" parameterType="usrUserInfoVO" resultType="Integer">
+		/*
+			 SQL ID : selectDuplicate
+			 설  명 : 중복키를 이용하여 사용자 중복 정보를 조회 한다.
+	 	*/
+		SELECT COUNT(USER_NO)
+		  FROM tb_usr_user_info
+		 WHERE DUP_INFO = #{dupInfo}
+	</select>		
+
+	<update id="updateWithdrawal" parameterType="usrUserInfoVO" >
+		/*
+			 SQL ID : updateWithdrawal
+			 설  명 : 회원탈퇴용 업데이트 사용자의 필드 정보만 초기화함.
+	 	*/
+		UPDATE tb_usr_user_info
+		   SET PHOTO_FILE_SN = null
+		     , HOME_POST_NO = ''
+		     , HOME_ADDR_1 = ''
+		     , HOME_ADDR_2 = ''
+		     , HOME_PHONENO = ''
+		     , ETC_PHONENO = ''
+		     , MOBILE_NO = ''
+		     , EMAIL = ''
+		     , EMAIL_RECV = ''
+		     , SMS_RECV = ''
+		     , MSG_RECV = ''
+		     , BIRTH = ''
+		     , USER_DIV_CD = ''
+		     , SEX_CD = ''
+		     , DEPT_CD = ''
+		     , DEPT_NM = ''
+		     , COMP_FAX_NO = ''
+		     , INTEREST_FIELD = ''
+		     , INTEREST_FIELD_CD = ''
+		     , DISABLILITY_YN = ''
+		     , USER_DIV_NM = ''
+		     , JOB_CD = ''
+		     , COMP_PHONENO = ''
+		     , COMP_ADDR_1 = ''
+		     , AREA_CD = ''
+		     , JUMIN_NO = ''
+		     , STD_DIV_CD = ''
+		     , NON_REGU_DIV_CD =''
+		     , COST_COMP_NO = ''
+		 WHERE USER_NO = #{userNo}
+	</update>
+	
+	<select id="selectUserCheckByUserIdOrgCd" parameterType="usrUserInfoVO" resultType="usrUserInfoVO">
+		SELECT A.USER_NO, A.DEPT_CD, B.USER_STS
+		FROM tb_usr_user_info A, tb_usr_login B
+		WHERE A.USER_NO = B.USER_NO
+			AND B.USER_STS = 'U'
+			AND B.USER_ID = #{userId}
+			AND A.ORG_CD = #{orgCd}
+		
+	</select>
+	
+	<select id="selectEmailCheck" parameterType="usrUserInfoVO" resultType="String">
+		SELECT CASE WHEN COUNT(*) = 0 THEN 'Y' ELSE 'N' END AS isUseable
+		  FROM tb_usr_user_info
+		 WHERE EMAIL = #{email}
+	</select>
+	
+	<select id="selectUserInfoApi" parameterType="usrUserInfoVO" resultType="egovMap">
+		SELECT 
+		  'ocuhrd' as AGENT_PK		
+		, @row_num := @row_num + 1  as SEQ		
+		, A.USER_NO as USER_AGENT_PK	
+		, A.USER_NM as USER_NAME	
+		, A.JUMIN_NO as RES_NO		
+		, '메디오피아테크 HRD-NET' as ENC_RES_NO	
+		, A.EMAIL as EMAIL		
+		, A.MOBILE_NO as MOBILE		
+		, 'C' as CHANGE_STATE	
+		, DATE_FORMAT( NOW(), '%Y-%m-%d %H:%i:%s') as REG_DATE		
+		, '12345678' as NW_INO		
+		, '007' as TRNEE_SE		
+		, '000' as IRGLBR_SE
+		FROM tb_usr_user_info A,tb_usr_login B, (select @row_num := 0) as C
+		WHERE A.USER_NO = B.USER_NO
+		<if test = "searchFrom != null and searchFrom != '' and searchTo != null and searchTo != ''">
+			AND DATE_FORMAT(B.REG_DTTM , '%Y%m%d') BETWEEN DATE_FORMAT(#{searchFrom} , '%Y%m%d') AND DATE_FORMAT(#{searchTo} , '%Y%m%d')
+		</if>
+	</select>
+	
+	<update id="updateNiceCheckInfo" parameterType="usrUserInfoVO" >
+		UPDATE tb_usr_user_info
+		   SET 
+		   	   USER_NM = #{userNm}
+		   	 , MOBILE_NO = #{mobileNo}
+		   	 , BIRTH = #{birth}
+		   	 , SEX_CD = #{sexCd}
+		 WHERE USER_NO = #{userNo}
+	</update>
+</mapper>

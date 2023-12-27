@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.lecture.bbs.service.impl.LecBbsAtclMapper">
+	<select id="selectKey" resultType="integer">
+		SELECT SQ_LEC_BBS_ATCL.nextVal FROM DUAL
+	</select>	
+		
+	<sql id="selectColumnQuery">
+	<![CDATA[
+				A.ATCL_SN  
+		   	  , A.CRS_CRE_CD  
+		   	  , A.BBS_CD  
+			  , A.PAR_ATCL_SN  
+		   	  , A.ATCL_LVL  
+		   	  , A.ATCL_ODR  
+		   	  , A.TITLE  
+		   	  , A.CTS  
+			  , A.HITS  
+			  , ( SELECT COUNT(T1.CMNT_SN)  
+				    FROM TB_LEC_BBS_CMNT T1  
+				   WHERE T1.ATCL_SN = A.ATCL_SN) AS CMNT_CNT  
+			  , ( SELECT COUNT(*)  
+				    FROM TB_LEC_BBS_ATCL T2  
+				   WHERE T2.PAR_ATCL_SN = A.ATCL_SN) AS REPLY_CNT  
+		      , A.EDITOR_YN  
+			  , A.REG_NO  
+			  , A.REG_DTTM  
+			  , A.MOD_NO  
+			  , A.MOD_DTTM  
+			  , ( SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL ) AS MOD_NM  
+			  , ( SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL ) AS REG_NM  
+			  	, CASE																	
+			    	WHEN A.REG_DTTM >= TO_CHAR(SYSDATE-1,'YYYYMMDDHH24MISS') THEN 'NEW' 
+			    	ELSE ''																
+			  	  END AS RECENTLY														
+			  , A.LOCK_YN  
+			  , A.ORIGIN_REG_NO  
+		      , (SELECT P.REG_NO FROM TB_LEC_BBS_ATCL P WHERE P.ATCL_SN = A.PAR_ATCL_SN) AS PAR_REG_NO	
+	]]>		
+	</sql>
+		
+	<sql id="selectQuery">
+		  SELECT 
+		  <include refid="selectColumnQuery" />			
+		   FROM TB_LEC_BBS_ATCL A, TB_LEC_BBS B  
+		  WHERE A.CRS_CRE_CD = B.CRS_CRE_CD  
+		    AND A.BBS_CD = B.BBS_CD  
+		    AND A.CRS_CRE_CD = #{crsCreCd}  
+		    AND A.BBS_CD = #{bbsCd}  
+	</sql>
+	
+	<select id="count" parameterType="lecBbsAtclVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM TB_LEC_BBS_ATCL A, TB_LEC_BBS B  
+		WHERE A.CRS_CRE_CD = B.CRS_CRE_CD  
+		    AND A.BBS_CD = B.BBS_CD  
+		    AND A.CRS_CRE_CD = #{crsCreCd}  
+		    AND A.BBS_CD = #{bbsCd}  
+	</select>
+		
+	<select id="listPageing"  parameterType="lecBbsAtclVO" resultType="lecBbsAtclVO">
+		<!-- 게시글 레코드 목록을 조회한다.(트리 페이징 포함)  -->
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+			<include refid="selectQuery" />
+			<if test = "searchValue != null and searchValue != ''">
+				<choose>
+					<when test="searchKey == 'regNm'">
+					  	AND (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) LIKE '%'||NVL(#{searchValue}, '')||'%'  
+						
+					</when>
+					<otherwise>
+					  	AND A.TITLE LIKE '%'||NVL(#{searchValue}, '')||'%'  
+					</otherwise>
+				</choose>
+			</if>
+		CONNECT BY A.PAR_ATCL_SN = PRIOR A.ATCL_SN  
+		  ORDER SIBLINGS BY A.ATCL_SN DESC 
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="select" parameterType="lecBbsAtclVO" resultType="lecBbsAtclVO">
+		<!-- 단일 게시물 조회.  -->
+		<include refid="selectQuery" />
+		 AND A.ATCL_SN = #{atclSn} 
+	</select>
+	
+	<insert id="insert" parameterType="lecBbsAtclVO">
+		<!-- 게시물 등록  -->
+	
+		INSERT INTO   TB_LEC_BBS_ATCL (  
+		  	 	CRS_CRE_CD  
+		      , BBS_CD  
+		      , ATCL_SN  
+		      , PAR_ATCL_SN  
+		      , ATCL_LVL  
+		      , ATCL_ODR  
+		      , TITLE  
+		      , CTS  
+		      , HITS  
+		      , EDITOR_YN  
+		      , REG_NM  
+		      , REG_NO  
+		      , REG_DTTM  
+		      , MOD_NO  
+		      , MOD_DTTM  
+		      , LOCK_YN  
+		      , ORIGIN_REG_NO  
+		 ) VALUES (  
+		        #{crsCreCd}  
+		      , #{bbsCd} 
+		      , #{atclSn}
+		      , #{parAtclSn}
+		      , #{atclLvl}  
+		      , NVL(( SELECT MAX(NVL(ATCL_ODR,0)) + 1  
+		                FROM TB_LEC_BBS_ATCL  
+		               WHERE BBS_CD = #{bbsCd}  
+		                 AND NVL(PAR_ATCL_SN,1) = NVL(#{parAtclSn},1) ),1)  
+		      , #{title}  
+		      , #{cts}  
+		      , #{hits}  
+		      , #{editorYn}  
+		      , #{regNm}  
+		      , #{regNo}  
+		      , TO_CHAR(SYSDATE,'yyyymmddhh24miss')  
+			  , #{modNo}  
+		      , TO_CHAR(SYSDATE,'yyyymmddhh24miss')  
+		      , #{lockYn}
+		      , #{originRegNo}  
+		 )  
+	</insert>
+	
+	<update id="update" parameterType="lecBbsAtclVO">
+		<!-- 게시글 단일 레코드를 수정한다. -->
+		UPDATE TB_LEC_BBS_ATCL  
+			 SET TITLE = #{title}  
+			   , CTS = #{cts}  
+			   , EDITOR_YN = #{editorYn}  
+			   , MOD_NO = #{modNo}  
+			   , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+			   , LOCK_YN = #{lockYn}  
+			   , ORIGIN_REG_NO = #{originRegNo}  
+		  WHERE ATCL_SN = #{atclSn}  
+			 AND BBS_CD = #{bbsCd}  
+			 AND CRS_CRE_CD	= #{crsCreCd}
+	</update>
+	
+	<delete id="delete" parameterType="lecBbsAtclVO">
+		<!-- 게시글 단일 레코드를 삭제한다.  -->
+		 DELETE FROM TB_LEC_BBS_ATCL  
+		  WHERE ATCL_SN = #{atclSn} 
+	</delete>
+	
+	<delete id="deleteAll" parameterType="lecBbsAtclVO">
+		<!-- 게시글 단일 레코드를 삭제한다.  -->
+		 DELETE FROM TB_LEC_BBS_ATCL  
+		  WHERE BBS_CD = #{bbsCd}
+	</delete>
+	
+	<update id="hitup" parameterType="lecBbsAtclVO">
+		<!-- 해당글의 조회수를 1 증가시킨다. -->
+		UPDATE	TB_LEC_BBS_ATCL  
+		    SET	HITS = HITS + 1  
+		  WHERE	ATCL_SN	= #{atclSn}
+	</update>
+
+</mapper>

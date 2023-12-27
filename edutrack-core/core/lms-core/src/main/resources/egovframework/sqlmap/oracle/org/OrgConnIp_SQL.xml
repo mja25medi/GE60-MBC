@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.org.connip.service.impl.OrgConnIpMapper">	
+
+	<sql id="selectQuery">
+		SELECT ORG_CD as orgCd
+		     , CONN_IP as connIp
+		     , DIV_CD as divCd
+		     , USE_YN as useYn
+		     , REG_NO as regNo
+		     , ( SELECT FN_GET_USER_NAME(REG_NO)
+		           FROM DUAL) AS regNm
+		     , REG_DTTM as regDttm
+		     , MOD_NO as modNo
+		     , ( SELECT FN_GET_USER_NAME(MOD_NO)
+		           FROM DUAL) AS modNm
+		     , MOD_DTTM as modDttm
+		  FROM TB_ORG_CONN_IP
+		 WHERE ORG_CD = #{orgCd}
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		<if test = "useYn != null and useYn != ''">
+		   AND USE_YN = #{useYn}
+		</if>
+		 ORDER BY DIV_CD, CONN_IP		 
+	</sql>		
+
+	<select id="list" parameterType="orgConnIpVO" resultType="orgConnIpVO">
+		/*
+			 SQL ID : list
+			 설  명 : 접속 IP의 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	</select>
+	
+	<select id="listPageing" parameterType="orgConnIpVO" resultType="orgConnIpVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 접속 IP의 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="orgConnIpVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 접속 IP의 전체 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>	
+	
+	<select id="select" parameterType="orgConnIpVO" resultType="orgConnIpVO">
+		/*
+			 SQL ID : select
+			 설  명 : 접속 IP의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+           AND CONN_IP = #{connIp}	
+	</select>	
+	
+	<insert id="insert" parameterType="orgConnIpVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 접속 IP의 정보 등록
+	 	*/
+		INSERT INTO TB_ORG_CONN_IP (
+		       ORG_CD
+		     , CONN_IP
+		     , DIV_CD
+		     , USE_YN
+		     , REG_NO
+		     , REG_DTTM
+		     , MOD_NO
+		     , MOD_DTTM
+		) VALUES (
+		       #{orgCd}
+		     , #{connIp}
+		     , #{divCd}
+		     , #{useYn}
+		     , #{regNo}
+		     , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		     , #{modNo}
+		     , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		)	
+	</insert>
+	
+	<delete id="delete" parameterType="orgConnIpVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 접속 IP의 정보 삭제
+	 	*/
+		DELETE FROM TB_ORG_CONN_IP 
+		 WHERE ORG_CD = #{orgCd} 
+		   AND CONN_IP = #{connIp}
+	</delete>
+	 
+</mapper>

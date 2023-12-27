@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.log.classconn.service.impl.LogClassConnMapper">	
+
+	<update id="merge" parameterType="logClassConnVO" >
+			INSERT INTO tb_log_class_conn_log 
+				(
+			      ORG_CD								
+			   ,  CRS_CRE_CD							
+			   ,  USER_NO								
+			   ,  YEAR									
+			   ,  MONTH								
+			   ,  DAY									
+			   ,  CONN_CNT	
+				)VALUES(
+			      #{orgCd}									
+			   ,  #{crsCreCd}								
+			   ,  #{userNo}								
+			   ,  DATE_FORMAT(NOW(), '%Y')		
+			   ,  DATE_FORMAT(NOW(), '%m')				
+			   ,  DATE_FORMAT(NOW(), '%d')				
+			   ,  1	
+				)ON DUPLICATE KEY
+					UPDATE CONN_CNT = CONN_CNT + 1;	
+	</update>	
+
+	<select id="select" parameterType="logClassConnVO" resultType="logClassConnVO">
+		 	SELECT  CASE WHEN #{dateType} = 'Day' THEN #{endDt} 																		
+		             	 WHEN #{dateType} = 'Week' THEN DATE_FORMAT(STR_TO_DATE(replace(#{endDt},'.',''), '%Y%m%d') - 7,'%Y.%m.%d')			
+		             	 WHEN #{dateType} = 'Month' THEN DATE_FORMAT(STR_TO_DATE(replace(#{endDt},'.',''),'%Y%m%d') - 30,'%Y.%m.%d')		
+		             	 WHEN #{dateType} = 'Year' THEN DATE_FORMAT(STR_TO_DATE(replace(#{endDt},'.',''),'%Y%m%d') - 365,'%Y.%m.%d')		
+		             	 END START_DT  																								
+		        ,  #{endDt} AS END_DT																								
+	</select>
+
+</mapper>

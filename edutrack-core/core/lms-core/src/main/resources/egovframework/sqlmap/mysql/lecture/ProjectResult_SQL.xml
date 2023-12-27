@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.module.lecture.project.result.service.impl.ProjectResultMapper">	
+
+
+	<sql id="selectQuery">
+		    SELECT  A.CRS_CRE_CD                  	     	     	     	   			
+		               , A.PRJT_SN                    	     	     	     	   		
+		               , A.PRJT_TEAM_SN               	     	     	     	   		
+		               , A.PRJT_TEAM_NM               	     	     	     	   		
+		               , NVL((A.TEAM_SCORE),0) AS TEAM_SCORE          	     	   		
+		               , A.REG_NO                     	     	     	     	   		
+		               , A.REG_DTTM                   	     	     	     	   		
+		               , A.MOD_NO                     	     	     	     	   		
+		               , A.MOD_DTTM 		           									
+		               , NVL((SELECT FN_GET_USER_NAME(C.USER_NO)					
+		                        FROM TB_LEC_PRJT_TEAM_MBR B, tb_std_std C				
+		                        WHERE B.STD_NO = C.STD_NO								
+		                        AND B.CRS_CRE_CD = A.CRS_CRE_CD      		      		
+		                        AND B.PRJT_SN = A.PRJT_SN            					
+		                        AND B.PRJT_TEAM_SN = A.PRJT_TEAM_SN            		
+		               		 AND B.TEAM_LEADER_DIV = 'Y') ,'팀장없음') TEAM_LEADER 		
+		               ,(SELECT FN_GET_USER_ID(C.USER_NO)								
+		                        FROM TB_LEC_PRJT_TEAM_MBR B, tb_std_std C				
+		                        WHERE B.STD_NO = C.STD_NO								
+		                        AND B.CRS_CRE_CD = A.CRS_CRE_CD      		      		
+		                        AND B.PRJT_SN = A.PRJT_SN            					
+		                        AND B.PRJT_TEAM_SN = A.PRJT_TEAM_SN            		
+		               		 AND B.TEAM_LEADER_DIV = 'Y' ) LEADER_ID     			
+		     FROM  TB_LEC_PRJT_TEAM  A					
+	</sql>
+	<sql id="listQuery">
+		<include refid="selectQuery" />
+	</sql>
+ 	<select id="list" parameterType="projectResultVO" resultType="projectResultVO">
+	    <include refid="selectQuery" />
+				    WHERE A.CRS_CRE_CD = #{crsCreCd}				
+				      AND A.PRJT_SN 	= #{prjtSn}				
+				    ORDER BY A.PRJT_TEAM_SN					
+	</select>
+
+
+	<select id="select" parameterType="projectResultVO" resultType="projectResultVO">
+	    <include refid="selectQuery" />
+				    WHERE A.CRS_CRE_CD 	= #{crsCreCd}			
+				      AND A.PRJT_SN 	  	= #{prjtSn}			
+				      AND A.PRJT_TEAM_SN	= #{prjtTeamSn}		
+	</select>
+
+
+
+   <update id="updateScoreAll" parameterType="projectResultVO">
+		           UPDATE TB_LEC_PRJT_TEAM                								
+		              SET TEAM_SCORE		=  #{teamScore}           	 				
+		                , MOD_NO    =  #{modNo}                   						
+		                , MOD_DTTM 		=  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')    	
+		            WHERE CRS_CRE_CD 		=  #{crsCreCd}		     					
+		              AND PRJT_SN 			=  #{prjtSn}		     						
+		              AND PRJT_TEAM_SN     =  #{prjtTeamSn}		     		
+    </update>
+   <update id="updateMbrScoreAll" parameterType="projectResultVO">
+		           UPDATE TB_LEC_PRJT_TEAM_MBR                							
+		              SET MBR_SCORE		=  #{teamScore}            	 				
+		                , MOD_DTTM 		=  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')    	
+		                , MOD_NO    =  #{modNo}                   						
+		            WHERE CRS_CRE_CD 		=  #{crsCreCd}		     					
+		              AND PRJT_SN 			=  #{prjtSn}		     						
+		              AND PRJT_TEAM_SN     =  #{prjtTeamSn}		     					
+    </update>
+
+ 	<select id="teamList" parameterType="projectResultVO" resultType="projectResultVO">
+		    SELECT     A.CRS_CRE_CD                                                    
+		               , A.PRJT_MBR_SN     	   		                                
+		               , A.PRJT_TEAM_SN 	    	                                            
+		               , A.STD_NO 	    	                                            
+		               , NVL((A.MBR_SCORE),0) AS MBR_SCORE	                            	                
+		               , A.MBR_ROLE 	                            	                
+		               , B.USER_NO 	                            	                
+		               ,(SELECT FN_GET_USER_NAME(B.USER_NO)) AS TEAM_LEADER	
+		               ,(SELECT FN_GET_USER_ID(B.USER_NO)) AS LEADER_ID		
+		     FROM                                                                      
+		     TB_LEC_PRJT_TEAM_MBR A, tb_std_std B                                      
+		     WHERE A.CRS_CRE_CD = B.CRS_CRE_CD                                         
+		     AND A.STD_NO	= B.STD_NO                                                  
+		     AND A.PRJT_SN	= #{prjtSn}                                                   
+		     AND A.PRJT_TEAM_SN = #{prjtTeamSn}                                  
+	</select>
+
+   <update id="editMbScoreAll" parameterType="projectResultVO">
+		           UPDATE TB_LEC_PRJT_TEAM_MBR                							
+		              SET MBR_SCORE		=  #{mbrScore}            	 				
+		                , MOD_DTTM 		=  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')  	
+		            WHERE CRS_CRE_CD 		=  #{crsCreCd}		     					
+		              AND PRJT_SN 			=  #{prjtSn}		     						
+		              AND PRJT_TEAM_SN     =  #{prjtTeamSn}		     					
+		              AND PRJT_MBR_SN      =  #{prjtMbrSn}		     			     					
+    </update>
+	<select id="siInfoSelect" parameterType="projectResultVO" resultType="projectResultVO">
+		    SELECT  A.CRS_CRE_CD                                                  				     
+		               , A.PRJT_SN     	   		                               				     
+		               , A.ASMT_SN 	    	                                  				      
+		               , A.ASMT_TITLE 	    	                                 				       
+		   	 		, FN_GET_DATE_FORMAT(ASMT_END_DTTM, '%Y.%m.%d %H:%i') ASMT_START_DTTM	         	
+		        		, FN_GET_DATE_FORMAT(ASMT_END_DTTM, '%Y.%m.%d %H:%i') ASMT_END_DTTM	              
+		               , A.ASMT_CTS	                            	           				     
+		     FROM                                                                 				     
+		     TB_LEC_PRJT_ASMT A                                                    			     
+		     WHERE A.CRS_CRE_CD = #{crsCreCd}                                         				 
+		     AND A.PRJT_SN 	= #{prjtSn}                                              				 
+		     AND A.ASMT_END_DTTM > DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')             	
+	</select>
+	<select id="submitInfoSelect" parameterType="prjAssignmentSendVO" resultType="prjAssignmentSendVO">
+		    SELECT A.SEND_CTS                                                  		      
+		   		,A.ASMT_SN                                                  		      
+		               ,(SELECT PRJT_TEAM_NM     	   		                                  
+		               FROM 	    	                                  				      
+		               TB_LEC_PRJT_TEAM B 	    	                                 	      
+		   	 		WHERE B.CRS_CRE_CD = #{crsCreCd}	                                      	
+		        		AND B.PRJT_SN      = #{prjtSn}	                                       
+		               AND B.PRJT_TEAM_SN = #{prjtTeamSn}	                                  
+		     ) AS PRJT_TEAM_NM                                                    		      
+		     FROM                                                    		           	      
+		     	TB_LEC_PRJT_ASMT_SEND A                                         		      
+		     WHERE A.ASMT_SN = #{asmtSn}                                                       
+		           AND A.PRJT_SN 	= #{prjtSn}                                  				  
+		           AND A.PRJT_TEAM_SN = #{prjtTeamSn}                                 	
+	</select>	
+
+
+</mapper>

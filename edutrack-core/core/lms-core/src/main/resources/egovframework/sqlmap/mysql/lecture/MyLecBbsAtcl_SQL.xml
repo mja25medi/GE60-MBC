@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.lecture.mybbs.service.impl.MyLecBbsAtclMapper">
+
+	<sql id="selectColumnQuery">
+				 A.CRS_CRE_CD 											
+		       , C.CRS_CRE_NM 											
+		       , C.CRE_YEAR 											
+		       , C.CRE_TERM 											
+		       , A.BBS_CD 												
+		       , B.BBS_NM 												
+		       , A.ATCL_SN 											
+		       , A.PAR_ATCL_SN 										
+		       , A.ARCL_LVL 											
+		       , A.ARCL_ODR 											
+		       , A.TITLE 												
+		       , A.CTS 												
+		       , A.REG_NO 												
+		       , A.REG_NM 												
+		       , A.REG_DTTM 											
+		       , A.HITS	 											
+	</sql>
+	
+	<sql id="selectQuery">
+		  SELECT 
+		  <include refid="selectColumnQuery" />										
+		  FROM tb_lec_bbs_atcl A, tb_lec_bbs B, tb_crs_cre_crs C 	
+		  WHERE A.BBS_CD = B.BBS_CD 									
+		    AND A.CRS_CRE_CD = C.CRS_CRE_CD 							
+		    AND B.CRS_CRE_CD = C.CRS_CRE_CD 							
+		    AND A.REG_NO = #{regNo}
+	</sql>
+
+	<select id="count" parameterType="myLecBbsAtclVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM tb_lec_bbs_atcl A, tb_lec_bbs B, tb_crs_cre_crs C 	
+		WHERE A.BBS_CD = B.BBS_CD 									
+		  AND A.CRS_CRE_CD = C.CRS_CRE_CD 							
+		  AND B.CRS_CRE_CD = C.CRS_CRE_CD 							
+		  AND A.REG_NO = #{regNo}
+	</select>
+		
+	<select id="listPageing"  parameterType="myLecBbsAtclVO" resultType="myLecBbsAtclVO">
+		<!-- 게시글 레코드 목록을 조회한다.(페이징 포함)  -->
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+			<include refid="selectQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		ORDER BY REG_DTTM DESC, CRS_CRE_NM, CRE_YEAR
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="select" parameterType="myLecBbsAtclVO" resultType="myLecBbsAtclVO">
+		<!--   단일 게시물 조회. -->
+		<include refid="selectQuery" />
+		AND A.ATCL_SN = #{atclSn}
+	</select>
+	
+</mapper>

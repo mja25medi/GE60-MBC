@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.system.file.service.impl.SysFileRepoMapper">	
+	
+	<sql id="selectQuery">
+		SELECT A.REPO_CD as repoCd
+		     , A.PAR_TABLE_NM as parTableNm
+		     , A.PAR_FIELD_NM as parFieldNm
+		     , A.REPO_NM as repoNm
+		     , A.REPO_DFLT_PATH as repoDfltPath
+		     , A.REG_NM regNm
+		     , A.REG_NO regNo
+		     , A.REG_DTTM regDttm
+		     , ( SELECT COUNT(*)
+		           FROM tb_sys_file
+		          WHERE REPO_CD = A.REPO_CD )  AS fileCnt
+		  FROM tb_sys_file_repo A
+		 WHERE '1' = '1'
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		<if test = "repoCd != null and repoCd != ''">
+		   AND A.REPO_CD LIKE CONCAT('%',#{repoCd},'%')
+		</if>
+		<if test = "repoNm != null and repoNm != ''">
+			   AND A.REPO_NM LIKE CONCAT('%',#{repoNm},'%')
+		</if>
+		<if test = "parTableNm != null and parTableNm != ''">
+		   AND A.PAR_TABLE_NM LIKE CONCAT('%',#{parTableNm},'%')
+		</if>
+		<if test = "repoDfltPath != null and repoDfltPath != ''">
+		   AND A.REPO_DFLT_PATH LIKE CONCAT('%',#{repoDfltPath},'%')
+		</if>
+	</sql>	
+	
+	<select id="list" parameterType="sysFileRepoVO" resultType="sysFileRepoVO">
+		/*
+			 SQL ID : list
+			 설  명 : 파일 리파지토리 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	 	 ORDER BY A.REPO_CD
+	</select>
+	
+	<select id="listPageing" parameterType="sysFileRepoVO" resultType="sysFileRepoVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 파일 리파지토리 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+	 	ORDER BY REPOCD
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count"  parameterType="sysFileRepoVO" resultType="Integer">
+		/*
+			 SQL ID : TbSysCfgCtgrDAO.count
+			 설  명 : 파일 리파지토리의 페이징 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>	
+
+	<select id="select" parameterType="sysFileRepoVO" resultType="sysFileRepoVO">
+		/*
+			 SQL ID : select
+			 설  명 : 파일 리파지토리의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+           AND A.REPO_CD = #{repoCd}	 	
+	</select>	
+	
+	<insert id="insert" parameterType="sysFileRepoVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 파일 리파지토리의 정보 등록
+	 	*/
+	 	INSERT INTO tb_sys_file_repo (
+		       REPO_CD
+		     , PAR_TABLE_NM
+		     , PAR_FIELD_NM
+		     , REPO_NM
+		     , REPO_DFLT_PATH
+		     , REG_NM
+		     , REG_NO
+		     , REG_DTTM
+		) VALUES (
+		       #{repoCd}
+		     , #{parTableNm}
+		     , #{parFieldNm}
+		     , #{repoNm}
+		     , #{repoDfltPath}
+		     , #{regNm}
+		     , #{regNo}
+		     , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		)
+	</insert>
+	
+	<update id="update" parameterType="sysFileRepoVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 파일 리파지토리의 정보 수정
+	 	*/
+		UPDATE tb_sys_file_repo
+		   SET REPO_CD = #{repoCd}
+		     , PAR_TABLE_NM = #{parTableNm}
+		     , PAR_FIELD_NM = #{parFieldNm}
+		     , REPO_NM = #{repoNm}
+		     , REPO_DFLT_PATH  = #{repoDfltPath}
+		 WHERE REPO_CD = #{repoCd}	 	
+	</update>	
+
+	<delete id="delete" parameterType="sysFileRepoVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 파일 리파지토리의 정보 삭제
+	 	*/
+		DELETE FROM tb_sys_file_repo
+		 WHERE REPO_CD = #{repoCd}
+	</delete>
+	 
+</mapper>

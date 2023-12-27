@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>smhrd</title>
+        <link rel="stylesheet" type="text/css" href="../css/hrd_common.css" />
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css" />
+        <style type="text/css">
+            #wrap {
+                width: 100%;
+                margin: 4rem auto;
+            }
+
+            h1 {
+                font-size: 32px;
+                color: #333;
+                font-weight: 700;
+                text-align: center;
+            }
+
+            h2 {
+                padding: 10px 0;
+                font-size: 24px;
+                color: #333;
+                font-weight: 700;
+            }
+
+            h3 {
+                padding: 10px 0;
+                font-size: 18px;
+                color: #333;
+                font-weight: 700;
+            }
+
+            dl.group-box {
+                margin: 20px 0;
+                padding: 20px;
+            }
+
+            dl.group-box dt {
+                padding-bottom: 10px;
+                font-size: 24px;
+                color: #333;
+                font-weight: 500;
+            }
+
+            dl.group-box dt ul {}
+
+            dl.group-box dt ul li {}
+
+            dl.group-box dd {}
+
+            dl.group-box dd ul {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 1rem;
+            }
+
+            dl.group-box dd ul ol {
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+                margin: 0 .5rem;
+            }
+
+            dl.group-box dd ul ol ul {flex-direction: column;}
+
+            dl.group-box dd ul ol ul li {
+                padding: 2px 0;
+                font-size: 13px;
+            }
+
+            dl.group-box dd ul ol ul li span.ui.button {
+                width: 16px;
+                height: 16px;
+                padding: 0;
+                line-height: 16px;
+                vertical-align: inherit;
+            }
+            
+            @media (max-width: 767.98px) {
+                dl.group-box dd ul {flex-direction: column;}
+                dl.group-box dd ul ol + ol {margin-top: .5rem;}
+            }
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+            <h1>smhrd class</h1>
+            <dl class="group-box">
+                <dt>강의실</dt>
+                <dd><a href="#0" class="ui violet fluid button">학습자</a>
+                    <ul>
+                        <ol><a href="./class_home.jsp" class="ui basic black fluid button">강의실 홈</a></ol>
+                        <ol><a href="./class_lacture_plan.jsp" class="ui basic black fluid button">강의계획서</a></ol>
+                        <ol><a href="./class_lecture_list.jsp" class="ui basic black fluid button">강의보기</a>
+                            <ul>
+                                <li><span class="ui purple mini button mr5">M</span>모바일출석체크</li>
+                            </ul>
+                        </ol>
+                        <ol><a href="./class_test_list.jsp" class="ui basic black fluid button">시험</a>
+                            <ul>
+                                <li><a href="./class_test_list.jsp" class="ui basic fluid button">시험응시</a></li>
+                                <li><span class="ui purple mini button mr5">M</span>응시약관</li>
+                                <li><span class="ui purple mini button mr5">M</span>시험보기</li>
+                                <li><span class="ui purple mini button mr5">M</span>시험결과</li>
+                                <li><a href="./class_test_problem.jsp" class="ui basic fluid button">이의제기</a></li>
+                                <li><a href="./class_test_problem_write.jsp" class="ui basic fluid button">이의제기 등록</a></li>
+                                <li><a href="./class_grade_check.jsp" class="ui basic fluid button">성적조회</a></li>
+                            </ul>
+                        </ol>
+                    </ul>
+                    <div class="ui divider"></div>
+                </dd>
+                <dd><a href="#0" class="ui blue fluid button">강사</a>
+                    <ul>
+                        <ol><a href="./prof_lacture_plan.jsp" class="ui basic black fluid button">강의계획서</a></ol>
+                        <ol><a href="./prof_lecture_manage.jsp" class="ui basic black fluid button">강의관리</a>
+                            <ul>
+                                <li><a href="./prof_lecture_manage.jsp" class="ui basic fluid button">강의관리</a></li>
+                                <li><a href="./prof_lecture_info.jsp" class="ui basic fluid button">과정정보</a></li>
+                            </ul>
+                        </ol>
+                        <ol><a href="./prof_test_grade.jsp" class="ui basic black fluid button">시험관리</a>
+                            <ul>
+                                <li><a href="./prof_test_grade.jsp" class="ui basic fluid button">시험채점</a></li>
+                                <li><span class="ui purple mini button mr5">M</span>시험정보</li>
+                                <li><a href="./prof_test_grade_reg.jsp" class="ui basic fluid button">시험등록</a></li>
+                                <li><a href="./prof_test_grade_scoreTab1.jsp" class="ui basic fluid button">채점하기(문제관리)</a></li>
+                                <li><span class="ui purple mini button mr5">M</span>시험문제은행</li>
+                                <li><span class="ui purple mini button mr5">M</span>서술형문제추가</li>
+                                <li><span class="ui purple mini button mr5">M</span>선택형문제추가</li>
+                                <li><span class="ui purple mini button mr5">M</span>진위형문제추가</li>
+                                <li><span class="ui purple mini button mr5">M</span>단답형문제추가</li>
+                                
+                                <li><a href="./prof_test_grade_scoreTab2.jsp" class="ui basic fluid button">채점하기(평가관리)</a></li>
+                                <li><span class="ui purple mini button mr5">M</span>SMS</li>
+                                <li><span class="ui purple mini button mr5">M</span>Email</li>
+                                <li><a href="./prof_test_problem.jsp" class="ui basic fluid button">이의제기</a></li>
+                            </ul>
+                        </ol>
+                        <ol><a href="./prof_task_list.jsp" class="ui basic black fluid button">과제관리</a>
+                            <ul>
+                                <li><a href="./prof_task_reg.jsp" class="ui basic fluid button">과제등록</a></li>
+                                <li><a href="./prof_task_infoTab1.jsp" class="ui basic fluid button">과정정보(문제관리)</a></li>
+                                <li><span class="ui purple mini button mr5">M</span>문제관리</li>
+                                <li><a href="./prof_task_infoTab2.jsp" class="ui basic fluid button">과정정보(평가관리)</a></li>
+                            </ul>
+                        </ol>
+                        <ol><a href="./prof_eval_list.jsp" class="ui basic black fluid button">강의평가관리</a>
+                            <ul>
+                                <li><a href="./prof_eval_result.jsp" class="ui basic fluid button">결과보기</a></li>
+                                <li><span class="ui purple mini button mr5">M</span>서술형결과보기</li>
+                            </ul>
+                        </ol>
+                        <ol><a href="./board_list.jsp" class="ui basic black fluid button">커뮤니티</a>
+                            <ul>
+                                <li><a href="./board_list.jsp" class="ui basic fluid button">리스트</a></li>
+                                <li><a href="./board_write.jsp" class="ui basic fluid button">글쓰기</a></li>
+                                <li><a href="./board_view.jsp" class="ui basic fluid button">글보기</a></li>
+                            </ul>
+                        </ol>
+                        <ol><a href="./prof_user_list.jsp" class="ui basic black fluid button">수강자관리</a>
+                            <ul>
+                                <li><span class="ui purple mini button mr5">M</span>성적조회</li>
+                            </ul>
+                        </ol>
+                        <ol><a href="./prof_notgrade_list.jsp" class="ui basic black fluid button">미채점현황</a></ol>
+                    </ul>
+                </dd>
+            </dl>
+        </div>
+    </body>
+</html>

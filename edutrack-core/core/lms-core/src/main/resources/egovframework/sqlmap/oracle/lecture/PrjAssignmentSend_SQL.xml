@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.lecture.project.assignment.service.impl.PrjAssignmentSendMapper">
+
+	<sql id="selectQuery">
+		SELECT  PRJT_TEAM_SN               
+			     			 , ASMT_SN               
+			                 , PRJT_SN              
+			                 , CRS_CRE_CD           
+			                 , SEND_CTS             
+			                 , REG_NO               
+			                 , REG_DTTM             
+			                 , MOD_NO               
+			                 , MOD_DTTM             
+			     FROM TB_LEC_PRJT_ASMT_SEND
+	</sql>
+	
+	<select id="select" parameterType="prjAssignmentSendVO" resultType="prjAssignmentSendVO">
+		<!-- 팀프로젝트 과제 제출 정보 조회 (학습자용)  -->
+		<include refid="selectQuery" />
+		 WHERE CRS_CRE_CD 	  = #{crsCreCd}				
+			      AND PRJT_SN 	  	  = #{prjtSn}					
+			      AND ASMT_SN	  	  = #{asmtSn}					  
+			      AND PRJT_TEAM_SN	  = #{prjtTeamSn}
+	</select>
+	
+	<insert id="insert" parameterType="prjAssignmentSendVO">
+		<!-- 팀프로젝트 과제 제출 정보 등록 (학습자용)  -->
+		INSERT INTO  TB_LEC_PRJT_ASMT_SEND (              
+			             PRJT_TEAM_SN                            
+			           , ASMT_SN                                 
+			           , PRJT_SN                                 
+			           , CRS_CRE_CD                              
+			           , SEND_CTS                                
+			           , REG_NO                                  
+			           , REG_DTTM                                
+			           , MOD_NO                                  
+			           , MOD_DTTM                                
+			           ) VALUES (                                
+			             #{prjtTeamSn}                             
+			           , #{asmtSn}                                 
+			           , #{prjtSn}                                 
+			           , #{crsCreCd}                               
+				        , #{sendCts}                                
+				        , #{regNo}                                  
+			           , TO_CHAR(sysdate, 'YYYYMMDDHH24MISS')    
+			           , #{modNo}                                  
+			           , TO_CHAR(sysdate, 'YYYYMMDDHH24MISS')    
+			           ) 
+	</insert>
+	
+	<update id="update" parameterType="prjAssignmentSendVO">
+		<!-- 팀프로젝트 과제 제츨 정보 수정 (학습자용) -->
+		UPDATE TB_LEC_PRJT_ASMT_SEND			            		  		   
+			       SET SEND_CTS			=	#{sendCts}                    		   
+			   	WHERE  CRS_CRE_CD 		= 	#{crsCreCd}
+			         AND  PRJT_SN	  		=	#{prjtSn}                      		   
+			         AND  ASMT_SN	  		=	#{asmtSn}                      		   
+			         AND  PRJT_TEAM_SN	  	=	#{prjtTeamSn} 
+	</update>
+	
+	<delete id="delete" parameterType="prjAssignmentSendVO">
+		<!--  팀프로젝트 과제 제출 정보 삭제(학습자용)        -->
+		DELETE FROM TB_LEC_PRJT_ASMT_SEND				
+			   	WHERE  CRS_CRE_CD 		= 	#{crsCreCd}       
+			         AND  PRJT_SN	  		=	#{prjtSn}         
+			         AND  ASMT_SN	  		=	#{asmtSn}         
+			         AND  PRJT_TEAM_SN	  	=	#{prjtTeamSn} 
+	</delete>
+	
+</mapper>

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.lecture.score.service.impl.StdScoreMapper">	
+	<sql id="selectQuery">
+		 SELECT A.STD_NO 
+		      , B.USER_NM 
+		      , C.USER_ID 
+		      , FN_GET_SCORE_EXAM(A.CRS_CRE_CD, A.STD_NO) AS EXAM_SCORE 
+		      , FN_GET_SCORE_ASMT(A.CRS_CRE_CD, A.STD_NO) AS ASMT_SCORE 
+		      , FN_GET_SCORE_FORUM(A.CRS_CRE_CD, A.STD_NO) AS FORUM_SCORE 
+		   FROM tb_std_std A, tb_usr_user_info B, tb_usr_login C 
+		  WHERE B.USER_NO = C.USER_NO 
+		    AND A.USER_NO = B.USER_NO 
+		    AND A.CRS_CRE_CD = #{crsCreCd}  
+		    AND C.USER_STS = 'U'  
+		    AND A.ENRL_STS IN ('S','C','F') 
+	</sql>
+ 	<select id="list" parameterType="stdScoreVO" resultType="stdScoreVO">
+	    <include refid="selectQuery" />
+	    ORDER BY A.STD_NO
+	</select>
+	<select id="select" parameterType="stdScoreVO" resultType="stdScoreVO">
+	    <include refid="selectQuery" />
+	    AND A.STD_NO = #{stdNo}
+	</select>
+	
+	
+	<sql id="selectCreStdQuery">
+		select 
+		   	 A.CRS_CRE_CD  
+		   	 , A.CRS_CD 
+		     , A.CRE_YEAR 
+		     , A.CRE_TERM 
+		     , A.CRS_CRE_NM
+		     , A.ENRL_APLC_START_DTTM
+		     , A.ENRL_APLC_END_DTTM
+		     , A.ENRL_APLC_START_DTTM
+		     , A.ENRL_APLC_END_DTTM
+		     , A.ENRL_START_DTTM
+		     , A.ENRL_END_DTTM
+		     , NVL((A.NOP_LIMIT_YN),'N') AS NOP_LIMIT_YN
+		     , A.ENRL_NOP 
+		     , NVL((A.EDU_PRICE),0) AS EDU_PRICE
+		     , A.SCORE_HANDL_CD 
+		     , A.CPLT_SCORE 
+		     , NVL((A.PRGR_RATIO),0) AS PRGR_RATIO 
+		     , NVL((A.ATTD_RATIO),0) AS ATTD_RATIO 
+		     , NVL((A.EXAM_RATIO),0) AS EXAM_RATIO 
+		     , NVL((A.FORUM_RATIO),0) AS FORUM_RATIO 
+		     , NVL((A.ASMT_RATIO),0) AS ASMT_RATIO 
+		     , NVL((A.PRJT_RATIO),0) AS PRJT_RATIO 
+		     , NVL((A.JOIN_RATIO),0) AS JOIN_RATIO 
+		     , NVL((A.ETC_RATIO),0) AS ETC_RATIO	
+		     , A.DAY_STUDY_LIMIT 
+		     , A.REG_NO 
+		 	 , (SELECT FN_GET_USER_NAME(A.REG_NO) ) AS REG_NM 
+		 	 , A.REG_DTTM 
+		     , A.MOD_NO 
+			 , (SELECT FN_GET_USER_NAME(A.MOD_NO) ) AS MOD_NM 
+		     , A.MOD_DTTM 
+		     ,  NVL(((SELECT C.RATE_YN
+		        FROM tb_lec_exam B, tb_lec_exam_stare C
+		        WHERE B.CRS_CRE_CD = A.CRS_CRE_CD 
+		        AND B.CRS_CRE_CD = C.CRS_CRE_CD   
+		        AND B.EXAM_SN = C.EXAM_SN
+		        AND B.REG_YN = 'Y'
+		        AND B.SEMI_EXAM_YN = 'N'
+		        AND C.STD_NO = D.STD_NO )),'N') AS RATE_YN
+		     ,  NVL(((SELECT C.TOT_GET_SCORE
+		        FROM tb_lec_exam B, tb_lec_exam_stare C
+		        WHERE B.CRS_CRE_CD = A.CRS_CRE_CD 
+		        AND B.CRS_CRE_CD = C.CRS_CRE_CD   
+		        AND B.EXAM_SN = C.EXAM_SN
+		        AND B.REG_YN = 'Y'
+		        AND B.SEMI_EXAM_YN = 'N'
+		        AND C.STD_NO = D.STD_NO )),0)AS EXAM_TOT_GET_SCORE
+		     ,  (SELECT C.START_DTTM
+		        FROM tb_lec_exam B, tb_lec_exam_stare C
+		        WHERE B.CRS_CRE_CD = A.CRS_CRE_CD 
+		        AND B.CRS_CRE_CD = C.CRS_CRE_CD   
+		        AND B.EXAM_SN = C.EXAM_SN
+		        AND B.REG_YN = 'Y'
+		        AND B.SEMI_EXAM_YN = 'N'
+		        AND C.STD_NO = D.STD_NO )AS EXAM_START_DTTM
+		     ,  (SELECT C.END_DTTM
+		        FROM tb_lec_exam B, tb_lec_exam_stare C
+		        WHERE B.CRS_CRE_CD = A.CRS_CRE_CD 
+		        AND B.CRS_CRE_CD = C.CRS_CRE_CD   
+		        AND B.EXAM_SN = C.EXAM_SN
+		        AND B.REG_YN = 'Y'
+		        AND B.SEMI_EXAM_YN = 'N'
+		        AND C.STD_NO = D.STD_NO )AS EXAM_END_DTTM		        
+		     , (SELECT C.EXAM_SN
+		        FROM tb_lec_exam B, tb_lec_exam_stare C
+		        WHERE B.CRS_CRE_CD = A.CRS_CRE_CD 
+		        AND B.CRS_CRE_CD = C.CRS_CRE_CD   
+		        AND B.EXAM_SN = C.EXAM_SN
+		        AND B.REG_YN = 'Y'
+		        AND B.SEMI_EXAM_YN = 'Y'
+		        AND C.STD_NO = D.STD_NO )AS SEMI_EXAM_SN
+		     ,  NVL(((SELECT C.TOT_GET_SCORE
+		        FROM tb_lec_exam B, tb_lec_exam_stare C
+		        WHERE B.CRS_CRE_CD = A.CRS_CRE_CD 
+		        AND B.CRS_CRE_CD = C.CRS_CRE_CD   
+		        AND B.EXAM_SN = C.EXAM_SN
+		        AND B.REG_YN = 'Y'
+		        AND B.SEMI_EXAM_YN = 'Y'
+		        AND C.STD_NO = D.STD_NO )),0)AS SEMI_TOT_GET_SCORE
+		     , (SELECT C.START_DTTM
+		        FROM tb_lec_exam B, tb_lec_exam_stare C
+		        WHERE B.CRS_CRE_CD = A.CRS_CRE_CD 
+		        AND B.CRS_CRE_CD = C.CRS_CRE_CD   
+		        AND B.EXAM_SN = C.EXAM_SN
+		        AND B.REG_YN = 'Y'
+		        AND B.SEMI_EXAM_YN = 'Y'
+		        AND C.STD_NO = D.STD_NO )AS SEMI_EXAM_START_DTTM
+		     , (SELECT C.END_DTTM
+		        FROM tb_lec_exam B, tb_lec_exam_stare C
+		        WHERE B.CRS_CRE_CD = A.CRS_CRE_CD 
+		        AND B.CRS_CRE_CD = C.CRS_CRE_CD   
+		        AND B.EXAM_SN = C.EXAM_SN
+		        AND B.REG_YN = 'Y'
+		        AND B.SEMI_EXAM_YN = 'Y'
+		        AND C.STD_NO = D.STD_NO )AS SEMI_EXAM_END_DTTM		        
+		     ,  NVL(((SELECT C.SCORE
+		        FROM  tb_lec_asmt B,tb_lec_asmt_send C																				
+		        WHERE B.CRS_CRE_CD = A.CRS_CRE_CD 
+		        AND B.CRS_CRE_CD 	= C.CRS_CRE_CD																				
+		        AND B.ASMT_SN 		= C.ASMT_SN	
+		        AND B.REG_YN = 'Y'
+		        AND C.STD_NO    	= D.STD_NO )),0)AS ASMT_TOT_GET_SCORE
+		     , (SELECT C.ASMT_SN
+		        FROM  tb_lec_asmt B, tb_lec_asmt_send C																				
+		        WHERE B.CRS_CRE_CD = A.CRS_CRE_CD 
+		        AND B.CRS_CRE_CD 	= C.CRS_CRE_CD																				
+		        AND B.ASMT_SN 		= C.ASMT_SN	
+		        AND B.REG_YN = 'Y'
+		        AND C.STD_NO    	= D.STD_NO  )AS ASMT_SN
+		     , (SELECT B.ASMT_START_DTTM
+		        FROM  tb_lec_asmt B, tb_lec_asmt_send C																				
+		        WHERE B.CRS_CRE_CD = A.CRS_CRE_CD 
+		        AND B.CRS_CRE_CD 	= C.CRS_CRE_CD																				
+		        AND B.ASMT_SN 		= C.ASMT_SN	
+		        AND B.REG_YN = 'Y'
+		        AND C.STD_NO    	= D.STD_NO )AS ASMT_START_DTTM
+		     ,  NVL(((SELECT C.SCORE
+		        FROM  tb_lec_forum B,tb_lec_forum_join_user C																				
+		        WHERE B.CRS_CRE_CD = A.CRS_CRE_CD 
+		        AND B.CRS_CRE_CD 	= C.CRS_CRE_CD																				
+		        AND B.FORUM_SN 		= C.FORUM_SN	
+		        AND B.FORUM_REG_YN = 'Y'
+		        AND C.STD_NO    	= D.STD_NO )),0)AS FORUM_TOT_GET_SCORE
+		     , (SELECT C.FORUM_SN
+		        FROM  tb_lec_forum B,tb_lec_forum_join_user C																				
+		        WHERE B.CRS_CRE_CD = A.CRS_CRE_CD 
+		        AND B.CRS_CRE_CD 	= C.CRS_CRE_CD																				
+		        AND B.FORUM_SN 		= C.FORUM_SN	
+		        AND B.FORUM_REG_YN = 'Y'
+		        AND C.STD_NO    	= D.STD_NO )AS FORUM_SN
+		     , (SELECT B.FORUM_START_DTTM
+		        FROM  tb_lec_forum B,tb_lec_forum_join_user C																				
+		        WHERE B.CRS_CRE_CD = A.CRS_CRE_CD 
+		        AND B.CRS_CRE_CD 	= C.CRS_CRE_CD																				
+		        AND B.FORUM_SN 		= C.FORUM_SN	
+		        AND B.FORUM_REG_YN = 'Y'
+		        AND C.STD_NO    	= D.STD_NO )AS FORUM_START_DTTM
+		     , (SELECT FN_GET_CRS_STD_PRGR(D.STD_NO, A.CRS_CRE_CD)) AS PRE_PRGR_RATIO
+		     , ROUND((SELECT FN_GET_BOOKMARK_TIME(D.STD_NO, A.CRS_CRE_CD))/60) AS CONN_TM	  	
+		     , (SELECT FN_GET_BOOKMARK_CNT(D.STD_NO, A.CRS_CRE_CD)) AS CONN_CNT
+		     , D.STD_NO 
+		     , D.ENRL_STS 
+		     , (SELECT FN_GET_CODE_NAME('ENRL_STS',NVL((D.ENRL_STS),''))) AS ENRL_STS_NM  
+		     , D.EDU_NO
+		     , D.CPLT_NO
+		     , D.GET_CREDIT
+		     , D.PAYM_PRICE
+		     , D.PAYM_STS_CD
+		     , D.PAYM_NO
+		     , NVL((E.PRGR_SCORE),0) as PRGR_SCORE
+		     , NVL((E.PRGR_RATE),0) as PRGR_RATE
+		     , NVL((E.ATTD_SCORE),0) as ATTD_SCORE
+		     , NVL((E.EXAM_SCORE),0) as EXAM_SCORE
+		     , NVL((E.FORUM_SCORE),0)as FORUM_SCORE
+		     , NVL((E.ASMT_SCORE),0) as ASMT_SCORE
+		     , NVL((E.PRJT_SCORE),0) as PRJT_SCORE
+		     , NVL((E.JOIN_SCORE),0) as JOIN_SCORE
+		     , NVL((E.ETC_SCORE),0)  as ETC_SCORE
+		     , NVL((E.TOT_SCORE),0)  as TOT_SCORE
+		     , NVL((E.CONV_SCORE),0) as CONV_SCORE
+		     , E.SCORE_LVL
+		     , F.CRS_NM
+		     , F.SCORE_OPEN_START_DTTM 
+		     , F.SCORE_OPEN_END_DTTM 
+	</sql>
+	
+	<select id="listCreStd" parameterType="stdScoreVO" resultType="egovMap">
+		/*
+		 	SQL ID : StdScoreMapper.listCreStd
+		 	설  명 : 과정 학습자의 과정,시험,과제 성적 정보를 가져온다
+	 	*/
+	
+    	<include refid="selectCreStdQuery" />
+    	   FROM tb_crs_cre_crs A
+		   INNER JOIN tb_crs_crs F
+		   ON A.CRS_CD = F.CRS_CD 
+		   LEFT OUTER JOIN tb_std_std D  
+		   ON ( A.CRS_CRE_CD = D.CRS_CRE_CD   
+		    AND D.USER_NO = #{userNo}  	  	
+		   )
+		   LEFT OUTER JOIN tb_std_edu_rslt E  
+		   ON ( D.STD_NO = E.STD_NO
+		   )
+		  WHERE A.CRS_CRE_CD = #{crsCreCd}  
+		  AND D.ENRL_STS IN ('S','C','F')
+	</select>
+	
+	<select id="listEndCreStd" parameterType="stdScoreVO" resultType="egovMap">
+		/*
+		 	SQL ID : StdScoreMapper.listEndCreStd
+		 	설  명 : 과정 학습자의 종료된 과정,시험,과제 성적 정보를 가져온다
+	 	*/
+	
+    	<include refid="selectCreStdQuery" />
+    	  FROM tb_crs_cre_crs A
+		  INNER JOIN tb_crs_crs F
+		  ON A.CRS_CD = F.CRS_CD 
+		  INNER JOIN tb_std_std D  
+		  ON ( A.CRS_CRE_CD = D.CRS_CRE_CD   
+		   AND D.USER_NO = #{userNo}  	
+		  )
+		  LEFT OUTER JOIN tb_std_edu_rslt E  
+		  ON ( D.STD_NO = E.STD_NO
+		  )
+		  <![CDATA[
+		  WHERE DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') > DATE_FORMAT(F.ENRL_END_DTTM, '%Y%m%d%H%i%s')
+		  AND D.ENRL_STS IN ('S','C','F')
+		  ]]>
+	</select>
+
+ 
+
+</mapper>

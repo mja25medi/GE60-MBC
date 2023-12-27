@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.research.service.impl.ResearchBankMapper">	
+	<select id="selectKey" resultType="Integer">
+	    SELECT nextval(SQ_CRS_RESH_BANK) AS RESH_SN
+	</select>
+
+	<sql id="selectColumnQuery">
+		 		A.RESH_SN  
+		      , A.RESH_TITLE  
+		      , A.RESH_CTS  
+		      , IFNULL(FN_GET_NULL(A.REG_YN),'N') AS REG_YN 
+		      , A.REG_NO  
+		      , A.REG_DTTM  
+		      , A.MOD_NO  
+		      , A.MOD_DTTM  
+		      , (SELECT FN_GET_USER_NAME(MOD_NO)) AS MOD_NM  
+		      , (SELECT FN_GET_USER_NAME(REG_NO)) AS REG_NM  
+		      , ( SELECT COUNT(*)  
+		            FROM tb_crs_resh_item  
+		           WHERE RESH_SN = A.RESH_SN ) AS ITEM_CNT  
+		      , ( SELECT COUNT(*)  
+		            FROM tb_crs_cre_crs_resh  
+		           WHERE RESH_SN = A.RESH_SN ) AS USE_CNT   
+	</sql>
+		
+	<sql id="selectQuery">
+		SELECT 
+		<include refid="selectColumnQuery" />
+		FROM tb_crs_resh_bank A  
+		WHERE '1' = '1'  
+	</sql>
+	
+	<sql id="selectListQuery">
+		 SELECT * FROM (
+		<include refid="selectQuery" />
+		<if test = "orgCd != null and orgCd != ''">                          			
+	    	AND A.ORG_CD = #{orgCd}  
+	    </if>	
+		<if test = "regYn != null and regYn != ''">                          			
+	    	AND A.REG_YN = #{regYn}  
+	    </if>	
+		<if test = "searchValue != null and searchValue != ''">                          			
+	   		AND A.RESH_TITLE like CONCAT('%', #{searchValue}, '%')  
+	    </if>	
+          ) T  
+	</sql>
+
+	<select id="count" parameterType="researchBankVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM
+		(
+		<include refid="selectQuery" />
+		<if test = "orgCd != null and orgCd != ''">                          			
+	    	AND A.ORG_CD = #{orgCd}  
+	    </if>	
+		<if test = "regYn != null and regYn != ''">                          			
+	    	AND A.REG_YN = #{regYn}  
+	    </if>	
+		<if test = "searchValue != null and searchValue != ''">                          			
+	   		AND A.RESH_TITLE like CONCAT('%', #{searchValue}, '%') 
+	    </if>	
+          )AS A
+	</select>
+		
+ 	<select id="list" parameterType="researchBankVO" resultType="researchBankVO">
+	    <include refid="selectListQuery" />
+	    <if test = "sortKey != null and sortKey != ''">                          			
+			<choose>
+				<when test = "sortKey == 'TITLE_ASC'">
+					 ORDER BY RESH_TITLE ASC  
+				</when>
+				<when test = "sortKey == 'TITLE_DESC'">
+					 ORDER BY RESH_TITLE DESC  
+				</when>
+				<when test = "sortKey == 'CNT_ASC'">
+					 ORDER BY ITEM_CNT ASC  
+				</when>
+				<when test = "sortKey == 'CNT_DESC'">
+					 ORDER BY ITEM_CNT DESC  
+				</when>
+				<when test = "sortKey == 'REGDATE_ASC'">
+					 ORDER BY REG_DTTM ASC   
+				</when>
+				<when test = "sortKey == 'REGDate_DESC'">
+					 ORDER BY REG_DTTM DESC  
+				</when>
+				<otherwise>
+				   ORDER BY REG_DTTM DESC, RESH_SN  
+				</otherwise>
+			</choose>
+	    </if>	
+	</select>
+
+     <select id="listPageing" parameterType="researchBankVO" resultType="researchBankVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectListQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+	    <if test = "sortKey != null and sortKey != ''">                          			
+			<choose>
+				<when test = "sortKey == 'TITLE_ASC'">
+					 ORDER BY RESH_TITLE ASC  
+				</when>
+				<when test = "sortKey == 'TITLE_DESC'">
+					 ORDER BY RESH_TITLE DESC  
+				</when>
+				<when test = "sortKey == 'CNT_ASC'">
+					 ORDER BY ITEM_CNT ASC  
+				</when>
+				<when test = "sortKey == 'CNT_DESC'">
+					 ORDER BY ITEM_CNT DESC  
+				</when>
+				<when test = "sortKey == 'REGDATE_ASC'">
+					 ORDER BY REG_DTTM ASC   
+				</when>
+				<when test = "sortKey == 'REGDate_DESC'">
+					 ORDER BY REG_DTTM DESC  
+				</when>
+				<otherwise>
+				   ORDER BY REG_DTTM DESC, RESH_SN  
+				</otherwise>
+			</choose>
+	    </if>
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+ 	<select id="searchList" parameterType="researchBankVO" resultType="researchBankVO">
+	    <include refid="selectQuery" />
+	    	AND A.REG_YN = 'Y'
+	    	AND A.RESH_TITLE LIKE CONCAT('%', #{searchValue}, '%') 
+	    ORDER BY RESH_SN 
+	</select>
+
+	<select id="select" parameterType="researchBankVO" resultType="researchBankVO">
+	    <include refid="selectQuery" />
+	     AND  A.RESH_SN = #{reshSn} 
+	</select>
+
+    <insert id="insert" parameterType="researchBankVO">
+
+		 INSERT INTO tb_crs_resh_bank (  
+		        ORG_CD  
+		      ,	RESH_SN  
+		      ,	RESH_TITLE  
+		      ,	RESH_CTS  
+		      ,	REG_YN  
+		      ,	REG_NO  
+		      ,	REG_DTTM  
+		      ,	MOD_NO  
+		      ,	MOD_DTTM  
+		 ) VALUES (  
+		       	#{orgCd}  
+		      ,	#{reshSn}  
+		      ,	#{reshTitle}  
+		      ,	#{reshCts}  
+		      ,	#{regYn}  
+		      ,	#{regNo}  
+		      , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')  
+		      ,	#{modNo}  
+		      , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')   
+		 )
+    </insert>
+
+   <update id="update" parameterType="researchBankVO">
+		 UPDATE tb_crs_resh_bank  
+		    SET RESH_SN		= #{reshSn}  
+		      ,	RESH_TITLE  = #{reshTitle}  
+		      ,	RESH_CTS    = #{reshCts}  
+		      ,	REG_YN		= #{regYn}  
+		      ,	MOD_NO      = #{modNo}  
+		      ,	MOD_DTTM    =  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')  
+		  WHERE RESH_SN    	= #{reshSn}   
+    </update>
+
+	<delete id="delete" parameterType="researchBankVO">
+		 DELETE FROM tb_crs_resh_bank  
+		  WHERE RESH_SN  = #{reshSn}   			
+    </delete>
+ 	<select id="listResearchPreclusive" parameterType="researchBankVO" resultType="researchBankVO">
+	    <include refid="selectQuery" />
+	    	AND NOT EXISTS (SELECT B.RESH_SN FROM tb_crs_cre_crs_resh B WHERE B.CRS_CRE_CD = #{crsCreCd} AND A.RESH_SN = B.RESH_SN)
+		<if test = "orgCd != null and orgCd != ''">                          			
+	   		 AND A.ORG_CD = #{orgCd} 
+	    </if>	
+		<if test = "regYn != null and regYn != ''">                          			
+	   		 AND A.REG_YN = #{regYn}
+	    </if>	
+		<if test = "searchCnt != null and searchCnt != ''">                          			
+	   		 AND ( SELECT COUNT(*) FROM tb_crs_resh_item WHERE RESH_SN = A.RESH_SN ) > 0
+	    </if>	
+		ORDER BY RESH_SN 
+	</select>
+
+
+</mapper>	

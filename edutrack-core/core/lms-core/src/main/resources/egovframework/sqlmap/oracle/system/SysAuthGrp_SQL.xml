@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.system.menu.service.impl.SysAuthGrpMapper">	
+
+	
+	<sql id="selectQuery">
+		SELECT MENU_TYPE as menuType
+		     , AUTH_GRP_CD as authGrpCd
+		     , AUTH_GRP_NM as authGrpNm
+		     , USE_YN as useYn
+		     , AUTH_GRP_DESC as authGrpDesc
+		     , AUTH_GRP_ODR as authGrpOdr
+		     , REG_NO as regNo
+			 , (SELECT FN_GET_USER_NAME(REG_NO) FROM DUAL) AS regNm
+		     , REG_DTTM as regDttm
+		     , MOD_NO as modNo
+		     , (SELECT FN_GET_USER_NAME(MOD_NO) FROM DUAL) AS modNm
+		     , MOD_DTTM as modDttm
+		  FROM TB_SYS_AUTH_GRP
+		 WHERE MENU_TYPE = #{menuType}
+	</sql>
+	
+	<select id="list" parameterType="sysAuthGrpVO" resultType="sysAuthGrpVO">
+		/*
+			 SQL ID : list
+			 설  명 : 시스템 권한의 전체 목록
+	 	*/
+	 	<include refid="selectQuery"/>
+		<if test = "useYn != null and useYn != ''">
+		   AND USE_YN = #{useYn}
+		</if>
+		 ORDER BY AUTH_GRP_ODR
+	</select>
+
+	<select id="listInUser" parameterType="sysAuthGrpVO" resultType="sysAuthGrpVO">
+		/*
+			 SQL ID : list
+			 설  명 : 해당 사용자가 부여 받은 권한 목록
+	 	*/
+		<include refid="selectQuery"/>
+		   AND USE_YN = 'Y'
+		   AND AUTH_GRP_CD IN (SELECT AUTH_GRP_CD FROM TB_USR_USER_AUTH_GRP WHERE USER_NO = #{userNo} )
+		 ORDER BY AUTH_GRP_ODR
+	</select>
+	
+	<select id="listNotInUser" parameterType="sysAuthGrpVO" resultType="sysAuthGrpVO">
+		/*
+			 SQL ID : list
+			 설  명 : 해당 사용자가 부여 받지 않은 권한 목록
+	 	*/
+		<include refid="selectQuery"/>
+		   AND USE_YN = 'Y'
+		   AND AUTH_GRP_CD NOT IN (SELECT AUTH_GRP_CD FROM TB_USR_USER_AUTH_GRP WHERE USER_NO = #{userNo} )
+		 ORDER BY AUTH_GRP_ODR
+	</select>
+	
+	<select id="select" parameterType="sysAuthGrpVO" resultType="sysAuthGrpVO">
+		/*
+			 SQL ID : select
+			 설  명 : 시스템 권한의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+           AND AUTH_GRP_CD = #{authGrpCd}	 	
+	</select>	
+	
+	<insert id="insert" parameterType="sysAuthGrpVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 시스템 권한의 정보 등록
+	 	*/
+		INSERT INTO TB_SYS_AUTH_GRP (
+		       MENU_TYPE
+		     , AUTH_GRP_CD
+		     , AUTH_GRP_NM
+		     , USE_YN
+		     , AUTH_GRP_DESC
+		     , AUTH_GRP_ODR
+		     , REG_NO
+		     , REG_DTTM
+		     , MOD_NO
+		     , MOD_DTTM
+		) VALUES ( 
+		       #{menuType}
+		     , #{authGrpCd}
+		     , #{authGrpNm}
+		     , #{useYn}
+		     , #{authGrpDesc}
+		     , ( SELECT NVL(MAX(AUTH_GRP_ODR),0)+1
+		           FROM TB_SYS_AUTH_GRP 
+		          WHERE MENU_TYPE = #{menuType} )
+		     , #{regNo}
+		     , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		     , #{modNo}
+		     , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		)		     
+	</insert>
+	
+	<update id="update" parameterType="sysAuthGrpVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 시스템 권한의 정보 수정
+	 	*/
+		UPDATE TB_SYS_AUTH_GRP
+		   SET AUTH_GRP_NM = #{authGrpNm}
+		     , USE_YN = #{useYn}
+		     , AUTH_GRP_DESC = #{authGrpDesc}
+		     , AUTH_GRP_ODR = #{authGrpOdr}
+		     , MOD_NO = #{modNo}
+		     , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		 WHERE MENU_TYPE = #{menuType}
+		   AND AUTH_GRP_CD = #{authGrpCd}
+	</update>	
+
+	<delete id="delete" parameterType="sysAuthGrpVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 시스템 권한의 정보 삭제
+	 	*/
+		DELETE FROM TB_SYS_AUTH_GRP
+		 WHERE MENU_TYPE = #{menuType}
+		   AND AUTH_GRP_CD = #{authGrpCd}
+	</delete>
+	 
+</mapper>

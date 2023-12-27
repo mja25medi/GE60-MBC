@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.log.classconn.service.impl.LogClassConnMapper">	
+
+	<update id="merge" parameterType="logClassConnVO" >
+		MERGE INTO  TB_LOG_CLASS_CONN_LOG A				
+		     USING  DUAL									
+		        ON  ( A.ORG_CD = #{orgCd}					
+		       AND    A.CRS_CRE_CD = #{crsCreCd}				
+		       AND    A.USER_NO = #{userNo}					
+		       AND    A.YEAR = TO_CHAR(SYSDATE,'YYYY')		
+		       AND    A.MONTH = TO_CHAR(SYSDATE,'MM')		
+		       AND    A.DAY = TO_CHAR(SYSDATE,'DD') )		
+		  WHEN NOT MATCHED THEN							
+		    INSERT  (										
+		            A.ORG_CD								
+		         ,  A.CRS_CRE_CD							
+		         ,  A.USER_NO								
+		         ,  A.YEAR									
+		         ,  A.MONTH								
+		         ,  A.DAY									
+		         ,  A.CONN_CNT								
+		            )										
+		   VALUES  (										
+		            #{orgCd}									
+		         ,  #{crsCreCd}								
+		         ,  #{userNo}								
+		         ,  TO_CHAR(SYSDATE,'YYYY')				
+		         ,  TO_CHAR(SYSDATE,'MM')					
+		         ,  TO_CHAR(SYSDATE,'DD')					
+		         ,  1										
+		            )										
+		  WHEN MATCHED THEN								
+		    UPDATE  SET A.CONN_CNT = A.CONN_CNT + 1	 	
+	</update>	
+
+	<select id="select" parameterType="logClassConnVO" resultType="logClassConnVO">
+		 	SELECT  CASE WHEN #{dateType} = 'Day' THEN #{endDt} 																		
+		             	 WHEN #{dateType} = 'Week' THEN TO_CHAR(TO_DATE(replace(#{endDt},'.',''),'YYYYMMDD') - 7,'YYYY.MM.DD')			
+		             	 WHEN #{dateType} = 'Month' THEN TO_CHAR(TO_DATE(replace(#{endDt},'.',''),'YYYYMMDD') - 30,'YYYY.MM.DD')		
+		             	 WHEN #{dateType} = 'Year' THEN TO_CHAR(TO_DATE(replace(#{endDt},'.',''),'YYYYMMDD') - 365,'YYYY.MM.DD')		
+		             	 END START_DT  																								
+		        ,  #{endDt} AS END_DT																								
+		     FROM  DUAL			
+	</select>
+
+</mapper>

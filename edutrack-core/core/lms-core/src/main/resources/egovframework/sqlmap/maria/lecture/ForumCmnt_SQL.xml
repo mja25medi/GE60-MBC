@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.lecture.forum.service.impl.ForumCmntMapper">
+	<select id="selectKey" resultType="Integer">
+		SELECT nextval(SQ_LEC_FORUM_CMNT)
+	</select>
+	<select id="count"  parameterType="forumCmntVO" resultType="Integer">
+		<!-- 댓글 목록 조회 -->
+			SELECT COUNT(*)					
+			 FROM  tb_lec_forum_cmnt			
+		    WHERE ATCL_SN = #{atclSn} 			
+	</select>
+
+	<select id="listPageing"  parameterType="forumCmntVO" resultType="forumCmntVO">
+		<!-- 댓글 목록 조회 -->
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+			SELECT CRS_CRE_CD					
+				 , FORUM_SN						
+				 , ATCL_SN						
+				 , CMNT_SN						
+				 , CMNT_CTS						
+				 , EMOTICON_NO					
+				 , REG_NM						
+				 , REG_NO						
+				 , REG_DTTM						
+			 FROM  tb_lec_forum_cmnt			
+		    WHERE ATCL_SN = #{atclSn} 			
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		ORDER BY CMNT_SN 
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<insert id="insert" parameterType="forumCmntVO">
+		<!-- 댓글 정보 저장  -->
+		
+		INSERT  INTO tb_lec_forum_cmnt (				
+		           CRS_CRE_CD								
+		        ,  FORUM_SN								
+		        ,  CMNT_SN									
+		        ,  ATCL_SN									
+		        ,  CMNT_CTS								
+		        ,  EMOTICON_NO								
+		        ,  REG_NM									
+		        ,  REG_NO									
+		        ,  REG_DTTM								
+		   ) VALUES (										
+					#{crsCreCd}								
+		        ,  #{forumSn}	
+		      	,  #{cmntSn}
+		        ,  #{atclSn}									
+		        ,  #{cmntCts}
+		        ,  #{emoticonNo}								
+		        ,  #{regNm}									
+		        ,  #{regNo}									
+		        ,  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')		
+			)
+	</insert>
+	
+	<delete id="delete" parameterType="forumCmntVO">
+		<!-- 댓글 정보 삭제  -->
+		DELETE  FROM tb_lec_forum_cmnt      
+		    WHERE  CRS_CRE_CD	= #{crsCreCd}		
+		      AND  FORUM_SN	= #{forumSn}		
+		      <if test = "atclSn != null and atclSn > 0">
+			      AND  ATCL_SN = #{atclSn}
+			  </if>
+			  <if test = "cmntSn != null and cmntSn > 0">
+			  	  AND  CMNT_SN = #{cmntSn}
+			  </if>
+	</delete>
+
+</mapper>

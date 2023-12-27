@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.student.worklog.service.impl.StdEduRsltWorkLogMapper">
+
+	<sql id="selectColumnQuery">
+		 		REG_DTTM 
+		      , CRS_CRE_CD 
+		      , REG_DIV_CD 
+		      , REG_NO 
+		      , REG_MTHD 
+		      , REG_CTS 
+		      , (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) AS REG_NM 
+	</sql>
+	
+	<sql id="selectQuery">
+		  SELECT 
+		  <include refid="selectColumnQuery" />
+	   FROM TB_STD_EDU_RSLT_WORK_LOG A 
+		  WHERE CRS_CRE_CD = #{crsCreCd} 
+	</sql>
+	
+	<select id="count" parameterType="stdEduRsltWorkLogVO" resultType="Integer">
+		  SELECT 
+		 	COUNT(*)
+		  FROM TB_STD_EDU_RSLT_WORK_LOG A 
+		  WHERE CRS_CRE_CD = #{crsCreCd} 
+		<if test = "searchValue != null and searchValue != ''">                          			
+	    	AND (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) like '%'||#{searchValue}||'%'	
+	    </if>
+	    <if test = "regDivCd != null and regDivCd != ''">                          			
+	    	 AND REG_DIV_CD = #{regDivCd}
+	    </if>
+	</select>	
+	
+	<select id="list" parameterType="stdEduRsltWorkLogVO" resultType="stdEduRsltWorkLogVO">
+	    <include refid="selectQuery" />
+		<if test = "searchValue != null and searchValue != ''">                          			
+	    	AND (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) like '%'||#{searchValue}||'%'	
+	    </if>
+	    <if test = "regDivCd != null and regDivCd != ''">                          			
+	    	 AND REG_DIV_CD = #{regDivCd}
+	    </if>
+		ORDER BY REG_DTTM DESC 
+	</select>
+	
+     <select id="listPageing" parameterType="stdEduRsltWorkLogVO" resultType="stdEduRsltWorkLogVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectQuery" />
+		<if test = "searchValue != null and searchValue != ''">                          			
+	    	AND (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) like '%'||#{searchValue}||'%'
+	    </if>
+	    <if test = "regDivCd != null and regDivCd != ''">                          			
+	    	 AND REG_DIV_CD = #{regDivCd}
+	    </if>
+		ORDER BY REG_DTTM DESC 
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select> 
+
+ 	<select id="select" parameterType="stdEduRsltWorkLogVO" resultType="stdEduRsltWorkLogVO">
+	    <include refid="selectQuery" />
+	      AND REG_DTTM = #{regDttm} 
+	</select>
+	 
+
+ 	<insert id="insert" parameterType="stdEduRsltWorkLogVO">
+		 INSERT INTO TB_STD_EDU_RSLT_WORK_LOG ( 
+		        REG_DTTM 
+		      , CRS_CRE_CD 
+		      , REG_DIV_CD 
+		      , REG_NO 
+		      , REG_MTHD 
+		      , REG_CTS 
+		 ) VALUES ( 
+		        TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 
+		      , #{crsCreCd} 
+		      , #{regDivCd }
+		      , #{regNo }
+		      , #{regMthd} 
+		      , #{regCts }
+		 ) 
+	</insert>
+	
+</mapper>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.lecture.assignment.service.impl.AssignmentSubMapper">
+	<select id="selectKey" resultType="Integer">
+		SELECT SQ_LEC_ASMT_SUB.nextVal  FROM DUAL
+	</select>
+	
+	<select id="list" parameterType="assignmentVO" resultType="assignmentSubVO">
+		<!--   -->
+		SELECT  CRS_CRE_CD												
+		        ,  ASMT_SN													
+		        ,  ASMT_SUB_SN												
+		        ,  ASMT_TITLE												
+		        ,  ASMT_CTS												
+		        ,  EDITOR_YN												
+		        ,  REG_NO													
+		        ,  REG_DTTM												
+		        ,  MOD_NO													
+		        ,  MOD_DTTM												
+			     ,  (SELECT FN_GET_USER_NAME(MOD_NO) FROM DUAL) AS MOD_NM	
+			     ,  (SELECT FN_GET_USER_NAME(REG_NO) FROM DUAL) AS REG_NM	
+		     FROM  TB_LEC_ASMT_SUB											
+		    WHERE  CRS_CRE_CD 	= #{crsCreCd}									
+		      AND  ASMT_SN 	= #{asmtSn}									
+		    ORDER  BY REG_DTTM
+	</select>
+	
+	<select id="select" parameterType="assignmentSubVO" resultType="assignmentSubVO">
+		<!--   -->
+		SELECT  CRS_CRE_CD												
+		        ,  ASMT_SN													
+		        ,  ASMT_SUB_SN												
+		        ,  ASMT_TITLE												
+		        ,  ASMT_CTS												
+		        ,  EDITOR_YN												
+		        ,  REG_NO													
+		        ,  REG_DTTM												
+		        ,  MOD_NO													
+		        ,  MOD_DTTM												
+			     ,  (SELECT FN_GET_USER_NAME(MOD_NO) FROM DUAL) AS MOD_NM	
+			     ,  (SELECT FN_GET_USER_NAME(REG_NO) FROM DUAL) AS REG_NM	
+		     FROM  TB_LEC_ASMT_SUB											
+		    WHERE  CRS_CRE_CD = #{crsCreCd}									
+		      AND  ASMT_SN = #{asmtSn}										
+		      AND  ASMT_SUB_SN = #{asmtSubSn}
+	</select>
+	
+	<insert id="insert" parameterType="assignmentSubVO">
+		<!--   -->
+		INSERT  INTO TB_LEC_ASMT_SUB (					
+		           CRS_CRE_CD								
+		        ,  ASMT_SN									
+		        ,  ASMT_SUB_SN								
+		        ,  ASMT_TITLE								
+		        ,  ASMT_CTS								
+		        ,  EDITOR_YN								
+		        ,  REG_NO									
+		        ,  REG_DTTM								
+		        ,  MOD_NO									
+		        ,  MOD_DTTM								
+			) VALUES (										
+		           #{crsCreCd}								
+		        ,  #{asmtSn}									
+		        ,  #{asmtSubSn}								
+		        ,  #{asmtTitle}								
+		        ,  #{asmtCts}								
+		        ,  #{editorYn}
+		        ,  #{regNo}									
+		        ,  TO_CHAR(SYSDATE,'yyyymmddhh24miss')		
+		        ,  #{modNo}									
+		        ,  TO_CHAR(SYSDATE,'yyyymmddhh24miss')		
+			)
+	</insert>
+	
+	<update id="update" parameterType="assignmentSubVO">
+		<!--  -->
+		UPDATE  TB_LEC_ASMT_SUB                                     	
+		  	   SET  CRS_CRE_CD     =  #{crsCreCd}                           	
+		        ,   ASMT_SN       =  #{asmtSn}                             	
+		        ,   ASMT_SUB_SN   =  #{asmtSubSn}                          	
+		        ,   ASMT_TITLE    =  #{asmtTitle}                          	
+		        ,   ASMT_CTS      =  #{asmtCts}                            	
+		        ,   EDITOR_YN     =  #{editorYn}                            	
+		        ,   MOD_NO        =  #{modNo}     							
+		        ,   MOD_DTTM      =  TO_CHAR(SYSDATE,'yyyymmddhh24miss')	
+		    WHERE  CRS_CRE_CD     =  #{crsCreCd}                           	
+		      AND  ASMT_SN        =  #{asmtSn}                              	
+		      AND  ASMT_SUB_SN    =  #{asmtSubSn}
+	</update>
+	
+	<delete id="delete" parameterType="assignmentSubVO">
+		<!--   -->
+		DELETE  FROM TB_LEC_ASMT_SUB              		
+		  	 WHERE  CRS_CRE_CD   = 		#{crsCreCd}         	
+		      AND  ASMT_SN      = 		#{asmtSn}           	
+		      AND  ASMT_SUB_SN  = 		#{asmtSubSn}
+	</delete>
+	
+	<delete id="deleteAll" parameterType="assignmentVO">
+		<!--   -->
+		DELETE  FROM TB_LEC_ASMT_SUB              		
+		  	 WHERE  CRS_CRE_CD   = 		#{crsCreCd}         	
+		      AND  ASMT_SN      = 		#{asmtSn}           	
+	</delete>
+	
+</mapper>

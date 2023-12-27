@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.org.menu.service.impl.OrgAuthGrpMenuMapper">	
+
+	
+	<insert id="merge" parameterType="orgAuthGrpMenuVO" >
+		/*
+			 SQL ID : merge
+			 설  명 : 기관 권한 그룹 메뉴의 정보 등록
+	 	*/
+		MERGE INTO TB_ORG_AUTH_GRP_MENU A
+		      USING DUAL
+			  ON (     A.ORG_CD = #{orgCd}
+		 	       AND A.MENU_TYPE = #{menuType}
+				   AND A.MENU_CD	= #{menuCd}
+				   AND A.AUTH_GRP_CD = #{authGrpCd} )
+		      WHEN NOT MATCHED THEN
+		           INSERT (
+		       	          A.ORG_CD
+		       	        , A.MENU_TYPE
+		       	        , A.MENU_CD
+		       	        , A.AUTH_GRP_CD
+		       	        , A.VIEW_AUTH
+		       	        , A.CRE_AUTH
+		       	        , A.MOD_AUTH
+		       	        , A.DEL_AUTH
+		       	        , A.REG_NO
+		       	        , A.REG_DTTM
+		       	        , A.MOD_NO
+		       	        , A.MOD_DTTM
+		           ) VALUES (
+		       	          #{orgCd}
+		       	        , #{menuType}
+		       	        , #{menuCd}
+		       	        , #{authGrpCd}
+		       	        , #{viewAuth}
+		       	        , #{creAuth}
+		       	        , #{modAuth}
+		       	        , #{delAuth}
+		       	        , #{regNo}
+		       	        , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		       	        , #{modNo}
+		       	        , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		           )
+	</insert>
+	
+	<delete id="delete" parameterType="orgAuthGrpMenuVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 기관 권한 그룹 메뉴의 정보 삭제
+	 	*/
+		DELETE FROM TB_ORG_AUTH_GRP_MENU
+		 WHERE ORG_CD = #{orgCd}
+		   AND MENU_TYPE = #{menuType}
+		<if test = "authGrpCd != null and authGrpCd != ''">
+		   AND AUTH_GRP_CD = #{authGrpCd}
+		</if>
+		<if test = "menuCd != null and menuCd != ''">
+		   AND MENU_CD = #{menuCd}
+		</if>
+	</delete>
+	
+	<insert id="insertInit" parameterType="orgAuthGrpMenuVO" >
+		/*
+			 SQL ID : insertInit
+			 설  명 : 기관 권한 그룹 메뉴의 초기화 등록
+	 	*/
+		INSERT INTO TB_ORG_AUTH_GRP_MENU (
+		       ORG_CD
+		     , MENU_TYPE
+		     , AUTH_GRP_CD
+		     , MENU_CD
+		     , VIEW_AUTH
+		     , CRE_AUTH
+		     , MOD_AUTH
+		     , DEL_AUTH
+		     , REG_NO
+		     , REG_DTTM
+		     , MOD_NO
+		     , MOD_DTTM
+		)
+		SELECT #{orgCd}
+		     , MENU_TYPE
+		     , AUTH_GRP_CD
+		     , MENU_CD
+		     , VIEW_AUTH
+		     , CRE_AUTH
+		     , MOD_AUTH
+		     , DEL_AUTH
+		     , #{regNo}
+		     , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		     , #{modNo}
+		     , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		  FROM TB_SYS_AUTH_GRP_MENU
+		 WHERE MENU_TYPE = #{menuType}
+	</insert>
+	
+	<delete id="deleteInit" parameterType="orgAuthGrpMenuVO" >
+		/*
+			 SQL ID : deleteInit
+			 설  명 : 기관 권한 그룹 메뉴의 초기화 삭제
+	 	*/
+		DELETE FROM TB_ORG_AUTH_GRP_MENU
+		 WHERE ORG_CD = #{orgCd}
+		   AND MENU_TYPE = #{menuType}
+	</delete>	
+	 
+</mapper>

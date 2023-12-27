@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/jdbc  http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd">	
+    
+    <!-- datasource 설정(propertyConfigurer 활용) -->
+    <alias name="dataSource-${framework.database.db_type}" alias="dataSource" />
+    <alias name="dataSource-${framework.database.db_type}" alias="egov.dataSource" />
+    
+    <!-- mssql-->
+    <bean id="dataSourceMssqlSpied" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${framework.database.driver_class_name}"/>
+        <property name="url" value="${framework.database.url}" />
+        <property name="username" value="${framework.database.user_name}"/>
+        <property name="password" value="${framework.database.password}"/>
+        <property name="validationQuery" value="SELECT 1"/>
+        <property name="testOnBorrow" value="true"/>
+    </bean>
+    <bean id="dataSource-mssql" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+        <constructor-arg ref="dataSourceMssqlSpied" />
+        <property name="logFormatter">
+            <bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+                <property name="loggingType" value="MULTI_LINE" />
+                <property name="sqlPrefix" value="Excute SQL	  :  "/>
+            </bean>
+        </property>
+    </bean>
+    
+    <!-- mysql -->
+    <bean id="dataSourceMysqlSpied" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${framework.database.driver_class_name}"/>
+        <property name="url" value="${framework.database.url}" />
+        <property name="username" value="${framework.database.user_name}"/>
+        <property name="password" value="${framework.database.password}"/>
+        <property name="validationQuery" value="SELECT 1"/>
+        <property name="testOnBorrow" value="true"/>
+    </bean>
+    <bean id="dataSource-mysql" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+        <constructor-arg ref="dataSourceMysqlSpied" />
+        <property name="logFormatter">
+            <bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+                <property name="loggingType" value="MULTI_LINE" />
+                <property name="sqlPrefix" value="Excute SQL	  :  "/>
+            </bean>
+        </property>
+    </bean>
+    <!-- mariaDB -->
+    <bean id="dataSourceMariaSpied" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${framework.database.driver_class_name}"/>
+        <property name="url" value="${framework.database.url}" />
+        <property name="username" value="${framework.database.user_name}"/>
+        <property name="password" value="${framework.database.password}"/>
+        <property name="validationQuery" value="SELECT 1"/>
+        <property name="testOnBorrow" value="true"/>
+    </bean>
+    <bean id="dataSource-maria" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+        <constructor-arg ref="dataSourceMariaSpied" />
+        <property name="logFormatter">
+            <bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+                <property name="loggingType" value="MULTI_LINE" />
+                <property name="sqlPrefix" value="Excute SQL	  :  "/>
+            </bean>
+        </property>
+    </bean>
+    
+    <!-- HikariCP 설정 Start-->
+    <!-- <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+        <property name="driverClassName" value="${framework.database.driver_class_name}"/>
+        <property name="jdbcUrl" value="${framework.database.url}" />
+        <property name="username" value="${framework.database.user_name}"/>
+        <property name="password" value="${framework.database.password}"/>            
+    </bean>
+    
+    <bean id="dataSourceHikariSpied" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+        <constructor-arg name="configuration" ref="hikariConfig" />
+    </bean>
+    <bean id="dataSource-hikari" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+        <constructor-arg ref="dataSourceHikariSpied" />
+        <property name="logFormatter">
+            <bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+                <property name="loggingType" value="MULTI_LINE" />
+                <property name="sqlPrefix" value="Excute SQL      :  "/>
+            </bean>
+        </property>
+    </bean> -->
+    
+    <!-- Oracle -->
+    <bean id="dataSourceOracleSpied" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${framework.database.driver_class_name}"/>
+        <property name="url" value="${framework.database.url}" />
+        <property name="username" value="${framework.database.user_name}"/>
+        <property name="password" value="${framework.database.password}"/>
+        <property name="validationQuery" value="SELECT 1 FROM DUAL"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+    </bean>
+    
+    <bean id="dataSource-oracle" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+        <constructor-arg ref="dataSourceOracleSpied" />
+        <property name="logFormatter">
+            <bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+                <property name="loggingType" value="MULTI_LINE" />
+                <property name="sqlPrefix" value="Excute SQL	  :  "/>
+            </bean>
+        </property>
+    </bean>
+    
+    <!-- Altibase -->
+    <bean id="dataSourceAltibaseSpied" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${framework.database.driver_class_name}"/>
+        <property name="url" value="${framework.database.url}" />
+        <property name="username" value="${framework.database.user_name}"/>
+        <property name="password" value="${framework.database.password}"/>
+        <property name="maxActive" value="10"/>
+    </bean>
+    <bean id="dataSource-altibase" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+        <constructor-arg ref="dataSourceAltibaseSpied" />
+        <property name="logFormatter">
+            <bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+                <property name="loggingType" value="MULTI_LINE" />
+                <property name="sqlPrefix" value="Excute SQL	  :  "/>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- Tibero -->
+    <bean id="dataSourceTiberoSpied" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${framework.database.driver_class_name}"/>
+        <property name="url" value="${framework.database.url}" />
+        <property name="username" value="${framework.database.user_name}"/>
+        <property name="password" value="${framework.database.password}"/>
+    </bean>
+    <bean id="dataSource-tibero" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+        <constructor-arg ref="dataSourceTiberoSpied" />
+        <property name="logFormatter">
+            <bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+                <property name="loggingType" value="MULTI_LINE" />
+                <property name="sqlPrefix" value="Excute SQL	  :  "/>
+            </bean>
+        </property>
+    </bean>
+    
+</beans>

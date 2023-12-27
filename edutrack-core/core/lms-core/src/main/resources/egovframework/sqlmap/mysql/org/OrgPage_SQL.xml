@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.org.page.service.impl.OrgPageMapper">	
+
+	
+	<sql id="selectQuery">
+		<![CDATA[
+		SELECT ORG_CD as orgCd
+		     , ( SELECT ORG_NM
+		           FROM tb_org_org_info
+		          WHERE ORG_CD = A.ORG_CD ) AS orgNm
+		     , PAGE_CD as pageCd
+		     , PAGE_NM as pageNm
+		     , PAGE_CTS as pageCts
+		     , PAGE_ODR as pageOdr
+		     , USE_YN as useYn
+		     , DFLT_YN as dfltYn
+		     , MENU_CD as menuCd
+		     , EDITOR_YN as editorYn
+		     , REG_NO as regNo
+			 , (SELECT FN_GET_USER_NAME(REG_NO)) AS regNm
+		     , REG_DTTM as regDttm
+		     , MOD_NO as modNo
+		     , (SELECT FN_GET_USER_NAME(MOD_NO)) AS modNm
+		     , MOD_DTTM as modDttm
+		  FROM tb_org_page A
+		 WHERE '1' = '1'
+		]]>
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		<if test = "orgCd != null and orgCd != ''">
+		   AND ORG_CD = #{orgCd}
+		</if>
+		<if test = "sortKey != null and sortKey == 'PAGE_CD_ASC'">
+		 ORDER BY PAGE_CD ASC
+		</if>
+		<if test = "sortKey != null and sortKey == 'PAGE_CD_DESC'">
+		 ORDER BY PAGE_CD DESC
+		</if>
+		<if test = "sortKey != null and sortKey == 'PAGE_NM_ASC'">
+		 ORDER BY PAGE_NM ASC
+		</if>
+		<if test = "sortKey != null and sortKey == 'PAGE_NM_DESC'">
+		 ORDER BY PAGE_NM DESC
+		</if>
+		<if test = "sortKey != null and sortKey == 'USE_YN_ASC'">
+		 ORDER BY USE_YN ASC
+		</if>
+		<if test = "sortKey != null and sortKey == 'USE_YN_DESC'">
+		 ORDER BY USE_YN DESC
+		</if>
+		<if test = "sortKey == null or sortKey == ''">
+		 ORDER BY ORG_CD, PAGE_ODR
+		</if>
+	</sql>		
+
+	<select id="list" parameterType="orgPageVO" resultType="orgPageVO">
+		/*
+			 SQL ID : list
+			 설  명 : 기관 페이지의 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	</select>
+	
+	<select id="listForMenu" parameterType="orgPageVO" resultType="orgPageVO">
+		/*
+			 SQL ID : listForMenu
+			 설  명 : 메뉴 관리용 기관 페이지의 전체 목록
+	 	*/
+	 	<include refid="selectQuery"/>
+	 	   AND (MENU_CD is NULL OR MENU_CD = '')
+		<if test = "orgCd != null and orgCd != ''">
+	 	   AND ORG_CD = #{orgCd}
+		</if>
+	 	 ORdER BY ORG_CD, PAGE_ODR
+	</select>	
+	
+	<select id="listPageing" parameterType="orgPageVO" resultType="orgPageVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 기관 페이지의 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		<if test = "sortKey != null and sortKey == 'PAGE_CD_ASC'">
+		 ORDER BY PAGECD ASC
+		</if>
+		<if test = "sortKey != null and sortKey == 'PAGE_CD_DESC'">
+		 ORDER BY PAGECD DESC
+		</if>
+		<if test = "sortKey != null and sortKey == 'PAGE_NM_ASC'">
+		 ORDER BY PAGENM ASC
+		</if>
+		<if test = "sortKey != null and sortKey == 'PAGE_NM_DESC'">
+		 ORDER BY PAGENM DESC
+		</if>
+		<if test = "sortKey != null and sortKey == 'USE_YN_ASC'">
+		 ORDER BY USEYN ASC
+		</if>
+		<if test = "sortKey != null and sortKey == 'USE_YN_DESC'">
+		 ORDER BY USEYN DESC
+		</if>
+		<if test = "sortKey == null or sortKey == ''">
+		 ORDER BY ORGCD, PAGECD
+		</if>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="orgPageVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 기관 페이지의 전체 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>	
+	
+	<select id="select" parameterType="orgPageVO" resultType="orgPageVO">
+		/*
+			 SQL ID : select
+			 설  명 : 기관 페이지의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+	 	   AND ORG_CD = #{orgCd}
+           AND PAGE_CD = #{pageCd}	 	
+	</select>	
+	
+	<insert id="insert" parameterType="orgPageVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 기관 페이지의 정보 등록
+	 	*/
+		INSERT INTO tb_org_page (
+		       ORG_CD
+		     , PAGE_CD
+		     , PAGE_NM
+		     , PAGE_CTS
+		     , PAGE_ODR
+		     , USE_YN
+		     , DFLT_YN
+		     , MENU_CD
+		     , EDITOR_YN
+		     , REG_NO
+		     , REG_DTTM
+		     , MOD_NO
+		     , MOD_DTTM
+		) VALUES (
+		       #{orgCd}
+		     , #{pageCd}
+		     , #{pageNm}
+		     , #{pageCts}
+		     , ( SELECT NVL((MAX(PAGE_ODR)),0)+1 
+		           FROM tb_org_page AS SUBQUERY
+		          WHERE ORG_CD = #{orgCd} )
+		     , #{useYn}
+		     , #{dfltYn}
+		     , #{menuCd}
+		     , #{editorYn}
+		     , #{regNo}
+		     , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		     , #{modNo}
+		     , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		)	 	
+	</insert>
+	
+	<update id="update" parameterType="orgPageVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 기관 페이지의 정보 수정
+	 	*/
+		UPDATE tb_org_page
+		   SET PAGE_NM = #{pageNm}
+		     , PAGE_CTS = #{pageCts}
+		     , PAGE_ODR = #{pageOdr}
+		     , USE_YN = #{useYn}
+		     , EDITOR_YN = #{editorYn}
+		     , MOD_NO = #{modNo}
+		     , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		 WHERE ORG_CD = #{orgCd}
+		   AND PAGE_CD = #{pageCd}
+	</update>	
+
+	<delete id="delete" parameterType="orgPageVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 기관 페이지의 정보 삭제
+	 	*/
+		DELETE FROM tb_org_page
+		 WHERE ORG_CD = #{orgCd}
+		   AND PAGE_CD = #{pageCd}
+	</delete>
+	
+	<delete id="deleteAll" parameterType="orgPageVO" >
+		/*
+			 SQL ID : deleteAll
+			 설  명 : 기관의 페이지 전체 정보 삭제
+	 	*/
+		DELETE FROM tb_org_page
+		 WHERE ORG_CD = #{orgCd}
+	</delete>
+	
+	<update id="updateMenuCd" parameterType="orgPageVO" >
+		/*
+			 SQL ID : updateMenuCd
+			 설  명 : 메뉴 코드와 연결
+	 	*/
+		UPDATE tb_org_page
+		   SET MENU_CD = #{menuCd}
+		     , MOD_NO = #{modNo}
+		     , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		 WHERE ORG_CD = #{orgCd}
+		   AND PAGE_CD = #{pageCd}	 	
+	</update>
+
+	<update id="updateMenuCdToNull" parameterType="orgPageVO" >
+		/*
+			 SQL ID : updateMenuCd
+			 설  명 : 메뉴 코드와 연결 해제
+	 	*/
+		UPDATE tb_org_page
+		   SET MENU_CD = ''
+		     , MOD_NO = #{modNo}
+		     , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		 WHERE ORG_CD = #{orgCd}
+		   AND MENU_CD = #{menuCd}	
+	</update>
+	
+	<update id="updateAllMenuCdToNull" parameterType="orgPageVO" >
+		/*
+			 SQL ID : updateMenuCd
+			 설  명 : Default 가 아닌 모든 메뉴 코드와 연결 해제
+	 	*/
+		UPDATE tb_org_page
+		   SET MENU_CD = ''
+		     , MOD_NO = #{modNo}
+		     , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		 WHERE ORG_CD = #{orgCd}
+		   AND DFLT_YN = 'N'
+	</update>
+	 
+</mapper>

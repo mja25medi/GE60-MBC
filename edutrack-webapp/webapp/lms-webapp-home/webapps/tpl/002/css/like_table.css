@@ -1,0 +1,191 @@
+@charset "UTF-8";
+/* =======================================================================================
+반응형을 위해 테이블 대신 ul li 사용,
+thead의 하위 span과 tbody > li 내의 dl 개수는 동일하여야 합니다.
+======================================================================================= */
+.like-table {
+  width: 100%;
+  display: table;
+  margin-top: 1rem;
+}
+.like-table .thead {
+  display: table-header-group;
+}
+.like-table .thead .th {
+  display: table-cell;
+  text-align: center;
+  position: relative;
+  vertical-align: middle;
+  background: linear-gradient(-180deg, #f7f8ff 0%, #eef0f9 100%) 0% 0% no-repeat;
+  padding: 13px 0;
+  color: #222;
+  font-weight: 500;
+  border-top: 1px solid #e1e1e1;
+  line-height: 1.5rem;
+  word-break: keep-all;
+}
+.like-table .thead .th .txt-small {
+  font-size: 1.3rem;
+}
+.like-table .thead .th + .th:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  background-color: #d9d9d9;
+  width: 1px;
+  height: 14px;
+  margin-top: -7px;
+}
+.like-table .tbody {
+  display: table-row-group;
+}
+.like-table .tbody .tr {
+  display: table-row;
+}
+.like-table .tbody .tr .td {
+  display: table-cell;
+  text-align: center;
+  padding: 12px 0;
+  border-top: 1px solid #e1e1e1;
+  background: #fff;
+  vertical-align: middle;
+}
+.like-table .tbody .tr .td.txt-left dd {
+  padding-left: 1rem;
+}
+.like-table .tbody .tr .td dt {
+  display: none;
+}
+.like-table .tbody .tr .td .btn, .like-table .tbody .tr .td .btn3 {
+  padding: 0.4rem 1rem;
+  font-size: 1.4rem;
+  border-radius: 0.4rem;
+  margin: 2px;
+}
+.like-table .tbody .tr .td input[type=checkbox] {
+  width: 1.125em;
+  height: 1.125em;
+}
+.like-table .tbody.main {
+  min-height: 20rem;
+  display: table;
+}
+.like-table .no-list {
+  position: absolute;
+  top: 100px;
+}
+@media screen and (max-width: 1280px) {
+  .like-table {
+    display: block;
+  }
+  .like-table .thead {
+    display: none;
+  }
+  .like-table .tbody {
+    display: block;
+  }
+  .like-table .tbody .tr {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #fff;
+    margin: 5px;
+    padding: 10px;
+  }
+  .like-table .tbody .tr::after {
+    display: block;
+    clear: both;
+    content: "";
+  }
+  .like-table .tbody .tr .td {
+    display: flex;
+    align-items: flex-start;
+    float: left;
+    width: 50%;
+    border-bottom: 0 none;
+  }
+}
+@media screen and (max-width: 1280px) and (max-width: 768px) {
+  .like-table .tbody .tr .td {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 1280px) {
+  .like-table .tbody .tr .td dt {
+    display: inline-block;
+    text-align: left;
+    width: 30%;
+    position: relative;
+    padding-left: 12px;
+    vertical-align: top;
+    color: #222;
+    font-weight: 500;
+  }
+  .like-table .tbody .tr .td dt .txt-small {
+    font-size: 1.4rem;
+  }
+  .like-table .tbody .tr .td dt:before {
+    content: "";
+    width: 3px;
+    height: 3px;
+    top: 50%;
+    margin-top: -1px;
+    left: 0;
+    position: absolute;
+    background-color: #000;
+  }
+}
+@media screen and (max-width: 1280px) {
+  .like-table .tbody .tr .td dd {
+    display: inline-block;
+    width: 70%;
+    height: 100%;
+    border-left: 1px solid #e7e7e7;
+    text-align: left !important;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+@media screen and (max-width: 1280px) {
+  .like-table .tbody .tr .td.dt-hidden {
+    clear: both;
+    display: block;
+    width: 100%;
+  }
+  .like-table .tbody .tr .td.dt-hidden dt {
+    display: none;
+  }
+  .like-table .tbody .tr .td.dt-hidden dd {
+    width: 100%;
+    border-left: 0 none;
+  }
+}
+
+@media screen and (max-width: 786px) {
+  .like-table {
+    margin-top: 1rem;
+  }
+  .like-table .tbody .tr {
+    border: 1px solid #f0f1f2;
+    margin: 0 0 10px;
+    /* @include display-flex; */
+    flex-wrap: wrap;
+    padding: 7px 15px 7px 15px;
+    position: relative;
+  }
+  .like-table .tbody .tr .td {
+    padding: 5px 0;
+  }
+  .like-table .tbody .tr .td:first-child {
+    border-top: none;
+  }
+  .like-table .tbody .tr .td dt:before {
+    width: 2px;
+    height: 2px;
+    background-color: #9ea4a6;
+  }
+  .like-table .tbody .tr .td dd {
+    text-align: left !important;
+    padding-left: 10px;
+  }
+}/*# sourceMappingURL=like_table.css.map */

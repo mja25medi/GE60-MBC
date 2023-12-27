@@ -1,0 +1,731 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.log.educourse.service.impl.LogEduCourseStatusMapper">	
+
+
+	
+	<select id="listTeamStatus" parameterType="logEduTeamStatusVO" resultType="logEduTeamStatusVO">
+ 		/*
+			 SQL ID : listTeamStatus
+			 설  명 : 팀별 /년도 월에 대한 과정 운영 현황 목록
+	 	*/
+		SELECT CODE_CD AS eduTeamCd
+		     , CODE_NM AS eduTeamNm
+		     , ( SELECT COUNT(*)
+		           FROM tb_crs_cre_crs
+		          WHERE EDU_TEAM = T.CODE_CD
+		            AND CRE_YEAR = #{creYear}
+		<if test = 'creMonth != null and creMonth != ""'>
+		            AND SUBSTR(ENRL_START_DTTM,1,6) = CONCAT(#{creYear}, #{creMonth})
+		</if>
+               ) AS creCnt
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND B.EDU_TEAM = T.CODE_CD
+		            AND B.CRE_YEAR = #{creYear}
+		<if test = 'creMonth != null and creMonth != ""'>
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear}, #{creMonth})
+		</if>		            
+		            AND A.ENRL_STS in ('S','C','F') ) AS enrlCnt
+		     , ( SELECT COUNT(*)
+			       FROM tb_std_std A, tb_crs_cre_crs B
+			      WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+			        AND B.EDU_TEAM = T.CODE_CD
+			        AND B.CRE_YEAR = #{creYear}
+		<if test = 'creMonth != null and creMonth != ""'>
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear}, #{creMonth})
+		</if>
+		            AND A.ENRL_STS = 'C' ) AS cpltCnt
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND B.EDU_TEAM = T.CODE_CD
+		            AND B.CRE_YEAR = #{creYear}
+		<if test = 'creMonth != null and creMonth != ""'>
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},#{creMonth})
+		</if>
+		            AND A.ENRL_STS = 'F' ) AS failCnt
+		  FROM tb_sys_code T
+		 WHERE CODE_CTGR_CD = 'EDU_TEAM_CD'
+		   AND CODE_CD != '99'
+		   AND USE_YN = 'Y'
+		 ORDER BY CODE_ODR
+	</select>
+	
+	<select id="listCourseStatus" parameterType="logEduCourseStatusVO" resultType="logEduCourseStatusVO">
+		/*
+			 SQL ID : listCourseStatus
+			 설  명 : 팀별, 년,월별 개설과정 목록
+	 	*/
+		<include refid="getListStatusQuery" />
+		<include refid="whereStatusQuery" />
+		<include refid="orderStatusQuery" />
+	</select>
+	
+	<sql id="getListStatusQuery">
+		SELECT A.CRS_CRE_CD as crsCreCd
+		     , B.CRS_NM as crsNm
+		     , A.CRS_CRE_NM as crsCreNm
+		     , A.CRE_YEAR as creYear
+		     , A.CRE_TERM as creTerm
+		     , B.ENRL_START_DTTM as enrlStartDttm
+		     , B.ENRL_END_DTTM as enrlEndDttm
+		     , A.OFLN_START_DTTM as oflnStartDttm
+		     , A.OFLN_END_DTTM as oflnEndDttm
+		     , B.CRS_OPER_MTHD as crsOperMthd
+		     , A.DEPT_CD
+			 , C.DEPT_NM
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std
+		          WHERE CRS_CRE_CD = A.CRS_CRE_CD
+		            AND ENRL_STS IN ('S','C','F') ) AS enrlCnt
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std
+		          WHERE CRS_CRE_CD = A.CRS_CRE_CD
+		            AND ENRL_STS = 'C' ) AS cpltCnt
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std
+		          WHERE CRS_CRE_CD = A.CRS_CRE_CD
+		            AND ENRL_STS = 'F' ) AS failCnt
+		  FROM tb_crs_cre_crs A, tb_crs_crs B, tb_usr_dept_info C
+		 WHERE A.CRS_CD = B.CRS_CD
+		 AND A.DEPT_CD = C.DEPT_CD
+	</sql>
+	
+	<sql id="whereStatusQuery">
+		<!-- 	<if test = 'creMonth != null and creMonth != ""'>
+		   AND SUBSTR(A.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},#{creMonth})
+		</if> -->
+		<if test = 'orgCd != null and orgCd != ""'>
+		   AND A.ORG_CD = #{orgCd}
+		</if>
+		<if test = 'creYear != null and creYear != ""'>
+		   AND A.CRE_YEAR = #{creYear}
+		</if>		
+		<if test = 'crsCd != null and crsCd != ""'>
+			AND A.CRS_CD = IFNULL((#{crsCd}),A.CRS_CD)
+		</if>
+		<if test = 'deptCd != null and deptCd != ""'>
+			AND A.DEPT_CD = IFNULL((#{deptCd}),A.DEPT_CD)
+		</if>
+		<if test = 'sbjCd != null and sbjCd != ""'>
+			AND A.SBJ_CD = IFNULL((#{sbjCd}),A.SBJ_CD)
+		</if>
+		<if test = 'enrlStartDttmStart != null and enrlStartDttmEnd != ""'>
+			AND SUBSTR(B.ENRL_START_DTTM,1,8) BETWEEN #{enrlStartDttmStart} AND #{enrlStartDttmEnd}
+		</if>
+		<if test = 'enrlEndDttmStart != null and enrlEndDttmEnd != ""'>
+			AND SUBSTR(B.ENRL_END_DTTM,1,8) BETWEEN #{enrlEndDttmStart} AND #{enrlEndDttmEnd}
+		</if>
+		<if test = 'searchValue != null and searchValue != ""'>
+		   AND (CASE WHEN #{searchKey} = 'crsNm' THEN B.CRS_NM  WHEN #{searchKey} = 'crsCreNm' THEN A.CRS_CRE_NM ELSE C.DEPT_NM END)  like CONCAT('%',#{searchValue},'%')
+		</if>
+	</sql>
+	
+	<sql id="orderStatusQuery">
+		<if test = 'sortKey != null and sortKey != ""'>
+			<if test = 'sortKey == "CRS_NM_ASC"'>
+				 ORDER BY B.CRS_NM ASC
+			</if>
+			<if test = 'sortKey == "CRS_NM_DESC"'>
+				 ORDER BY B.CRS_NM DESC
+			</if>
+			<if test = 'sortKey == "CRE_TERM_ASC"'>
+				 ORDER BY A.CRE_TERM ASC
+			</if>
+			<if test = 'sortKey == "CRE_TERM_DESC"'>
+				 ORDER BY A.CRE_TERM DESC
+			</if> 
+			<if test = 'sortKey == "CRS_CRE_NM_ASC"'>
+				 ORDER BY A.CRS_CRE_NM ASC
+			</if>
+			<if test = 'sortKey == "CRS_CRE_NM_DESC"'>
+				 ORDER BY A.CRS_CRE_NM DESC
+			</if>			
+		</if>
+		<if test = 'sortKey == null or sortKey == ""'>
+		 ORDER BY A.ENRL_START_DTTM DESC, A.CRS_CRE_CD DESC		
+		</if>
+	</sql>
+	
+	<select id="count" parameterType="LogEduCourseStatusVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM tb_crs_cre_crs A, tb_crs_crs B, tb_usr_dept_info C
+		 WHERE A.CRS_CD = B.CRS_CD
+		 AND A.DEPT_CD = C.DEPT_CD								
+		<include refid="whereStatusQuery" />
+	</select>
+	
+	<select id="deptStatusList" parameterType="LogEduCourseStatusVO" resultType="logEduCourseStatusVO">
+		<include refid="getListStatusQuery" />
+		 <include refid="whereStatusQuery" />
+		 GROUP BY A.DEPT_CD							
+	</select>
+	
+	<select id="listCourseStatusPageing" parameterType="logEduCourseStatusVO" resultType="logEduCourseStatusVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="getListStatusQuery" />
+		<include refid="whereStatusQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		<include refid="orderStatusQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="listStdEduResultExcel" parameterType="LogEduCourseStatusVO" resultType="eduResultVO">
+		SELECT 
+			 A.STD_NO
+			, A.CRS_CRE_CD
+			, E.CRS_CRE_NM
+			, A.USER_NO
+			, A.DECLS_NO
+			, B.USER_NM
+			, C.USER_ID
+			, E.CRS_CD
+			, (SELECT CRS_NM FROM tb_crs_crs WHERE CRS_CD= E.CRS_CD) AS CRS_NM
+			, B.DEPT_NM
+			, A.ENRL_STS
+			, (SELECT FN_GET_CODE_NAME('ENRL_STS',A.ENRL_STS)) AS ENRL_STS_NM
+			, A.EDU_NO
+			, CONCAT(DATE_FORMAT(STR_TO_DATE(A.ENRL_START_DTTM,'%Y%m%d%H%i%s'),'%Y%m%d'),' ~ ', DATE_FORMAT(STR_TO_DATE(A.ENRL_END_DTTM,'%Y%m%d%H%i%s'),'%Y%m%d')) AS ENRL_DURATION
+			, IFNULL(FN_GET_NULL(D.PRGR_SCORE),0) AS PRGR_SCORE
+			, IFNULL(FN_GET_NULL(D.PRGR_RATE),0) AS PRGR_RATE
+			, IFNULL(FN_GET_NULL(D.ATTD_SCORE),0) AS ATTD_SCORE
+			, IFNULL(FN_GET_NULL(D.EXAM_SCORE),0) AS EXAM_SCORE
+			, IFNULL(FN_GET_NULL(D.SEMI_EXAM_SCORE),0) AS SEMI_EXAM_SCORE
+			, IFNULL(FN_GET_NULL(D.ASMT_SCORE),0) AS ASMT_SCORE
+			, IFNULL(FN_GET_NULL(D.FORUM_SCORE),0) AS FORUM_SCORE
+			, IFNULL(FN_GET_NULL(D.PRJT_SCORE),0) AS PRJT_SCORE
+			, IFNULL(FN_GET_NULL(D.JOIN_SCORE),0) AS JOIN_SCORE
+			, IFNULL(FN_GET_NULL(D.ETC_SCORE),0) AS ETC_SCORE
+			, IFNULL(FN_GET_NULL(D.TOT_SCORE),0) AS TOT_SCORE
+			, IFNULL(FN_GET_NULL(D.CONV_SCORE),0) AS CONV_SCORE			
+			, (CASE WHEN D.STD_NO = null THEN 'N' ELSe 'Y' END) AS RESULT_YN
+			, (SELECT FN_GET_CRS_STD_PRGR(A.CRS_CRE_CD, A.STD_NO)) AS TOT_RATIO
+			, ROUND((SELECT FN_GET_CRS_STD_BMKTIME(A.CRS_CRE_CD, A.STD_NO))) AS TOT_BMK_TIME
+		FROM tb_std_std A
+		LEFT OUTER JOIN
+			tb_std_edu_rslt D
+		ON A.STD_NO = D.STD_NO		
+		, tb_usr_user_info B
+		, tb_usr_login C
+		, tb_crs_cre_crs E
+		, tb_crs_crs F
+		, tb_usr_dept_info G
+		WHERE A.USER_NO = B.USER_NO
+			AND B.USER_NO = C.USER_NO
+			AND A.CRS_CRE_CD = E.CRS_CRE_CD
+			AND E.CRS_CD = F.CRS_CD
+			AND E.DEPT_CD = G.DEPT_CD
+			AND A.ENRL_STS IN ('S', 'C', 'F')
+			AND C.USER_STS ='U'
+		<if test = 'orgCd != null and orgCd != ""'>
+		   AND E.ORG_CD = #{orgCd}
+		</if>
+		<if test = 'crsCd != null and crsCd != ""'>
+			AND E.CRS_CD = IFNULL((#{crsCd}),E.CRS_CD)
+		</if>
+		<if test = 'deptCd != null and deptCd != ""'>
+			AND E.DEPT_CD = IFNULL((#{deptCd}),E.DEPT_CD)
+		</if>
+		<if test = 'sbjCd != null and sbjCd != ""'>
+			AND E.SBJ_CD = IFNULL((#{sbjCd}),E.SBJ_CD)
+		</if>
+		<if test = 'enrlStartDttmStart != null and enrlStartDttmEnd != ""'>
+			AND SUBSTR(F.ENRL_START_DTTM,1,8) BETWEEN #{enrlStartDttmStart} AND #{enrlStartDttmEnd}
+		</if>
+		<if test = 'enrlEndDttmStart != null and enrlEndDttmEnd != ""'>
+			AND SUBSTR(F.ENRL_END_DTTM,1,8) BETWEEN #{enrlEndDttmStart} AND #{enrlEndDttmEnd}
+		</if>
+		<if test = 'searchValue != null and searchValue != ""'>
+		   AND (CASE WHEN #{searchKey} = 'crsNm' THEN F.CRS_NM  WHEN #{searchKey} = 'crsCreNm' THEN E.CRS_CRE_NM ELSE G.DEPT_NM END)  like CONCAT('%',#{searchValue},'%')
+		</if>
+		 ORDER BY F.ENRL_START_DTTM DESC, E.CRS_CRE_CD DESC		
+	</select>
+	
+	
+	
+	<select id="listCourseResult" parameterType="logEduCourseStatusVO" resultType="logEduCourseStatusVO">
+		/*
+			 SQL ID : listCourseResult
+			 설  명 : 교육 총괄 실적표용 과정 결과 목록
+	 	*/
+		SELECT CRS_CD AS creCreCd
+		     , CRS_NM AS crsCreNm
+		     , PLAN_CRE_CNT as planCreCnt
+		     , PLAN_ENRL_CNT as planEnrlCnt
+		     , CRE_CNT as creCnt
+		     , ENRL_CNT as enrlCnt
+	         , CRE_YEAR as creYear
+	         , CRS_OPER_MTHD as crsOperMthd
+	         , CRS_OPER_TYPE as crsOperType
+		     , CASE WHEN PLAN_CRE_CNT = 0 THEN
+		                 CASE WHEN CRE_CNT > 0 THEN CRE_CNT * 100
+		                      ELSE 0 END
+		            ELSE ROUND(CRE_CNT / PLAN_CRE_CNT * 100,2) END AS creRatio
+		     , CASE WHEN PLAN_ENRL_CNT = 0 THEN
+		                 CASE WHEN ENRL_CNT > 0 THEN ENRL_CNT * 100
+		                      ELSE 0 END
+		            ELSE ROUND(ENRL_CNT / PLAN_ENRL_CNT * 100,2) END AS eduRatio
+		     , EDU_PRICE as eduPrice
+		  FROM (
+		         SELECT A.CRS_CD
+		              , A.CRS_NM
+                      , B.CRE_YEAR
+                      , A.CRS_OPER_MTHD
+                      , A.CRS_OPER_TYPE
+		              , IFNULL(FN_GET_NULL(B.CRE_CNT),0) AS PLAN_CRE_CNT
+		              , IFNULL(FN_GET_NULL(B.YEAR_NOP_CNT),0) AS PLAN_ENRL_CNT
+		              , ( SELECT COUNT(*)
+		                    FROM tb_crs_cre_crs
+		                   WHERE CRS_CD = A.CRS_CD
+		                     AND CRE_YEAR = #{creYear}
+		                     AND ORG_CD = #{orgCd} ) AS CRE_CNT
+		              , ( SELECT COUNT(*)
+		                    FROM tb_crs_cre_crs T1, tb_std_std T2
+		                   WHERE T1.CRS_CRE_CD = T2.CRS_CRE_CD
+		                     AND T1.CRS_CD = A.CRS_CD
+		                     AND T1.CRE_YEAR = #{creYear}
+		                     AND T1.ORG_CD = #{orgCd}
+		                     AND T2.ENRL_STS IN ('S','C','F') ) AS ENRL_CNT
+		              <!-- , IFNULL(FN_GET_NULL( SELECT SUM(PAYM_PRICE)
+		                        FROM tb_crs_cre_crs T1, tb_std_std T2
+		                       WHERE T1.CRS_CRE_CD = T2.CRS_CRE_CD
+		                         AND T1.CRS_CD = A.CRS_CD
+		                         AND T1.CRE_YEAR = #{creYear}
+		                         AND T1.ORG_CD = #{orgCd}
+		                         AND T2.PAYM_STS_CD = 'Y'
+		                         AND IFNULL(FN_GET_NULL(T2.REPAY_STS_CD),'9999999999') != 'REFUND003'  ),0) AS EDU_PRICE -->
+		           FROM tb_crs_crs A
+		           LEFT OUTER JOIN
+		           	tb_crs_crs_plan B
+		           ON (A.CRS_CD = B.CRS_CD AND B.CRE_YEAR = #{creYear})
+		          WHERE A.ORG_CD = #{orgCd}
+		<if test = 'searchValue != null and searchValue != ""'>
+		      AND A.CRS_NM like CONCAT('%', #{searchValue}, '%')
+		</if>
+		        ) A
+		<if test = 'sortKey != null and sortKey != ""'>
+			<if test = 'sortKey == "CRE_YEAR_ASC"'>
+		 ORDER BY CRE_YEAR ASC
+			</if>
+			<if test = 'sortKey == "CRE_YEAR_DESC"'>
+		 ORDER BY CRE_YEAR DESC
+			</if>
+			<if test = 'sortKey == "CRS_NM_ASC"'>
+		 ORDER BY CRS_NM ASC
+			</if>
+			<if test = 'sortKey == "CRS_NM_DESC"'>
+		 ORDER BY CRS_NM DESC
+			</if>
+			<if test = 'sortKey == "CRS_OPER_MTHD_ASC"'>
+		 ORDER BY CRS_OPER_MTHD ASC
+			</if>
+			<if test = 'sortKey == "CRS_OPER_MTHD_DESC"'>
+		 ORDER BY CRS_OPER_MTHD DESC
+			</if>
+			<if test = 'sortKey == "CRS_OPER_TYPE_ASC"'>
+		 ORDER BY CRS_OPER_TYPE ASC
+			</if>
+			<if test = 'sortKey == "CRS_OPER_TYPE_DESC"'>
+		 ORDER BY CRS_OPER_TYPE DESC
+			</if>
+		</if>
+		<if test = 'sortKey == null or sortKey == ""'>
+		 ORDER BY CRS_NM
+		</if>
+	
+	</select>
+	
+	<select id="listCourseResultDash" parameterType="logEduCourseStatusVO" resultType="logEduCourseStatusVO">
+		/*
+			 SQL ID : listCourseResultDash
+			 설  명 : 교육 총괄 실적표용 과정 결과 목록
+	 	*/
+		SELECT CRS_CD AS crsCreCd
+		     , CRS_NM AS crsCreNm
+		     , PLAN_CRE_CNT as planCreCnt
+		     , PLAN_ENRL_CNT as planEnrlCnt
+		     , CRE_CNT as creCnt
+		     , ENRL_CNT as enrlCnt
+	         , CRE_YEAR as creYear
+	         , CRS_OPER_MTHD as crsOperMthd
+	         , CRS_OPER_TYPE as creOperType
+		     , CASE WHEN PLAN_CRE_CNT = 0 THEN
+		                 CASE WHEN CRE_CNT > 0 THEN CRE_CNT * 100
+		                      ELSE 0 END
+		            ELSE ROUND(CRE_CNT / PLAN_CRE_CNT * 100,2) END AS creRatio
+		     , CASE WHEN PLAN_ENRL_CNT = 0 THEN
+		                 CASE WHEN ENRL_CNT > 0 THEN ENRL_CNT * 100
+		                      ELSE 0 END
+		            ELSE ROUND(ENRL_CNT / PLAN_ENRL_CNT * 100,2) END AS eduRatio
+		     , EDU_PRICE as eduPrice
+		  FROM (
+		         SELECT A.CRS_CD
+		              , A.CRS_NM
+                      , B.CRE_YEAR
+                      , A.CRS_OPER_MTHD
+                      , A.CRS_OPER_TYPE
+		              , IFNULL(FN_GET_NULL(B.CRE_CNT),0) AS PLAN_CRE_CNT
+		              , IFNULL(FN_GET_NULL(B.YEAR_NOP_CNT),0) AS PLAN_ENRL_CNT
+		              , ( SELECT COUNT(*)
+		                    FROM tb_crs_cre_crs
+		                   WHERE CRS_CD = A.CRS_CD
+		                     AND CRE_YEAR = #{creYear}
+		                     AND ORG_CD = #{orgCd} ) AS CRE_CNT
+		              , ( SELECT COUNT(*)
+		                    FROM tb_crs_cre_crs T1, tb_std_std T2, tb_usr_login T3
+		                   WHERE T1.CRS_CRE_CD = T2.CRS_CRE_CD
+		                     AND T1.CRS_CD = A.CRS_CD
+		                     AND T1.CRE_YEAR = #{creYear}
+		                     AND T1.ORG_CD = #{orgCd}
+		                     AND T2.ENRL_STS IN ('S','C','F')
+		                     AND T2.USER_NO = T3.USER_NO
+		                     AND T3.USER_STS = 'U' ) AS ENRL_CNT
+		              <!-- , IFNULL(FN_GET_NULL( SELECT SUM(PAYM_PRICE)
+		                        FROM tb_crs_cre_crs T1, tb_std_std T2
+		                       WHERE T1.CRS_CRE_CD = T2.CRS_CRE_CD
+		                         AND T1.CRS_CD = A.CRS_CD
+		                         AND T1.CRE_YEAR = #{creYear}
+		                         AND T1.ORG_CD = #{orgCd}
+		                         AND T2.PAYM_STS_CD = 'Y'
+		                         AND IFNULL(FN_GET_NULL(T2.REPAY_STS_CD),'9999999999') != 'REFUND003'  ),0) AS EDU_PRICE -->
+		           FROM tb_crs_crs A
+		           LEFT OUTER JOIN
+		           	tb_crs_crs_plan B
+		           ON (A.CRS_CD = B.CRS_CD AND B.CRE_YEAR = #{creYear})
+		          WHERE A.ORG_CD = #{orgCd}
+		<if test = 'searchValue != null and searchValue != ""'>
+		            AND A.CRS_NM  like CONCAT('%',#{searchValue},'%')
+		</if>
+		       ) A
+		<if test = 'sortKey != null and sortKey != ""'>
+			<if test = 'sortKey == "CRE_YEAR_ASC"'>
+		 ORDER BY CRE_YEAR ASC
+			</if>
+			<if test = 'sortKey == "CRE_YEAR_DESC"'>
+		 ORDER BY CRE_YEAR DESC
+			</if>
+			<if test = 'sortKey == "CRS_NM_ASC"'>
+		 ORDER BY CRS_NM ASC
+			</if>
+			<if test = 'sortKey == "CRS_NM_DESC"'>
+		 ORDER BY CRS_NM DESC
+			</if>
+			<if test = 'sortKey == "CRS_OPER_MTHD_ASC"'>
+		 ORDER BY CRS_OPER_MTHD ASC
+			</if>
+			<if test = 'sortKey == "CRS_OPER_MTHD_DESC"'>
+		 ORDER BY CRS_OPER_MTHD DESC
+			</if>
+			<if test = 'sortKey == "CRS_OPER_TYPE_ASC"'>
+		 ORDER BY CRS_OPER_TYPE ASC
+			</if>
+			<if test = 'sortKey == "CRS_OPER_TYPE_DESC"'>
+		 ORDER BY CRS_OPER_TYPE DESC
+			</if>
+		</if>
+		<if test = 'sortKey == null or sortKey == ""'>
+		 ORDER BY CRS_NM
+		</if>
+
+	</select>
+	
+	<select id="selectResult" parameterType="logEduOrgStatusVO" resultType="logEduOrgStatusVO">
+		/*
+			 SQL ID : selectResult
+			 설  명 : 시스템 총 현황 검색
+	 	*/
+		SELECT ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'01')
+		            AND A.ENRL_STS IN ('S', 'C', 'F')) AS enrlCnt1
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'01')
+		            AND A.ENRL_STS = 'C' ) AS cpltCnt1
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'01')
+		            AND A.ENRL_STS = 'F' ) AS failCnt1
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'02')
+		            AND A.ENRL_STS IN ('S', 'C', 'F')) AS enrlCnt2
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'02')
+		            AND A.ENRL_STS = 'C' ) AS cpltCnt2
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'02')
+		            AND A.ENRL_STS = 'F' ) AS failCnt2
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'03')
+		            AND A.ENRL_STS IN ('S', 'C', 'F')) AS enrlCnt3
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'03')
+		            AND A.ENRL_STS = 'C' ) AS cpltCnt3
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'03')
+		            AND A.ENRL_STS = 'F' ) AS failCnt3
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'04')
+		            AND A.ENRL_STS IN ('S', 'C', 'F')) AS enrlCnt4
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'04')
+		            AND A.ENRL_STS = 'C' ) AS cpltCnt4
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'04')
+		            AND A.ENRL_STS = 'F' ) AS failCnt4
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'05')
+		            AND A.ENRL_STS IN ('S', 'C', 'F')) AS enrlCnt5
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear}, '05')
+		            AND A.ENRL_STS = 'C' ) AS cpltCnt5
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear}, '05')
+		            AND A.ENRL_STS = 'F' ) AS failCnt5
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'06')
+		            AND A.ENRL_STS IN ('S', 'C', 'F')) AS enrlCnt6
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'06')
+		            AND A.ENRL_STS = 'C' ) AS cpltCnt6
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'06')
+		            AND A.ENRL_STS = 'F' ) AS failCnt6
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'07')
+		            AND A.ENRL_STS IN ('S', 'C', 'F')) AS enrlCnt7
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'07')
+		            AND A.ENRL_STS = 'C' ) AS cpltCnt7
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'07')
+		            AND A.ENRL_STS = 'F' ) AS failCnt7
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'08')
+		            AND A.ENRL_STS IN ('S', 'C', 'F')) AS enrlCnt8
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear}, '08')
+		            AND A.ENRL_STS = 'C' ) AS cpltCnt8
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'08')
+		            AND A.ENRL_STS = 'F' ) AS failCnt8
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'09')
+		            AND A.ENRL_STS IN ('S', 'C', 'F')) AS enrlCnt9
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'09')
+		            AND A.ENRL_STS = 'C' ) AS cpltCnt9
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'09')
+		            AND A.ENRL_STS = 'F' ) AS failCnt9
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'10')
+		            AND A.ENRL_STS IN ('S', 'C', 'F')) AS enrlCnt10
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear}, '10')
+		            AND A.ENRL_STS = 'C' ) AS cpltCnt10
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear}, '10')
+		            AND A.ENRL_STS = 'F' ) AS failCnt10
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear}, '11')
+		            AND A.ENRL_STS IN ('S', 'C', 'F')) AS enrlCnt11
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear}, '11')
+		            AND A.ENRL_STS = 'C' ) AS cpltCnt11
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear}, '11')
+		            AND A.ENRL_STS = 'F' ) AS failCnt11
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear}, '12')
+		            AND A.ENRL_STS IN ('S', 'C', 'F')) AS enrlCnt12
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear}, '12')
+		            AND A.ENRL_STS = 'C' ) AS cpltCnt12
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std A, tb_crs_cre_crs B
+		              , tb_usr_user_info C
+		          WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		            AND A.USER_NO = C.USER_NO
+		            AND C.ORG_CD = #{orgCd}
+		            AND SUBSTR(B.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},'12')
+		            AND A.ENRL_STS = 'F' ) AS failCnt12
+		  FROM DUAL
+	</select>	
+
+</mapper>

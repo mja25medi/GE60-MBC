@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.teacher.item.service.impl.TchItemMapper">
+	
+	<sql id="listItem">
+		   SELECT  T.USER_NO						
+			    ,   T.LEC_ITEM_SN               	
+			    ,   T.CRS_NM                    	
+			    ,   T.LEC_TITLE                 	
+			    ,   T.REG_NO                    	
+			    ,   T.REG_DTTM                  	
+			    ,   T.MOD_NO                    	
+			    ,   T.MOD_DTTM                  	
+			FROM    TB_TCH_LEC_ITEM T           	
+		   WHERE   T.USER_NO     = #{userNo}        
+		<choose>
+			<when test = "lecItemSn != null and lecItemSn != ''">
+			  	AND     T.LEC_ITEM_SN = #{lecItemSn}
+			</when>
+			<otherwise>
+				ORDER BY T.LEC_ITEM_SN ASC 
+			</otherwise>
+		</choose>
+	</sql>
+		
+	<select id="selectKey" resultType="Integer">
+		SELECT SQ_TB_TCH_LEC_ITEM_SN.nextVal FROM DUAL
+	</select>
+	
+	<select id="selectItem"  parameterType="tchItemVO" resultType="tchItemVO">
+			<include refid="listItem" />
+	</select>
+	
+	<insert id="insertItem" parameterType="tchItemVO">
+		<selectKey keyProperty="lecItemSn" resultType="string" order="BEFORE"> 
+				 SELECT SQ_TB_TCH_LEC_ITEM_SN.nextVal AS LEC_ITEM_SN FROM DUAL
+		</selectKey>
+		  INSERT INTO TB_TCH_LEC_ITEM (                         
+		     USER_NO, LEC_ITEM_SN, CRS_NM,                      
+		     LEC_TITLE, REG_NO,                                 
+		     REG_DTTM, MOD_NO, MOD_DTTM)                        
+		  VALUES (                                              
+		     #{userNo},#{lecItemSn},#{crsNm},                         
+		     #{lecTitle},                                         
+		     #{regNo},TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'),        
+		     #{modNo},TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'))        
+	</insert>
+	
+	<update id="updateItem" parameterType="tchItemVO">
+		 UPDATE TB_TCH_LEC_ITEM                       		
+		 SET    CRS_NM      		= #{crsNm},   			
+		        LEC_TITLE   		= #{lecTitle},            
+		        MOD_NO       		= #{modNo},               
+		        MOD_DTTM     		= TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+		 WHERE  LEC_ITEM_SN        = #{lecItemSn}                 	       
+	</update>
+
+	
+	<delete id="deleteItem" parameterType="tchItemVO">
+		   DELETE FROM TB_TCH_LEC_ITEM   					    
+		         WHERE LEC_ITEM_SN = #{lecItemSn               
+	</delete>
+	
+</mapper>

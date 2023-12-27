@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.org.noti.service.impl.OrgNotiRecvMapper">	
+	
+	<sql id="selectQuery">
+		SELECT RECV_ID as recvId
+		     , ORG_CD as orgCd
+		     , NOTI_CTGR as notiCtgr
+		     , EMAIL as email
+		     , REG_NO as regNo
+		     , REG_DTTM as regDttm
+		     , MOD_NO as modNo
+		     , MOD_DTTM as modDttm
+		  FROM tb_org_noti_recv A
+		 WHERE 1 = 1 	
+	</sql>	
+	
+	<select id="select" parameterType="orgNotiRecvVO" resultType="orgNotiRecvVO">
+	 	<include refid="selectQuery"/>
+           AND RECV_ID = #{recvId}	 	
+	</select>	
+
+	<select id="list" parameterType="orgNotiRecvVO" resultType="orgNotiRecvVO">
+	 	<include refid="selectQuery"/>
+	 		AND ORG_CD = #{orgCd}
+	 	 	AND NOTI_CTGR = #{notiCtgr} 
+	 	 ORDER BY recvId		
+	</select>
+	
+	<insert id="insert" parameterType="orgNotiRecvVO" >
+		INSERT INTO tb_org_noti_recv (
+			  ORG_CD
+			, NOTI_CTGR
+			, EMAIL
+			, REG_NO
+			, REG_DTTM
+			, MOD_NO
+			, MOD_DTTM
+		) VALUES (
+		       #{orgCd}
+		     , #{notiCtgr}
+		     , #{email}
+		     , #{regNo}
+		     , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		     , #{modNo}
+		     , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		)	 	
+	</insert>
+	
+	<update id="update" parameterType="orgNotiRecvVO" >
+		UPDATE tb_org_noti_recv
+		   SET EMAIL = #{email}
+		     , MOD_NO = #{modNo}
+		     , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		 WHERE RECV_ID = #{recvId}
+	</update>	
+
+	<delete id="delete" parameterType="orgNotiRecvVO" >
+		DELETE FROM tb_org_noti_recv
+		 WHERE RECV_ID = #{recvId}
+	</delete>
+	 
+</mapper>

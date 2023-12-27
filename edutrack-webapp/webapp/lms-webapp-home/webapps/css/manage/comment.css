@@ -1,0 +1,44 @@
+@CHARSET "UTF-8";
+
+/* ----- 게시판 댓글 컨트롤 ----- */
+#comments {
+	font-size: 12px;
+}
+
+#comments .comment_div {
+	text-align: left;
+	border-top: #888 1px solid;
+	border-bottom: #ddd 1px solid;
+	padding: 0px 0px 0px 10px;
+	width: 700px;
+	margin-bottom: 3px;
+	background-color: #ddd7f8;
+	overflow: hidden;
+}
+
+#comments .comment_div .comment_content {
+	padding: 10px 15px;
+	margin: 5px 0px 0px 20px;
+	width: 680px;
+	background-color: #fafafa;
+	float: left;
+}
+
+#comments .comment_div .comment_info {
+	margin-bottom: 1px;
+	color: #777;
+	font-size: 11px;
+}
+
+#comments .comment_div .comment_info SPAN {
+	padding-right: 10px;
+	margin-bottom: 5px;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+HR.hr_jline {
+	display: block;
+	border: none;
+	border-bottom: #e0e0e0 1px solid;
+}

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.lecture.objt.service.impl.LecObjtCmntMapper">
+
+	<select id="selectKey" resultType="integer">
+		SELECT nextval(SQ_LEC_OBJT_CMNT)
+	</select>
+	
+	<select id="listByObjtSn" parameterType="lecObjtCmntVO" resultType="lecObjtCmntVO">
+		with recursive CTE as (
+			select 
+					OBJT_CMNT_SN
+					,	OBJT_SN
+					,	PAR_CMNT_SN
+					,	CMNT_LVL
+					,	CMNT_CTS
+					,	REG_NO
+					,	REG_NM
+					,	REG_DTTM
+					,	MOD_NO
+					,	MOD_DTTM
+					,CAST(OBJT_CMNT_SN AS CHAR(200)) AS path
+					,OBJT_CMNT_SN as group_no
+			from 
+				tb_lec_objt_cmnt
+			where 
+				OBJT_SN = #{objtSn}
+			AND PAR_cmnt_SN is null
+			UNION ALL
+			SELECT
+					a.OBJT_CMNT_SN
+					,	a.OBJT_SN
+					,	a.PAR_CMNT_SN
+					,	a.CMNT_LVL
+					,	a.CMNT_CTS
+					,	a.REG_NO
+					,	a.REG_NM
+					,	a.REG_DTTM
+					,	a.MOD_NO
+					,	a.MOD_DTTM
+					, CONCAT(b.path,',',A.OBJT_CMNT_SN) as path
+				    , SUBSTRING_INDEX(b.path,',',1) AS GROUP_NO
+			FROM
+				tb_lec_objt_cmnt as a
+			INNER JOIN CTE AS b ON a.PAR_CMNT_SN = b.OBJT_CMNT_SN
+		)
+		select
+				OBJT_CMNT_SN as objtCmntSn
+			,	OBJT_SN as objtSn
+			,	PAR_CMNT_SN as parCmntSn
+			,	CMNT_LVL as cmntLvl
+			,	CMNT_CTS as cmntCts
+			,	REG_NO as regNo
+			,	REG_NM as regNm
+			,	REG_DTTM as regDttm
+			,	MOD_NO as modNo
+			,	MOD_DTTM as modDttm
+		from cte ORDER BY GROUP_NO ASC, path;
+	</select>
+	
+	<select id="listByObjtSnVer5" parameterType="lecObjtCmntVO" resultType="lecObjtCmntVO">
+		SELECT
+					a.OBJT_CMNT_SN  as objtCmntSn
+				,	a.OBJT_SN   as objtSn
+				,	a.PAR_CMNT_SN   as parCmntSn
+				,	a.CMNT_LVL   as cmntLvl
+				,	a.CMNT_CTS   as cmntCts
+				,	a.REG_NO   as regNo
+				,	a.REG_NM  as regNm
+				,	a.REG_DTTM  as regDttm
+				,	a.MOD_NO  as modNo
+				,	a.MOD_DTTM  as modDttm
+			  	,	CAST(a.OBJT_CMNT_SN AS CHAR(200)) AS path
+				,	a.OBJT_CMNT_SN as group_no
+			FROM tb_lec_objt_cmnt a			
+			LEFT OUTER JOIN tb_lec_objt_cmnt b ON a.PAR_CMNT_SN = b.OBJT_CMNT_SN
+			LEFT OUTER JOIN tb_lec_objt_cmnt c ON b.PAR_CMNT_SN = c.OBJT_CMNT_SN
+			LEFT OUTER JOIN tb_lec_objt_cmnt d ON c.PAR_CMNT_SN = d.OBJT_CMNT_SN
+		WHERE
+			a.OBJT_SN = ${objtSn}
+		ORDER BY GROUP_NO ASC, path
+	</select>
+	
+	<update id="update" parameterType="lecObjtCmntVO">
+		UPDATE 	
+			tb_lec_objt_cmnt 
+		SET 	CMNT_CTS = #{cmntCts}
+			,	MOD_NO = #{modNo}
+			,	MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		WHERE
+			OBJT_CMNT_SN = #{objtCmntSn}
+	</update>
+	
+	<insert id="insert" parameterType="lecObjtCmntVO">
+		INSERT INTO tb_lec_objt_cmnt (
+				OBJT_CMNT_SN
+			,	OBJT_SN
+			,	PAR_CMNT_SN
+			,	CMNT_LVL
+			,	CMNT_CTS
+			,	REG_NO
+			,	REG_NM
+			,	REG_DTTM
+			,	MOD_NO
+			,	MOD_DTTM
+		) VALUES (
+				#{objtCmntSn}
+			,	#{objtSn}
+			,	#{parCmntSn}
+			,	#{cmntLvl}
+			,	#{cmntCts}
+			,	#{regNo}
+			,	#{regNm}
+			,	DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+			,	#{modNo}
+			,	DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		)
+	</insert>
+	
+	<delete id="delete" parameterType="lecObjtCmntVO" >
+		DELETE FROM tb_lec_objt_cmnt
+         WHERE OBJT_CMNT_SN = #{objtCmntSn}
+	</delete>
+</mapper>

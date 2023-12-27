@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.org.fac.service.impl.OrgFacMapper">	
+	
+	<update id="facUseUpdate" parameterType="orgFacInfoVO" >
+		/*
+			 SQL ID : itemUpdate
+			 설  명 : 시설 정보 업데이트.
+	 	*/
+		UPDATE tb_org_fac SET
+			USE_YN=#{useYn}
+		WHERE 1=1
+		AND FAC_CD = #{facCd}
+	</update>
+
+	<update id="facInfoUpdate" parameterType="orgFacInfoVO" >
+		/*
+			 SQL ID : facInfoUpdate
+			 설  명 : 시설 정보 업데이트.
+	 	*/
+		UPDATE tb_org_fac SET
+			FAC_CTGR_CD = #{facCtgrCd}
+			,FAC_NM = #{facNm}
+			,FAC_AREA = #{facArea}
+			,FAC_CAP = #{facCap}
+			,FAC_USE = #{facUse}
+			,FAC_EQU = #{facEqu}
+			,FAC_LOC = #{facLoc}
+			,FAC_OPER_TIME = #{facOperTime}
+			,REG_NO = #{regNo}
+			,REG_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+			,USE_YN = #{useYn}
+		WHERE 1=1
+		AND FAC_CD = #{facCd}
+	</update>
+
+	<update id="facResUpdate" parameterType="orgFacResVO" >
+		UPDATE tb_org_fac_reserve
+		   SET RES_STS = #{resSts}
+		     , MEMO = #{memo}
+		 WHERE 1=1
+		 AND RES_CD = #{resCd}
+	</update>
+
+	<select id="selectResKey" resultType="string">
+		/*
+			 SQL ID : selectKey
+			 설  명 : 키 생성
+	 	*/
+	 	SELECT CONCAT('RES', LPAD(nextval(sq_org_fac_reserve),8,'0')) AS selectKey
+	</select>
+	
+	<select id="selectFacKey" resultType="string">
+		/*
+			 SQL ID : selectKey
+			 설  명 : 키 생성
+	 	*/
+	 	SELECT CONCAT('FAC', LPAD(nextval(sq_org_fac),8,'0')) AS selectKey
+	</select>
+	
+	<select id="selectCtgrKey" resultType="string">
+		/*
+			 SQL ID : selectKey
+			 설  명 : 키 생성
+	 	*/
+	 	SELECT CONCAT('FCT', LPAD(nextval(sq_org_fac),8,'0')) AS selectKey
+	</select>	
+		
+	<select id="listFac" parameterType="orgFacInfoVO" resultType="orgFacInfoVO">
+		SELECT
+			 FAC_CD
+			,ORG_CD
+			,FAC_CTGR_CD
+			,(SELECT FAC_CTGR_NM FROM tb_org_fac_ctgr WHERE FAC_CTGR_CD = A.FAC_CTGR_CD) as facCtgrNm
+			,FAC_NM
+			,FAC_AREA
+			,FAC_CAP
+			,FAC_USE
+			,FAC_EQU
+			,FAC_LOC
+			,FAC_OPER_TIME
+			,REG_NO
+			,REG_DTTM
+			,USE_YN
+		FROM tb_org_fac A
+		WHERE USE_YN = 'Y'
+			AND ORG_CD = #{orgCd}
+		ORDER BY FAC_CD ASC
+	</select>
+	
+	<sql id="selectInfoQuery">
+		SELECT
+			ROW_NUMBER() OVER(ORDER BY A.REG_DTTM DESC) as CNT
+		    , A.FAC_CD
+		    , A.ORG_CD
+		    , A.FAC_CTGR_CD
+		    , (SELECT FAC_CTGR_NM FROM tb_org_fac_ctgr WHERE FAC_CTGR_CD = A.FAC_CTGR_CD) as facCtgrNm
+		    , A.FAC_NM
+		    , A.FAC_AREA
+		    , A.FAC_CAP
+		    , A.FAC_USE
+		    , A.FAC_EQU
+		    , A.FAC_LOC
+		    , A.FAC_OPER_TIME
+		    , A.REG_NO
+		    , case when A.USE_YN='Y' then '사용' else '비사용' end AS USE_YN_NM
+		    , A.USE_YN
+		    , A.FAC_ODR
+		FROM tb_org_fac A
+		WHERE 1=1
+	</sql>
+	
+	<sql id="listInfoQuery">
+		<include refid="selectInfoQuery"/>
+		<if test="facCtgrCd != null and facCtgrCd != ''">
+			AND A.FAC_CTGR_CD = #{facCtgrCd}
+		</if>		
+		<if test="searchValue != null and searchValue != ''">
+			AND (A.FAC_NM LIKE CONCAT('%', IFNULL(#{searchValue}, ''), '%'))
+		</if>
+			<if test = "orgCd != null and orgCd != ''">                          			
+	    	AND A.ORG_CD = #{orgCd}  
+	    </if>	
+		ORDER BY A.REG_DTTM DESC
+	</sql>
+	
+	<select id="selectFacInfo" parameterType="orgFacInfoVO" resultType="orgFacInfoVO">
+		<include refid="selectInfoQuery"/>
+		AND A.FAC_CD = #{facCd}
+	</select>
+	
+	<sql id="selectQuery">
+		SELECT
+			ROW_NUMBER() OVER(ORDER BY A.REG_DTTM DESC) as CNT
+		    , A.FAC_CD
+		    , A.ORG_CD
+		    , A.FAC_CTGR_CD
+		    , (SELECT FAC_CTGR_NM FROM tb_org_fac_ctgr WHERE FAC_CTGR_CD = A.FAC_CTGR_CD) as facCtgrNm		    
+		    , A.FAC_NM
+		    , A.FAC_AREA
+		    , A.FAC_CAP
+		    , A.FAC_USE
+		    , A.FAC_EQU
+		    , A.FAC_LOC
+		    , A.FAC_OPER_TIME
+		    , A.REG_NO
+		    , A.USE_YN
+		    , B.RES_CD
+		    , B.USER_NO
+		    , C.USER_NM
+		    , (SELECT USER_ID FROM tb_usr_login WHERE USER_NO = B.USER_NO) AS USER_ID
+		    , C.MOBILE_NO
+		    , C.EMAIL
+		    , C.HOME_POST_NO
+		    , C.HOME_ADDR_1
+		    , C.HOME_ADDR_2
+		    , B.RES_DT
+		    , TIME_FORMAT(B.RES_STM,'%H:%i') AS RES_STM
+		    , TIME_FORMAT(B.RES_ETM,'%H:%i')  AS RES_ETM
+		    , B.REG_DTTM
+		    , B.RES_STS
+		    , B.EVENT_TITLE
+		    , B.EVENT_DESC
+		    , B.ATT_CNT
+		    , B.MEMO
+		FROM tb_org_fac A, tb_org_fac_reserve B, tb_usr_user_info C
+		WHERE A.FAC_CD = B.FAC_CD
+		AND B.USER_NO = C.USER_NO
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		<if test="facCd != null and facCd != ''">
+			AND A.FAC_CD = #{facCd}
+		</if>
+		<if test="userNo != null and userNo != ''">
+			AND B.USER_NO = #{userNo}
+		</if>		
+		<if test="resSts != null">
+			AND B.RES_STS = #{resSts}
+		</if>
+		<if test="workStartDate != null and workStartDate != ''">
+		<![CDATA[
+			AND DATE_FORMAT(B.RES_DT, '%Y%m%d') >= DATE_FORMAT(#{workStartDate}, '%Y%m%d')
+		]]>
+		</if>
+		<if test="workEndDate != null and workEndDate != ''">
+		<![CDATA[
+			AND DATE_FORMAT(B.RES_DT, '%Y%m%d') <= DATE_FORMAT(#{workEndDate}, '%Y%m%d')
+		]]>
+		</if>
+		<if test="searchValue != null and searchValue != ''">
+			AND (B.EVENT_TITLE LIKE CONCAT('%', IFNULL(#{searchValue}, ''), '%') OR B.GROUP_NM LIKE CONCAT('%', IFNULL(#{searchValue}, ''), '%'))
+		</if>		
+	</sql>
+	
+	<select id="selectFacRes" parameterType="orgFacResVO" resultType="orgFacResVO">
+		<include refid="selectQuery"/>
+		AND B.RES_CD = #{resCd}
+	</select>
+	
+	<select id="list" parameterType="orgFacResVO" resultType="orgFacResVO">
+		<include refid="listQuery"/>
+		<if test="facCd != null and facCd != ''">
+			AND A.FAC_CD = #{facCd}
+		</if>	
+		ORDER BY B.REG_DTTM DESC
+	</select>
+	
+	<select id="listPageing" parameterType="orgFacResVO" resultType="orgFacResVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 시설예약 목록(페이징)
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+	 	ORDER BY REG_DTTM DESC
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="listInfo" parameterType="orgFacInfoVO" resultType="orgFacInfoVO">
+	 	<include refid="listInfoQuery"/>
+	</select>
+	
+	<select id="listInfoPageing" parameterType="orgFacInfoVO" resultType="orgFacInfoVO">
+		/*
+			 SQL ID : listInfoPageing
+			 설  명 : 시설 목록(페이징)
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listInfoQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+	 	ORDER BY FAC_ODR ASC
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="infoCount" parameterType="orgFacInfoVO" resultType="Integer">
+		/*
+			 SQL ID : infoCount
+			 설  명 : 시설 목록 조회(총카운트)
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 		<include refid="listInfoQuery"/>
+	 	) T
+	</select>
+	
+	<select id="count" parameterType="orgFacResVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 시설 예약 목록 조회(총카운트)
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 		<include refid="listQuery"/>
+	 	) T
+	</select>
+	
+	<insert id="addRes" parameterType="orgFacResVO" >
+		/*
+			 SQL ID : add
+			 설  명 : 설비 사용 신청 저장.
+	 	*/
+		INSERT INTO tb_org_fac_reserve (
+			  FAC_CD
+			, RES_CD
+			, USER_NO
+			, RES_DT
+			, RES_STM
+			, RES_ETM
+			, REG_DTTM
+			, RES_STS
+			, EVENT_TITLE
+			, EVENT_DESC
+			, ATT_CNT
+			, MEMO
+			, REG_NO
+			, MOD_NO
+			, MOD_DTTM
+		) VALUES (
+			  #{facCd           }
+			, #{resCd           }
+			, #{userNo          }
+			, #{resDt           }
+			, TIME_FORMAT(#{resStm}, '%H%i%s')
+			, TIME_FORMAT(#{resEtm}, '%H%i%s')
+			, DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+			, #{resSts     		}
+			, #{eventTitle      }
+			, #{eventDesc       }
+			, #{attCnt          }
+			, #{memo            }
+			, #{regNo			}
+			, #{modNo			}
+			, DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		)
+	</insert>
+
+	<insert id="addFac" parameterType="orgFacInfoVO" >
+		/*
+			 SQL ID : addFac
+			 설  명 : 사설 등록
+	 	*/
+		INSERT INTO tb_org_fac (
+			  FAC_CD 
+			, ORG_CD
+			, FAC_CTGR_CD
+			, FAC_NM
+			, FAC_AREA
+			, FAC_CAP
+			, FAC_LOC
+			, FAC_USE
+			, FAC_EQU
+			, FAC_OPER_TIME
+			, REG_NO
+			, REG_DTTM
+			, USE_YN
+			, FAC_ODR
+			, MOD_NO
+			, MOD_DTTM
+		) VALUES (
+			  #{facCd}
+			, #{orgCd}
+			, #{facCtgrCd}
+			, #{facNm}
+			, #{facArea}
+			, #{facCap}
+			, #{facLoc}
+			, #{facUse}
+			, #{facEqu}
+			, #{facOperTime}
+			, #{regNo}
+			, DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+			, #{useYn}
+			, (SELECT NVL(MAX(T.FAC_ODR),0) + 1 FROM tb_org_fac T)
+			, #{modNo}
+			, DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		)
+	</insert>
+	
+	<delete id="facRemove" parameterType="orgFacInfoVO" >
+		/*
+			 SQL ID : facRemove
+			 설  명 : 시설 정보 삭제
+	 	*/
+		DELETE FROM tb_org_fac
+		 WHERE FAC_CD = #{facCd}
+	</delete>
+	
+	<insert id="addFacCtgr" parameterType="orgFacCtgrVO" >
+		/*
+			 SQL ID : addFac
+			 설  명 : 사설 등록
+	 	*/
+		INSERT INTO tb_org_fac_ctgr (
+			  FAC_CTGR_CD 
+			, ORG_CD
+			, FAC_CTGR_NM
+			, FAC_CTGR_DESC
+			, USE_YN
+			, REG_NO
+			, REG_DTTM
+			, MOD_NO
+			, MOD_DTTM
+		) VALUES (
+			  #{facCtgrCd}
+			, #{orgCd}
+			, #{facCtgrNm}
+			, #{facCtgrDesc}
+			, #{useYn}
+			, #{regNo}
+			, DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+			, #{modNo}
+			, DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		)
+	</insert>
+	
+	<select id="selectFacCtgr" parameterType="orgFacCtgrVO" resultType="orgFacCtgrVO">
+		SELECT 
+			  FAC_CTGR_CD 
+			, ORG_CD
+			, FAC_CTGR_NM
+			, FAC_CTGR_DESC
+			, USE_YN
+		FROM tb_org_fac_ctgr
+		WHERE FAC_CTGR_CD = #{facCtgrCd}		
+	</select>
+	
+	<select id="listFacCtgr" parameterType="orgFacCtgrVO" resultType="orgFacCtgrVO">
+		SELECT 
+			  FAC_CTGR_CD 
+			, ORG_CD
+			, FAC_CTGR_NM
+			, FAC_CTGR_DESC
+			, USE_YN
+			, MOD_NO
+			, MOD_DTTM
+		FROM tb_org_fac_ctgr
+		WHERE ORG_CD = #{orgCd}
+		<if test="useYn != null and useYn != ''">
+			AND USE_YN = #{useYn}
+		</if>		
+	</select>
+	
+	<update id="updateFacCtgr" parameterType="orgFacCtgrVO" >
+		UPDATE tb_org_fac_ctgr SET
+			 FAC_CTGR_NM = #{facCtgrNm}
+			,USE_YN = #{useYn}
+			,FAC_CTGR_DESC = #{facCtgrDesc}
+			,MOD_NO = #{modNo}
+			,MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		WHERE 1=1
+		AND FAC_CTGR_CD = #{facCtgrCd}
+	</update>
+	
+	<update id="deleteFacCtgr" parameterType="orgFacCtgrVO" >
+		DELETE FROM tb_org_fac_ctgr
+		 WHERE FAC_CTGR_CD = #{facCtgrCd}
+	</update>
+	
+	<select id="resListForTimeChk" parameterType="orgFacResVO" resultType="orgFacResVO">
+		<![CDATA[
+		SELECT 
+			 RES_CD
+			,RES_STS
+			,FAC_CD
+			,RES_DT
+			,RES_STM
+			,RES_ETM
+		 FROM tb_org_fac_reserve
+			WHERE FAC_CD = #{facCd}
+				AND RES_DT = #{resDt}
+				AND RES_ETM > TIME_FORMAT(#{resStm}, '%H%i%s') 
+				AND RES_STM < TIME_FORMAT(#{resEtm}, '%H%i%s')
+		]]>
+	</select>
+	
+	<update id="updateFacOdr" parameterType="orgFacInfoVO" >
+		UPDATE tb_org_fac SET
+			FAC_ODR = #{facOdr}
+		WHERE FAC_CD = #{facCd}
+	</update>
+	
+	<select id="selectForSwap" parameterType="orgFacInfoVO" resultType="orgFacInfoVO">
+		SELECT
+			  A.FAC_CD
+			, A.ORG_CD
+			, A.FAC_CTGR_CD
+			, A.FAC_NM
+			, A.FAC_AREA
+			, A.FAC_CAP
+			, A.FAC_USE
+			, A.FAC_EQU
+			, A.FAC_LOC
+			, A.FAC_OPER_TIME
+			, A.FAC_ODR
+			, A.REG_NO
+			, A.REG_DTTM
+			, A.USE_YN	
+		FROM tb_org_fac A
+		ORDER BY FAC_ODR ASC LIMIT #{facOdr}, 1
+	</select>	
+	
+	<update id="increaseOtherFacOdr" parameterType="orgFacInfoVO" >
+		<![CDATA[
+		UPDATE tb_org_fac 
+		SET
+			FAC_ODR = FAC_ODR + 1
+		WHERE FAC_ODR >= #{facOdr}
+		 AND FAC_ODR < (SELECT T.FAC_ODR FROM tb_org_fac T WHERE FAC_CD = #{facCd})
+		 ]]>
+	</update>
+	
+	<update id="decreaseOtherFacOdr" parameterType="orgFacInfoVO" >
+		<![CDATA[
+		UPDATE tb_org_fac 
+		SET
+			FAC_ODR = FAC_ODR - 1
+		WHERE FAC_ODR <= #{facOdr}
+		 AND FAC_ODR > (SELECT T.FAC_ODR FROM tb_org_fac T WHERE FAC_CD = #{facCd})
+		 ]]>
+	</update>
+</mapper>

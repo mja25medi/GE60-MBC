@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.atalk.service.impl.AtalkMapper">	
+
+	
+	<insert id="insert" parameterType="egovframework.edutrack.modules.atalk.AtalkVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 알림톡 등록
+	 	*/
+		INSERT INTO mts_atalk_msg (
+		       TRAN_PR
+              ,TRAN_SENDER_KEY  
+              ,TRAN_CALLBACK
+              ,TRAN_PHONE
+              ,TRAN_TMPL_CD
+              ,TRAN_DATE
+              ,TRAN_TYPE
+              ,TRAN_STATUS
+              ,TRAN_ETC1
+              ,TRAN_SUBJECT
+              ,TRAN_MSG
+              ,TRAN_REPLACE_MSG
+		) VALUES (
+		       nextval(MTS_ATALK_MSG_SQL)
+              ,#{tranSenderKey}
+              ,#{tranCallback}
+              ,#{tranPhone}
+              ,#{tranTmplCd}
+              ,now()
+              ,5
+              ,'1'
+              ,#{tranEtc1}
+              ,#{tranSubject}
+              ,#{tranMsg}
+              ,#{tranReplaceMsg}
+		)	 	
+	</insert>
+	
+</mapper>

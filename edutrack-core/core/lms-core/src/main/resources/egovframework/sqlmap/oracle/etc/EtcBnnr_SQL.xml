@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.etc.banner.service.impl.EtcBnnrMapper">	
+
+	
+	<sql id="selectQuery">
+		SELECT BNNR_SN as bnnrSn
+		     , ORG_CD as orgCd
+		     , BNNR_NM as bnnrNm
+		     , BNNR_URL as bnnrUrl
+		     , BNNR_POS_CD as bnnrPosCd
+		     , BNNR_ODR as bnnrOdr
+		     , BNNR_TRGT as bnnrTrgt
+		     , BNNR_IMG_SN as bnnrImgSn
+		     , BNNR_DESC as bnnrDesc
+		     , OPEN_YN as openYn
+		     , REG_NO as regNo
+		     , ( SELECT FN_GET_USER_NAME(REG_NO) FROM DUAL ) AS regNm
+		     , REG_DTTM as regDttm
+		     , MOD_NO as modNo
+		     , ( SELECT FN_GET_USER_NAME(MOD_NO) FROM DUAL ) AS modNm
+		     , MOD_DTTM as modDttm
+          FROM TB_ETC_BNNR
+         WHERE ORG_CD = #{orgCd}
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		<if test = "openYn != null and openYn != ''">
+		   AND OPEN_YN = #{openYn}
+		</if>
+		 ORDER BY BNNR_ODR
+	</sql>		
+
+	<select id="list" parameterType="etcBnnrVO" resultType="etcBnnrVO">
+		/*
+			 SQL ID : list
+			 설  명 : 베너의 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	</select>
+	
+	<select id="listPageing" parameterType="etcBnnrVO" resultType="etcBnnrVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 베너의 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="etcBnnrVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 베너의 전체 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>	
+	
+	<select id="select" parameterType="etcBnnrVO" resultType="etcBnnrVO">
+		/*
+			 SQL ID : select
+			 설  명 : 베너의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+           AND BNNR_SN = #{bnnrSn}	 	
+	</select>
+	
+	<select id="selectKey" resultType="Integer">
+		/*
+			 SQL ID : selectKey
+			 설  명 : 베너의 키 생성
+	 	*/
+	 	SELECT SQ_ETC_BNNR.nextVal FROM DUAL	 	
+	</select>	
+	
+	<insert id="insert" parameterType="etcBnnrVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 베너의 정보 등록
+	 	*/
+		INSERT INTO TB_ETC_BNNR (
+		       BNNR_SN
+		     , ORG_CD
+		     , BNNR_NM
+		     , BNNR_URL
+		     , BNNR_POS_CD
+		     , BNNR_ODR
+		     , BNNR_TRGT
+		     , BNNR_IMG_SN
+		     , BNNR_DESC
+		     , OPEN_YN
+		     , REG_NO
+		     , REG_DTTM
+		     , MOD_NO
+		     , MOD_DTTM
+		) VALUES (
+		       #{bnnrSn}
+		     , #{orgCd} 
+		     , #{bnnrNm}  
+		     , #{bnnrUrl}  
+		     , #{bnnrPosCd}  
+		     , ( SELECT NVL(MAX(BNNR_ODR),0)+1 
+		           FROM TB_ETC_BNNR  
+		          WHERE ORG_CD = #{orgCd} )  
+		     , #{bnnrTrgt}  
+		     , #{bnnrImgSn}  
+		     , #{bnnrDesc}  
+		     , #{openYn}  
+		     , #{regNo}  
+		     , TO_CHAR(SYSDATE,'yyyymmddhh24miss')  
+		     , #{modNo}  
+		     , TO_CHAR(SYSDATE,'yyyymmddhh24miss')  
+		)
+	</insert>
+	
+	<update id="update" parameterType="etcBnnrVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 베너의 정보 수정
+	 	*/
+		UPDATE TB_ETC_BNNR
+		   SET BNNR_NM = #{bnnrNm}
+		     , ORG_CD = #{orgCd}
+		     , BNNR_URL = #{bnnrUrl}
+		     , BNNR_POS_CD = #{bnnrPosCd}
+		     , BNNR_ODR = #{bnnrOdr}
+		     , BNNR_TRGT = #{bnnrTrgt}
+		     , BNNR_IMG_SN  = #{bnnrImgSn}
+		     , BNNR_DESC = #{bnnrDesc}
+		     , OPEN_YN = #{openYn}
+		     , MOD_NO = #{modNo}
+		     , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		 WHERE BNNR_SN = #{bnnrSn}
+	</update>	
+
+	<delete id="delete" parameterType="etcBnnrVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 베너의 정보 삭제
+	 	*/
+	 	DELETE FROM TB_ETC_BNNR 
+	 	 WHERE BNNR_SN = #{bnnrSn}
+	</delete>
+	 
+</mapper>

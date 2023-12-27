@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.library.cnts.share.req.service.impl.ClibCntsShareReqMapper">	
+	<select id="selectKey" resultType="Integer">
+		SELECT nextval(SQ_CLIB_CNTS_SHARE_REQ) AS REQ_SN
+	</select>
+	<sql id="selectQuery">
+		  SELECT A.REQ_SN  
+		       , A.CNTS_CD  
+		       , A.CNTS_TYPE_CD  
+		       , A.SHARE_DIV_CD  
+		       , A.SHARE_STS_CD  
+		       , A.REQ_DTTM  
+		       , A.APRV_DTTM  
+		       , A.REG_NO  
+		       , A.REG_DTTM  
+		       , A.MOD_NO  
+		       , A.MOD_DTTM  
+		       , A.CCL_CD  
+		       , B.ORG_CD  
+		    FROM tb_clib_cnts_share_req A, tb_clib_olc_cnts B 
+		   WHERE A.CNTS_CD = B.CNTS_CD 
+		     AND B.ORG_CD = #{orgCd}
+	</sql>
+	<sql id="selectSearchQuery">
+
+	</sql>
+ 	<select id="list" parameterType="clibCntsShareReqVO" resultType="clibCntsShareReqVO">
+	    <include refid="selectQuery" />
+	</select>
+	<select id="select" parameterType="clibCntsShareReqVO" resultType="clibCntsShareReqVO">
+	    <include refid="selectQuery" />
+	      AND A.CNTS_CD = #{cntCd}
+	</select>
+
+    <insert id="insert" parameterType="clibCntsShareReqVO">
+  
+		  INSERT INTO tb_clib_cnts_share_req ( 
+		         REQ_SN  
+		         , CNTS_CD  
+		         , CNTS_TYPE_CD  
+		         , SHARE_DIV_CD  
+		         , SHARE_STS_CD  
+		         , REQ_DTTM  
+		         , REG_NO  
+		         , REG_DTTM  
+		         , MOD_NO  
+		         , MOD_DTTM  
+		         , CCL_CD  
+		 ) VALUES ( 
+		         #{reqSn}  
+		         , #{cntsCd}  
+		         , FN_GET_NULL(#{cntsTypeCd})  
+		         , #{shareDivCd}  
+		         , #{shareStsCd}  
+		         , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 
+		         , #{regNo}  
+		         , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 
+		         , #{modNo}  
+		         , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		         , #{cclCd}  
+		 ) 
+    </insert>
+
+   <update id="update" parameterType="clibCntsShareReqVO">
+		  UPDATE tb_clib_cnts_share_req SET 
+		         , SHARE_STS_CD = #{shareStsCd}  
+		         , APRV_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')  
+		         , CCL_CD = #{cclCd}  
+		         , MOD_NO = #{modNo}
+		         , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		   WHERE REQ_SN = #{reqSn}  
+		     AND CNTS_CD = #{cntsCd}  
+		     AND CNTS_TYPE_CD = #{cntsTypeCd}  
+		     AND SHARE_DIV_CD = #{shareDivCd}  
+    </update>
+
+	<delete id="delete" parameterType="clibCntsShareReqVO">
+		  DELETE FROM tb_clib_cnts_share_req 
+		   WHERE REQ_SN = #{reqSn}   			
+    </delete>
+
+	<delete id="deleteCnts" parameterType="clibCntsShareReqVO">
+		  DELETE FROM tb_clib_cnts_share_req 
+		   WHERE CNTS_CD = #{cntsCd}    			
+    </delete>
+
+   <update id="rejectCnts" parameterType="clibCntsShareReqVO">
+		  UPDATE tb_clib_cnts_share_req SET SHARE_STS_CD = '04' 
+		         , MOD_NO = #{modNo}  
+		         , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 
+		   WHERE CNTS_CD = #{cntsCd}    
+    </update>
+
+   <update id="updateShareCd" parameterType="clibCntsShareReqVO">
+		  UPDATE tb_clib_cnts_share_req  
+		     SET SHARE_STS_CD = #{shareStsCd}  
+		         , APRV_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		         , MOD_NO = #{modNo}  
+		         , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		   WHERE REQ_SN = #{reqSn}     
+    </update>
+
+
+
+
+</mapper>	

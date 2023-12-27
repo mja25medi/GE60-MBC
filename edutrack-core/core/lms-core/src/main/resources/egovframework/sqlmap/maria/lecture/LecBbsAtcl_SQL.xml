@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.lecture.bbs.service.impl.LecBbsAtclMapper">
+	<select id="selectKey" resultType="Integer">
+		SELECT nextval(SQ_LEC_BBS_ATCL)
+	</select>
+
+	<sql id="selectColumnQuery">
+	<![CDATA[
+				A.ATCL_SN  
+		   	  , A.CRS_CRE_CD  
+		   	  , A.BBS_CD  
+			  , A.PAR_ATCL_SN  
+		   	  , A.ATCL_LVL  
+		   	  , A.ATCL_ODR  
+		   	  , A.TITLE  
+		   	  , A.CTS  
+			  , A.HITS  
+			  , ( SELECT COUNT(T1.CMNT_SN)  
+				    FROM tb_lec_bbs_cmnt T1  
+				   WHERE T1.ATCL_SN = A.ATCL_SN) AS CMNT_CNT  
+			  , ( SELECT COUNT(*)  
+				    FROM tb_lec_bbs_atcl T2  
+				   WHERE T2.PAR_ATCL_SN = A.ATCL_SN) AS REPLY_CNT  
+		      , A.EDITOR_YN  
+			  , A.REG_NO  
+			  , A.REG_DTTM  
+			  , A.MOD_NO  
+			  , A.MOD_DTTM  
+			  , ( SELECT FN_GET_USER_NAME(A.MOD_NO)) AS MOD_NM  
+			  , ( SELECT FN_GET_USER_NAME(A.REG_NO)) AS REG_NM  
+			  	, CASE																	
+			    	WHEN A.REG_DTTM >= DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') THEN 'NEW' 
+			    	ELSE ''																
+			  	  END AS RECENTLY														
+			  , A.LOCK_YN  
+			  , A.ORIGIN_REG_NO  
+		      , (SELECT P.REG_NO FROM tb_lec_bbs_atcl P WHERE P.ATCL_SN = A.PAR_ATCL_SN) AS PAR_REG_NO	
+	]]>		
+	</sql>
+		
+	<sql id="selectQuery">
+		  SELECT 
+		  <include refid="selectColumnQuery" />			
+		   FROM tb_lec_bbs_atcl A, tb_lec_bbs B  
+		  WHERE A.CRS_CRE_CD = B.CRS_CRE_CD  
+		    AND A.BBS_CD = B.BBS_CD  
+		    AND A.CRS_CRE_CD = #{crsCreCd}  
+		    AND A.BBS_CD = #{bbsCd}  
+	</sql>
+	
+	<select id="count" parameterType="lecBbsAtclVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM tb_lec_bbs_atcl A, tb_lec_bbs B  
+		WHERE A.CRS_CRE_CD = B.CRS_CRE_CD  
+		    AND A.BBS_CD = B.BBS_CD  
+		    AND A.CRS_CRE_CD = #{crsCreCd}  
+		    AND A.BBS_CD = #{bbsCd} 
+		 <if test = "searchValue != null and searchValue != ''">
+				<choose>
+					<when test="searchKey == 'regNm'">
+					  	AND (SELECT FN_GET_USER_NAME(A.REG_NO)) LIKE CONCAT('%', NVL(#{searchValue}, ''), '%') 
+					</when>
+					<otherwise>
+					  	AND A.TITLE LIKE CONCAT('%', NVL(#{searchValue}, ''), '%')  
+					</otherwise>
+				</choose>
+			</if>	 
+	</select>
+	
+	<select id="listPageing"  parameterType="lecBbsAtclVO" resultType="lecBbsAtclVO">
+		<!-- 게시글 레코드 목록을 조회한다.(트리 페이징 포함)  -->
+		WITH RECURSIVE CTE AS (
+		    SELECT
+		     ATCL_SN , CAST(ATCL_SN as CHAR(100))AS PATH
+		     , ATCL_SN AS GROUP_NO
+		    FROM tb_lec_bbs_atcl
+			WHERE CRS_CRE_CD = #{crsCreCd}  
+		    AND BBS_CD = #{bbsCd}  
+			AND PAR_ATCL_SN IS NULL
+		    UNION ALL
+		    SELECT
+		       A.ATCL_SN, CONCAT(CTE.path,',',A.ATCL_SN) as path
+		       , SUBSTRING_INDEX(CTE.path,',',1) AS GROUP_NO
+		    FROM tb_lec_bbs_atcl A
+		    inner join CTE on A.PAR_ATCL_SN = CTE.ATCL_SN
+			AND A.CRS_CRE_CD = #{crsCreCd}  
+		    AND A.BBS_CD = #{bbsCd}  
+		)
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+			SELECT 
+			C.PATH, C.GROUP_NO, 
+		 		 <include refid="selectColumnQuery" />			
+		  	FROM tb_lec_bbs_atcl A, tb_lec_bbs B, CTE C
+		 	WHERE A.ATCL_SN = C.ATCL_SN 
+		 	AND A.CRS_CRE_CD = B.CRS_CRE_CD  
+			AND A.BBS_CD = B.BBS_CD
+			<if test = "searchValue != null and searchValue != ''">
+				<choose>
+					<when test="searchKey == 'regNm'">
+					  	AND (SELECT FN_GET_USER_NAME(A.REG_NO)) LIKE CONCAT('%', IFNULL(#{searchValue}, ''), '%') 
+								
+					</when>
+					<otherwise>
+					  	AND A.TITLE LIKE CONCAT('%', IFNULL(#{searchValue}, ''), '%')  
+					</otherwise>
+				</choose>
+			</if>
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>	
+		ORDER BY GROUP_NO DESC, PATH	
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="select" parameterType="lecBbsAtclVO" resultType="lecBbsAtclVO">
+		<!-- 단일 게시물 조회.  -->
+		<include refid="selectQuery" />
+		 AND A.ATCL_SN = #{atclSn} 
+	</select>
+	
+	<insert id="insert" parameterType="lecBbsAtclVO">
+		<!-- 게시물 등록  -->
+	
+		INSERT INTO   tb_lec_bbs_atcl (  
+		  	 	CRS_CRE_CD  
+		      , BBS_CD  
+		      , ATCL_SN  
+		      , PAR_ATCL_SN  
+		      , ATCL_LVL  
+		      , ATCL_ODR  
+		      , TITLE  
+		      , CTS  
+		      , HITS  
+		      , EDITOR_YN  
+		      , REG_NM  
+		      , REG_NO  
+		      , REG_DTTM  
+		      , MOD_NO  
+		      , MOD_DTTM  
+		      , LOCK_YN  
+		      , ORIGIN_REG_NO  
+		 ) VALUES (  
+		        #{crsCreCd}  
+		      , #{bbsCd} 
+		      , #{atclSn}
+		      , #{parAtclSn}
+		      , #{atclLvl}  
+		      , IFNULL(( SELECT MAX(IFNULL(FN_GET_NULL(ATCL_ODR),0)) + 1 
+		                FROM tb_lec_bbs_atcl AS SUBQUERY 
+		               WHERE BBS_CD = #{bbsCd}  
+		                 AND IFNULL(FN_GET_NULL(PAR_ATCL_SN),1) = IFNULL(FN_GET_NULL(#{parAtclSn}),1) ),1)  
+		      , #{title}  
+		      , #{cts}  
+		      , #{hits}  
+		      , #{editorYn}  
+		      , #{regNm}  
+		      , #{regNo}  
+		      , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+			  , #{modNo}  
+		      , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 
+		      , #{lockYn}
+		      , #{originRegNo}  
+		 )  
+	</insert>
+	
+	<update id="update" parameterType="lecBbsAtclVO">
+		<!-- 게시글 단일 레코드를 수정한다. -->
+		UPDATE tb_lec_bbs_atcl  
+			 SET TITLE = #{title}  
+			   , CTS = #{cts}  
+			   , EDITOR_YN = #{editorYn}  
+			   , MOD_NO = #{modNo}  
+			   , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+			   , LOCK_YN = #{lockYn}  
+			   , ORIGIN_REG_NO = #{originRegNo}  
+		  WHERE ATCL_SN = #{atclSn}  
+			 AND BBS_CD = #{bbsCd}  
+			 AND CRS_CRE_CD	= #{crsCreCd}
+	</update>
+	
+	<delete id="delete" parameterType="lecBbsAtclVO">
+		<!-- 게시글 단일 레코드를 삭제한다.  -->
+		 DELETE FROM tb_lec_bbs_atcl  
+		  WHERE ATCL_SN = #{atclSn} 
+	</delete>
+	
+	<delete id="deleteAll" parameterType="lecBbsAtclVO">
+		<!-- 게시글 단일 레코드를 삭제한다.  -->
+		 DELETE FROM tb_lec_bbs_atcl  
+		  WHERE BBS_CD = #{bbsCd}
+	</delete>
+	
+	<update id="hitup" parameterType="lecBbsAtclVO">
+		<!-- 해당글의 조회수를 1 증가시킨다. -->
+		UPDATE	tb_lec_bbs_atcl  
+		    SET	HITS = HITS + 1  
+		  WHERE	ATCL_SN	= #{atclSn}
+	</update>
+
+</mapper>

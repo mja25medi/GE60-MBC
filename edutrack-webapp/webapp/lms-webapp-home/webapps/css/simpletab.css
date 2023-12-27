@@ -1,0 +1,39 @@
+.tabbox {
+	background: url("/img/framework/tab/tab_bg.gif");
+	width:100%;
+	margin:0px;
+}
+
+ul.tab { /*CSS for Simple Tree Menu*/
+	margin: 0;
+	padding: 0;
+}
+
+.tab ul{ /* 텝메뉴 UL */
+	list-style:nonne;
+	margin: 2em 1em;
+	padding: 0;
+}
+
+.tab li{ /* 텝메뉴 LI */
+  	background: url("/img/framework/tab/tab_off.gif") no-repeat;
+  	float: left;
+  	margin: 0;
+  	padding: 1em 0;
+  	text-align: center;
+  	width: 200px;
+}
+
+.tab li span {
+	cursor:pointer;
+}
+
+.tab li.selected { /* 선택된 텝 표현 */
+  	background: url("/img/framework/tab/tab_on.gif") no-repeat;
+}
+
+.tab li.selected span {
+	color:#ffffff;
+	font-weight: bold;
+	cursor:pointer;
+}

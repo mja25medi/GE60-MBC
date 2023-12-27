@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.coursesubject.service.impl.CrsOflnSbjMapper">	
+
+	<sql id="selectColumnQuery">
+				 A.CRS_CD  
+		       , A.SBJ_CD  
+		       , A.SBJ_ODR  
+		       , A.REG_NO  
+			   , (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) AS REG_NM  
+		       , A.REG_DTTM  
+		       , A.MOD_NO  
+			   , (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) AS MOD_NM  
+		       , A.MOD_DTTM  
+		       , B.SBJ_NM  
+		       , B.SBJ_CTGR_CD  
+		       , C.SBJ_CTGR_NM  
+		       , A.EDU_MTHD_CD  
+	</sql>
+	
+	<sql id="selectQuery">
+		  SELECT 
+		  <include refid="selectColumnQuery" />
+		   FROM TB_CRS_CRS_OFLN_SBJ A, TB_CRS_OFLN_SBJ B, TB_CRS_SBJ_CTGR C  
+		   WHERE A.SBJ_CD = B.SBJ_CD  
+		     AND B.SBJ_CTGR_CD = C.SBJ_CTGR_CD  
+		     AND A.CRS_CD = #{crsCd}  
+	</sql>
+
+	<sql id="selectColumnSearchQuery">
+				 A.SBJ_CD  
+		       , A.SBJ_NM  
+		       , A.SBJ_CTGR_CD  
+		       , A.EDU_MTHD_CD  
+		       , B.SBJ_CTGR_NM  
+		       , ( SELECT COUNT(*) FROM TB_CRS_SBJ_CNTS  
+		            WHERE SBJ_CD = A.SBJ_CD ) AS UNIT_CNT  
+	</sql>
+			
+	<sql id="selectSearchQuery">
+		  SELECT 
+		  <include refid="selectColumnQuery" />  
+		  FROM TB_CRS_OFLN_SBJ A, TB_CRS_SBJ_CTGR B  
+		  WHERE A.SBJ_CTGR_CD = B.SBJ_CTGR_CD  
+	</sql>
+	
+	<select id="listPageingCount" parameterType="crsOflnSbjVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM TB_CRS_CRS_OFLN_SBJ A, TB_CRS_OFLN_SBJ B, TB_CRS_SBJ_CTGR C  
+		WHERE A.SBJ_CD = B.SBJ_CD  
+		  AND B.SBJ_CTGR_CD = C.SBJ_CTGR_CD  
+		  AND A.CRS_CD = #{crsCd} 			
+	</select>
+		
+ 	<select id="list" parameterType="crsOflnSbjVO" resultType="crsOflnSbjVO">
+	    <include refid="selectQuery" />
+		ORDER BY SBJ_ODR	
+	</select>
+
+     <select id="listPageing" parameterType="crsOflnSbjVO" resultType="crsOflnSbjVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectQuery" />
+		ORDER BY SBJ_ODR
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+
+	<select id="select" parameterType="crsOflnSbjVO" resultType="crsOflnSbjVO">
+	    <include refid="selectQuery" />
+	     AND A.SBJ_CD = #{sbjCd}	
+	</select>
+
+    <insert id="insert" parameterType="crsOflnSbjVO">
+		  INSERT INTO TB_CRS_CRS_OFLN_SBJ (  
+		         CRS_CD  
+		       , SBJ_CD  
+		       , SBJ_ODR  
+		       , REG_NO  
+		       , REG_DTTM  
+		       , MOD_NO  
+		       , MOD_DTTM  
+		       , EDU_MTHD_CD  
+		  ) VALUES (  
+		         #{crsCd}  
+		       , #{sbjCd}  
+		       , NVL(( SELECT MAX(NVL(SBJ_ODR,0)) + 1  
+		                 FROM TB_CRS_CRS_OFLN_SBJ  
+		                WHERE CRS_CD = #{crsCd}),1)  
+		       , #{regNo}  
+		       , NVL(#{regDttm}, TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'))  
+		       , #{modNo}  
+		       , NVL(#{modDttm}, TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'))  
+		       , #{eduMthdCd}  
+		  ) 
+    </insert>
+
+
+   <update id="update" parameterType="crsOflnSbjVO">
+		  UPDATE TB_CRS_CRS_OFLN_SBJ  
+		     SET SBJ_ODR = #{sbjOdr}  
+		       , MOD_NO = #{modNo}  
+		       , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+		       , EDU_MTHD_CD = #{eduMthdCd}  
+		   WHERE CRS_CD = #{crsCd}  
+		     AND SBJ_CD = #{sbjCd}  
+    </update>
+	<update id="updateBatch" parameterType="list" >
+		<foreach collection="list" item="item" index="index" open="DECLARE BEGIN" close="; END;" separator=";">
+		  UPDATE TB_CRS_CRS_OFLN_SBJ  
+		  SET
+			     SBJ_ODR = #{item.sbjOdr}  
+		       , MOD_NO = #{item.modNo}  
+		       , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+		       , EDU_MTHD_CD = #{item.eduMthdCd} 	
+		   WHERE CRS_CD = #{item.crsCd}  
+		     AND SBJ_CD = #{item.sbjCd}  
+		</foreach>	     
+	</update>
+	
+	<delete id="delete" parameterType="crsOflnSbjVO">
+		 DELETE FROM TB_CRS_CRS_OFLN_SBJ  
+		  WHERE CRS_CD = #{crsCd}  
+		    AND SBJ_CD = #{sbjCd}  			
+    </delete>
+
+	<delete id="deleteAll" parameterType="crsOflnSbjVO">
+		 DELETE FROM TB_CRS_CRS_OFLN_SBJ  
+		  WHERE CRS_CD = #{crsCd}  
+    </delete>
+
+	<select id="listSearchPageingCount" parameterType="crsOflnSbjVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM TB_CRS_OFLN_SBJ A, TB_CRS_SBJ_CTGR B  
+		WHERE A.SBJ_CTGR_CD = B.SBJ_CTGR_CD  	
+		  AND A.SBJ_CD NOT IN (SELECT SBJ_CD FROM TB_CRS_CRS_OFLN_SBJ  
+							  WHERE CRS_CD = #{crsCd} )  
+		<if test = "orgCd != null and orgCd != ''">                          			
+		    	AND A.ORG_CD = #{orgCd} 	
+	    </if>	
+		<if test = "sbjNm != null and sbjNm != ''">                          			
+		    	AND A.SBJ_NM like '%'||#{sbjNm}||'%'  	
+	    </if>					
+	</select>
+	
+	<select id="listSearch" parameterType="crsOflnSbjVO" resultType="offlineSubjectVO">
+	    <include refid="selectSearchQuery" />
+		     AND A.SBJ_CD NOT IN (SELECT SBJ_CD FROM TB_CRS_CRS_OFLN_SBJ  
+								  WHERE CRS_CD = #{crsCd} )  
+		<if test = "orgCd != null and orgCd != ''">                          			
+		    	AND A.ORG_CD = #{orgCd} 	
+	    </if>	
+		<if test = "sbjNm != null and sbjNm != ''">                          			
+		    	AND A.SBJ_NM like '%'||#{sbjNm}||'%'  	
+	    </if>	
+	   ORDER BY SBJ_NM  
+	</select>
+   <select id="listSearchPageing" parameterType="crsOflnSbjVO" resultType="offlineSubjectVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectSearchQuery" />
+		     AND A.SBJ_CD NOT IN (SELECT SBJ_CD FROM TB_CRS_CRS_OFLN_SBJ  
+								  WHERE CRS_CD = #{crsCd} )  
+		<if test = "orgCd != null and orgCd != ''">                          			
+		    	AND A.ORG_CD = #{orgCd} 	
+	    </if>	
+		<if test = "sbjNm != null and sbjNm != ''">                          			
+		    	AND A.SBJ_NM like '%'||#{sbjNm}||'%'  	
+	    </if>	
+	   ORDER BY SBJ_NM  
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+
+
+
+</mapper>		

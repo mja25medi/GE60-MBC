@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<sitemesh>
+	<!-- mapping decorator="/WEB-INF/jsp/decorators/defaultDecorator.jsp" /-->	
+	<mapping>	
+		<path>/home/main/indexMain</path>
+		<!-- decorator>context:/main/decorators/default_decorator.jsp</decorator -->
+		<decorator>/decorator/main</decorator>
+	</mapping>
+	<mapping>	
+		<path>/home/*Pop</path>
+		<decorator>/decorator/pop</decorator>
+	</mapping>
+	<mapping>	
+		<path>/home/*Pop2</path>
+		<decorator>/decorator/pop2</decorator>
+	</mapping>
+	<mapping>	
+		<path>/home/*Main</path>
+		<decorator>/decorator/sub</decorator>
+	</mapping>
+	<mapping>	
+		<path>/home/user/loginForm</path>
+		<decorator>/decorator/sub</decorator>
+	</mapping>
+	<mapping>	
+		<path>/home/tch/info/loginForm</path>
+		<decorator>/decorator/tutor</decorator>
+	</mapping>
+	<mapping>
+		<path>/home/brd/popup/indexRead</path>
+		<decorator>/decorator/pop</decorator>
+	</mapping>
+	<mapping>	
+		<path>/lec/*Main</path>
+		<decorator>/decorator/lec</decorator>
+	</mapping>
+	<mapping>	
+		<path>/lec/*Pop</path>
+		<decorator>/decorator/lecPop</decorator>
+	</mapping>
+	<mapping>	
+		<path>/mng/*main</path>
+		<decorator>/decorator/main</decorator>
+	</mapping>
+	<mapping>	
+		<path>/mng/*Main</path>
+		<decorator>/decorator/main</decorator>
+	</mapping>
+	<mapping>	
+		<path>/mng/*Form</path>
+		<decorator>/decorator/ifm</decorator>
+	</mapping>
+	<mapping>	
+		<path>/mng/*Pop</path>
+		<decorator>/decorator/pop</decorator>
+	</mapping>
+	<mapping>	
+		<path>/*/preview</path>
+		<decorator>/decorator/pop</decorator>
+	</mapping>
+	<mapping>	
+		<path>/tpl/*main</path>
+		<decorator>/decorator/sub</decorator>
+	</mapping>
+
+
+	<!-- Exclude path from decoration. -->
+	<!-- 레이아웃을 사용하지 않는 추가페이지는 제외 -->
+	<!--
+	<mapping path="/attend/excel" exclue="true" />
+	<mapping path="/adm/leftMenu" exclue="true" />
+	<mapping path="/decorator" exclue="true" />
+	-->
+	<mapping path="/*.jsp" exclue="true" />
+	<mapping path="/*.css" exclue="true" />
+	<mapping path="/*.js" exclue="true" />
+	<mapping path="/*.png" exclue="true" />
+	<mapping path="/*.jpg" exclue="true" />
+	<mapping path="/*.gif" exclue="true" />
+	<mapping path="/app/*" exclue="true" />
+	<mapping path="/home/main/goMenuPage" exclue="true" />
+	<mapping path="/home/main/indexChgLang" exclue="true" />
+	<mapping path="/lec/main/goMenuPage" exclue="true" />
+	<mapping path="/lec/main/goLecture" exclue="true" />
+	<mapping path="/lec/main/courseInfo" exclue="true" />
+
+	
+
+	
+	<content-processor>
+   		<tag-rule-bundle class="org.sitemesh.content.tagrules.html.DivExtractingTagRuleBundle" />
+	</content-processor>
+</sitemesh>
+

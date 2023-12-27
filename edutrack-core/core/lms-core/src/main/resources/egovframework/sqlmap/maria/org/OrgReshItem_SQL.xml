@@ -1,0 +1,988 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.org.resh.service.impl.OrgReshItemMapper">	
+	
+	<select id="selectKey" resultType="Integer">
+	    SELECT nextval(SQ_ORG_RESH_ITEM) AS RESH_ITEM_SN
+	</select>
+
+	<sql id="selectQuery">
+	 	SELECT  RESH_SN                               											
+	        ,  RESH_ITEM_SN                          											
+	        ,  RESH_ITEM_TYPE_CD                     											
+	        ,  (SELECT FN_GET_CODE_NAME('RESH_ITEM_TYPE_CD', RESH_ITEM_TYPE_CD)) 	
+	        	AS RESH_ITEM_TYPE_NM															
+	        , 	RESH_ITEM_CTS             											
+	        , 	ITEM_ODR                         											
+	        ,  EMPL_1                                											
+	        ,  EMPL_2                                											
+	        ,  EMPL_3                                											
+	        ,  EMPL_4                                											
+	        ,  EMPL_5                                											
+	        ,  EMPL_6                                											
+	        ,  EMPL_7                                											
+	        ,  EMPL_8                                											
+	        ,  EMPL_9                                											
+	        ,  EMPL_10 AS EMPL_1_0                    											
+	        ,  EMPL_11 AS EMPL_1_1                    											
+	        ,  EMPL_12 AS EMPL_1_2                    											
+	        ,  EMPL_13 AS EMPL_1_3                    											
+	        ,  EMPL_14 AS EMPL_1_4                    											
+	        ,  EMPL_15 AS EMPL_1_5                    											
+	        ,  EMPL_16 AS EMPL_1_6                    											
+	        ,  EMPL_17 AS EMPL_1_7                    											
+	        ,  EMPL_18 AS EMPL_1_8                    											
+	        ,  EMPL_19 AS EMPL_1_9                    											
+	        ,  EMPL_20 AS EMPL_2_0                    											
+	        ,  EMPL_SCORE_1                           											
+	        ,  EMPL_SCORE_2                           											
+	        ,  EMPL_SCORE_3                           											
+	        ,  EMPL_SCORE_4                           											
+	        ,  EMPL_SCORE_5                           											
+	        ,  EMPL_SCORE_6                           											
+	        ,  EMPL_SCORE_7                           											
+	        ,  EMPL_SCORE_8                           											
+	        ,  EMPL_SCORE_9                           											
+	        ,  EMPL_SCORE_10 AS EMPL_SCORE_1_0       											
+	        ,  EMPL_SCORE_11 AS EMPL_SCORE_1_1        											
+	        ,  EMPL_SCORE_12 AS EMPL_SCORE_1_2       											
+	        ,  EMPL_SCORE_13 AS EMPL_SCORE_1_3        											
+	        ,  EMPL_SCORE_14 AS EMPL_SCORE_1_4        											
+	        ,  EMPL_SCORE_15 AS EMPL_SCORE_1_5        											
+	        ,  EMPL_SCORE_16 AS EMPL_SCORE_1_6        											
+	        ,  EMPL_SCORE_17 AS EMPL_SCORE_1_7        											
+	        ,  EMPL_SCORE_18 AS EMPL_SCORE_1_8        											
+	        ,  EMPL_SCORE_19 AS EMPL_SCORE_1_9        											
+	        ,  EMPL_SCORE_20 AS EMPL_SCORE_2_0        											
+	        ,  EMPL_CNT                                                  						
+	        ,  EMPL_VIEW_TYPE
+	        ,  ETC_NO                         											
+	        ,  EDITOR_YN	                         											
+	        ,  REG_NO                                											
+	        ,  REG_DTTM                              											
+	        ,  MOD_NO                                											
+	        ,  MOD_DTTM                               											
+		    ,  (SELECT FN_GET_USER_NAME(MOD_NO)) AS MOD_NM							
+	        ,  (SELECT FN_GET_USER_NAME(REG_NO)) AS REG_NM			
+	     FROM  TB_ORG_RESH_ITEM AS A                    	 
+	</sql>
+
+ 	<select id="list" parameterType="orgReshVO" resultType="orgReshItemVO">
+	    <include refid="selectQuery" />
+		WHERE  RESH_SN = #{reshSn}	
+		ORDER  BY ITEM_ODR	
+	</select>
+	
+	<select id="select" parameterType="orgReshItemVO" resultType="orgReshItemVO">
+	    <include refid="selectQuery" />
+	     WHERE  RESH_SN = #{reshSn}   	
+	     	 	AND  RESH_ITEM_SN	= #{reshItemSn} 
+	</select>
+
+    <insert id="insert" parameterType="orgReshItemVO">
+		 	INSERT  INTO  TB_ORG_RESH_ITEM (                                	
+		        	RESH_SN                                                 	
+		        ,  RESH_ITEM_SN                                              	
+		        ,  RESH_ITEM_TYPE_CD                                         	
+		        ,  RESH_ITEM_CTS                                             	
+		        ,  ITEM_ODR	                                             	
+		        ,  EMPL_1                                                    	
+		        ,  EMPL_2                                                    	
+		        ,  EMPL_3                                                    	
+		        ,  EMPL_4                                                    	
+		        ,  EMPL_5                                                    	
+		        ,  EMPL_6                                                    	
+		        ,  EMPL_7                                                    	
+		        ,  EMPL_8                                                    	
+		        ,  EMPL_9                                                    	
+		        ,  EMPL_10                                                   	
+		        ,  EMPL_11                                                   	
+		        ,  EMPL_12                                                   	
+		        ,  EMPL_13                                                   	
+		        ,  EMPL_14                                                   	
+		        ,  EMPL_15                                                   	
+		        ,  EMPL_16                                                   	
+		        ,  EMPL_17                                                   	
+		        ,  EMPL_18                                                   	
+		        ,  EMPL_19                                                   	
+		        ,  EMPL_20                                                   	
+		        ,  EMPL_SCORE_1                                               	
+		        ,  EMPL_SCORE_2                                               	
+		        ,  EMPL_SCORE_3                                               	
+		        ,  EMPL_SCORE_4                                               	
+		        ,  EMPL_SCORE_5                                               	
+		        ,  EMPL_SCORE_6                                               	
+		        ,  EMPL_SCORE_7                                               	
+		        ,  EMPL_SCORE_8                                               	
+		        ,  EMPL_SCORE_9                                               	
+		        ,  EMPL_SCORE_10                                             	
+		        ,  EMPL_SCORE_11                                             	
+		        ,  EMPL_SCORE_12                                             	
+		        ,  EMPL_SCORE_13                                             	
+		        ,  EMPL_SCORE_14                                             	
+		        ,  EMPL_SCORE_15                                             	
+		        ,  EMPL_SCORE_16                                             	
+		        ,  EMPL_SCORE_17                                             	
+		        ,  EMPL_SCORE_18                                             	
+		        ,  EMPL_SCORE_19                                             	
+		        ,  EMPL_SCORE_20                                             	
+		        ,  EMPL_CNT                                                  	
+		        ,  EMPL_VIEW_TYPE                                             	
+		        ,  EDITOR_YN	
+		        ,  ETC_NO                         						
+		        ,  REG_NO                                                    	
+		        ,  REG_DTTM                                                  	
+		        ,  MOD_NO                                                    	
+		        ,  MOD_DTTM                                                  	
+		 	) VALUES (                                                      	
+		        	#{reshSn}                                                  	
+		        ,  #{reshItemSn}                                              	
+		        ,  #{reshItemTypeCd}                                          	
+		        ,  #{reshItemCts}                                             	
+		        ,  ( SELECT COALESCE( cast(FN_GET_NULL(MAX(ITEM_ODR)) as unsigned),0) + 1 							
+		               FROM TB_ORG_RESH_ITEM AS SUBQUERY
+		              WHERE RESH_SN = #{reshSn} )								
+		        ,  #{empl1}                                                   	
+		        ,  #{empl2}                                                   	
+		        ,  #{empl3}                                                   	
+		        ,  #{empl4}                                                   	
+		        ,  #{empl5}                                                   	
+		        ,  #{empl6}                                                   	
+		        ,  #{empl7}                                                   	
+		        ,  #{empl8}                                                   	
+		        ,  #{empl9}                                                   	
+		        ,  #{empl10}                                                  	
+		        ,  #{empl11}                                                  	
+		        ,  #{empl12}                                                  	
+		        ,  #{empl13}                                                  	
+		        ,  #{empl14}                                                  	
+		        ,  #{empl15}                                                  	
+		        ,  #{empl16}                                                  	
+		        ,  #{empl17}                                                  	
+		        ,  #{empl18}                                                  	
+		        ,  #{empl19}                                                  	
+		        ,  #{empl20}                                                  	
+		        ,  #{emplScore1 }                                               	
+		        ,  #{emplScore2}                                                	
+		        ,  #{emplScore3}                                                	
+		        ,  #{emplScore4}                                                	
+		        ,  #{emplScore5}                                                	
+		        ,  #{emplScore6}                                                	
+		        ,  #{emplScore7}                                                	
+		        ,  #{emplScore8}                                                	
+		        ,  #{emplScore9}                                                	
+		        ,  #{emplScore10}                                               	
+		        ,  #{emplScore11}                                               	
+		        ,  #{emplScore12}                                               	
+		        ,  #{emplScore13}                                               	
+		        ,  #{emplScore14}                                               	
+		        ,  #{emplScore15}                                               	
+		        ,  #{emplScore16}                                               	
+		        ,  #{emplScore17}                                               	
+		        ,  #{emplScore18}                                               	
+		        ,  #{emplScore19}                                               	
+		        ,  #{emplScore20}                                               	
+		        ,  #{emplCnt}                                                 	
+		        ,  #{emplViewType}                                              	
+		        ,  #{editorYn}	 
+		        ,  #{etcNo}                                             	
+		        ,  #{regNo}												     	
+		        ,  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')                      	
+		        ,  #{modNo}	                                                	
+		        ,  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')                      	
+		 )                                                              		
+    </insert>
+   <update id="update" parameterType="orgReshItemVO">
+	 	UPDATE  TB_ORG_RESH_ITEM												
+	      SET  RESH_SN             = #{reshSn}									
+	        ,  RESH_ITEM_SN        = #{reshItemSn}								
+	        ,  RESH_ITEM_TYPE_CD   = #{reshItemTypeCd}							
+	        ,  RESH_ITEM_CTS       = #{reshItemCts}   							
+	        ,  ITEM_ODR       		= #{itemOdr}		   							
+	        ,  EMPL_1              = #{empl1} 									
+	        ,  EMPL_2              = #{empl2} 									
+	        ,  EMPL_3              = #{empl3} 									
+	        ,  EMPL_4              = #{empl4} 									
+	        ,  EMPL_5              = #{empl5} 									
+	        ,  EMPL_6              = #{empl6} 									
+	        ,  EMPL_7              = #{empl7} 									
+	        ,  EMPL_8              = #{empl8} 									
+	        ,  EMPL_9              = #{empl9} 									
+	        ,  EMPL_10             = #{empl10}									
+	        ,  EMPL_11             = #{empl11}									
+	        ,  EMPL_12             = #{empl12}									
+	        ,  EMPL_13             = #{empl13}									
+	        ,  EMPL_14             = #{empl14}									
+	        ,  EMPL_15             = #{empl15}									
+	        ,  EMPL_16             = #{empl16}									
+	        ,  EMPL_17             = #{empl17}									
+	        ,  EMPL_18             = #{empl18}									
+	        ,  EMPL_19             = #{empl19}									
+	        ,  EMPL_20             = #{empl20}									
+	        ,  EMPL_SCORE_1        = #{emplScore1}								
+	        ,  EMPL_SCORE_2        = #{emplScore2}								
+	        ,  EMPL_SCORE_3        = #{emplScore3}								
+	        ,  EMPL_SCORE_4        = #{emplScore4}								
+	        ,  EMPL_SCORE_5        = #{emplScore5}								
+	        ,  EMPL_SCORE_6        = #{emplScore6}								
+	        ,  EMPL_SCORE_7        = #{emplScore7}								
+	        ,  EMPL_SCORE_8        = #{emplScore8}								
+	        ,  EMPL_SCORE_9        = #{emplScore9}								
+	        ,  EMPL_SCORE_10       = #{emplScore10}								
+	        ,  EMPL_SCORE_11       = #{emplScore11}								
+	        ,  EMPL_SCORE_12       = #{emplScore12}								
+	        ,  EMPL_SCORE_13       = #{emplScore13}								
+	        ,  EMPL_SCORE_14       = #{emplScore14}								
+	        ,  EMPL_SCORE_15       = #{emplScore15}								
+	        ,  EMPL_SCORE_16       = #{emplScore16}								
+	        ,  EMPL_SCORE_17       = #{emplScore17}								
+	        ,  EMPL_SCORE_18       = #{emplScore18}								
+	        ,  EMPL_SCORE_19       = #{emplScore19}								
+	        ,  EMPL_SCORE_20       = #{emplScore20}								
+	        ,  EMPL_CNT            = #{emplCnt} 									
+	        ,  EMPL_VIEW_TYPE      = #{emplViewType}								
+	        ,  EDITOR_YN		    = #{editorYn}	
+	        ,  ETC_NO				= #{etcNo}								
+	        ,  MOD_NO              = #{modNo} 									
+	        ,  MOD_DTTM            = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 		
+	    WHERE  RESH_SN        		= #{reshSn}									
+	      AND  RESH_ITEM_SN   		= #{reshItemSn}   
+    </update>
+
+	<delete id="delete" parameterType="orgReshItemVO">
+		DELETE  FROM TB_ORG_RESH_ITEM          
+	 	 WHERE  RESH_SN        = #{reshSn}        
+	      AND  RESH_ITEM_SN   = #{reshItemSn}  			
+    </delete>
+    
+    <update id="updateBatch" parameterType="list" >
+		<foreach collection="list" item="item" index="index" open="DECLARE BEGIN" close="; END;" separator=";">
+		  UPDATE TB_ORG_RESH_ITEM
+		  SET
+			      ITEM_ODR       		= #{item.itemOdr}							
+       			, MOD_NO = #{item.modNo}	 								
+       			, MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')   
+	      WHERE  RESH_SN        		= #{item.reshSn}									
+	      		AND  RESH_ITEM_SN   		= #{item.reshItemSn} 
+		</foreach>	     
+	</update>
+	
+	<select id="listStatResearch"  parameterType="orgReshItemVO" resultType="orgReshItemVO">
+		<!-- 일반 설문 통계 리스트 쿼리  -->
+	 	SELECT 
+			A.ORG_CD 				-- 기관코드
+			, A.CRS_TERM_CD 		-- 기수코드
+			, A.RESH_SN 			-- 설문 고유번호
+			, A.USE_YN 				-- 설문 사용 여부
+			, A.REG_YN 				-- 설문 등록 여부
+			, A.RESH_TITLE 			-- 설문 제목
+			, A.START_DTTM 			-- 설문 시작 일시
+			, A.END_DTTM 			-- 설문 종료 일시
+			, COUNT(DISTINCT D.STD_NO) 	AS RESH_TAR_CNT 									-- 설문 대상자 수
+			, COUNT(DISTINCT C.STD_NO) 	AS RESH_CNT 										-- 설문 참여자 수
+			, COUNT(DISTINCT D.STD_NO) - COUNT(DISTINCT C.STD_NO) AS RESH_NOT_CNT 			-- 설문 미참여자 수
+			, ROUND(COUNT(DISTINCT C.STD_NO) / COUNT(DISTINCT D.STD_NO) * 100,1) AS RESH_PER -- 설문 응시율(제출율)
+			, GROUP_CONCAT(DISTINCT D.STD_NO) AS RESH_TAR_STD								-- 설문 대상자 교육생 번호
+			, GROUP_CONCAT(DISTINCT C.STD_NO) AS RESH_STD									-- 설문 참여자 교육생 번호
+			, GROUP_CONCAT( DISTINCT IF(NULLIF(D.STD_NO,C.STD_NO) = D.STD_NO, D.USER_NO, NULL ) ) AS RESH_NOT_STD	-- 설문 미참여자 리스트
+			, ROUND(SEC_TO_TIME(AVG(TIMESTAMPDIFF(SECOND, A.START_DTTM, C.REG_DTTM)))) AS RESH_AVG_TAR_TM -- 평균제출소요시간
+		FROM TB_ORG_RESH A INNER JOIN TB_ORG_RESH_ITEM B ON A.RESH_SN = B.RESH_SN
+		INNER JOIN TB_STD_STD D ON A.CRS_TERM_CD = D.CRS_TERM_CD
+		LEFT JOIN TB_ORG_RESH_ANSR C ON D.STD_NO = C.STD_NO AND A.ORG_CD = C.ORG_CD AND B.RESH_SN = C.RESH_SN AND B.RESH_ITEM_SN = C.RESH_ITEM_SN  
+		WHERE 1=1
+		AND A.ORG_CD = #{orgCd}
+		AND A.USE_YN = 'Y'
+		AND A.REG_YN = 'Y'
+		AND A.CRS_TERM_CD = #{crsTermCd}
+		AND A.RESH_SN = #{reshSn}
+		AND UPPER(D.ENRL_STS) IN ('C','F','NR','S')
+		GROUP BY B.RESH_SN
+		ORDER BY A.CRS_TERM_CD, A.RESH_TITLE, A.START_DTTM
+	</select>
+	
+	<select id="listStatCrsResearch"  parameterType="orgReshItemVO" resultType="orgReshItemVO">
+		<!-- 과목 설문 통계 리스트 쿼리  -->
+	 	SELECT 
+			A.ORG_CD 				-- 기관코드
+			, Y.CRS_TERM_CD 		-- 기수코드
+			, Y.CRS_CRE_CD			-- 과정 개설 코드
+			, A.RESH_SN 			-- 설문 고유번호
+			, Z.USE_YN 				-- 설문 사용 여부
+			, A.REG_YN 				-- 설문 등록 여부
+			, A.RESH_TITLE 			-- 설문 제목
+			, Z.START_DTTM 			-- 설문 시작 일시
+			, Z.END_DTTM 			-- 설문 종료 일시
+			, D.STD_NO 				-- 학생 번호
+			, D.CRS_CURRI_CD		-- 커리컬륨 코드
+			, (SELECT MAX(IT.CRS_CURRI_NM) FROM TB_CRS_CRS_CURRI IT WHERE IT.CRS_CURRI_CD = D.CRS_CURRI_CD)	AS CRS_CURRI_NM	-- 커리컬륨 명
+			, Y.CRS_CRE_NM			-- 과정 개설 명
+			, COUNT(DISTINCT D.STD_NO) 	AS RESH_TAR_CNT 									-- 설문 대상자 수
+			, COUNT(DISTINCT C.STD_NO) 	AS RESH_CNT 										-- 설문 참여자 수
+			, COUNT(DISTINCT D.STD_NO) - COUNT(DISTINCT C.STD_NO) AS RESH_NOT_CNT 			-- 설문 미참여자 수
+			, ROUND(COUNT(DISTINCT C.STD_NO) / COUNT(DISTINCT D.STD_NO) * 100,1) AS RESH_PER -- 설문 응시율(제출율)
+			, GROUP_CONCAT(DISTINCT D.STD_NO) AS RESH_TAR_STD								-- 설문 대상자 교육생 번호
+			, GROUP_CONCAT(DISTINCT C.STD_NO) AS RESH_STD									-- 설문 참여자 교육생 번호
+			, GROUP_CONCAT( DISTINCT IF(NULLIF(D.STD_NO,C.STD_NO) = D.STD_NO, D.USER_NO, NULL ) ) AS RESH_NOT_STD	-- 설문 미참여자 리스트
+			, ROUND(SEC_TO_TIME(AVG(TIMESTAMPDIFF(SECOND, Z.START_DTTM, C.REG_DTTM)))) AS RESH_AVG_TAR_TM -- 평균제출소요시간
+		FROM TB_CRS_RESH_BANK A INNER JOIN TB_CRS_RESH_ITEM B ON A.RESH_SN = B.RESH_SN
+		INNER JOIN TB_CRS_CRE_CRS_RESH Z ON A.RESH_SN = Z.RESH_SN		-- 과정 개설 CRS_CRE_CD , 설문 번호 RESH_SN
+		INNER JOIN TB_CRS_CRE_CRS Y ON Z.CRS_CRE_CD = Y.CRS_CRE_CD  		-- 과정 개설 CRS_CRE_CD
+		-- INNER JOIN TB_CRS_SBJ_CNTS X ON Z.CRS_CRE_CD = X.CRS_CRE_CD AND Z.RESH_SN = X.REF_SN AND X.CNTS_TYPE_CD = 'RESH' 		-- 과정 개설 CRS_CRE_CD
+		INNER JOIN TB_STD_STD D ON Y.CRS_TERM_CD = D.CRS_TERM_CD AND Y.CRS_CURRI_CD = D.CRS_CURRI_CD		-- 기수 코드와 연결 CRS_TERM_CD
+		LEFT JOIN TB_CRS_RESH_ANSR C ON D.STD_NO = C.STD_NO AND Z.CRS_CRE_CD = C.CRS_CRE_CD AND B.RESH_SN = C.RESH_SN AND B.RESH_ITEM_SN = C.RESH_ITEM_SN  
+		WHERE 1=1
+			AND A.ORG_CD = #{orgCd}
+			AND A.REG_YN = 'Y'
+			AND Z.REG_YN = 'Y'
+			AND (Z.START_DTTM IS NOT NULL AND Z.START_DTTM != '')
+			AND Y.CRS_TERM_CD = #{crsTermCd}
+			AND Y.CRS_CRE_CD = #{crsCreCd}
+			AND A.RESH_SN = #{reshSn}
+			AND UPPER(D.ENRL_STS) IN ('C','F','NR','S')
+		GROUP BY B.RESH_SN, Y.CRS_CRE_CD
+		ORDER BY Y.CRS_TERM_CD, A.RESH_TITLE, Z.START_DTTM
+	</select>
+	
+	<select id="listStatCrsResearchCrsCre"  parameterType="orgReshItemVO" resultType="orgReshItemVO">
+		SELECT Y.ORG_CD 			-- 기관코드
+			, Y.CRS_TERM_CD 		-- 기수코드
+			, Y.CRS_CRE_CD			-- 과정 개설 코드 
+			, Y.CRS_CRE_NM			-- 과정 개설 명
+		FROM TB_CRS_CRE_CRS Y
+		WHERE 1=1
+			AND Y.ORG_CD = #{orgCd}
+			AND Y.CRS_TERM_CD = #{crsTermCd}
+		ORDER BY Y.CRS_TERM_CD, Y.CRS_CRE_NM
+	</select>
+	
+	<select id="listStatResearchStdNmExcel"  parameterType="orgReshItemVO" resultType="orgReshItemVO">
+		<!-- 일반 설문 통계 엑셀 리스트 쿼리  -->
+		SELECT 
+			A.ORG_CD 				-- 기관코드
+			, A.RESH_TYPE			-- 설문 타입(G= 일반형, I= 점수형)
+			, B.RESH_ITEM_TYPE_CD	-- 설문 항목 유형 코드(D= 서술형, K= 선택형)
+			, D.CRS_CURRI_CD		-- 커리컬륨 코드
+			, A.RESH_SN 			-- 설문 고유번호
+			, A.USE_YN 				-- 설문 사용 여부
+			, A.REG_YN 				-- 설문 등록 여부
+			, A.RESH_TITLE 			-- 설문 제목
+			, D.STD_NO 				-- 학생 번호
+			, (SELECT MAX(IT.CRS_CURRI_NM) FROM TB_CRS_CRS_CURRI IT WHERE IT.CRS_CURRI_CD = D.CRS_CURRI_CD)	AS CRS_CURRI_NM			-- 커리컬륨 명
+			, D.DECLS_NO AS	DECLS_NO_INT	-- 분반 번호
+			, D.AREA_CD						-- 교육지역
+			, (SELECT MAX(IT.CODE_NM) FROM TB_SYS_CODE IT WHERE IT.CODE_CTGR_CD = 'AREA_CD' AND IT.CODE_CD = D.AREA_CD) AS AREA_NM 	-- 교육지역명
+			, D.ENRL_STS					-- 교육 상태
+			, (SELECT MAX(IT.CODE_NM) FROM TB_SYS_CODE IT WHERE IT.CODE_CTGR_CD = 'ENRL_STS' AND IT.CODE_CD = D.ENRL_STS) AS ENRL_STS_NM
+			, FN_GET_USER_ID(D.USER_NO) AS USER_ID		-- 학생ID
+			, FN_GET_USER_NAME(D.USER_NO) AS USER_NM	-- 학생명
+			, GROUP_CONCAT(B.RESH_ITEM_SN ORDER BY B.RESH_ITEM_SN separator ':풱:' ) AS RESH_ITEM_SN_LIST			-- 설문 항목 고유번호들
+			, C.STD_NO									AS ANSR_STD_NO												-- 제출여부 체크 값 있으면 제출
+			, DATE_FORMAT(MAX(C.REG_DTTM),'%Y-%m-%d') 	AS ANSR_REG_DTTM											-- 설문 제출일
+			, GROUP_CONCAT(C.RESH_ANSR ORDER BY B.RESH_ITEM_SN separator ':풱:' ) 				AS RESH_ANSR_LIST	-- 설문 답변
+		FROM TB_ORG_RESH A INNER JOIN TB_ORG_RESH_ITEM B ON A.RESH_SN = B.RESH_SN
+		-- INNER JOIN TB_CRS_SBJ_CNTS X ON Z.CRS_CRE_CD = X.CRS_CRE_CD AND Z.RESH_SN = X.REF_SN AND X.CNTS_TYPE_CD = 'RESH' 		-- 과정 개설 CRS_CRE_CD
+		INNER JOIN TB_STD_STD D ON A.CRS_TERM_CD = D.CRS_TERM_CD								-- 기수 코드와 연결 CRS_TERM_CD
+		LEFT JOIN TB_ORG_RESH_ANSR C ON D.STD_NO = C.STD_NO AND A.ORG_CD = C.ORG_CD AND B.RESH_SN = C.RESH_SN AND B.RESH_ITEM_SN = C.RESH_ITEM_SN  
+		WHERE 1=1
+			AND A.ORG_CD = #{orgCd}
+			AND A.USE_YN = 'Y'
+			AND A.REG_YN = 'Y'
+			AND A.CRS_TERM_CD = #{crsTermCd}
+			AND UPPER(D.ENRL_STS) IN ('C','F','NR','S')
+		GROUP BY A.CRS_TERM_CD, A.RESH_SN, D.STD_NO
+		ORDER BY A.CRS_TERM_CD, D.CRS_CURRI_CD, A.RESH_SN, D.DECLS_NO, C.STD_NO DESC, FN_GET_USER_NAME(D.USER_NO)
+	</select>
+	
+	<select id="listStatCrsResearchStdNmExcel"  parameterType="orgReshItemVO" resultType="orgReshItemVO">
+		<!-- 과목 설문 통계 엑셀 리스트 쿼리  -->
+		SELECT 
+			A.ORG_CD 				-- 기관코드
+			, A.RESH_TYPE			-- 설문 타입(G= 일반형, I= 점수형)
+			, B.RESH_ITEM_TYPE_CD	-- 설문 항목 유형 코드(D= 서술형, K= 선택형)
+			, Y.CRS_TERM_CD 		-- 기수코드
+			, Y.CRS_CRE_CD			-- 과정 개설 코드
+			, D.CRS_CURRI_CD		-- 커리컬륨 코드
+			, A.RESH_SN 			-- 설문 고유번호
+			, Z.USE_YN 				-- 설문 사용 여부
+			, A.REG_YN 				-- 설문 등록 여부
+			, A.RESH_TITLE 			-- 설문 제목
+			, Z.START_DTTM 			-- 설문 시작 일시
+			, Z.END_DTTM 			-- 설문 종료 일시
+			, D.STD_NO 				-- 학생 번호
+			, (SELECT MAX(IT.CRS_CURRI_NM) FROM TB_CRS_CRS_CURRI IT WHERE IT.CRS_CURRI_CD = D.CRS_CURRI_CD)	AS CRS_CURRI_NM			-- 커리컬륨 명
+			, Y.CRS_CRE_NM			-- 과정 개설 명
+			, D.DECLS_NO AS	DECLS_NO_INT	-- 분반 번호
+			, D.AREA_CD						-- 교육지역
+			, (SELECT MAX(IT.CODE_NM) FROM TB_SYS_CODE IT WHERE IT.CODE_CTGR_CD = 'AREA_CD' AND IT.CODE_CD = D.AREA_CD) AS AREA_NM 	-- 교육지역명
+			, D.ENRL_STS					-- 교육 상태
+			, (SELECT MAX(IT.CODE_NM) FROM TB_SYS_CODE IT WHERE IT.CODE_CTGR_CD = 'ENRL_STS' AND IT.CODE_CD = D.ENRL_STS) AS ENRL_STS_NM
+			, FN_GET_USER_ID(D.USER_NO) AS USER_ID		-- 학생ID
+			, FN_GET_USER_NAME(D.USER_NO) AS USER_NM	-- 학생명
+			, GROUP_CONCAT(B.RESH_ITEM_SN ORDER BY B.RESH_ITEM_SN separator ':풱:' ) AS RESH_ITEM_SN_LIST			-- 설문 항목 고유번호들
+			, C.STD_NO									AS ANSR_STD_NO												-- 제출여부 체크 값 있으면 제출
+			, DATE_FORMAT(MAX(C.REG_DTTM),'%Y-%m-%d') 	AS ANSR_REG_DTTM											-- 설문 제출일
+			, GROUP_CONCAT(C.RESH_ANSR ORDER BY B.RESH_ITEM_SN separator ':풱:' ) 				AS RESH_ANSR_LIST	-- 설문 답변
+		FROM TB_CRS_RESH_BANK A INNER JOIN TB_CRS_RESH_ITEM B ON A.RESH_SN = B.RESH_SN
+		INNER JOIN TB_CRS_CRE_CRS_RESH Z ON A.RESH_SN = Z.RESH_SN																	-- 과정 개설 CRS_CRE_CD , 설문 번호 RESH_SN
+		INNER JOIN TB_CRS_CRE_CRS Y ON Z.CRS_CRE_CD = Y.CRS_CRE_CD  																-- 과정 개설 CRS_CRE_CD
+		-- INNER JOIN TB_CRS_SBJ_CNTS X ON Z.CRS_CRE_CD = X.CRS_CRE_CD AND Z.RESH_SN = X.REF_SN AND X.CNTS_TYPE_CD = 'RESH' 		-- 과정 개설 CRS_CRE_CD
+		INNER JOIN TB_STD_STD D ON Y.CRS_TERM_CD = D.CRS_TERM_CD AND Y.CRS_CURRI_CD = D.CRS_CURRI_CD								-- 기수 코드와 연결 CRS_TERM_CD
+		LEFT JOIN TB_CRS_RESH_ANSR C ON D.STD_NO = C.STD_NO AND Z.CRS_CRE_CD = C.CRS_CRE_CD AND B.RESH_SN = C.RESH_SN AND B.RESH_ITEM_SN = C.RESH_ITEM_SN  
+		WHERE 1=1
+			AND A.ORG_CD = #{orgCd}
+			AND A.REG_YN = 'Y'
+			AND Z.REG_YN = 'Y'
+			AND (Z.START_DTTM IS NOT NULL AND Z.START_DTTM != '')
+			AND Y.CRS_TERM_CD = #{crsTermCd}
+			AND UPPER(D.ENRL_STS) IN ('C','F','NR','S')
+		GROUP BY Y.CRS_TERM_CD, D.CRS_CURRI_CD, Z.CRS_CRE_CD, A.RESH_SN, D.STD_NO
+		ORDER BY Y.CRS_TERM_CD, D.CRS_CURRI_CD, Y.CRS_CRE_CD, A.RESH_SN, D.DECLS_NO, C.STD_NO DESC, FN_GET_USER_NAME(D.USER_NO)
+	</select>
+	
+	<select id="listCrsReshItem"  parameterType="orgReshItemVO" resultType="orgReshItemVO">
+		<!-- 과목 설문 항목 리스트 -->
+		SELECT 
+			A.RESH_SN
+			,A.RESH_ITEM_SN
+			,A.RESH_ITEM_SN AS RESH_ITEM_SNS
+			,A.RESH_ITEM_TYPE_CD
+			,A.RESH_ITEM_CTS
+			,A.ITEM_ODR
+			,A.EMPL_1
+			,A.EMPL_SCORE_1
+			,A.EMPL_2
+			,A.EMPL_SCORE_2
+			,A.EMPL_3
+			,A.EMPL_SCORE_3
+			,A.EMPL_4
+			,A.EMPL_SCORE_4
+			,A.EMPL_5
+			,A.EMPL_SCORE_5
+			,A.EMPL_6
+			,A.EMPL_SCORE_6
+			,A.EMPL_7
+			,A.EMPL_SCORE_7
+			,A.EMPL_8
+			,A.EMPL_SCORE_8
+			,A.EMPL_9
+			,A.EMPL_SCORE_9
+			,A.EMPL_10     
+			,A.EMPL_SCORE_10
+			,A.EMPL_11    
+			,A.EMPL_SCORE_11
+			,A.EMPL_12    
+			,A.EMPL_SCORE_12
+			,A.EMPL_13     
+			,A.EMPL_SCORE_13
+			,A.EMPL_14     
+			,A.EMPL_SCORE_14
+			,A.EMPL_15     
+			,A.EMPL_SCORE_15
+			,A.EMPL_16     
+			,A.EMPL_SCORE_16
+			,A.EMPL_17     
+			,A.EMPL_SCORE_17
+			,A.EMPL_18     
+			,A.EMPL_SCORE_18
+			,A.EMPL_19     
+			,A.EMPL_SCORE_19
+			,A.EMPL_20     
+			,A.EMPL_SCORE_20
+			,A.EMPL_CNT     
+			,A.EMPL_VIEW_TYPE
+			,A.REG_NO    
+			,A.REG_DTTM  
+			,A.MOD_NO    
+			,A.MOD_DTTM  
+			,A.EDITOR_YN 
+		FROM TB_CRS_RESH_ITEM A
+		WHERE 1=1
+		<if test = "reshSn != null and reshSn != ''">
+	  		AND RESH_SN =	#{reshSn}
+	  	</if>
+		<if test = "reshItemSn != null and reshItemSn != ''">
+	  		AND RESH_ITEM_SN =	#{reshItemSn}
+		</if>
+		ORDER BY RESH_SN , ITEM_ODR
+	</select>
+	
+	<select id="listReshItem"  parameterType="orgReshItemVO" resultType="orgReshItemVO">
+		<!-- 일반 설문 항목 리스트 -->
+		SELECT 
+			A.RESH_SN
+			,A.RESH_ITEM_SN
+			,A.RESH_ITEM_SN AS RESH_ITEM_SNS
+			,A.RESH_ITEM_TYPE_CD
+			,A.RESH_ITEM_CTS
+			,A.ITEM_ODR
+			,A.EMPL_1
+			,A.EMPL_SCORE_1
+			,A.EMPL_2
+			,A.EMPL_SCORE_2
+			,A.EMPL_3
+			,A.EMPL_SCORE_3
+			,A.EMPL_4
+			,A.EMPL_SCORE_4
+			,A.EMPL_5
+			,A.EMPL_SCORE_5
+			,A.EMPL_6
+			,A.EMPL_SCORE_6
+			,A.EMPL_7
+			,A.EMPL_SCORE_7
+			,A.EMPL_8
+			,A.EMPL_SCORE_8
+			,A.EMPL_9
+			,A.EMPL_SCORE_9
+			,A.EMPL_10     
+			,A.EMPL_SCORE_10
+			,A.EMPL_11    
+			,A.EMPL_SCORE_11
+			,A.EMPL_12    
+			,A.EMPL_SCORE_12
+			,A.EMPL_13     
+			,A.EMPL_SCORE_13
+			,A.EMPL_14     
+			,A.EMPL_SCORE_14
+			,A.EMPL_15     
+			,A.EMPL_SCORE_15
+			,A.EMPL_16     
+			,A.EMPL_SCORE_16
+			,A.EMPL_17     
+			,A.EMPL_SCORE_17
+			,A.EMPL_18     
+			,A.EMPL_SCORE_18
+			,A.EMPL_19     
+			,A.EMPL_SCORE_19
+			,A.EMPL_20     
+			,A.EMPL_SCORE_20
+			,A.EMPL_CNT     
+			,A.EMPL_VIEW_TYPE
+			,A.REG_NO    
+			,A.REG_DTTM  
+			,A.MOD_NO    
+			,A.MOD_DTTM  
+			,A.EDITOR_YN 
+		FROM TB_ORG_RESH_ITEM A
+		WHERE 1=1
+		<if test = "reshSn != null and reshSn != ''">
+	  		AND RESH_SN =	#{reshSn}
+	  	</if>
+		<if test = "reshItemSn != null and reshItemSn != ''">
+	  		AND RESH_ITEM_SN =	#{reshItemSn}
+		</if>
+		ORDER BY RESH_SN , ITEM_ODR
+	</select>
+	
+	<select id="listRslt" parameterType="egovframework.edutrack.modules.course.creCrsResh.service.CrsReshResultVO" resultType="egovframework.edutrack.modules.course.creCrsResh.service.CrsReshResultVO">
+		<!-- 미사용  -->
+		SELECT RESH_SN 									
+		       , RESH_ITEM_SN 								
+		       , RESH_ITEM_TYPE_CD 						
+		       , ( SELECT FN_GET_CODE_NAME('RESH_ITEM_TYPE_CD', RESH_ITEM_TYPE_CD )	
+		             ) AS RESH_ITEM_TYPE_NM		
+		       , RESH_ITEM_CTS 							
+		       , ITEM_ODR 									
+		       , EMPL_1 									
+		       , EMPL_2 									
+		       , EMPL_3 									
+		       , EMPL_4 									
+		       , EMPL_5 									
+		       , EMPL_6 									
+		       , EMPL_7 									
+		       , EMPL_8 									
+		       , EMPL_9 									
+		       , EMPL_10 AS EMPL_1_0  									
+		       , EMPL_11 AS EMPL_1_1 									
+		       , EMPL_12 AS EMPL_1_2 									
+		       , EMPL_13 AS EMPL_1_3  									
+		       , EMPL_14 AS EMPL_1_4  									
+		       , EMPL_15 AS EMPL_1_5  									
+		       , EMPL_16 AS EMPL_1_6  									
+		       , EMPL_17 AS EMPL_1_7  									
+		       , EMPL_18 AS EMPL_1_8  									
+		       , EMPL_19 AS EMPL_1_9  									
+		       , EMPL_20 AS EMPL_2_0  									
+		       , EMPL_CNT 									
+		       , EMPL_VIEW_TYPE 							
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN )	
+		         AS EMPL_TOT_CNT							
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '1'	)				
+		         AS EMPL_1_CNT								
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '2'	)				
+		         AS EMPL_2_CNT								
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '3'	)				
+		         AS EMPL_3_CNT								
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '4'	)				
+		         AS EMPL_4_CNT								
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '5'	)				
+		         AS EMPL_5_CNT								
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '6'	)				
+		         AS EMPL_6_CNT								
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '7'	)				
+		         AS EMPL_7_CNT								
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '8'	)				
+		         AS EMPL_8_CNT								
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '9'	)				
+		         AS EMPL_9_CNT								
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '10'	)				
+		         AS EMPL_1_0_CNT							
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '11'	)				
+		         AS EMPL_1_1_CNT							
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '12'	)				
+		         AS EMPL_1_2_CNT							
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '13'	)				
+		         AS EMPL_1_3_CNT							
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '14'	)				
+		         AS EMPL_1_4_CNT							
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '15'	)				
+		         AS EMPL_1_5_CNT							
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '16'	)				
+		         AS EMPL_1_6_CNT							
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '17'	)				
+		         AS EMPL_1_7_CNT							
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '18'	)				
+		         AS EMPL_1_8_CNT							
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '19'	)				
+		         AS EMPL_1_9_CNT							
+		       , ( SELECT COUNT(DISTINCT STD_NO)			
+		             FROM TB_CRS_RESH_ANSR					
+		            WHERE CRS_CRE_CD = #{crsCreCd} 	 		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND RESH_ANSR = '20'	)				
+		         AS EMPL_2_0_CNT
+		    FROM TB_CRS_RESH_ITEM A						
+		   WHERE RESH_SN = #{reshSn}							
+		   ORDER BY ITEM_ODR
+	</select>
+	
+	<select id="listRsltScore"  parameterType="orgReshItemVO" resultType="orgReshItemVO">
+		<!-- 설문결과 점수결과보기  -->
+		SELECT 
+			T.RESH_SN
+			, T.RESH_TYPE
+			, T.RESH_ITEM_TYPE_CD
+			, T.RESH_ITEM_SN		-- 설문 항목 번호
+			, T.ITEM_ODR
+			, T.RESH_ITEM_CTS
+			, T.EMPL_1 
+			, T.EMPL_2 
+			, T.EMPL_3 
+			, T.EMPL_4 
+			, T.EMPL_5 
+			, T.EMPL_6 
+			, T.EMPL_7 
+			, T.EMPL_8 
+			, T.EMPL_9 
+			, T.EMPL_10 
+			, T.EMPL_11
+			, T.EMPL_12 
+			, T.EMPL_13 
+			, T.EMPL_14 
+			, T.EMPL_15 
+			, T.EMPL_16
+			, T.EMPL_17 
+			, T.EMPL_18 
+			, T.EMPL_19 
+			, T.EMPL_20
+			, SUM(T.RESH_ANSR_SCORE) AS SUM_RESH_ANSR_SCORE
+			, TRUNCATE(AVG(T.RESH_ANSR_SCORE),0) AS AVG_RESH_ANSR_SCORE 
+			, COUNT(IF('K' = T.RESH_ITEM_TYPE_CD AND T.RESH_ANSR = '1' , 1 , NULL)) AS EMPL_SCORE_1
+			, COUNT(IF('K' = T.RESH_ITEM_TYPE_CD AND T.RESH_ANSR = '2' , 1 , NULL)) AS EMPL_SCORE_2
+			, COUNT(IF('K' = T.RESH_ITEM_TYPE_CD AND T.RESH_ANSR = '3' , 1 , NULL)) AS EMPL_SCORE_3
+			, COUNT(IF('K' = T.RESH_ITEM_TYPE_CD AND T.RESH_ANSR = '4' , 1 , NULL)) AS EMPL_SCORE_4
+			, COUNT(IF('K' = T.RESH_ITEM_TYPE_CD AND T.RESH_ANSR = '5' , 1 , NULL)) AS EMPL_SCORE_5
+			, COUNT(IF('K' = T.RESH_ITEM_TYPE_CD AND T.RESH_ANSR = '6' , 1 , NULL)) AS EMPL_SCORE_6
+			, COUNT(IF('K' = T.RESH_ITEM_TYPE_CD AND T.RESH_ANSR = '7' , 1 , NULL)) AS EMPL_SCORE_7
+			, COUNT(IF('K' = T.RESH_ITEM_TYPE_CD AND T.RESH_ANSR = '8' , 1 , NULL)) AS EMPL_SCORE_8
+			, COUNT(IF('K' = T.RESH_ITEM_TYPE_CD AND T.RESH_ANSR = '9' , 1 , NULL)) AS EMPL_SCORE_9
+			, COUNT(IF('K' = T.RESH_ITEM_TYPE_CD AND T.RESH_ANSR = '10' , 1 , NULL)) AS EMPL_SCORE_10
+			, COUNT(IF('K' = T.RESH_ITEM_TYPE_CD AND T.RESH_ANSR = '11' , 1 , NULL)) AS EMPL_SCORE_11
+			, COUNT(IF('K' = T.RESH_ITEM_TYPE_CD AND T.RESH_ANSR = '12' , 1 , NULL)) AS EMPL_SCORE_12
+			, COUNT(IF('K' = T.RESH_ITEM_TYPE_CD AND T.RESH_ANSR = '13' , 1 , NULL)) AS EMPL_SCORE_13
+			, COUNT(IF('K' = T.RESH_ITEM_TYPE_CD AND T.RESH_ANSR = '14' , 1 , NULL)) AS EMPL_SCORE_14
+			, COUNT(IF('K' = T.RESH_ITEM_TYPE_CD AND T.RESH_ANSR = '15' , 1 , NULL)) AS EMPL_SCORE_15
+			, COUNT(IF('K' = T.RESH_ITEM_TYPE_CD AND T.RESH_ANSR = '16' , 1 , NULL)) AS EMPL_SCORE_16
+			, COUNT(IF('K' = T.RESH_ITEM_TYPE_CD AND T.RESH_ANSR = '17' , 1 , NULL)) AS EMPL_SCORE_17
+			, COUNT(IF('K' = T.RESH_ITEM_TYPE_CD AND T.RESH_ANSR = '18' , 1 , NULL)) AS EMPL_SCORE_18
+			, COUNT(IF('K' = T.RESH_ITEM_TYPE_CD AND T.RESH_ANSR = '19' , 1 , NULL)) AS EMPL_SCORE_19
+			, COUNT(IF('K' = T.RESH_ITEM_TYPE_CD AND T.RESH_ANSR = '20' , 1 , NULL)) AS EMPL_SCORE_20
+			, COUNT(1) AS RESH_CNT
+		FROM (
+			SELECT 
+				A.ORG_CD 				-- 기관코드
+				, A.CRS_TERM_CD			-- 기수코드
+				, A.RESH_TYPE			-- 설문 타입(G= 일반형, I= 점수형)
+				, B.RESH_ITEM_TYPE_CD	-- 설문 항목 유형 코드(D= 서술형, K= 선택형)
+				, B.RESH_ITEM_SN		-- 설문 항목 번호
+				, B.RESH_ITEM_CTS		-- 설문 항목 내용
+				, B.ITEM_ODR			-- 설문 항목 순서
+				, B.EMPL_1 
+				, B.EMPL_2 
+				, B.EMPL_3 
+				, B.EMPL_4 
+				, B.EMPL_5 
+				, B.EMPL_6 
+				, B.EMPL_7 
+				, B.EMPL_8 
+				, B.EMPL_9 
+				, B.EMPL_10 
+				, B.EMPL_11
+				, B.EMPL_12 
+				, B.EMPL_13 
+				, B.EMPL_14 
+				, B.EMPL_15 
+				, B.EMPL_16
+				, B.EMPL_17 
+				, B.EMPL_18 
+				, B.EMPL_19 
+				, B.EMPL_20 
+				, A.RESH_SN 			-- 설문 고유번호
+				, A.USE_YN 				-- 설문 사용 여부
+				, A.REG_YN 				-- 설문 등록 여부
+				, A.RESH_TITLE 			-- 설문 제목
+				, C.STD_NO 				-- 학생 번호
+				, C.RESH_ANSR 			-- 설문 답변
+				, (
+					CASE WHEN A.RESH_TYPE != 'I' OR B.RESH_ITEM_TYPE_CD != 'K' THEN NULL ELSE 
+					(SELECT IF( C.RESH_ANSR = 1, IFNULL(IT.EMPL_SCORE_1,0), 0 )+IF( C.RESH_ANSR = 2, IFNULL(IT.EMPL_SCORE_2,0), 0 )
+							+IF( C.RESH_ANSR = 3, IFNULL(IT.EMPL_SCORE_3,0), 0 )+IF( C.RESH_ANSR = 4, IFNULL(IT.EMPL_SCORE_4,0), 0 )
+							+IF( C.RESH_ANSR = 5, IFNULL(IT.EMPL_SCORE_5,0), 0 )+IF( C.RESH_ANSR = 6, IFNULL(IT.EMPL_SCORE_6,0), 0 )
+							+IF( C.RESH_ANSR = 7, IFNULL(IT.EMPL_SCORE_7,0), 0 )+IF( C.RESH_ANSR = 8, IFNULL(IT.EMPL_SCORE_8,0), 0 )
+							+IF( C.RESH_ANSR = 9, IFNULL(IT.EMPL_SCORE_9,0), 0 )+IF( C.RESH_ANSR = 10, IFNULL(IT.EMPL_SCORE_10,0), 0 )
+							+IF( C.RESH_ANSR = 11, IFNULL(IT.EMPL_SCORE_11,0), 0 )+IF( C.RESH_ANSR = 12, IFNULL(IT.EMPL_SCORE_12,0), 0 )
+							+IF( C.RESH_ANSR = 13, IFNULL(IT.EMPL_SCORE_13,0), 0 )+IF( C.RESH_ANSR = 14, IFNULL(IT.EMPL_SCORE_14,0), 0 )
+							+IF( C.RESH_ANSR = 15, IFNULL(IT.EMPL_SCORE_15,0), 0 )+IF( C.RESH_ANSR = 16, IFNULL(IT.EMPL_SCORE_16,0), 0 )
+							+IF( C.RESH_ANSR = 17, IFNULL(IT.EMPL_SCORE_17,0), 0 )+IF( C.RESH_ANSR = 18, IFNULL(IT.EMPL_SCORE_18,0), 0 )
+							+IF( C.RESH_ANSR = 19, IFNULL(IT.EMPL_SCORE_19,0), 0 )+IF( C.RESH_ANSR = 20, IFNULL(IT.EMPL_SCORE_20,0), 0 )
+						FROM TB_ORG_RESH_ITEM IT 
+						WHERE IT.RESH_SN = A.RESH_SN AND IT.RESH_ITEM_SN = B.RESH_ITEM_SN)
+					END
+					) AS RESH_ANSR_SCORE
+			FROM TB_ORG_RESH A INNER JOIN TB_ORG_RESH_ITEM B ON A.RESH_SN = B.RESH_SN
+			LEFT JOIN TB_ORG_RESH_ANSR C ON A.ORG_CD = C.ORG_CD AND B.RESH_SN = C.RESH_SN AND B.RESH_ITEM_SN = C.RESH_ITEM_SN
+			WHERE 1=1
+			AND A.ORG_CD = #{orgCd}
+			<if test = "crsTermCd != null and crsTermCd != ''">
+	  		AND A.CRS_TERM_CD = #{crsTermCd}
+	  		</if>
+			AND A.RESH_SN = #{reshSn}
+		) T
+		GROUP BY T.RESH_SN, T.ITEM_ODR
+		ORDER BY T.ITEM_ODR
+	</select>		
+
+	<select id="listReshScoreExcel"  parameterType="orgReshItemVO" resultType="orgReshItemVO">
+		<!-- 설문결과 엑셀다운로드  -->
+		SELECT 
+			A.ORG_CD 				-- 기관코드
+			, A.CRS_TERM_CD			-- 기수코드
+			, A.RESH_TYPE			-- 설문 타입(G= 일반형, I= 점수형)
+			, B.RESH_ITEM_TYPE_CD	-- 설문 항목 유형 코드(D= 서술형, K= 선택형)
+			, B.RESH_ITEM_SN		-- 설문 항목 번호
+			, B.ITEM_ODR			-- 설문 항목 순서
+			, A.RESH_SN 			-- 설문 고유번호
+			, A.USE_YN 				-- 설문 사용 여부
+			, A.REG_YN 				-- 설문 등록 여부
+			, A.RESH_TITLE 			-- 설문 제목
+			, C.STD_NO 				-- 학생 번호
+			, C.RESH_ANSR 			-- 설문 답변
+			, C.REG_DTTM  AS START_DTTM			-- 설문 제출일시
+			, DATE_FORMAT(C.REG_DTTM,'%Y-%m-%d %p%l:%i') AS ANSR_REG_DTTM 	-- 설문 제출일시 변경
+			, FN_GET_USER_NAME(D.USER_NO) AS USER_NM	-- 학생명(응시자)
+		FROM TB_ORG_RESH A INNER JOIN TB_ORG_RESH_ITEM B ON A.RESH_SN = B.RESH_SN
+		INNER JOIN TB_ORG_RESH_ANSR C ON A.ORG_CD = C.ORG_CD AND B.RESH_SN = C.RESH_SN AND B.RESH_ITEM_SN = C.RESH_ITEM_SN
+		LEFT JOIN TB_STD_STD D ON C.STD_NO = D.STD_NO
+		WHERE 1=1
+			AND A.ORG_CD = #{orgCd}
+			<if test = "crsTermCd != null and crsTermCd != ''">
+	  		AND A.CRS_TERM_CD = #{crsTermCd}
+	  		</if>
+			AND A.RESH_SN = #{reshSn}
+		ORDER BY A.CRS_TERM_CD, A.RESH_SN, USER_NM, B.ITEM_ODR 
+	</select>
+	
+	<select id="listStatOutResearchStdNmExcel"  parameterType="orgReshItemVO" resultType="orgReshItemVO">
+		<!-- 퇴교 설문 통계 엑셀 리스트 쿼리  -->
+		SELECT 
+			A.ORG_CD 				-- 기관코드
+			, A.RESH_TYPE			-- 설문 타입(G= 일반형, I= 점수형)
+			, B.RESH_ITEM_TYPE_CD	-- 설문 항목 유형 코드(D= 서술형, K= 선택형)
+			, D.CRS_CURRI_CD		-- 커리컬륨 코드
+			, A.RESH_SN 			-- 설문 고유번호
+			, A.USE_YN 				-- 설문 사용 여부
+			, A.REG_YN 				-- 설문 등록 여부
+			, A.RESH_TITLE 			-- 설문 제목
+			, D.STD_NO 				-- 학생 번호
+			, (SELECT MAX(IT.CRS_CURRI_NM) FROM TB_CRS_CRS_CURRI IT WHERE IT.CRS_CURRI_CD = D.CRS_CURRI_CD)	AS CRS_CURRI_NM			-- 커리컬륨 명
+			, (select MNG_NO from tb_crs_crs_curri_decls tcccd where CRS_CURRI_CD = D.CRS_CURRI_CD and DECLS_NO = D.DECLS_NO) as MNG_NO 
+			, FN_GET_USER_ID((select MNG_NO from tb_crs_crs_curri_decls tcccd where CRS_CURRI_CD = D.CRS_CURRI_CD and DECLS_NO = D.DECLS_NO)) as MNG_ID 
+			, FN_GET_USER_NAME((select MNG_NO from tb_crs_crs_curri_decls tcccd where CRS_CURRI_CD = D.CRS_CURRI_CD and DECLS_NO = D.DECLS_NO)) as MNG_NM
+			, D.DECLS_NO AS	DECLS_NO_INT	-- 분반 번호
+			, D.AREA_CD						-- 교육지역
+			, (SELECT MAX(IT.CODE_NM) FROM TB_SYS_CODE IT WHERE IT.CODE_CTGR_CD = 'AREA_CD' AND IT.CODE_CD = D.AREA_CD) AS AREA_NM 	-- 교육지역명
+			, D.ENRL_STS					-- 교육 상태
+			, (SELECT MAX(IT.CODE_NM) FROM TB_SYS_CODE IT WHERE IT.CODE_CTGR_CD = 'ENRL_STS' AND IT.CODE_CD = D.ENRL_STS) AS ENRL_STS_NM
+			, FN_GET_USER_ID(D.USER_NO) AS USER_ID		-- 학생ID
+			, FN_GET_USER_NAME(D.USER_NO) AS USER_NM	-- 학생명
+			, GROUP_CONCAT(B.RESH_ITEM_SN ORDER BY B.RESH_ITEM_SN separator ':풱:' ) AS RESH_ITEM_SN_LIST			-- 설문 항목 고유번호들
+			, C.STD_NO									AS ANSR_STD_NO												-- 제출여부 체크 값 있으면 제출
+			, DATE_FORMAT(MAX(C.REG_DTTM),'%Y-%m-%d') 	AS ANSR_REG_DTTM											-- 설문 제출일
+			, GROUP_CONCAT(C.RESH_ANSR ORDER BY B.RESH_ITEM_SN separator ':풱:' ) 				AS RESH_ANSR_LIST	-- 설문 답변
+		FROM TB_ORG_RESH A INNER JOIN TB_ORG_RESH_ITEM B ON A.RESH_SN = B.RESH_SN
+		-- INNER JOIN TB_CRS_SBJ_CNTS X ON Z.CRS_CRE_CD = X.CRS_CRE_CD AND Z.RESH_SN = X.REF_SN AND X.CNTS_TYPE_CD = 'RESH' 		-- 과정 개설 CRS_CRE_CD
+		INNER JOIN TB_STD_STD D ON A.CRS_TERM_CD = D.CRS_TERM_CD								-- 기수 코드와 연결 CRS_TERM_CD
+		LEFT JOIN TB_ORG_RESH_ANSR C ON D.STD_NO = C.STD_NO AND A.ORG_CD = C.ORG_CD AND B.RESH_SN = C.RESH_SN AND B.RESH_ITEM_SN = C.RESH_ITEM_SN  
+		WHERE 1=1
+			AND A.ORG_CD = #{orgCd}
+			AND A.RESH_TYPE_CD = 'D'
+			AND A.CRS_TERM_CD = #{crsTermCd}
+			AND UPPER(D.ENRL_STS) IN ('NR','N')
+		GROUP BY A.CRS_TERM_CD, A.RESH_SN, D.STD_NO
+		ORDER BY A.CRS_TERM_CD, D.CRS_CURRI_CD, A.RESH_SN, D.DECLS_NO, C.STD_NO DESC, FN_GET_USER_NAME(D.USER_NO)
+	</select>
+	
+	<select id="listOpinion" parameterType="orgReshItemVO" resultType="orgReshItemVO">
+	    SELECT A.ORG_CD 							
+		       , A.RESH_SN 							
+		       , A.USER_NO 								
+		       , A.RESH_ITEM_SN 						
+		       , A.RESH_ANSR 							
+		       , C.USER_NM								
+		       , D.USER_ID								
+		       , A.REG_NO 								
+			    , (SELECT FN_GET_USER_NAME(A.REG_NO) 	
+		             ) AS REG_NM				
+		       , A.REG_DTTM 							
+		       , A.MOD_NO 								
+			    , (SELECT FN_GET_USER_NAME(A.MOD_NO) 	
+		             ) AS MOD_NM				
+		       , A.MOD_DTTM 							
+		    FROM TB_ORG_RESH_ANSR A, TB_USR_USER_INFO C, TB_USR_LOGIN D	
+		   WHERE A.ORG_CD = #{orgCd}		
+		     AND A.RESH_SN = #{reshSn}					
+		     AND A.RESH_ITEM_SN = #{reshItemSn}			
+		     AND A.USER_NO = C.USER_NO					
+		     AND C.USER_NO = D.USER_NO	
+		<if test = "reshAnsr != null and reshAnsr != ''">
+	    	AND A.RESH_ANSR = #{reshAnsr}
+	    </if>	
+		<choose>
+			<when test = "sortKey != null and sortKey == 'USER_NM_ASC'">
+				 ORDER BY C.USER_NM ASC 	
+			</when>
+			<when test = "sortKey != null and sortKey == 'USER_NM_DESC'">
+			 	ORDER BY C.USER_NM DESC
+			</when>
+			<when test = "sortKey != null and sortKey == 'USER_ID_ASC'">
+			 	ORDER BY D.USER_ID ASC
+			</when>
+			<when test = "sortKey != null and sortKey == 'USER_ID_DESC'">
+			 	ORDER BY D.USER_ID DESC 	
+			</when>
+			<otherwise>
+			   ORDER BY A.REG_DTTM
+			</otherwise>
+		</choose>
+	</select>
+	
+</mapper>	

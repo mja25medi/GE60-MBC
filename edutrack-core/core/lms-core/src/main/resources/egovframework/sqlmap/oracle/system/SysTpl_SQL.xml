@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.system.tpl.service.impl.SysTplMapper">	
+	
+	<sql id="selectQuery">
+		SELECT TPL_CD as tplCd
+		     , TPL_NM as tplNm
+		     , TPL_DESC as tplDesc
+		     , TPL_ODR as tplOdr
+		     , MAIN_IMG_FILE_SN as mainImgFileSn
+		     , SUB_IMG_FILE_SN as subImgFileSn
+		     , USE_YN as useYn
+		     , REG_NO as regNo
+		     , (SELECT FN_GET_USER_NAME(REG_NO) FROM DUAL) AS regNm
+		     , REG_DTTM as regDttm
+		     , MOD_NO as modNo
+		     , (SELECT FN_GET_USER_NAME(MOD_NO) FROM DUAL) AS modNm
+		     , MOD_DTTM as modDttm
+		  FROM TB_SYS_TPL
+		 WHERE '1' = '1'	
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		<if test = "useYn != null and useYn != ''">
+		   AND USE_YN = #{useYn}
+		</if>
+		 ORDER BY TPL_ODR
+	</sql>		
+
+	<select id="list" parameterType="sysTplVO" resultType="sysTplVO">
+		/*
+			 SQL ID : list
+			 설  명 : 시스템 템플릿의 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	</select>
+	
+	<select id="listPageing" parameterType="sysTplVO" resultType="sysTplVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 시스템 템플릿의 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="sysTplVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 시스템 템플릿의 전체 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>	
+	
+	<select id="select" parameterType="sysTplVO" resultType="sysTplVO">
+		/*
+			 SQL ID : select
+			 설  명 : 시스템 템플릿의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+           AND TPL_CD = #{tplCd}	 	
+	</select>	
+	
+	<insert id="insert" parameterType="sysTplVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 시스템 템플릿의 정보 등록
+	 	*/
+		INSERT INTO TB_SYS_TPL (
+		       TPL_CD
+		     , TPL_NM
+		     , TPL_DESC
+		     , TPL_ODR
+		     , MAIN_IMG_FILE_SN
+		     , SUB_IMG_FILE_SN
+		     , USE_YN
+		     , REG_NO
+		     , REG_DTTM
+		     , MOD_NO
+		     , MOD_DTTM
+		) VALUES (
+		       #{tplCd}
+		     , #{tplNm}
+		     , #{tplDesc}
+		     , ( SELECT NVL(MAX(TPL_ODR),0)+1
+		           FROM TB_SYS_TPL )
+		     , #{mainImgFileSn}
+		     , #{subImgFileSn}
+		     , #{useYn}
+		     , #{regNo}
+		     , TO_CHAR(SYSDATE, 'yyyymmddhh24miss')
+		     , #{modNo}
+		     , TO_CHAR(SYSDATE, 'yyyymmddhh24miss')
+		)	 	
+	</insert>
+	
+	<update id="update" parameterType="sysTplVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 시스템 템플릿의 정보 수정
+	 	*/
+		UPDATE TB_SYS_TPL
+		   SET TPL_NM = #{tplNm}
+		     , TPL_DESC = #{tplDesc}
+		     , TPL_ODR = #{tplOdr}
+		     , MAIN_IMG_FILE_SN = #{mainImgFileSn}
+		     , SUB_IMG_FILE_SN = #{subImgFileSn}
+		     , USE_YN = #{useYn}
+		     , MOD_NO = #{modNo}
+		     , MOD_DTTM = TO_CHAR(SYSDATE, 'yyyymmddhh24miss')
+		 WHERE TPL_CD = #{tplCd}	 	
+	</update>	
+
+	<delete id="delete" parameterType="sysTplVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 시스템 템플릿의 정보 삭제
+	 	*/
+		DELETE FROM TB_SYS_TPL
+		 WHERE TPL_CD = #{tplCd}
+	</delete>
+	 
+</mapper>

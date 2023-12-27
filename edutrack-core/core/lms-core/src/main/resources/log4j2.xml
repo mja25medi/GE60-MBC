@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration shutdownHook="disable">
+	<Appenders>
+		<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d %5p [%c] %m%n" />
+		</Console>
+		<File name="file" fileName="./logs/edutrack-lms-admin.log" append="false">
+			<PatternLayout pattern="%d %5p [%c] %m%n" />
+		</File>
+	</Appenders>
+	
+	<Loggers>
+		<logger name="egovframework" level="${log.level.edutrack}" additivity="false">
+			<AppenderRef  ref="console" />
+		</logger>
+	
+		<!-- log SQL with timing information, post execution -->
+		<logger name="jdbc.connection" level="${log.level.jdbc}" additivity="false">
+			<AppenderRef  ref="console" />
+		</logger>
+		
+		<logger name="jdbc.sqltiming" level="${log.level.jdbc}" additivity="false">
+			<AppenderRef  ref="console" />
+		</logger>
+		
+		<logger name="jdbc.sqlonly" level="${log.level.jdbc}" additivity="false"> 
+			<appender-ref ref="console"/> 
+		</logger>
+		
+		<logger name="jdbc.audit" level="${log.level.jdbc}" additivity="false"> 
+			<appender-ref ref="console"/> 
+		</logger>
+		
+		<!-- log SQL with timing information, post execution -->
+		<logger name="jdbc.resultset" level="ERROR" additivity="false">
+			<AppenderRef  ref="console" />
+		</logger>
+		<logger name="jdbc.resultsettable" level="ERROR" additivity="false">
+			<AppenderRef  ref="console" />
+		</logger>
+	
+		<logger name="org.springframework" level="${log.level.spring}" additivity="false">
+			<AppenderRef  ref="console" />
+		</logger>
+	
+		<root level="${log.level.root}">
+			<AppenderRef  ref="console" />
+		</root>
+	</Loggers>
+	                   
+</Configuration>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.module.lecture.project.board.atcl.service.impl.PrjBbsAtclMapper">	
+
+	<select id="selectKey" resultType="Integer">
+		SELECT SQ_LEC_PRJT_BBS_ATCL.nextVal  AS ATCL_SN FROM DUAL
+	</select>
+
+	<sql id="selectColumnQuery">
+		      		  CRS_CRE_CD                                    
+		      		 ,PRJT_SN                                   	
+		      		 ,BBS_CD                                    	
+		            ,(SELECT BBS_NM FROM TB_LEC_PRJT_BBS           
+		               WHERE  CRS_CRE_CD = A.CRS_CRE_CD            
+		                 AND PRJT_SN = A.PRJT_SN                	
+		                 AND BBS_CD = A.BBS_CD) BBS_NM             
+		      		 ,ATCL_SN                                   	
+		            ,PAR_ATCL_SN                                   
+		            ,ATCL_TITLE                                    
+		            ,ATCL_CTS                                      
+		            ,ATCL_LVL                                      
+		            ,ATCL_ODR                                      
+		            ,HITS                                          
+		            ,REG_NO                                        
+		            ,FN_GET_USER_NAME(REG_NO) REG_NM               
+		            ,FN_GET_USER_ID(REG_NO) REG_ID		            
+		            ,REG_DTTM                                      
+		            ,MOD_NO                                        
+		            ,MOD_DTTM                                      
+	</sql>
+	
+	<sql id="selectQuery">
+		  SELECT 
+		  <include refid="selectColumnQuery" />                                   
+		  FROM TB_LEC_PRJT_BBS_ATCL A                          
+		  WHERE 1 = 1								
+	</sql>
+
+
+ 	<select id="list" parameterType="prjBbsAtclVO" resultType="prjBbsAtclVO">
+	    <include refid="selectQuery" />
+	</select>
+
+	<select id="count" parameterType="prjBbsAtclVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM TB_LEC_PRJT_BBS_ATCL A                          
+		WHERE 1 = 1	
+	</select>
+	
+     <select id="listPageing" parameterType="prjBbsAtclVO" resultType="prjBbsAtclVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectQuery" />
+		      	 AND CRS_CRE_CD = #{crsCreCd}										
+		      	 AND PRJT_SN = #{prjtSn} 											
+		      	 AND BBS_CD = DECODE(#{bbsCd},'',A.BBS_CD, #{bbsCd})				
+		      	  AND DECODE(#{searchKey}, 										
+		      	      'regNm', (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL),	
+		      	      A.ATCL_TITLE ) LIKE '%'||NVL(#{searchValue}, '')||'%'		
+		      START WITH A.PAR_ATCL_SN IS NULL         						
+		    CONNECT BY A.PAR_ATCL_SN = PRIOR A.ATCL_SN 						
+		      ORDER SIBLINGS BY A.ATCL_ODR DESC									    
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+
+	<select id="select" parameterType="prjBbsAtclVO" resultType="prjBbsAtclVO">
+	    <include refid="selectQuery" />
+	    		AND ATCL_SN = #{atclSn}		
+	</select>
+
+    <insert id="insert" parameterType="prjBbsAtclVO">
+   
+			INSERT INTO TB_LEC_PRJT_BBS_ATCL (  						
+				   CRS_CRE_CD			       							
+				 , PRJT_SN			      								
+				 , BBS_CD			       								
+				 , ATCL_SN			      								
+				 , PAR_ATCL_SN			       							
+				 , ATCL_TITLE		     								
+				 , ATCL_CTS			      								
+				 , ATCL_LVL			      								
+				 , ATCL_ODR			      								
+				 , HITS			      									
+				 , REG_NO			       								
+				 , REG_DTTM			       								
+				 , MOD_NO			       								
+				 , MOD_DTTM			       								
+			) VALUES ( 					       							
+				   #{crsCreCd} 					      					
+				 , #{prjtSn}					       						
+				 , #{bbsCd}					       						
+			     , #{atclSn}
+				 , #{parAtclSn}					      					
+				 , #{atclTitle}					       					
+				 , #{atclCts}					       						
+				 , #{atclLvl}					       						
+		        , NVL(( SELECT MAX(NVL(ATCL_ODR,0)) + 1				
+		             FROM TB_LEC_PRJT_BBS_ATCL							
+		            WHERE CRS_CRE_CD = #{crsCreCd}						
+		              AND BBS_CD = #{bbsCd}								
+		              AND NVL(PAR_ATCL_SN,1) = NVL(#{parAtclSn},1) ),1)	
+				 , #{hits}						      					
+				 , #{regNo}					     						
+				 , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')					
+				 , #{modNo}					       						
+				 , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')					
+			)
+    </insert>
+
+
+   <update id="update" parameterType="prjBbsAtclVO">
+		  UPDATE  TB_LEC_PRJT_BBS_ATCL									
+			  SET  ATCL_TITLE = #{atclTitle}				      				
+				 , ATCL_CTS = #{atclCts}						      			
+				 , MOD_NO = #{modNo}					       				
+				 , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')		
+		   WHERE ATCL_SN = #{atclSn}										
+    </update>
+	
+	<delete id="delete" parameterType="prjBbsAtclVO">
+		DELETE FROM TB_LEC_PRJT_BBS_ATCL WHERE ATCL_SN = #{atclSn}
+   </delete>
+	
+
+	<delete id="deleteAll" parameterType="prjBbsAtclVO">
+		DELETE FROM TB_LEC_PRJT_BBS_ATCL					 
+		   WHERE BBS_CD	  		=	#{bbsCd}       
+   </delete>
+	
+	<delete id="deleteBbsAll" parameterType="prjBbsAtclVO">
+		DELETE FROM TB_LEC_PRJT_BBS_ATCL					 
+		   WHERE BBS_CD	  		=	#{bbsCd}  
+   </delete>
+   <update id="hitsup" parameterType="prjBbsAtclVO">
+		  UPDATE TB_LEC_PRJT_BBS_ATCL		                                    
+			  SET HITS  =	 HITS +	1	                                       	
+		      	 WHERE CRS_CRE_CD = #{crsCreCd}									
+		      	 AND PRJT_SN = #{prjtSn} 											
+		      	 AND ATCL_SN = #{atclSn} 											
+		      	 AND BBS_CD = DECODE(#{bbsCd},'',BBS_CD, #{bbsCd})											
+    </update>
+
+
+</mapper>

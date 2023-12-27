@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.log.orgstatus.service.impl.LogOrgStatusMapper">	
+
+	
+	<sql id="selectQuery">
+		<![CDATA[
+			SELECT A.ORG_CD as orgCd
+			     , A.ORG_NM as orgNm
+			     , A.DOMAIN_NM as domainNm
+			     , ( SELECT COUNT(*)
+			           FROM tb_usr_login T1, tb_usr_user_info T2
+			          WHERE T1.USER_NO = T2.USER_NO
+			            AND T1.USER_STS = 'U'
+			            AND T2.ORG_CD = A.ORG_CD ) AS userUseCnt
+			     , ( SELECT COUNT(*)
+			           FROM tb_usr_login T1, tb_usr_user_info T2
+			          WHERE T1.USER_NO = T2.USER_NO
+			            AND T1.USER_STS = 'D'
+			            AND T2.ORG_CD = A.ORG_CD ) AS userOutCnt
+			     , (SELECT COUNT(*)
+			     		FROM tb_crs_crs T1
+			     	  WHERE T1.ORG_CD = A.ORG_CD
+			     	   AND T1.USE_YN = 'Y') as crsUseCnt
+			     , (SELECT COUNT(*)
+			     		FROM tb_crs_crs T1
+			     	  WHERE T1.ORG_CD = A.ORG_CD
+			     	   AND T1.USE_YN != 'Y') as crsNouseCnt
+			     , (SELECT COUNT(*)
+			     		FROM tb_crs_crs T1, tb_crs_cre_crs T2
+			     		WHERE T1.CRS_CD = T2.CRS_CD
+			     		 AND T1.ORG_CD = A.ORG_CD
+			     		 AND DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 
+			     		 		<= T1.ENRL_START_DTTM) as creCrsBefCnt
+			     , (SELECT COUNT(*)
+			     		FROM tb_crs_crs T1, tb_crs_cre_crs T2
+			     		WHERE T1.CRS_CD = T2.CRS_CD
+			     		 AND T1.ORG_CD = A.ORG_CD
+			     		 AND DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 
+			     		 		BETWEEN T1.ENRL_START_DTTM AND T1.ENRL_END_DTTM) as creCrsIngCnt
+			     , (SELECT COUNT(*)
+			     		FROM tb_crs_crs T1, tb_crs_cre_crs T2
+			     		WHERE T1.CRS_CD = T2.CRS_CD
+			     		 AND T1.ORG_CD = A.ORG_CD
+			     		 AND DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 
+			     		 		>= T1.ENRL_END_DTTM) as creCrsEndCnt
+			     , (SELECT COUNT(*)
+			     		FROM tb_std_std T1, tb_crs_cre_crs T2
+			     		WHERE T1.CRS_CRE_CD = T2.CRS_CRE_CD
+			     		 AND T2.ORG_CD = A.ORG_CD
+			     		 AND T1.ENRL_STS = 'S') as stuEnrlCnt
+			     , (SELECT COUNT(*)
+			     		FROM tb_std_std T1, tb_crs_cre_crs T2
+			     		WHERE T1.CRS_CRE_CD = T2.CRS_CRE_CD
+			     		 AND T2.ORG_CD = A.ORG_CD
+			     		 AND T1.ENRL_STS = 'C') as stuCpltCnt
+			     , (SELECT COUNT(*)
+			     		FROM tb_std_std T1, tb_crs_cre_crs T2
+			     		WHERE T1.CRS_CRE_CD = T2.CRS_CRE_CD
+			     		 AND T2.ORG_CD = A.ORG_CD
+			     		 AND T1.ENRL_STS = 'F') as stuFailCnt
+			     , REG_DTTM as regDttm
+			  FROM tb_org_org_info A
+			 WHERE A.ORG_CD IS NOT NULL	
+		]]>
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		<if test = "useYn != null and useYn != ''">
+		   AND USE_YN = #{useYn}
+		</if>
+		<if test = "searchValue != null and searchValue != ''">
+		   AND ORG_NM like CONCAT('%', #{searchValue}, '%')
+		</if>
+	</sql>		
+
+	<select id="list" parameterType="logOrgStatusVO" resultType="logOrgStatusVO">
+		/*
+			 SQL ID : list
+			 설  명 : 기관 상태 로그 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	 	 ORDER BY REG_DTTM
+	</select>
+	
+	<select id="listPageing" parameterType="logOrgStatusVO" resultType="logOrgStatusVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 기관 상태 로그 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+	 	ORDER BY regDttm
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="logOrgStatusVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 기관 상태 로그 페이징 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>	
+	
+	<select id="selectTotalStatus" parameterType="logOrgStatusVO" resultType="logOrgStatusVO">
+		/*
+			 SQL ID : selectTotalStatus
+			 설  명 : 시스템 총 현황 검색
+	 	*/
+		SELECT ( SELECT COUNT(*)
+		           FROM tb_org_org_info
+		          WHERE USE_YN = 'Y' ) AS totalOrgCnt
+		     , ( SELECT COUNT(*)
+		           FROM tb_usr_login T1, tb_usr_user_info T2
+		          WHERE T1.USER_NO = T2.USER_NO
+		            AND T1.USER_STS = 'U'
+		            AND T2.ORG_CD IS NOT NULL) AS totalUserCnt
+		     , 0 as totalCrsCnt
+		  FROM DUAL
+	</select>
+	
+	<select id="selectOrgStatus" parameterType="logOrgStatusVO" resultType="logOrgStatusVO">
+		/*
+			 SQL ID : selectOrgStatus
+			 설  명 : 사이트별 메인페이지 현황
+	 	*/
+	 	<![CDATA[
+	 		SELECT
+			    ( SELECT COUNT(*)
+			           FROM tb_usr_login A, tb_usr_user_info B
+			          WHERE A.USER_NO = B.USER_NO
+			            AND B.ORG_CD = #{orgCd}
+			            AND A.USER_STS = 'U' ) AS totalUserCnt
+			 	, ( SELECT NVL((SUM(CONN_CNT)),0)
+			           FROM tb_log_sys_conn_log
+			          WHERE ORG_CD = #{orgCd}
+			            AND CONCAT(YEAR,MONTH,DAY) = DATE_FORMAT(NOW(), '%Y%m%d') ) AS todayConnectCnt
+			     , ( SELECT NVL((SUM(LOGIN_CNT)),0)
+			           FROM tb_log_sys_login_log
+			          WHERE ORG_CD = #{orgCd}
+			            AND CONCAT(YEAR,MONTH,DAY) = DATE_FORMAT(NOW(), '%Y%m%d') ) AS todayLoginCnt
+			     , ( SELECT COUNT(*)
+			           FROM tb_brd_bbs_atcl
+			          WHERE ORG_CD = #{orgCd}
+			            AND (NOW() - STR_TO_DATE(REG_DTTM,'%Y%m%d%H%i%s')) <= 3 ) AS newAtclCnt
+			     , ( SELECT COUNT(*)
+			     	 FROM tb_org_org_info ) AS totalOrgCnt
+			     , ( SELECT COUNT(*)
+			     	 FROM tb_org_org_info
+			     	 WHERE SITE_USAGE_CD = 'Y' ) AS totalDCnt
+			     , ( SELECT COUNT(*)
+			     	 FROM tb_org_org_info
+			     	 WHERE SITE_USAGE_CD = 'N' ) AS totalECnt
+			     , ( SELECT COUNT(*)
+			           FROM tb_usr_login A, tb_usr_user_info B, tb_org_org_info C
+			          WHERE A.USER_NO = B.USER_NO
+			            AND A.USER_STS = 'U'
+			            AND B.ORG_CD = C.ORG_CD
+			            AND C.SITE_USAGE_CD = 'Y' ) AS totalDUserCnt
+			     , ( SELECT COUNT(*)
+			           FROM tb_usr_login A, tb_usr_user_info B, tb_org_org_info C
+			          WHERE A.USER_NO = B.USER_NO
+			            AND A.USER_STS = 'U'
+			            AND B.ORG_CD = C.ORG_CD
+			            AND C.SITE_USAGE_CD = 'N' ) AS totalEUserCnt       	 	 	  	 	       
+			  FROM DUAL
+		]]>
+	</select>	
+
+</mapper>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.module.lecture.project.board.cmnt.service.impl.PrjBbsCmntMapper">	
+	<select id="selectKey" resultType="Integer">
+		SELECT SQ_LEC_PRJT_BBS_CMNT.nextVal  AS CMNT_SN FROM DUAL
+	</select>
+
+	<sql id="selectColumnQuery">
+		 		 CRS_CRE_CD 						                                             
+		        ,PRJT_SN  						  	                                             
+		        ,BBS_CD							                                             
+		        ,ATCL_SN  							                                             
+		        ,CMNT_SN  							                                             
+		        ,CMNT_CTS  						                                             
+		        ,EMOTICON_NO						                                             
+		        ,FN_GET_USER_NAME(REG_NO) REG_NM	                                             
+		        ,REG_NO  						 	                                
+		        ,REG_DTTM							 
+		        ,MOD_NO							                                             
+		        ,MOD_DTTM							                                             
+		 FROM TB_LEC_PRJT_BBS_CMNT			
+	</sql>
+	
+	<sql id="selectQuery">
+		  SELECT 
+		  <include refid="selectColumnQuery" />						                                             
+		 FROM TB_LEC_PRJT_BBS_CMNT			
+	</sql>
+
+	<select id="count" parameterType="prjBbsCmntVO" resultType="Integer">
+		SELECT 
+			COUNT(*)					                                             
+		FROM TB_LEC_PRJT_BBS_CMNT		
+	</select>
+		
+ 	<select id="list" parameterType="prjBbsCmntVO" resultType="prjBbsCmntVO">
+	    <include refid="selectQuery" />
+	</select>
+
+     <select id="listPageing" parameterType="prjBbsCmntVO" resultType="prjBbsCmntVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectQuery" />
+		   WHERE ATCL_SN = #{atclSn}							
+			ORDER BY CMNT_SN								
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+
+	<select id="select" parameterType="prjBbsCmntVO" resultType="prjBbsCmntVO">
+	    <include refid="selectQuery" />
+		    WHERE CMNT_SN     = #{cmntSn}            
+		    ORDER BY CMNT_SN DESC        	    
+	</select>
+
+    <insert id="insert" parameterType="prjBbsCmntVO">
+			INSERT INTO TB_LEC_PRJT_BBS_CMNT (  	                  
+					 CRS_CRE_CD 					                  
+					 ,PRJT_SN  					       	              
+					 ,BBS_CD						                  
+					 ,ATCL_SN  					      	              
+					 ,CMNT_SN  					       	              
+					 ,CMNT_CTS  					                  
+					 ,EMOTICON_NO				      	              
+					 ,REG_NO  					       	              
+					 ,REG_DTTM				      		              
+					 ,MOD_NO					      	              
+					 ,MOD_DTTM				      		              
+			) VALUES ( 					       		                  
+					  #{crsCreCd} 	                                  
+					, #{prjtSn}  		                                  
+					, #{bbsCd}		                                  
+					, #{atclSn}  		                                  
+					, #{cmntSn}  		                                  
+					, #{cmntCts}  	                                  
+					, #{emoticonNo}	                                  
+					, #{regNo}  		                                  
+					, TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')		      
+					, #{modNo}		                                  
+					, TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')		      
+			)	
+    </insert>
+
+	
+	<delete id="delete" parameterType="prjBbsCmntVO">
+		  DELETE FROM TB_LEC_PRJT_BBS_CMNT					
+			WHERE CMNT_SN = #{cmntSn}			
+   </delete>
+   
+ 	<delete id="deleteAtclAll" parameterType="prjBbsCmntVO">
+		   DELETE FROM TB_LEC_PRJT_BBS_CMNT					
+			WHERE ATCL_SN = #{atclSn}					
+   </delete>
+ 
+ 	<delete id="deleteBbsAll" parameterType="prjBbsCmntVO">
+		  DELETE FROM TB_LEC_PRJT_BBS_CMNT					
+			WHERE BBS_CD = #{bbsCd}								
+   </delete>
+ 	<delete id="deletePrjAll" parameterType="prjBbsCmntVO">
+		  DELETE FROM TB_LEC_PRJT_BBS_CMNT					
+			WHERE PRJT_SN = #{prjtSn}								
+   </delete>
+ 	
+
+
+</mapper>

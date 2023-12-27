@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.org.resh.service.impl.OrgReshMapper">	
+	<select id="selectKey" resultType="Integer">
+	    SELECT nextval(SQ_ORG_RESH) AS RESH_SN
+	</select>
+	<sql id="selectColumnQuery">
+		<![CDATA[
+				 A.ORG_CD	
+		       , A.RESH_SN 									
+		       , A.USE_YN
+		       , A.RESH_TITLE
+		       , A.RESH_CTS
+		       , A.START_DTTM 									
+		       , A.END_DTTM 									
+		       , A.RESH_TYPE_CD
+		       , A.RESH_TYPE
+		       , IFNULL(FN_GET_NULL(A.REG_YN),'N') AS REG_YN
+		       , ( SELECT COUNT(1)  
+		            FROM TB_ORG_RESH_ITEM  
+		           WHERE RESH_SN = A.RESH_SN ) AS ITEM_CNT									
+		 	   , A.REG_NO
+		 	   , (SELECT FN_GET_USER_NAME(REG_NO)) AS REG_NM
+		       , A.REG_DTTM  
+		       , A.MOD_NO 
+		       , (SELECT FN_GET_USER_NAME(MOD_NO)) AS MOD_NM
+		       , A.MOD_DTTM 
+		       , (SELECT COUNT(DISTINCT IT.USER_NO) FROM TB_ORG_RESH_ANSR IT WHERE IT.ORG_CD = A.ORG_CD AND IT.RESH_SN = A.RESH_SN) AS RESH_CNT
+		 ]]>
+	</sql>
+	
+	<sql id="selectQuery">
+		  SELECT 
+		  <include refid="selectColumnQuery" />
+		  FROM TB_ORG_RESH A
+		  WHERE 1=1		
+	</sql>
+	<sql id="selectMyQuery">
+		  SELECT 
+		  <include refid="selectColumnQuery" />
+		       , CASE WHEN ( SELECT COUNT(1) 					
+		                       FROM TB_ORG_RESH_ANSR		
+		                      WHERE RESH_SN = A.RESH_SN
+		                        AND USER_NO = #{userNo}						
+		                         ) > 0			
+		              THEN 'Y' ELSE 'N' END AS JOIN_YN	
+		              
+		       , CASE WHEN DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 			
+		                   BETWEEN IFNULL(FN_GET_NULL(A.START_DTTM),'19000101000001')		
+		                       AND IFNULL(FN_GET_NULL(A.END_DTTM),'99991231235959')			       
+		              THEN 'Y' ELSE 'N' END AS ANSR_USE_YN		 
+	
+		        , ( SELECT REG_DTTM							
+		             FROM TB_ORG_RESH_ANSR						
+		            WHERE RESH_SN = A.RESH_SN
+		              AND USER_NO = #{userNo}
+		              LIMIT 1) AS SEND_REG_DTTM			              					
+		  FROM TB_ORG_RESH A
+		  WHERE 1=1		
+	</sql>	
+	<sql id="selectListQuery">
+		 SELECT * FROM (
+		<include refid="selectQuery" />
+		<if test = "orgCd != null and orgCd != ''">
+		  	AND A.ORG_CD = #{orgCd}
+		  </if>				
+			
+		  <if test = "reshTypeCd != null and reshTypeCd != ''">
+		  	AND A.RESH_TYPE_CD = #{reshTypeCd}
+		  </if>
+		<if test = "useYn != null and useYn != ''">                          			
+	    	AND A.USE_YN = #{useYn}			
+	    </if>	
+		<if test = "regYn != null and regYn != ''">                          			
+	    	AND A.REG_YN = #{regYn}  
+	    </if>	
+		<if test = "searchValue != null and searchValue != ''">                          			
+	   		AND A.RESH_TITLE like CONCAT('%', #{searchValue}, '%')  
+	    </if>
+          ) T  
+	</sql>
+	<sql id="selectMyListQuery">
+		 SELECT * FROM (
+			<include refid="selectMyQuery" />
+			<include refid="whereMyListQuery" />
+          ) T  
+	</sql>
+	
+	<sql id="whereMyListQuery">
+		AND A.START_DTTM IS NOT NULL 
+			AND A.START_DTTM != ''
+			AND A.END_DTTM IS NOT NULL 
+			AND A.END_DTTM != ''
+		<if test = "orgCd != null and orgCd != ''">
+		  	AND A.ORG_CD = #{orgCd}
+		  </if>				
+		  <if test = "reshTypeCd != null and reshTypeCd != ''">
+		  	AND A.RESH_TYPE_CD = #{reshTypeCd}
+		  </if>
+		<if test = "useYn != null and useYn != ''">                          			
+	    	AND A.USE_YN = #{useYn}			
+	    </if>	
+		<if test = "regYn != null and regYn != ''">                          			
+	    	AND A.REG_YN = #{regYn}  
+	    </if>	
+		<if test = "searchValue != null and searchValue != ''">                          			
+	   		AND A.RESH_TITLE like CONCAT('%', #{searchValue}, '%')  
+	    </if>
+	    <if test = "joinYn != null and joinYn != ''">
+			<if test='joinYn == "Y"'>
+	    	AND 
+			  'Y' =
+				(CASE WHEN ( SELECT COUNT(1) 					
+						   FROM tb_org_resh_ansr		
+						  WHERE RESH_SN = A.RESH_SN
+							AND ORG_CD = A.ORG_CD
+							AND USER_NO = #{userNo}
+							 ) > 0			
+				  THEN 'Y' ELSE 'N' END )			 			 
+			</if>
+			<if test='joinYn == "N"'>
+	    	AND 
+			  'N' =
+				(CASE WHEN ( SELECT COUNT(1) 					
+						   FROM tb_org_resh_ansr		
+						  WHERE RESH_SN = A.RESH_SN
+							AND ORG_CD = A.ORG_CD
+							AND USER_NO = #{userNo}
+							 ) > 0			
+				  THEN 'Y' ELSE 'N' END )			 			 
+			</if>  
+	    </if>
+	</sql>
+	
+	<select id="count" parameterType="egovframework.edutrack.modules.org.resh.service.OrgReshVO" resultType="Integer">
+		SELECT 
+			COUNT(1)
+		FROM
+		(
+		<include refid="selectQuery" />
+		<if test = "orgCd != null and orgCd != ''">                          			
+			AND A.ORG_CD = #{orgCd}
+	    </if>
+		<if test = "reshTypeCd != null and reshTypeCd != ''">
+			AND A.RESH_TYPE_CD = #{reshTypeCd}
+		</if>	
+		<if test = "useYn != null and useYn != ''">                          			
+	    	AND A.USE_YN = #{useYn}			
+	    </if>	
+		<if test = "regYn != null and regYn != ''">                          			
+	    	AND A.REG_YN = #{regYn}			
+	    </if>
+	    <if test = "searchValue != null and searchValue != ''">                          			
+	   		AND A.RESH_TITLE like CONCAT('%', #{searchValue}, '%') 
+	    </if>	
+         ) AS A 
+	</select>
+		
+	<select id="list" parameterType="egovframework.edutrack.modules.org.resh.service.OrgReshVO" resultType="egovframework.edutrack.modules.org.resh.service.OrgReshVO">
+	    <include refid="selectListQuery" />
+		<if test = "sortKey != null and sortKey != ''">                          			
+			<choose>
+				<when test = "sortKey == 'TITLE_ASC'">
+					 ORDER BY RESH_TYPE_CD ASC, RESH_TITLE ASC  
+				</when>
+				<when test = "sortKey == 'TITLE_DESC'">
+					 ORDER BY RESH_TYPE_CD ASC, RESH_TITLE DESC  
+				</when>
+				<when test = "sortKey == 'CNT_ASC'">
+					 ORDER BY RESH_TYPE_CD ASC, ITEM_CNT ASC  
+				</when>
+				<when test = "sortKey == 'CNT_DESC'">
+					 ORDER BY RESH_TYPE_CD ASC, ITEM_CNT DESC  
+				</when>
+				<when test = "sortKey == 'REGDATE_ASC'">
+					 ORDER BY RESH_TYPE_CD ASC, REG_DTTM ASC   
+				</when>
+				<when test = "sortKey == 'REGDate_DESC'">
+					 ORDER BY RESH_TYPE_CD ASC, REG_DTTM DESC  
+				</when>
+				<otherwise>
+				   ORDER BY RESH_TYPE_CD ASC, REG_DTTM DESC, RESH_SN  
+				</otherwise>
+			</choose>
+	    </if>	
+	</select>
+
+	<select id="myList" parameterType="egovframework.edutrack.modules.org.resh.service.OrgReshVO" resultType="egovframework.edutrack.modules.org.resh.service.OrgReshVO">
+	    <include refid="selectMyListQuery" />
+		<if test = "sortKey != null and sortKey != ''">                          			
+			<choose>
+				<when test = "sortKey == 'TITLE_ASC'">
+					 ORDER BY RESH_TYPE_CD ASC, RESH_TITLE ASC  
+				</when>
+				<when test = "sortKey == 'TITLE_DESC'">
+					 ORDER BY RESH_TYPE_CD ASC, RESH_TITLE DESC  
+				</when>
+				<when test = "sortKey == 'CNT_ASC'">
+					 ORDER BY RESH_TYPE_CD ASC, ITEM_CNT ASC  
+				</when>
+				<when test = "sortKey == 'CNT_DESC'">
+					 ORDER BY RESH_TYPE_CD ASC, ITEM_CNT DESC  
+				</when>
+				<when test = "sortKey == 'REGDATE_ASC'">
+					 ORDER BY RESH_TYPE_CD ASC, REG_DTTM ASC   
+				</when>
+				<when test = "sortKey == 'REGDate_DESC'">
+					 ORDER BY RESH_TYPE_CD ASC, REG_DTTM DESC  
+				</when>
+				<otherwise>
+				   ORDER BY RESH_TYPE_CD ASC, REG_DTTM DESC, RESH_SN  
+				</otherwise>
+			</choose>
+	    </if>	
+	</select>
+	
+	<select id="myListCount" parameterType="egovframework.edutrack.modules.org.resh.service.OrgReshVO" resultType="Integer">
+			SELECT COUNT(1)
+			FROM TB_ORG_RESH A
+		  	WHERE 1=1		
+			<include refid="whereMyListQuery" />
+	</select>
+	
+	<select id="myListPageing" parameterType="egovframework.edutrack.modules.org.resh.service.OrgReshVO" resultType="egovframework.edutrack.modules.org.resh.service.OrgReshVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectMyListQuery" />
+	    <include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		<if test = "sortKey != null and sortKey != ''">                          			
+			<choose>
+				<when test = "sortKey == 'TITLE_ASC'">
+					 ORDER BY RESH_TYPE_CD ASC, RESH_TITLE ASC  
+				</when>
+				<when test = "sortKey == 'TITLE_DESC'">
+					 ORDER BY RESH_TYPE_CD ASC, RESH_TITLE DESC  
+				</when>
+				<when test = "sortKey == 'CNT_ASC'">
+					 ORDER BY RESH_TYPE_CD ASC, ITEM_CNT ASC  
+				</when>
+				<when test = "sortKey == 'CNT_DESC'">
+					 ORDER BY RESH_TYPE_CD ASC, ITEM_CNT DESC  
+				</when>
+				<when test = "sortKey == 'REGDATE_ASC'">
+					 ORDER BY RESH_TYPE_CD ASC, REG_DTTM ASC   
+				</when>
+				<when test = "sortKey == 'REGDate_DESC'">
+					 ORDER BY RESH_TYPE_CD ASC, REG_DTTM DESC  
+				</when>
+				<otherwise>
+				   ORDER BY RESH_TYPE_CD ASC, REG_DTTM DESC, RESH_SN  
+				</otherwise>
+			</choose>
+	    </if>	
+	    <include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+
+
+   <select id="listPageing" parameterType="egovframework.edutrack.modules.org.resh.service.OrgReshVO" resultType="egovframework.edutrack.modules.org.resh.service.OrgReshVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectListQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		<if test = "sortKey != null and sortKey != ''">                          			
+			<choose>
+				<when test = "sortKey == 'TITLE_ASC'">
+					 ORDER BY RESH_TITLE ASC  
+				</when>
+				<when test = "sortKey == 'TITLE_DESC'">
+					 ORDER BY RESH_TITLE DESC  
+				</when>
+				<when test = "sortKey == 'CNT_ASC'">
+					 ORDER BY ITEM_CNT ASC  
+				</when>
+				<when test = "sortKey == 'CNT_DESC'">
+					 ORDER BY ITEM_CNT DESC  
+				</when>
+				<when test = "sortKey == 'REGDATE_ASC'">
+					 ORDER BY REG_DTTM ASC   
+				</when>
+				<when test = "sortKey == 'REGDATE_DESC'">
+					 ORDER BY REG_DTTM DESC  
+				</when>
+				<otherwise>
+				   ORDER BY REG_DTTM DESC, RESH_SN  
+				</otherwise>
+			</choose>
+	    </if>
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="searchList" parameterType="egovframework.edutrack.modules.org.resh.service.OrgReshVO" resultType="egovframework.edutrack.modules.org.resh.service.OrgReshVO">
+	    <include refid="selectQuery" />
+	     	AND A.REG_YN = 'Y'
+	    	AND A.RESH_TITLE LIKE CONCAT('%', #{searchValue}, '%') 
+	    ORDER BY RESH_SN 	
+	</select>
+	
+	<select id="select" parameterType="egovframework.edutrack.modules.org.resh.service.OrgReshVO" resultType="egovframework.edutrack.modules.org.resh.service.OrgReshVO">
+	    <include refid="selectQuery" />
+	     AND  A.RESH_SN = #{reshSn}	
+	</select>
+
+    <insert id="insert" parameterType="egovframework.edutrack.modules.org.resh.service.OrgReshVO">
+		  INSERT INTO TB_ORG_RESH (			
+		         ORG_CD
+		       , RESH_SN 								
+		       , USE_YN
+		       , RESH_TITLE
+		       , RESH_CTS						
+		       , START_DTTM 							
+		       , END_DTTM 								
+		       , RESH_TYPE_CD 								
+		       , RESH_TYPE 								
+		       , REG_YN 								
+		       , REG_NO 								
+		       , REG_DTTM 								
+		       , MOD_NO 								
+		       , MOD_DTTM 								
+		  ) VALUES (                                   
+		         #{orgCd} 							
+		       , #{reshSn} 								
+		       , #{useYn}
+		       , #{reshTitle}
+		       , #{reshCts}						
+		       , #{startDttm} 							
+		       , #{endDttm} 								
+		       , #{reshTypeCd} 								
+		       , #{reshType} 								
+		       , #{regYn} 								
+		       , #{regNo} 								
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		       , #{modNo} 								
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+		  )		
+    </insert>
+
+   <update id="update" parameterType="egovframework.edutrack.modules.org.resh.service.OrgReshVO">
+		  UPDATE TB_ORG_RESH								
+		       SET MOD_NO = #{modNo} 									
+		       , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		     <if test = "useYn != null and useYn != ''">  
+			   , USE_YN = #{useYn}
+		     </if>
+		     <if test = "reshTitle != null and reshTitle != ''">  
+		       , RESH_TITLE = #{reshTitle}
+		     </if>
+		     <if test = "reshCts != null and reshCts != ''">  
+		       , RESH_CTS = #{reshCts}							
+		     </if>
+		     <if test = "reshTypeCd != null and reshTypeCd != ''">  
+		       , RESH_TYPE_CD = #{reshTypeCd} 							
+		     </if>
+		     <if test = "reshType != null and reshType != ''">  
+		       , RESH_TYPE = #{reshType} 							
+		     </if>
+		     <if test = "startDttm != null and startDttm != ''">  
+		       , START_DTTM = #{startDttm} 							
+		     </if>
+		     <if test = "endDttm != null and endDttm != ''">  
+		       , END_DTTM = #{endDttm} 								
+		     </if>
+		     <if test = "regYn != null and regYn != ''">  
+		       , REG_YN = #{regYn} 									
+		     </if>
+		   WHERE ORG_CD = #{orgCd} 							
+		     AND RESH_SN = #{reshSn} 
+    </update>
+    
+	<delete id="delete" parameterType="egovframework.edutrack.modules.org.resh.service.OrgReshVO">
+		 	DELETE  FROM TB_ORG_RESH    	
+		    WHERE ORG_CD = #{orgCd} 			
+		     	AND RESH_SN = #{reshSn} 	 
+    </delete>
+    
+    <select id="listResearchPreclusive" parameterType="egovframework.edutrack.modules.org.resh.service.OrgReshVO" resultType="egovframework.edutrack.modules.org.resh.service.OrgReshVO">
+	    <include refid="selectQuery" />
+	    	AND NOT EXISTS (SELECT B.RESH_SN FROM TB_ORG_RESH B WHERE B.ORG_CD = #{orgCd} AND A.CRS_TERM_CD = B.CRS_TERM_CD AND A.RESH_SN = B.RESH_SN)
+		<if test = "orgCd != null and orgCd != ''">                          			
+	   		 AND A.ORG_CD = #{orgCd} 
+	    </if>	
+		<if test = "regYn != null and regYn != ''">                          			
+	   		 AND A.REG_YN = #{regYn}
+	    </if>	
+		<if test = "searchCnt != null and searchCnt != ''">                          			
+	   		 AND ( SELECT COUNT(1) FROM TB_ORG_RESH_ITEM WHERE RESH_SN = A.RESH_SN ) > 0
+	    </if>	
+		ORDER BY RESH_SN 
+	</select>
+
+	<select id="countPaging" parameterType="egovframework.edutrack.modules.org.resh.service.OrgReshAnsrVO" resultType="Integer">
+		  SELECT 
+	 	  COUNT(1)
+	 	  FROM  TB_USR_USER A
+	 	  WHERE USER_STS IN ('U')
+	 	  AND ORG_CD = #{orgCd}
+	</select>
+
+	<select id="listExpulsionStdPageing"  parameterType="egovframework.edutrack.modules.org.resh.service.OrgReshAnsrVO" resultType="egovframework.edutrack.modules.org.resh.service.OrgReshAnsrVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+		  SELECT 
+	 	  		A.USER_NO
+	 	  	,	(SELECT USER_ID FROM TB_USR_LOGIN WHERE USER_NO = A.USER_NO ) AS USER_ID
+	 	  	,	A.USER_NM
+	 	  	,	(SELECT REG_DTTM FROM tb_org_resh_ansr WHERE USER_NO = A.USER_NO LIMIT 1) AS REG_DTTM
+	 	  FROM  TB_USR_USER_INFO A
+	 	  WHERE USER_STS IN ('U')
+	 	  AND ORG_CD = #{orgCd}
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>	
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="expulsionResh" parameterType="egovframework.edutrack.modules.org.resh.service.OrgReshVO" resultType="egovframework.edutrack.modules.org.resh.service.OrgReshVO">
+	    <include refid="selectQuery" />
+	     AND A.ORG_CD = #{orgCd}
+	     AND A.REG_YN = #{regYn}
+	     AND A.RESH_TYPE_CD = #{reshTypeCd}
+	</select>
+	
+	<select id="listReshForCopy"  parameterType="egovframework.edutrack.modules.org.resh.service.OrgReshVO" resultType="egovframework.edutrack.modules.org.resh.service.OrgReshVO">
+		SELECT
+			 ORG_CD
+	       , RESH_SN 								
+	       , USE_YN
+	       , RESH_TITLE
+	       , RESH_CTS						
+	       , START_DTTM 							
+	       , END_DTTM 								
+	       , RESH_TYPE_CD 								
+	       , RESH_TYPE 								
+	       , REG_YN 								
+	       , REG_NO 								
+	       , REG_DTTM 								
+	       , MOD_NO 								
+	       , MOD_DTTM
+	   	FROM
+	   		TB_ORG_RESH
+	   	WHERE
+	   		ORG_CD = #{orgCd}
+	</select>
+</mapper>	

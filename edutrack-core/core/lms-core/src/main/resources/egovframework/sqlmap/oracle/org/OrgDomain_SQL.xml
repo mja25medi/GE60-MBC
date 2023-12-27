@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.org.domain.service.impl.OrgDomainMapper">	
+	
+	<sql id="selectQuery">
+		SELECT ORG_CD as orgCd
+		     , ORG_DOMAIN as orgDomain
+		     , DFLT_YN as dfltYn
+		     , RPRST_YN as rprstYn
+		     , REG_NO as regNo
+		     , ( SELECT FN_GET_USER_NAME(A.REG_NO)
+		           FROM DUAL) AS regNm
+		     , REG_DTTM as regDttm
+		     , MOD_NO as modNo
+		     , ( SELECT FN_GET_USER_NAME(A.MOD_NO)
+		           FROM DUAL) AS modNm
+		     , MOD_DTTM as modDttm
+		  FROM TB_ORG_DOMAIN A
+		 WHERE ORG_CD = #{orgCd}	
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		 ORDER BY REG_DTTM		
+	</sql>		
+
+	<select id="list" parameterType="orgDomainVO" resultType="orgDomainVO">
+		/*
+			 SQL ID : list
+			 설  명 : 기관 도메인의 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	</select>
+	
+	<select id="listPageing" parameterType="orgDomainVO" resultType="orgDomainVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 기관 도메인의 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="orgDomainVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 기관 도메인의 전체 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>	
+	
+	<select id="select" parameterType="orgDomainVO" resultType="orgDomainVO">
+		/*
+			 SQL ID : select
+			 설  명 : 기관 도메인의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+           AND ORG_DOMAIN = #{orgDomain}	 	
+	</select>	
+	
+	<insert id="insert" parameterType="orgDomainVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 기관 도메인의 정보 등록
+	 	*/
+		INSERT INTO TB_ORG_DOMAIN (
+		       ORG_CD
+		     , ORG_DOMAIN
+		     , DFLT_YN
+		     , RPRST_YN
+		     , REG_NO
+		     , REG_DTTM
+		     , MOD_NO
+		     , MOD_DTTM
+		) VALUES (
+		       #{orgCd}
+		     , #{orgDomain}
+		     , #{dfltYn}
+		     , #{rprstYn}
+		     , #{regNo}
+		     , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		     , #{modNo}
+		     , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		)	 	
+	</insert>
+	
+	<update id="update" parameterType="orgDomainVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 기관 도메인의 정보 수정
+	 	*/
+		UPDATE TB_ORG_DOMAIN
+		   SET DFLT_YN = #{dfltYn}
+		     , RPRST_YN = #{rprstYn}
+		     , MOD_NO = #{modNo}
+		     , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		 WHERE ORG_CD = #{orgCd}
+		   AND ORG_DOMAIN = #{orgDomain}	 	
+	</update>	
+
+	<delete id="delete" parameterType="orgDomainVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 기관 도메인의 정보 삭제
+	 	*/
+		DELETE FROM TB_ORG_DOMAIN
+		 WHERE ORG_CD = #{orgCd}
+		   AND ORG_DOMAIN = #{orgDomain}
+	</delete>
+	
+	<update id="updateRprstN" parameterType="orgDomainVO" >
+		/*
+			 SQL ID : updateRprstN
+			 설  명 : 기관의 대표 도베인을 N 상태로 변경
+	 	*/
+		UPDATE TB_ORG_DOMAIN
+		   SET RPRST_YN = 'N'
+		     , MOD_NO = #{modNo}
+		     , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		 WHERE ORG_CD = #{orgCd}
+	</update>
+
+	<update id="updateRprstY" parameterType="orgDomainVO" >
+		/*
+			 SQL ID : updateRprstY
+			 설  명 : 기관의 대표 도베인 지정
+	 	*/
+		UPDATE TB_ORG_DOMAIN
+		   SET RPRST_YN = 'Y'
+		     , MOD_NO = #{modNo}
+		     , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		 WHERE ORG_CD = #{orgCd}
+		   AND ORG_DOMAIN = #{orgDomain}
+	</update>
+	 
+</mapper>

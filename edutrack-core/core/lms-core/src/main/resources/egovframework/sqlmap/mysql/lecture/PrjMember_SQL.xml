@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.module.lecture.project.member.service.impl.PrjMemberMapper">	
+
+	<sql id="selectQuery">
+		   SELECT  A.CRS_CRE_CD											
+		             ,  A.MBR_ROLE											
+		             ,  A.MBR_SCORE										
+		             ,  A.MOD_DTTM											
+		             ,  A.MOD_NO											
+		             ,  A.PRJT_MBR_SN										
+		             ,  A.PRJT_SN											
+		             ,  A.PRJT_TEAM_SN										
+		             ,  A.REG_DTTM											
+		             ,  A.REG_NO											
+		             ,  A.STD_NO											
+		             ,  A.TEAM_LEADER_DIV									
+		             ,  FN_GET_USER_NAME (B.USER_NO) STD_NM				
+		        	  ,  FN_GET_USER_ID (B.USER_NO) STD_ID					
+		   FROM tb_std_std B
+		   LEFT OUTER JOIN
+		   	TB_LEC_PRJT_TEAM_MBR A
+		   ON A.STD_NO = B.STD_NO        				
+		   WHERE A.CRS_CRE_CD = B.CRS_CRE_CD								
+	</sql>
+
+ 	<select id="stdList" parameterType="prjMemberVO" resultType="prjMemberVO">
+			  SELECT CRS_CRE_CD										             
+		           ,STD_NO											             
+		           ,USER_NO										             
+		           ,FN_GET_USER_NAME (USER_NO) STD_NM				             
+		           ,FN_GET_USER_ID (USER_NO) STD_ID				             
+		       FROM tb_std_std 	    	   				 		             
+		      WHERE ENRL_STS = 'S'									             
+		        AND CRS_CRE_CD = #{crsCreCd}	                   		             
+		      MINUS												             
+		      SELECT A.CRS_CRE_CD									             
+		            ,A.STD_NO										             
+		            ,A.USER_NO										             
+		            ,FN_GET_USER_NAME (USER_NO) STD_NM				             
+		            ,FN_GET_USER_ID (USER_NO) STD_ID				             
+		        FROM tb_std_std A, TB_LEC_PRJT_TEAM_MBR B			             
+		       WHERE A.STD_NO = B.STD_NO          					             
+		         AND A.ENRL_STS = 'S' 								             
+		  	      AND b.PRJT_SN= #{prjtSn}							
+		  	      ORDER BY STD_NM		   						
+	</select>
+ 	<select id="list" parameterType="prjMemberVO" resultType="prjMemberVO">
+	    <include refid="selectQuery" />
+		    AND A.CRS_CRE_CD = #{crsCreCd}						
+		    AND A.PRJT_SN = #{prjtSn}							
+		    AND A.PRJT_TEAM_SN = #{prjtTeamSn}					
+		    ORDER BY STD_NM									
+
+	</select>
+ 	<select id="learnerList" parameterType="prjMemberVO" resultType="prjMemberVO">
+			  SELECT CRS_CRE_CD								            
+		           ,STD_NO									            
+		           ,USER_NO									            
+		           ,FN_GET_USER_NAME (USER_NO) STD_NM			            
+		           ,FN_GET_USER_ID (USER_NO) STD_ID			            
+		       FROM tb_std_std 	       				            
+		      WHERE ENRL_STS = 'S'							            
+		        AND CRS_CRE_CD = #{crsCreCd}			             
+		      ORDER BY STD_NM	                                 		
+
+	</select>
+
+
+	<select id="selectLearnerCnt" parameterType="prjMemberVO" resultType="prjMemberVO">
+		      SELECT COUNT(*) LEARNER_CNT							
+		        FROM tb_std_std									
+		       WHERE ENRL_STS = 'S'								
+		         AND CRS_CRE_CD = #{crsCreCd}				
+	</select>
+
+    <insert id="insert" parameterType="prjMemberVO">
+		   INSERT INTO TB_LEC_PRJT_TEAM_MBR (                             	
+		   	   CRS_CRE_CD                                              	
+		   	,  PRJT_SN                                                 	
+		       ,  PRJT_TEAM_SN                                            	
+		       ,  PRJT_MBR_SN                                            	
+		       ,  STD_NO                                                  	
+		       ,  TEAM_LEADER_DIV                                         	
+		       ,  MBR_ROLE                                                	
+		       ,  MBR_SCORE                                               	
+		       ,  REG_NO                                                  	
+		       ,  REG_DTTM                                                	
+		       ,  MOD_NO                                                  	
+		       ,  MOD_DTTM                                                	
+		                      	                                           	
+		   ) VALUES (	                                                   	
+		   		#{crsCreCd}		                                       	
+		   	,	#{prjtSn}		                                           	
+		       ,	#{prjtTeamSn}		                                       	
+		       ,	NVL((SELECT MAX(PRJT_MBR_SN)+1			               	
+		                 FROM TB_LEC_PRJT_TEAM_MBR AS SUBQUERY),1) 			       	
+		       ,	#{stdNo}		                                    		
+			    ,	NVL((#{teamLeaderDiv}),'N')	       		                
+			    ,	#{mbrRole}	                                           	
+			    ,	#{mbrScore}		                                        
+		       ,	#{regNo}	                                        		
+		       ,	DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')                   
+			    ,	#{modNo}	                                                
+			   ,	DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')                     
+		       )       
+    </insert>
+
+    <insert id="insertMember" parameterType="prjMemberVO">
+		   INSERT INTO TB_LEC_PRJT_TEAM_MBR (                 
+		   	   CRS_CRE_CD                                  
+		   	,  PRJT_SN                                     
+		       ,  PRJT_TEAM_SN                                
+		       ,  PRJT_MBR_SN                                 
+		       ,  STD_NO                                      
+		       ,  TEAM_LEADER_DIV                             
+		       ,  MBR_ROLE                                    
+		       ,  MBR_SCORE                                   
+		       ,  REG_NO                                      
+		       ,  REG_DTTM                                    
+		       ,  MOD_NO                                      
+		       ,  MOD_DTTM )                                  
+		  SELECT  CRS_CRE_CD                                  
+		   	,  #{prjtSn}                                     
+		       ,  PRJT_TEAM_SN                                
+		       ,  PRJT_MBR_SN                                 
+		       ,  STD_NO                                      
+		       ,  TEAM_LEADER_DIV                             
+		       ,  MBR_ROLE                                    
+		       ,  MBR_SCORE                                   
+			    ,  REG_NO                                      
+			    ,  REG_DTTM                                    
+			    ,  MOD_NO                                      
+		       ,  MOD_DTTM                                    
+		   FROM TB_LEC_PRJT_TEAM_MBR                          
+		  WHERE CRS_CRE_CD = #{crsCreCd}	       	                               
+			 AND PRJT_SN  = #{selPrjtSn}       
+    </insert>
+   <update id="update" parameterType="prjMemberVO">
+	             UPDATE TB_LEC_PRJT_TEAM_MBR                   					
+	                SET TEAM_LEADER_DIV =  'N'                 					
+	                  , MOD_NO    =  #{modNo}                   						
+	                  , MOD_DTTM   =  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')     	
+	              WHERE CRS_CRE_CD   =  #{crsCreCd}            						
+	                AND PRJT_TEAM_SN  =  #{prjtTeamSn};
+	                
+	             UPDATE TB_LEC_PRJT_TEAM_MBR                   					
+	                SET TEAM_LEADER_DIV =  #{teamLeaderDiv}                 			
+	                  , MOD_NO    =  #{modNo}                   						
+	                  , MOD_DTTM   =  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')     	
+	              WHERE CRS_CRE_CD   =  #{crsCreCd}            						
+	                AND PRJT_SN    =  #{prjtSn}             							
+	                AND PRJT_TEAM_SN  =  #{prjtTeamSn}            					
+	                AND PRJT_MBR_SN   =  #{prjtMbrSn};            		                            		
+    </update>
+	<update id="updatePrjMbr" parameterType="list" >
+		<foreach collection="list" item="item" index="index" open="DECLARE BEGIN" close="; END;" separator=";">
+		  UPDATE TB_LEC_PRJT_TEAM_MBR       
+		  SET
+		  		  MBR_ROLE  	 =  #{item.mbrRole}                 				
+		        , MOD_NO    	 =  #{item.modNo}                   				
+		        , MOD_DTTM  	 =  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+		  WHERE CRS_CRE_CD    =  #{item.crsCreCd}            					
+		      AND PRJT_SN    	 =  #{item.prjtSn}             					
+		      AND PRJT_TEAM_SN  =  #{item.prjtTeamSn}            					
+		      AND PRJT_MBR_SN   =  #{item.prjtMbrSn}       
+		</foreach>	     
+	</update>
+	<delete id="delete" parameterType="list" >
+		DELETE FROM TB_LEC_PRJT_TEAM_MBR		
+		<where>
+		<foreach collection="list" item="item" index="index" open="" close="" separator="OR">
+		  (
+			 CRS_CRE_CD 	= #{item.crsCreCd}				
+		     AND PRJT_SN		= #{item.prjtSn}				
+		     AND PRJT_TEAM_SN	= #{item.prjtTeamSn}			
+		     AND PRJT_MBR_SN	= #{item.prjtMbrSn}			  
+		  )     
+		</foreach>
+		</where>	     
+	</delete>
+	
+	<delete id="deletePrjAll" parameterType="prjMemberVO">
+		  DELETE FROM TB_LEC_PRJT_TEAM_MBR				
+		   WHERE PRJT_SN		= #{prjtSn}					
+   </delete>
+	<delete id="deletePrjTeamAll" parameterType="prjMemberVO">
+		  DELETE FROM TB_LEC_PRJT_TEAM_MBR				
+		   WHERE PRJT_TEAM_SN	= #{prjtTeamSn}						
+   </delete>
+	
+                                                                                           
+
+</mapper>

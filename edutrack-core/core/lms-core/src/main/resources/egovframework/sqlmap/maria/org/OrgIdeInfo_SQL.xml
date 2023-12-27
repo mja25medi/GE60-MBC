@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.org.ide.service.impl.OrgIdeInfoMapper">	
+
+	<sql id="selectQuery">
+		SELECT ORG_CD as orgCd
+		     , IDE_URL as ideUrl
+		     , USE_YN  as useYn
+		     , REG_NO as regNo
+		     , REG_DTTM as regDttm
+		  FROM tb_org_ide_info A
+		 WHERE ORG_CD = #{orgCd}	
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+	</sql>		
+
+	<select id="list" parameterType="OrgIdeInfoVO" resultType="OrgIdeInfoVO">
+		/*
+			 SQL ID : list
+			 설  명 : IDE URL 정보 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	 	<!-- ORDER BY REG_DTTM -->
+	</select>
+	
+	<select id="listPageing" parameterType="OrgIdeInfoVO" resultType="OrgIdeInfoVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : IDE URL 정보 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+	 	ORDER BY REGDTTM DESC
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="OrgIdeInfoVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : IDE URL 정보 전체 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>	
+	
+	
+	<insert id="insert" parameterType="OrgIdeInfoVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : IDE URL 정보 등록
+	 	*/
+		INSERT INTO tb_org_ide_info (
+		       IDE_URL
+		     , ORG_CD
+		     , USE_YN
+		     , REG_NO
+		     , REG_DTTM
+		) VALUES (
+		      #{ideUrl}
+		     , #{orgCd}
+		     , #{useYn}
+		     , #{regNo}
+		     , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		)	
+	</insert>
+	
+		<update id="updateUseYn" parameterType="OrgIdeInfoVO" >
+		/*
+			 SQL ID : updateUseYn
+			 설  명 : IDE URL 사용 여부 수정
+	 	*/
+		UPDATE tb_org_ide_info
+		   SET USE_YN = #{useYn}
+		 WHERE IDE_URL = #{ideUrl}	 	
+	</update>
+	
+	<delete id="delete" parameterType="OrgIdeInfoVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : IDE URL 정보 삭제
+	 	*/
+		DELETE FROM tb_org_ide_info 
+		 WHERE ORG_CD = #{orgCd} 
+		   AND IDE_URL = #{ideUrl}
+	</delete>
+	 
+	 
+	 <select id="selectIdeUrlCheck" parameterType="OrgIdeInfoVO" resultType="String">
+		SELECT CASE WHEN COUNT(*) = 0 THEN 'Y' ELSE 'N' END AS isUseable
+		  FROM tb_org_ide_info
+		 WHERE IDE_URL = #{ideUrl}
+	</select>
+</mapper>

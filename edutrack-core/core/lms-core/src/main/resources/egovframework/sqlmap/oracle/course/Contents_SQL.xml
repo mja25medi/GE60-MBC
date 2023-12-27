@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.contents.service.impl.ContentsMapper">	
+
+	<select id="selectUnitCd" resultType="String">
+	    SELECT 'CNT'||LPAD(SQ_CRS_SBJ_CNTS.nextVal,9,'0') AS UNIT_CD FROM DUAL
+	</select>
+
+	<sql id="selectContentsQuery">
+		<![CDATA[
+		  SELECT A.SBJ_CD  
+		       , A.UNIT_CD  
+		       , A.PAR_UNIT_CD  
+		       , A.UNIT_NM  
+		       , A.UNIT_LVL  
+		       , A.UNIT_ODR  
+		       , A.UNIT_TYPE  
+		       , A.CNTS_TYPE_CD  
+		       , A.UNIT_FILE_PATH  
+		       , A.QUIZ_CNT  
+		       , A.QUIZ_PASS_SCORE  
+		       , A.PRGR_CHK_TYPE  
+		       , A.CRIT_TM  
+		       , A.TOTAL_PAGE  
+		       , A.PRGR_CHK_YN  
+		       , A.ATCH_FILE_PATH  
+		       , A.MOBILE_FILE_PATH  
+		       , A.MOBILE_FILE_PATH_2  
+		       , A.MOBILE_YN  
+		       , A.OLC_YN  
+		       , A.REG_NO  
+		       , A.REG_DTTM  
+		       , A.MOD_NO  
+		       , A.MOD_DTTM  
+		       , (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) MOD_NM  
+		       , (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) REG_NM  
+		       , NVL(( SELECT UNIT_NM  
+		                 FROM TB_CRS_SBJ_CNTS  
+		                WHERE UNIT_CD = A.PAR_UNIT_CD),'ROOT') AS PAR_UNIT_NM  
+		       , CASE WHEN (A.UNIT_LVL -1) < 0 THEN 0 ELSE (A.UNIT_LVL -1) END PAR_UNIT_LVL  
+		       , ( SELECT MAX(UNIT_ODR)  
+		             FROM TB_CRS_SBJ_CNTS  
+		            WHERE NVL(PAR_UNIT_CD,'1') = NVL(A.PAR_UNIT_CD,'1') ) AS MAX_ODR  
+		       , ( SELECT COUNT(*)  
+		             FROM TB_CRS_SBJ_CNTS  
+		            WHERE PAR_UNIT_CD = A.UNIT_CD ) AS SUB_CNT  
+		       , ( SELECT COUNT(*)  
+		             FROM TB_LEC_BOOKMARK  
+		            WHERE SBJ_CD = A.SBJ_CD  
+		              AND UNIT_CD = A.UNIT_CD ) AS BOOKMARK_CNT  
+		    FROM TB_CRS_SBJ_CNTS A  
+		   WHERE SBJ_CD = #{sbjCd}  
+		]]>
+	</sql>
+
+
+	<select id="listContents" parameterType="contentsVO" resultType="contentsVO">
+	    <include refid="selectContentsQuery" />
+	    AND NVL(PAR_UNIT_CD,'1') = NVL(#{parUnitCd} ,'1')
+	    ORDER BY UNIT_ODR
+	</select>
+	
+	<select id="parListContents" parameterType="contentsVO" resultType="contentsVO">
+	    <include refid="selectContentsQuery" />
+	    AND NVL(UNIT_CD,'1') = NVL(#{parUnitCd} ,'1')
+	    ORDER BY UNIT_ODR
+	</select>	
+	
+	<select id="selectContents" parameterType="contentsVO" resultType="contentsVO">
+	    <include refid="selectContentsQuery" />
+	    <choose>
+		    <when test = 'parUnitCd != null and parUnitCd != ""'>
+				AND UNIT_CD = #{parUnitCd}
+			</when>
+			<otherwise>
+				AND  nvl(UNIT_CD,'') = nvl(#{unitCd},'') 
+			</otherwise>	    
+	    </choose>
+	</select>
+
+    <insert id="insertContents" parameterType="contentsVO">
+		  INSERT INTO TB_CRS_SBJ_CNTS (  
+		         SBJ_CD  
+		       , UNIT_CD  
+		       , PAR_UNIT_CD  
+		       , UNIT_NM  
+		       , UNIT_LVL  
+		       , UNIT_ODR  
+		       , UNIT_TYPE  
+		       , CNTS_TYPE_CD  
+		       , UNIT_FILE_PATH  
+		       , QUIZ_CNT  
+		       , QUIZ_PASS_SCORE  
+		       , PRGR_CHK_TYPE  
+		       , CRIT_TM  
+		       , TOTAL_PAGE  
+		       , PRGR_CHK_YN  
+		       , ATCH_FILE_PATH  
+		       , MOBILE_FILE_PATH  
+		       , MOBILE_FILE_PATH_2  
+		       , MOBILE_YN  
+		       , OLC_YN  
+		       , REG_NO  
+		       , REG_DTTM  
+		       , MOD_NO  
+		       , MOD_DTTM  
+		  ) VALUES (  
+		         #{sbjCd}  
+			   , #{unitCd}
+		       , #{parUnitCd}  
+		       , #{unitNm}  
+		       , #{unitLvl}  
+		       , ( SELECT NVL(MAX(UNIT_ODR),0)+1  
+		             FROM TB_CRS_SBJ_CNTS  
+		            WHERE SBJ_CD = #{sbjCd}  
+		              AND NVL(PAR_UNIT_CD,'1') = NVL(#{parUnitCd},'1') )  
+		       , #{unitType}  
+		       , #{cntsTypeCd}  
+		       , #{unitFilePath}  
+		       , #{quizCnt}  
+		       , #{quizPassScore}  
+		       , #{prgrChkType}  
+		       , #{critTm}  
+		       , #{totalPage}  
+		       , #{prgrChkYn}  
+		       , #{atchFilePath}  
+		       , #{mobileFilePath}  
+		       , #{mobileFilePath2}  
+		       , #{mobileYn}  
+		       , #{olcYn}  
+		       , #{regNo}  
+		       , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+		       , #{modNo}  
+		       , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+		  )  
+    </insert>
+ 	<insert id="insertContentsBatch" parameterType="list" >
+		  INSERT INTO TB_CRS_SBJ_CNTS (  
+		         SBJ_CD  
+		       , UNIT_CD  
+		       , PAR_UNIT_CD  
+		       , UNIT_NM  
+		       , UNIT_LVL  
+		       , UNIT_ODR  
+		       , UNIT_TYPE  
+		       , CNTS_TYPE_CD  
+		       , UNIT_FILE_PATH  
+		       , QUIZ_CNT  
+		       , QUIZ_PASS_SCORE  
+		       , PRGR_CHK_TYPE  
+		       , CRIT_TM  
+		       , TOTAL_PAGE  
+		       , PRGR_CHK_YN  
+		       , ATCH_FILE_PATH  
+		       , MOBILE_FILE_PATH  
+		       , MOBILE_FILE_PATH_2  
+		       , MOBILE_YN  
+		       , OLC_YN  
+		       , REG_NO  
+		       , REG_DTTM  
+		       , MOD_NO  
+		       , MOD_DTTM  
+		  ) 
+		  VALUES 
+		<foreach collection="list" item="item" index="index" separator=",">
+			(  
+		         #{item.sbjCd}  
+			   , #{item.unitCd}
+		       , #{item.parUnitCd }
+		       , #{item.unitNm}  
+		       , #{item.unitLvl } 
+		       , ( SELECT NVL(MAX(UNIT_ODR),0)+1  
+		             FROM TB_CRS_SBJ_CNTS  
+		            WHERE SBJ_CD = #{item.sbjCd}  
+		              AND NVL(PAR_UNIT_CD,'1') = NVL(#{item.parUnitCd},'1') )  
+		       , #{item.unitType}  
+		       , #{item.cntsTypeCd}  
+		       , #{item.unitFilePath}  
+		       , #{item.quizCnt}  
+		       , #{item.quizPassScore}  
+		       , #{item.prgrChkType}  
+		       , #{item.critTm}  
+		       , #{item.totalPage}  
+		       , #{item.prgrChkYn}  
+		       , #{item.atchFilePath}  
+		       , #{item.mobileFilePath}  
+		       , #{item.mobileFilePath2}  
+		       , #{item.mobileYn}  
+		       , #{item.olcYn}  
+		       , #{item.regNo}  
+		       , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+		       , #{item.modNo}  
+		       , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+		  	)  		
+		</foreach>
+		;
+	</insert>
+
+   <update id="updateContents" parameterType="contentsVO">
+		  UPDATE TB_CRS_SBJ_CNTS  
+		     SET UNIT_NM = #{unitNm}  
+		       , PAR_UNIT_CD = NVL(#{parUnitCd}, PAR_UNIT_CD) 
+		       , UNIT_LVL = #{unitLvl}  
+		       , UNIT_ODR = #{unitOdr}  
+		       , UNIT_TYPE = #{unitType}  
+		       , CNTS_TYPE_CD = #{cntsTypeCd}  
+		       , UNIT_FILE_PATH	= #{unitFilePath}	  
+		       , QUIZ_CNT = #{quizCnt}  
+		       , QUIZ_PASS_SCORE = #{quizPassScore}  
+		       , PRGR_CHK_TYPE = #{prgrChkType}  
+		       , CRIT_TM = #{critTm}  
+		       , TOTAL_PAGE =#{totalPage}  
+		       , PRGR_CHK_YN = DECODE(#{prgrChkYn},'Y','Y','N')  
+		       , ATCH_FILE_PATH = #{atchFilePath}  
+		       , MOBILE_FILE_PATH = #{mobileFilePath}  
+		       , MOBILE_FILE_PATH_2 = #{mobileFilePath2}  
+		       , MOBILE_YN = #{mobileYn}  
+		       , OLC_YN	= #{olcYn}  
+		       , MOD_NO = #{modNo}  
+		       , REG_DTTM =TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+		   WHERE SBJ_CD = #{sbjCd}  
+		     AND UNIT_CD = #{unitCd} 
+    </update>
+	<update id="updateContentsBatch" parameterType="list" >
+		<foreach collection="list" item="item" index="index" open="DECLARE BEGIN" close="; END;" separator=";">
+		  UPDATE TB_CRS_SBJ_CNTS  
+		  SET
+		         UNIT_NM = #{item.unitNm}  
+		       , PAR_UNIT_CD = NVL(#{item.parUnitCd}, PAR_UNIT_CD) 
+		       , UNIT_LVL = #{item.unitLvl}  
+		       , UNIT_ODR = #{item.unitOdr}  
+		       , UNIT_TYPE = #{item.unitType}  
+		       , CNTS_TYPE_CD = #{item.cntsTypeCd}  
+		       , UNIT_FILE_PATH	= #{item.unitFilePath}	  
+		       , QUIZ_CNT = #{item.quizCnt}  
+		       , QUIZ_PASS_SCORE = #{item.quizPassScore}  
+		       , PRGR_CHK_TYPE = #{item.prgrChkType}  
+		       , CRIT_TM = #{item.critTm}  
+		       , TOTAL_PAGE =#{item.totalPage}  
+		       , PRGR_CHK_YN = DECODE(#{item.prgrChkYn},'Y','Y','N')  
+		       , ATCH_FILE_PATH = #{item.atchFilePath}  
+		       , MOBILE_FILE_PATH = #{item.mobileFilePath}  
+		       , MOBILE_FILE_PATH_2 = #{item.mobileFilePath2}  
+		       , MOBILE_YN = #{item.mobileYn}  
+		       , OLC_YN	= #{item.olcYn}  
+		       , MOD_NO = #{item.modNo}  
+		       , REG_DTTM =TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+		   WHERE SBJ_CD = #{item.sbjCd}  
+		     AND UNIT_CD = #{item.unitCd} 
+		</foreach>	     
+	</update>
+	
+	<delete id="deleteContents" parameterType="contentsVO">
+		 DELETE FROM TB_CRS_SBJ_CNTS  
+  		 WHERE SBJ_CD = #{sbjCd} 
+     		AND UNIT_CD = #{unitCd}   
+    </delete>
+
+	<delete id="deleteAllContents" parameterType="string">
+		 DELETE FROM TB_CRS_SBJ_CNTS  
+  		 WHERE SBJ_CD = #{value} 
+    </delete>
+
+
+</mapper>	

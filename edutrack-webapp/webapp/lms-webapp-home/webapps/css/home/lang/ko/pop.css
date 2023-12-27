@@ -1,0 +1,141 @@
+@charset 'utf-8';
+@import url("base.css");
+@import url("common.css");
+@import url("button.css");
+
+.wrap {position:relative;}
+.wrap h1 {
+	padding:10px 0 7px 20px;
+	color:#fff;
+	font-weight:bold;
+	background:#1268b3;
+}
+.wrap h1.test {
+	padding:10px 0 7px 60px;
+	background:#1268b3 url('/lms/img/home/common/ico/ico_test.gif') no-repeat 20px 13px;
+}
+.contents {
+	padding:25px 24px;
+	border:1px solid #c0c0c0;
+}
+.contents h2.tit {margin:20px 0 10px 0;}
+/* LIST */
+.list1 {margin:18px 0 0 12px;padding-left:10px;line-height:15px;text-indent:-10px;}
+.list2 {margin:0 0 20px 0;padding-left:10px;line-height:15px;text-indent:-10px;}
+
+/* TABLE */
+table .txt_em {color:#ff0000;}
+
+/* BTN */
+.btn_search {
+	width:42px;
+	height:22px;
+	border:none;
+	background:url('/lms/img/home/common/btn/btn_pop_serach.gif') no-repeat 0 0;
+}
+/* 우편번호 찾기 */
+.d_note {margin-bottom:15px;line-height:14px;color:#333;}
+.dong_search {
+	border-left:1px solid #ccc;
+	border-right:1px solid #ccc;
+	border-bottom:1px solid #ccc;
+}
+.dong_search fieldset {
+	padding:10px 0 7px 22px;
+	border-top:2px solid #0089ff;
+	border-bottom:1px solid #ccc;
+}
+.dong_search fieldset label {margin-right:10px;color:#333;vertical-align:middle;*vertical-align:5px;}
+.dong_search fieldset .text {width:120px;height:13px;}
+.dong_search fieldset .btn_search {margin-left:5px;vertical-align:top;}
+.dong_search .scroll {
+	width:268px;
+	height:99px;
+	overflow-y:auto;
+}
+.dong_search .scroll ul {padding:15px 12px;}
+
+/* 과제관리 */
+.d_notice {
+	margin-bottom:15px;
+	padding-left:13px;
+	text-indent:-15px;
+	line-height:14px;
+	color:#333;
+}
+.d_notice em {color:#1268b3;text-decoration:underline;}
+
+/* 개인성적 */
+.grade_report {
+	margin-bottom:30px;
+	padding:20px;
+	border-top:2px solid #0089ff;
+	border-bottom:1px solid #ddd;
+}
+.grade_report strong {font-size:14px;}
+.grade_report p {margin-top:10px;padding-left:10px;background:url('/lms/img/home/common/bl/bl_txt_dot.gif') no-repeat 0 5px;}
+
+.test_time {position:absolute;top:10px;right:40px;color:#fff;}
+.close {position:absolute;top:15px;right:5px;width:30px;height:15px;text-align:center;}
+
+.question p {margin:47px 0 15px 0;font-weight:bold;	font-size:16px;}
+.question p.first {margin-top:0;} 
+.question .check_box {
+	margin-top:25px;
+	padding:9px 8px;
+	border:1px solid #ccc;
+}
+.question .check_box label {margin-right:15px;}
+.question .check_box input {margin-right:5px;vertical-align:-2px;}
+
+
+/* LECT_PHOTO */
+.lect_photo {
+	position:absolute;
+	top:61px;
+	left:25px;
+	width:126px;
+	height:163px;
+	border:1px solid #cdcdcd;
+}
+.lect_photo img {width:126px;height:163px;}
+.lect_profile {padding:15px 0 5px 170px;}
+.lect_profile li {margin:5px 0 10px 0;}
+.lect_profile li ul {margin-top:8px;}
+.lect_profile li ul li {margin:2px 0 10px 0;}
+
+.writing li {margin:3px 0;font-weight:bold;}
+.writing li p {text-indent:11px;font-weight:normal;}
+
+/* PROFILE */
+.profile {overflow:hidden;}
+.profile p {float:left;width:129px;height:160px;padding:6px;border:1px solid #ddd;}
+.profile p img {border:1px solid #ddd;}
+.profile strong {
+	display:block;
+	float:left;
+	width:592px;
+	padding-top:93px;
+	border-bottom:2px solid #0089ff;
+}
+.profile table {
+	width:735px;
+	border-left:1px solid #ddd;
+	border-right:1px solid #ddd;
+	border-bottom:1px solid #ddd;
+}
+.profile table th {
+	padding:40px 0;
+	color:#1268b3;
+	border-top:1px dotted #fff;
+	background:#f6f6f6;
+}
+.profile table td {
+	border-top:1px dotted #ddd;
+	padding:15px 0 15px 30px;
+	line-height:20px;
+}
+.profile table tr.fir th,
+.profile table tr.fir td {border-top:none;}
+.profile table td.career {background:url('/lms/img/home/bg/bg_tdcareer.gif') no-repeat 100% 100%;}
+

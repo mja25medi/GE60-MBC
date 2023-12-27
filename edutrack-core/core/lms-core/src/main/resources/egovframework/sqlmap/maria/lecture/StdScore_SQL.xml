@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.lecture.score.service.impl.StdScoreMapper">	
+	<sql id="selectQuery">
+		 SELECT A.STD_NO 
+		      , B.USER_NM 
+		      , C.USER_ID 
+		      , FN_GET_SCORE_EXAM(A.CRS_CRE_CD, A.STD_NO) AS EXAM_SCORE 
+		      , FN_GET_SCORE_ASMT(A.CRS_CRE_CD, A.STD_NO) AS ASMT_SCORE 
+		      , FN_GET_SCORE_FORUM(A.CRS_CRE_CD, A.STD_NO) AS FORUM_SCORE 
+		   FROM tb_std_std A, tb_usr_user_info B, tb_usr_login C 
+		  WHERE B.USER_NO = C.USER_NO 
+		    AND A.USER_NO = B.USER_NO 
+		    AND A.CRS_CRE_CD = #{crsCreCd}  
+		    AND C.USER_STS = 'U'  
+		    AND A.ENRL_STS IN ('S','C','F') 
+	</sql>
+ 	<select id="list" parameterType="stdScoreVO" resultType="stdScoreVO">
+	    <include refid="selectQuery" />
+	    ORDER BY A.STD_NO
+	</select>
+	<select id="select" parameterType="stdScoreVO" resultType="stdScoreVO">
+	    <include refid="selectQuery" />
+	    AND A.STD_NO = #{stdNo}
+	</select>
+	
+	
+	<sql id="selectCreStdQuery">
+		select 
+		   	 A.CRS_CRE_CD  
+		   	 , A.CRS_CD 
+		     , A.CRE_YEAR 
+		     , A.CRE_TERM 
+		     , A.CRS_CRE_NM
+		     , F.ENRL_APLC_START_DTTM
+		     , F.ENRL_APLC_END_DTTM
+		     , F.ENRL_START_DTTM
+		     , F.ENRL_END_DTTM
+		     , IFNULL(FN_GET_NULL(A.NOP_LIMIT_YN),'N') AS NOP_LIMIT_YN
+		     , A.ENRL_NOP 
+		     , IFNULL(FN_GET_NULL(A.EDU_PRICE),0) AS EDU_PRICE
+		     , A.SCORE_HANDL_CD 
+		     , A.CPLT_SCORE 
+		     , IFNULL(FN_GET_NULL(A.PRGR_RATIO),0) AS PRGR_RATIO 
+		     , IFNULL(FN_GET_NULL(A.ATTD_RATIO),0) AS ATTD_RATIO 
+		     , IFNULL(FN_GET_NULL(A.EXAM_RATIO),0) AS EXAM_RATIO 
+		     , IFNULL(FN_GET_NULL(A.FORUM_RATIO),0) AS FORUM_RATIO 
+		     , IFNULL(FN_GET_NULL(A.ASMT_RATIO),0) AS ASMT_RATIO 
+		     , IFNULL(FN_GET_NULL(A.PRJT_RATIO),0) AS PRJT_RATIO 
+		     , IFNULL(FN_GET_NULL(A.JOIN_RATIO),0) AS JOIN_RATIO 
+		     , IFNULL(FN_GET_NULL(A.ETC_RATIO),0) AS ETC_RATIO
+		     , A.DAY_STUDY_LIMIT 
+		     , A.REG_NO 
+		 	 , (SELECT FN_GET_USER_NAME(A.REG_NO) ) AS REG_NM 
+		 	 , A.REG_DTTM 
+		     , A.MOD_NO 
+			 , (SELECT FN_GET_USER_NAME(A.MOD_NO) ) AS MOD_NM 
+		     , A.MOD_DTTM 
+		     , (SELECT FN_GET_CRS_STD_PRGR(D.STD_NO, A.CRS_CRE_CD)) AS PRE_PRGR_RATIO
+		     , ROUND((SELECT FN_GET_BOOKMARK_TIME(D.STD_NO, A.CRS_CRE_CD))/60) AS CONN_TM	  	
+		     , (SELECT FN_GET_BOOKMARK_CNT(D.STD_NO, A.CRS_CRE_CD)) AS CONN_CNT
+		     , D.STD_NO 
+		     , D.ENRL_STS 
+		     , (SELECT FN_GET_CODE_NAME('ENRL_STS',IFNULL(FN_GET_NULL(D.ENRL_STS),''))) AS ENRL_STS_NM  
+		     , D.EDU_NO
+		     , D.CPLT_NO
+		     , D.GET_CREDIT
+		     , D.PAYM_NO
+		     , IFNULL(FN_GET_NULL(E.PRGR_SCORE),0) as PRGR_SCORE
+		     , IFNULL(FN_GET_NULL(E.ATTD_SCORE),0) as ATTD_SCORE
+		 	 , IFNULL(FN_GET_NULL(E.EXAM_SCORE),0) as EXAM_SCORE  
+			 , IFNULL(FN_GET_NULL(E.SEMI_EXAM_SCORE),0) as SEMI_EXAM_SCORE 
+		     , IFNULL(FN_GET_NULL(E.FORUM_SCORE),0)as FORUM_SCORE
+		     , IFNULL(FN_GET_NULL(E.ASMT_SCORE),0) as ASMT_SCORE
+		     , IFNULL(FN_GET_NULL(E.PRJT_SCORE),0) as PRJT_SCORE
+		     , IFNULL(FN_GET_NULL(E.JOIN_SCORE),0) as JOIN_SCORE
+		     , IFNULL(FN_GET_NULL(E.ETC_SCORE),0)  as ETC_SCORE
+		     , IFNULL(FN_GET_NULL(E.TOT_SCORE),0)  as TOT_SCORE
+		     , IFNULL(FN_GET_NULL(E.CONV_SCORE),0) as CONV_SCORE
+   		     , IFNULL(FN_GET_NULL(E.PRGR_RATE),0) as PRGR_RATE
+		     , E.SCORE_LVL
+		     , F.CRS_NM
+		     , F.SCORE_OPEN_START_DTTM 
+		     , F.SCORE_OPEN_END_DTTM 
+	</sql>
+	
+	<select id="listCreStd" parameterType="stdScoreVO" resultType="egovMap">
+		/*
+		 	SQL ID : StdScoreMapper.listCreStd
+		 	설  명 : 과정 학습자의 과정,시험,과제 성적 정보를 가져온다
+	 	*/
+	
+    	<include refid="selectCreStdQuery" />
+    	   FROM tb_crs_cre_crs A
+		   INNER JOIN tb_crs_crs F
+		   ON A.CRS_CD = F.CRS_CD 
+		   LEFT OUTER JOIN tb_std_std D  
+		   ON ( A.CRS_CRE_CD = D.CRS_CRE_CD   
+		    AND D.USER_NO = #{userNo}  	  	
+		   )
+		   LEFT OUTER JOIN tb_std_edu_rslt E  
+		   ON ( D.STD_NO = E.STD_NO
+		   )
+		  WHERE A.CRS_CRE_CD = #{crsCreCd}  
+		  AND D.ENRL_STS IN ('S','C','F')
+	</select>
+	
+	<select id="listEndCreStd" parameterType="stdScoreVO" resultType="egovMap">
+		/*
+		 	SQL ID : StdScoreMapper.listEndCreStd
+		 	설  명 : 과정 학습자의 종료된 과정,시험,과제 성적 정보를 가져온다
+	 	*/
+	
+    	<include refid="selectCreStdQuery" />
+    	  FROM tb_crs_cre_crs A
+		  INNER JOIN tb_crs_crs F
+		  ON A.CRS_CD = F.CRS_CD 
+		  INNER JOIN tb_std_std D  
+		  ON ( A.CRS_CRE_CD = D.CRS_CRE_CD   
+		   AND D.USER_NO = #{userNo}  	
+		  )
+		  LEFT OUTER JOIN tb_std_edu_rslt E  
+		  ON ( D.STD_NO = E.STD_NO
+		  )
+		  <![CDATA[
+		  WHERE DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') > DATE_FORMAT(A.ENRL_END_DTTM, '%Y%m%d%H%i%s')
+		  AND D.ENRL_STS IN ('S','C','F')
+		  ]]>
+	</select>
+	
+	<select id="listEndCreStdPageing" parameterType="stdScoreVO" resultType="egovMap">
+		/*
+		 	SQL ID : StdScoreMapper.listEndCreStd
+		 	설  명 : 과정 학습자의 종료된 과정,시험,과제 성적 정보를 가져온다 - 페이징
+	 	*/
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+    	<include refid="selectCreStdQuery" />
+    	  FROM tb_crs_cre_crs A
+		  INNER JOIN tb_crs_crs F
+		  ON A.CRS_CD = F.CRS_CD 
+		  INNER JOIN tb_std_std D  
+		  ON ( A.CRS_CRE_CD = D.CRS_CRE_CD   
+		   AND D.USER_NO = #{userNo}  	
+		  )
+		  LEFT OUTER JOIN tb_std_edu_rslt E  
+		  ON ( D.STD_NO = E.STD_NO
+		  )
+		  <![CDATA[
+		  WHERE DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') > DATE_FORMAT(A.ENRL_END_DTTM, '%Y%m%d%H%i%s')
+		  AND D.ENRL_STS IN ('S','C','F')
+		  ]]>
+		  <include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		  <include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="myListCount" parameterType="stdScoreVO" resultType="Integer">
+			SELECT COUNT(1)
+			FROM tb_crs_cre_crs A
+			  INNER JOIN tb_crs_crs F
+			  ON A.CRS_CD = F.CRS_CD 
+			  INNER JOIN tb_std_std D  
+			  ON ( A.CRS_CRE_CD = D.CRS_CRE_CD   
+			   AND D.USER_NO = #{userNo}  	
+			  )
+			  LEFT OUTER JOIN tb_std_edu_rslt E  
+			  ON ( D.STD_NO = E.STD_NO
+			  )
+			  <![CDATA[
+			  WHERE DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') > DATE_FORMAT(A.ENRL_END_DTTM, '%Y%m%d%H%i%s')
+			  AND D.ENRL_STS IN ('S','C','F')
+			  ]]>
+	</select>
+
+ 
+
+</mapper>

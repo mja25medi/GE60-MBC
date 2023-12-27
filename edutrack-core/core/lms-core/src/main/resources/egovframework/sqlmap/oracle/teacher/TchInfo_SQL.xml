@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.teacher.info.service.impl.TchInfoMapper">
+	
+	<sql id="selectQuery">
+		  SELECT UI.USER_NO 																		
+		       , UI.USER_NM		
+		       , A.TCH_CTGR_CD 																	
+		       , ( SELECT FN_GET_CODE_NAME('TCH_CTGR_CD', A.TCH_CTGR_CD) FROM DUAL )				
+		         AS TCH_CTGR_NM																	
+		       , A.TCH_DIV_CD 																		
+		       , ( SELECT FN_GET_CODE_NAME('TCH_DIV_CD', A.TCH_DIV_CD) FROM DUAL )					
+		         AS TCH_DIV_NM																		
+		       , A.LECFEE_PAY_CRIT_CD 																
+		       , ( SELECT FN_GET_CODE_NAME('LECFEE_PAY_CRIT_CD', A.LECFEE_PAY_CRIT_CD) FROM DUAL )	
+		         AS LECFEE_PAY_CRIT_MM																
+		       , A.BANK 																			
+		       , ( SELECT FN_GET_CODE_NAME('BANK_CD',A.BANK) FROM DUAL ) AS BANK_NM				
+		       , A.ACNT_NM 																		
+		       , A.CRER 																			
+		       , A.MAJOR 																			
+		       , A.REG_NO 																			
+		       , A.POSNG 																			
+		       , A.REG_DTTM 																		
+		       , A.MOD_NO 																			
+		       , A.MOD_DTTM 																		
+		    FROM TB_TCH_TCH_INFO A, TB_USR_USER_INFO UI																	
+	</sql>
+	
+	<select id="select" parameterType="tchInfoVO" resultType="tchInfoVO">
+		<include refid="selectQuery" />
+		   WHERE UI.USER_NO = #{userNo}			
+		   AND UI.USER_NO = A.USER_NO(+)			
+	</select>
+	
+	<insert id="insert" parameterType="tchInfoVO">
+		  INSERT INTO TB_TCH_TCH_INFO (				
+		         USER_NO 								
+		       , TCH_CTGR_CD 							
+		       , TCH_DIV_CD 							
+		       , LECFEE_PAY_CRIT_CD 					
+		       , BANK 									
+		       , ACNT_NM 								
+		       , CRER 									
+		       , MAJOR 								
+		       , POSNG 								
+		       , REG_NO 								
+		       , REG_DTTM 								
+		       , MOD_NO 								
+		       , MOD_DTTM 								
+		 ) VALUES (									
+		         #{userNo} 								
+		       , #{tchCtgrCd} 							
+		       , #{tchDivCd} 							
+		       , #{lecfeePayCritCd }						
+		       , #{bank} 								
+		       , #{acntNm} 								
+		       , #{crer} 								
+		       , #{major }								
+		       , #{posng} 							
+		       , #{regNo} 								
+		       , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')	
+		       , #{modNo} 								
+		       , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 	
+		 ) 										
+	</insert>
+	
+	<update id="update" parameterType="tchInfoVO">
+		  UPDATE TB_TCH_TCH_INFO									
+		     SET TCH_CTGR_CD = #{tchCtgrCd} 							
+		       , TCH_DIV_CD = #{tchDivCd} 							
+		       , LECFEE_PAY_CRIT_CD = #{lecfeePayCritCd} 			
+		       , BANK = #{bank} 										
+		       , ACNT_NM = #{acntNm} 								
+		       , CRER = #{crer} 										
+		       , MAJOR = #{major} 									
+		       , MOD_NO = #{modNo} 									
+		       , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')	
+		   WHERE USER_NO = #{userNo} 								
+	</update>
+
+	
+	<delete id="delete" parameterType="tchInfoVO">
+		 DELETE FROM TB_TCH_TCH_INFO 		
+		       WHERE USER_NO = #{userNo}		
+	</delete>
+	
+</mapper>

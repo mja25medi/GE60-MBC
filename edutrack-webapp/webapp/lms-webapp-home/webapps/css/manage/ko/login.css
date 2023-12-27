@@ -1,0 +1,50 @@
+@charset "UTF-8";
+
+body {background:url(/img/manage/ko/login/login_bg.jpg) repeat-x 0 0;}
+h1 {position:absolute; top:140px; left:0; margin:0;}
+h2 {margin:0; padding:0;}
+.ad_wrap {width:1003px; margin:0 auto; background:url(/img/manage/ko/login/ad_wrap_bg.jpg) no-repeat 50% 0}
+.box_info_set {position:relative; width:727px; margin:0 auto; padding:205px 0 0;}
+.box_info_set .graphic_info {position:absolute; top:55px; right:10px;}
+.box_login {
+	width:444px;
+	padding:32px 25px 30px 250px;
+	border:4px solid #e3e3e3;
+	background:#fff url(/img/manage/ko/login/box_ad_login_bg.gif) no-repeat 19px 31px;
+}
+.login_set {
+	position:relative;
+	overflow:hidden;
+	width:444px;
+	height:99px;
+	margin:25px 0 0;
+}
+.login_set .id_remember {
+	position:absolute;
+	top:79px;
+	left:230px;
+	color:#5b5b5b;
+	font-family:Dotum, Tahoma, sans-serif;
+	font-size:12px;
+}
+input.log {
+	width:191px;
+	height:22px;
+	padding:3px 0 0 3px;
+	border:1px solid #c9c9c9;
+	background-color:#f9f9f9;
+	font-size:14px;
+}
+.lf {float:left;}
+.tm10 {margin-top:10px;}
+.lm20 {margin-left:20px;}
+
+#login_title {
+	float:left;
+	color:#333;
+	font-size:28px;
+	font-weight:bold;
+	width:700px;
+	line-height:30px;
+	text-shadow:2px 2px 0px white, -2px 2px 0px white, -2px -2px 0px white, 2px -2px 0px white, 2px 0px 0px white, -2px 0px 0px white, 0px 2px 0px white, 0px -2px 0px white, 3px 3px 7px black
+}

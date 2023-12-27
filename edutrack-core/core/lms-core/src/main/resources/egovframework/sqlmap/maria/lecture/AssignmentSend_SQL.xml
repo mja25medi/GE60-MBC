@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.lecture.assignment.service.impl.AssignmentSendMapper">
+
+	<sql id="selectColumnQuery">
+		 A.STD_NO  
+       , A.CRS_CRE_CD  
+       , A.USER_NO  
+       , B.USER_NM  
+       , C.USER_ID  
+       , B.EMAIL  
+       , B.BIRTH  
+       , A.ENRL_STS  
+       , A.EDU_NO  
+       , IFNULL(FN_GET_NULL(D.SCORE),0) AS SCORE  
+       , IFNULL(FN_GET_NULL(D.SEND_CNT),0) AS SEND_CNT  
+       , IFNULL(FN_GET_NULL(D.REG_DTTM),'') AS REG_DTTM 
+       , IFNULL(FN_GET_NULL(D.MOD_DTTM),'') AS MOD_DTTM 		       
+       , D.RATE_YN  
+       , (SELECT COUNT(1) FROM tb_lec_asmt_send E WHERE E.ASMT_SN = D.ASMT_SN) AS SCORE_YN  
+          <!-- 과제 모사 들어간다면 카피킬러 추가 후 주석 제거
+   	   ,(SELECT URI FROM tb_copykiller_copyratio WHERE URI = CONCAT(A.CRS_CRE_CD,'_',C.USER_ID,'_',A.STD_NO,'_',D.ASMT_SN) AND CHECK_TYPE='report') AS COPY_RATIO_URI
+	   ,(SELECT DISP_TOTAL_COPY_RATIO FROM tb_copykiller_copyratio WHERE URI = CONCAT(A.CRS_CRE_CD,'_',C.USER_ID,'_',A.STD_NO,'_',D.ASMT_SN) AND CHECK_TYPE='report') AS DISP_TOTAL_COPY_RATIO
+	   ,(SELECT COMPLETE_STATUS FROM tb_copykiller_copyratio WHERE URI = CONCAT(A.CRS_CRE_CD,'_',C.USER_ID,'_',A.STD_NO,'_',D.ASMT_SN) AND CHECK_TYPE='report') AS COMPLETE_STATUS -->
+	</sql>
+		
+	<sql id="listQuery">
+		  SELECT 
+	 	  <include refid="selectColumnQuery" />	
+	 	  FROM  tb_std_std A
+	 	  	LEFT OUTER JOIN
+	 	  		tb_lec_asmt_send D
+	 	  	ON
+	 	  		(
+			    	 A.CRS_CRE_CD = D.CRS_CRE_CD
+			    AND  A.STD_NO  = D.STD_NO 	
+			    AND  D.ASMT_SN = #{asmtSn}  		
+	 	  		)
+	 	  		, tb_usr_user_info B
+	 	  		, tb_usr_login C
+		  WHERE  A.USER_NO = B.USER_NO  
+		    AND  B.USER_NO = C.USER_NO  
+		    AND  A.CRS_CRE_CD  = #{crsCreCd}  
+		    AND  A.ENRL_STS IN('S','C','F')  
+			<if test = "userNm != null and userNm != ''">
+				AND  B.USER_NM LIKE CONCAT('%',#{userNm}, '%') 
+			</if> 
+			<if test = "declsNo != null and declsNo gt 0">
+				AND  A.DECLS_NO = (CASE WHEN #{declsNo} = null THEN A.DECLS_NO WHEN #{declsNo}= 0 THEN A.DECLS_NO ELSE #{declsNo} END) 
+			</if>
+			<if test = 'stdNoObjArr != null and stdNoObjArr.length > 0'>
+				AND D.STD_NO IS NOT NULL -- 응시한 수강생 조회
+				AND A.STD_NO IN 
+								<foreach collection="stdNoObjArr" item="item" index="index" open="(" separator="," close=")">
+									#{item}
+								</foreach>
+			</if>
+			
+		      AND  C.USER_STS = 'U'  
+		<![CDATA[
+		      AND  CASE WHEN IFNULL(FN_GET_NULL(D.SEND_CNT), 0) > 0 THEN 'Y' ELSE 'N' END  =
+		           	(
+		           	CASE WHEN #{sendYn} = 'Y' THEN 'Y'
+		           		 WHEN #{sendYn} = 'N' THEN 'N'
+		           		 ELSE (CASE WHEN IFNULL(FN_GET_NULL(D.SEND_CNT), 0) > 0 THEN 'Y' ELSE 'N' END)
+		           	END)
+		]]>
+	</sql>
+	<select id="count" parameterType="assignmentSendVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+	     FROM  tb_std_std A
+	     	LEFT OUTER JOIN
+	     		tb_lec_asmt_send D 
+	     	ON
+	     		(
+		    		 A.CRS_CRE_CD = D.CRS_CRE_CD  
+		     	AND  A.STD_NO = D.STD_NO
+		        AND  D.ASMT_SN = #{asmtSn} 		    	     		
+	     		)
+	     	, tb_usr_user_info B
+	     	, tb_usr_login C
+		  WHERE  A.USER_NO = B.USER_NO  
+		    AND  B.USER_NO = C.USER_NO  
+		    AND  A.CRS_CRE_CD  = #{crsCreCd}  
+		    AND  A.ENRL_STS IN('S','C','F')  
+			<if test = "userNm != null and userNm != ''">
+				AND  B.USER_NM LIKE CONCAT('%',#{userNm}, '%')
+			</if> 
+			<if test = "declsNo != null and declsNo gt 0">
+				AND  A.DECLS_NO = (CASE WHEN #{declsNo} is null THEN A.DECLS_NO WHEN #{declsNo}= 0 THEN A.DECLS_NO ELSE #{declsNo} END)
+			</if>
+		      AND  C.USER_STS = 'U'  
+		<![CDATA[
+		      AND  
+		           	(
+		           	CASE WHEN #{sendYn} = 'Y' THEN 'Y'
+		           		 WHEN #{sendYn} = 'N' THEN 'N'
+		           		 ELSE (CASE WHEN IFNULL(FN_GET_NULL(D.SEND_CNT), 0) > 0 THEN 'Y' ELSE 'N' END)
+		           	END)
+		]]>	           
+	</select>	
+	<select id="list" parameterType="assignmentSendVO" resultType="assignmentSendVO">
+		<include refid="listQuery" />
+		ORDER  BY B.USER_NM
+	</select>
+	
+	<select id="listPageing"  parameterType="assignmentSendVO" resultType="assignmentSendVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+			<include refid="listQuery" />
+			ORDER  BY B.USER_NM
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>	
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="select" parameterType="assignmentSendVO" resultType="assignmentSendVO">
+		SELECT  A.STD_NO														
+		        ,  A.CRS_CRE_CD													
+		        ,  A.ASMT_SN														
+		        ,  B.SEND_TITLE													
+		        ,  B.SEND_CTS													
+		        ,  A.SEND_CNT													
+		        ,  A.SCORE														
+		        ,  A.ATCH_CTS													
+		        ,  IFNULL(FN_GET_NULL(B.ASMT_SUB_SN), 0)	ASMT_SUB_SN 							
+		        ,  A.REG_NO														
+		        ,  A.REG_DTTM													
+		        ,  A.MOD_NO														
+		        ,  A.MOD_DTTM													
+			     ,  (SELECT FN_GET_USER_NAME(A.MOD_NO)) AS MOD_NM		
+			     ,  (SELECT FN_GET_USER_NAME(A.REG_NO)) AS REG_NM		
+			     ,  A.RATE_YN														
+		     FROM  tb_lec_asmt_send	A, tb_lec_asmt_send_dtl	B 										
+		    WHERE  A.ASMT_SN = B.ASMT_SN  
+		      AND  A.STD_NO       = #{stdNo}										
+		      AND  A.CRS_CRE_CD   = #{crsCreCd}									
+		      AND  A.ASMT_SN      = #{asmtSn}
+		      GROUP BY STD_NO 
+	</select>
+	
+	<insert id="insert" parameterType="assignmentSendVO">
+		INSERT 	INTO tb_lec_asmt_send (						
+		           STD_NO										
+		        ,  CRS_CRE_CD									
+		        ,  ASMT_SN										
+		        <!-- ,  SEND_TITLE -->									
+		        <!-- ,  SEND_CTS -->									
+		        ,  SEND_CNT									
+		        ,  SCORE										
+		        ,  ATCH_CTS									
+		        <!-- ,  ASMT_SUB_SN -->	
+		        ,  RATE_YN								
+		        ,  REG_NO										
+		        ,  REG_DTTM									
+		        ,  MOD_NO										
+		        ,  MOD_DTTM									
+		 	) VALUES (											
+		           #{stdNo}										
+		        ,  #{crsCreCd}									
+		        ,  #{asmtSn}										
+		        <!-- ,  #{sendTitle} -->									
+		        <!-- ,  #{sendCts} -->									
+		        ,  #{sendCnt}
+		        ,  #{score}										
+		        ,  #{atchCts}									
+		        <!-- , (CASE WHEN #{asmtSubSn} = 0 THEN null ELSE #{asmtSubSn} END) -->	
+		        ,  #{rateYn}
+		        ,  #{regNo}										
+		        ,  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')		
+		        ,  #{modNo}										
+		        ,  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')				
+		 	)
+	</insert>
+	
+	<insert id="insertDetail" parameterType="assignmentSendVO">
+		INSERT 	INTO tb_lec_asmt_send_dtl (						
+		           STD_NO										
+		        ,  CRS_CRE_CD									
+		        ,  ASMT_SN										
+		        ,  SEND_TITLE									
+		        ,  SEND_CTS
+		        ,  GPT_RESULT									
+		        ,  ASMT_SUB_SN	
+		        ,  REG_NO										
+		        ,  REG_DTTM									
+		        ,  MOD_NO										
+		        ,  MOD_DTTM									
+		 	) VALUES (											
+		           #{stdNo}										
+		        ,  #{crsCreCd}									
+		        ,  #{asmtSn}										
+		        ,  #{sendTitle}									
+		        ,  #{sendCts}
+		        ,  #{gptResult}									
+		        , (CASE WHEN #{asmtSubSn} = 0 THEN null ELSE #{asmtSubSn} END)	
+		        ,  #{regNo}										
+		        ,  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')		
+		        ,  #{modNo}										
+		        ,  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')				
+		 	)
+	</insert>
+	
+	<update id="update" parameterType="assignmentSendVO">
+		UPDATE tb_lec_asmt_send SET										
+		        STD_NO           =   #{stdNo}								
+		      , CRS_CRE_CD       =   #{crsCreCd}								
+		      , ASMT_SN          =   #{asmtSn}								
+		      <!-- , SEND_TITLE       =   #{sendTitle} -->							
+		      <!-- , SEND_CTS         =   #{sendCts} -->								
+		      , SEND_CNT         =   #{sendCnt}								
+		      , SCORE            =   #{score}								
+		      , ATCH_CTS         =   #{atchCts}								
+		      <!-- , ASMT_SUB_SN      =   (CASE WHEN #{asmtSubSn} = 0 THEN null ELSE #{asmtSubSn} END) -->	
+		      ,  RATE_YN		 =   #{rateYn}
+		      <!-- , REG_NO           =   #{regNo}								
+		      , REG_DTTM         =   DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	 -->
+		      , MOD_NO           =   #{modNo}								
+		      , MOD_DTTM         =   DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+		      , RATE_YN          =   #{rateYn}		
+		  WHERE STD_NO           =   #{stdNo}								
+		    AND CRS_CRE_CD       =   #{crsCreCd}								
+		    AND ASMT_SN          =   #{asmtSn}
+	</update>
+	
+	<update id="send" parameterType="assignmentSendVO">
+		UPDATE tb_lec_asmt_send SET										
+		        STD_NO           =   #{stdNo}								
+		      , CRS_CRE_CD       =   #{crsCreCd}								
+		      , ASMT_SN          =   #{asmtSn}								
+		      <!-- , SEND_TITLE       =   #{sendTitle} -->							
+		      <!-- , SEND_CTS         =   #{sendCts} -->								
+		      , SEND_CNT         =   #{sendCnt}								
+		      , SCORE            =   #{score}								
+		      , ATCH_CTS         =   #{atchCts}								
+		      <!-- , ASMT_SUB_SN      =   (CASE WHEN #{asmtSubSn} = 0 THEN null ELSE #{asmtSubSn} END) -->	
+		      ,  RATE_YN		 =   #{rateYn}
+		      , MOD_NO           =   #{modNo}								
+		      , MOD_DTTM         =   DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+		      , RATE_YN          =   #{rateYn}
+		      , SEND_DTTM		 =   DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+		  WHERE STD_NO           =   #{stdNo}								
+		    AND CRS_CRE_CD       =   #{crsCreCd}								
+		    AND ASMT_SN          =   #{asmtSn}
+	</update>
+	
+	<update id="sendDetail" parameterType="assignmentSendVO">
+		UPDATE tb_lec_asmt_send_dtl SET										
+		        STD_NO           =   #{stdNo}								
+		      , CRS_CRE_CD       =   #{crsCreCd}								
+		      , ASMT_SN          =   #{asmtSn}			
+		      , ASMT_SUB_SN      =   (CASE WHEN #{asmtSubSn} = 0 THEN null ELSE #{asmtSubSn} END)						
+		      , SEND_TITLE       =   #{sendTitle}							
+		      , SEND_CTS         =   #{sendCts}								
+		      , MOD_NO           =   #{modNo}								
+		      , MOD_DTTM         =   DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+		  WHERE STD_NO           =   #{stdNo}								
+		    AND CRS_CRE_CD       =   #{crsCreCd}								
+		    AND ASMT_SN          =   #{asmtSn}
+	</update>
+	
+	<update id="rate" parameterType="assignmentSendVO">
+		UPDATE tb_lec_asmt_send SET										
+		        STD_NO           =   #{stdNo}								
+		      , CRS_CRE_CD       =   #{crsCreCd}								
+		      , ASMT_SN          =   #{asmtSn}								
+		      <!-- , SEND_TITLE       =   #{sendTitle} -->							
+		      <!-- , SEND_CTS         =   #{sendCts} -->								
+		      , SEND_CNT         =   #{sendCnt}								
+		      , SCORE            =   #{score}								
+		      , ATCH_CTS         =   #{atchCts}								
+		      <!-- , ASMT_SUB_SN      =   (CASE WHEN #{asmtSubSn} = 0 THEN null ELSE #{asmtSubSn} END) -->	
+		      ,  RATE_YN		 =   #{rateYn}
+		      , MOD_NO           =   #{modNo}								
+		      , MOD_DTTM         =   DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+		      , RATE_YN          =   #{rateYn}
+		      , RATE_NO          =   #{rateNo}
+		      , RATE_DTTM        =   DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')		
+		  WHERE STD_NO           =   #{stdNo}								
+		    AND CRS_CRE_CD       =   #{crsCreCd}								
+		    AND ASMT_SN          =   #{asmtSn}
+	</update>
+
+	
+	<delete id="delete" parameterType="assignmentSendVO">
+		DELETE  FROM  tb_lec_asmt_send           
+		  	 WHERE  STD_NO          =   #{stdNo}       
+		      AND  CRS_CRE_CD      =   #{crsCreCd}    
+		      AND  ASMT_SN         =   #{asmtSn}
+	</delete>
+	
+	<delete id="deleteDtl" parameterType="assignmentSendVO">
+		DELETE  FROM  tb_lec_asmt_send_dtl           
+		  	 WHERE  STD_NO          =   #{stdNo}       
+		      AND  CRS_CRE_CD      =   #{crsCreCd}    
+		      AND  ASMT_SN         =   #{asmtSn}
+	</delete>
+	
+	<delete id="deleteAll" parameterType="assignmentVO">
+		DELETE  FROM  tb_lec_asmt_send           
+		  	 WHERE  CRS_CRE_CD      =   #{crsCreCd}    
+		      AND  ASMT_SN         =   #{asmtSn}
+	</delete>
+	
+	<select id="selectTemp" parameterType="assignmentSendVO" resultType="assignmentSendVO">
+		SELECT  A.STD_NO														
+		        ,  A.CRS_CRE_CD													
+		        ,  A.ASMT_SN														
+		        ,  A.SEND_CNT													
+		        ,  A.SCORE														
+		        ,  A.ATCH_CTS													
+		        ,  A.REG_NO														
+		        ,  A.REG_DTTM													
+		        ,  A.MOD_NO														
+		        ,  A.MOD_DTTM													
+			     ,  (SELECT FN_GET_USER_NAME(A.MOD_NO)) AS MOD_NM		
+			     ,  (SELECT FN_GET_USER_NAME(A.REG_NO)) AS REG_NM		
+			     ,  A.RATE_YN														
+		     FROM  tb_lec_asmt_send	A										
+		    WHERE  A.STD_NO       = #{stdNo}										
+		      AND  A.CRS_CRE_CD   = #{crsCreCd}									
+		      AND  A.ASMT_SN      = #{asmtSn}
+		      GROUP BY STD_NO 
+	</select>
+	
+	<select id="selectTestResult" parameterType="assignmentSendVO" resultType="assignmentSendVO">
+		SELECT  CRS_CRE_CD														
+		        ,  STD_NO													
+		        ,  ASMT_SN														
+		        ,  ASMT_SUB_SN													
+		        ,  SEND_TITLE													
+		        ,  SEND_CTS													
+		        ,  GPT_RESULT														
+			    ,  SCORE														
+		     FROM  tb_lec_asmt_send_dtl											
+		    WHERE  CRS_CRE_CD   = #{crsCreCd}
+		      AND  STD_NO       = #{stdNo}										
+		      AND  ASMT_SN      = #{asmtSn}									
+		      AND  ASMT_SUB_SN  = #{asmtSubSn}
+	</select>
+	
+</mapper>

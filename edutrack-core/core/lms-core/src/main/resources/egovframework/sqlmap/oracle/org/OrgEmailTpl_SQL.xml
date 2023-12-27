@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.org.emailtpl.service.impl.OrgEmailTplMapper">	
+
+	
+	<sql id="selectQuery">
+		SELECT TPL_CD as tplCd
+		     , ORG_CD as orgCd
+		     , TPL_NM as tplNm
+		     , TPL_DESC as tplDesc
+		     , TPL_CTS as tplCts
+		     , TPL_ODR as tplOdr
+		     , USE_YN as useYn
+		     , EDITOR_YN as editorYn
+		     , REG_NO as regNo
+		     , (SELECT FN_GET_USER_NAME(REG_NO) FROM DUAL) as regNm
+		     , REG_DTTM as regDttm
+		     , MOD_NO as modNo
+		     , (SELECT FN_GET_USER_NAME(MOD_NO) FROM DUAL) as modNm
+		     , MOD_DTTM as modDttm
+		     , TPL_TYPE as tplType
+		  FROM TB_ORG_EMAIL_TPL A
+		 WHERE ORG_CD = #{orgCd}	
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		<if test = "tplType != null and tplType != ''">
+		   AND TPL_TYPE = #{tplType}
+		</if>
+		 ORDER BY ORG_CD, TPL_ODR
+	</sql>		
+
+	<select id="list" parameterType="orgEmailTplVO" resultType="orgEmailTplVO">
+		/*
+			 SQL ID : list
+			 설  명 : 이메일 템플릿의 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	</select>
+	
+	<select id="listPageing" parameterType="orgEmailTplVO" resultType="orgEmailTplVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 이메일 템플릿의 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="orgEmailTplVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 이메일 템플릿의 전체 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>	
+	
+	<select id="select" parameterType="orgEmailTplVO" resultType="orgEmailTplVO">
+		/*
+			 SQL ID : select
+			 설  명 : 이메일 템플릿의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+           AND TPL_CD = #{tplCd}	 	
+	</select>
+
+	<select id="selectKey" resultType="String">
+		/*
+			 SQL ID : selectKey
+			 설  명 : 이메일 템플릿의 키를 생성
+	 	*/
+	 	SELECT 'TPL'||LPAD(SQ_ORG_EMAIL_TPL.nextVal,6,'0') FROM DUAL
+	</select>
+	
+	<insert id="insert" parameterType="orgEmailTplVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 이메일 템플릿의 정보 등록
+	 	*/
+		INSERT INTO TB_ORG_EMAIL_TPL (
+		       TPL_CD
+		     , ORG_CD
+		     , TPL_NM
+		     , TPL_DESC
+		     , TPL_CTS
+		     , TPL_ODR
+		     , USE_YN
+		     , EDITOR_YN
+		     , REG_NO
+		     , REG_DTTM
+		     , MOD_NO
+		     , MOD_DTTM
+		     , TPL_TYPE
+		) VALUES (
+		       #{tplCd}
+		     , #{orgCd}
+		     , #{tplNm}
+		     , #{tplDesc}
+		     , #{tplCts}
+		     , ( SELECT NVL(MAX(TPL_ODR),0)+1
+		           FROM TB_ORG_EMAIL_TPL
+		          WHERE ORG_CD = #{orgCd} )
+		     , #{useYn}
+		     , #{editorYn}
+		     , #{regNo}
+		     , TO_CHAR(SYSDATE, 'yyyymmddhh24miss')
+		     , #{modNo}
+		     , TO_CHAR(SYSDATE, 'yyyymmddhh24miss')
+		     , #{tplType}
+		)
+	</insert>
+	
+	<update id="update" parameterType="orgEmailTplVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 이메일 템플릿의 정보 수정
+	 	*/
+		UPDATE TB_ORG_EMAIL_TPL
+		   SET TPL_NM = #{tplNm}
+		     , TPL_DESC = #{tplDesc}
+		     , TPL_CTS = #{tplCts}
+		     , TPL_ODR = #{tplOdr}
+		     , USE_YN = #{useYn}
+		     , EDITOR_YN = #{editorYn}
+		     , MOD_NO = #{modNo}
+		     , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		 WHERE ORG_CD = #{orgCd}
+		   AND TPL_CD = #{tplCd}
+	</update>	
+
+	<delete id="delete" parameterType="orgEmailTplVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 이메일 템플릿의 정보 삭제
+	 	*/
+		DELETE FROM TB_ORG_EMAIL_TPL
+		 WHERE ORG_CD = #{orgCd}
+		   AND TPL_CD = #{tplCd}
+	</delete>
+	 
+	<delete id="deleteAll" parameterType="orgEmailTplVO" >
+		/*
+			 SQL ID : deleteAll
+			 설  명 : 기관 이메일 템플릿 전체 삭제
+	 	*/
+		DELETE FROM TB_ORG_EMAIL_TPL
+		 WHERE ORG_CD = #{orgCd}
+	</delete>
+</mapper>

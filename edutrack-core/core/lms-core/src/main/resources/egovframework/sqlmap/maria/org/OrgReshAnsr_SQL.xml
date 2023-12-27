@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.org.resh.service.impl.OrgReshAnsrMapper">	
+	<sql id="selectColumnQuery">
+				 ORG_CD 							
+		       , RESH_SN 								
+		       , USER_NO 								
+		       , RESH_ITEM_SN 							
+		       , RESH_ANSR 							
+		       , REG_NO 								
+			    , (SELECT FN_GET_USER_NAME(REG_NO) 	
+		             ) AS REG_NM				
+		       , REG_DTTM 								
+		       , MOD_NO 								
+			    , (SELECT FN_GET_USER_NAME(MOD_NO) 	
+		             ) AS MOD_NM				
+		       , MOD_DTTM 								
+	</sql>
+	<sql id="selectQuery">
+		  SELECT
+		  <include refid="selectColumnQuery" />				
+		  FROM TB_ORG_RESH_ANSR 						
+		  WHERE ORG_CD = #{orgCd}				
+		     AND RESH_SN = #{reshSn}						
+		     AND USER_NO = #{userNo}	
+	</sql>
+	<sql id="selectSearchQuery">
+		  SELECT A.ORG_CD 							
+		       , A.RESH_SN 							
+		       , A.USER_NO 								
+		       , A.RESH_ITEM_SN 						
+		       , A.RESH_ANSR 							
+		       , B.USER_NM								
+		       , C.USER_ID								
+		       , A.REG_NO 								
+			    , (SELECT FN_GET_USER_NAME(A.REG_NO) 	
+		             ) AS REG_NM				
+		       , A.REG_DTTM 							
+		       , A.MOD_NO 								
+			    , (SELECT FN_GET_USER_NAME(A.MOD_NO) 	
+		             ) AS MOD_NM				
+		       , A.MOD_DTTM 							
+		    FROM TB_ORG_RESH_ANSR A, TB_USR_USER_INFO B, TB_USR_LOGIN C	
+		   WHERE A.ORG_CD = #{orgCd}				
+		     AND A.RESH_SN = #{reshSn}					
+		     AND A.RESH_ITEM_SN = #{reshItemSn}			
+		     AND A.USER_NO = B.USER_NO					
+		     AND B.USER_NO = C.USER_NO					
+	</sql>
+	<select id="count" parameterType="orgReshAnsrVO" resultType="Integer">
+		SELECT 
+			COUNT(1)
+		FROM TB_ORG_RESH_ANSR 						
+		WHERE ORG_CD = #{orgCd}				
+		     AND RESH_SN = #{reshSn}						
+		     AND USER_NO = #{userNo}	
+	</select>	
+ 	<select id="list" parameterType="orgReshAnsrVO" resultType="orgReshAnsrVO">
+	    <include refid="selectQuery" />
+	</select>
+     <select id="listPageing" parameterType="orgReshAnsrVO" resultType="orgReshAnsrVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		ORDER BY ORG_CD ,RESH_SN ,USER_NO ,RESH_ITEM_SN
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	<select id="select" parameterType="orgReshAnsrVO" resultType="orgReshAnsrVO">
+	    <include refid="selectQuery" />
+	     AND  RESH_ITEM_SN = #{reshItemSn}
+	</select>
+
+    <insert id="insert" parameterType="orgReshAnsrVO">
+		  INSERT INTO TB_ORG_RESH_ANSR (				
+		         ORG_CD 							
+		       , RESH_SN 								
+		       , USER_NO 								
+		       , RESH_ITEM_SN 							
+		       , RESH_ANSR
+		       , ETC_ANSR 							
+		       , REG_NO 								
+		       , REG_DTTM 								
+		       , MOD_NO 								
+		       , MOD_DTTM 								
+		  ) VALUES (                                   
+		         #{orgCd} 							
+		       , #{reshSn} 								
+		       , #{userNo} 								
+		       , #{reshItemSn} 							
+		       , #{reshAnsr}
+		       , #{etcAnsr} 							
+		       , #{regNo} 								
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 	
+		       , #{modNo} 								
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 
+		  )	ON
+     		 DUPLICATE KEY
+   		     UPDATE
+			      RESH_SN = #{reshSn},
+			      USER_NO = #{userNo},
+			      RESH_ITEM_SN = #{reshItemSn},
+			      RESH_ANSR = #{reshAnsr},
+			      MOD_NO = #{modNo},
+			      MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+    </insert>
+   <update id="update" parameterType="orgReshAnsrVO">
+		  UPDATE TB_ORG_RESH_ANSR									
+		     SET RESH_ANSR = #{reshAnsr} 							
+		       , MOD_NO = #{modNo} 									
+		       , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 	
+		   WHERE ORG_CD = #{orgCd} 							
+		     AND RESH_SN = #{reshSn} 								
+		     AND USER_NO = #{userNo} 									
+		     AND RESH_ITEM_SN = #{reshItemSn} 	 
+    </update>
+
+
+	<delete id="delete" parameterType="orgReshAnsrVO">
+		 	DELETE  FROM TB_ORG_RESH_ANSR		    	
+		   WHERE ORG_CD = #{orgCd} 				
+		     AND RESH_SN = #{reshSn} 					
+		     AND USER_NO = #{userNo} 						
+		     AND RESH_ITEM_SN = #{reshItemSn}   			
+    </delete>
+
+
+ 	<select id="listOpinion" parameterType="orgReshAnsrVO" resultType="orgReshAnsrVO">
+	    <include refid="selectSearchQuery" />
+		<if test = "reshAnsr != null and reshAnsr != ''">                          			
+	    	AND A.RESH_ANSR = #{reshAnsr}	
+	    </if>	
+  
+		<choose>
+			<when test = "sortKey != null and sortKey == 'USER_NM_ASC'">
+				 ORDER BY B.USER_NM ASC 	
+			</when>
+			<when test = "sortKey != null and sortKey == 'USER_NM_DESC'">
+			 	ORDER BY B.USER_NM DESC
+			</when>
+			<when test = "sortKey != null and sortKey == 'USER_ID_ASC'">
+			 	ORDER BY C.USER_ID ASC
+			</when>
+			<when test = "sortKey != null and sortKey == 'USER_ID_DESC'">
+			 	ORDER BY C.USER_ID DESC 	
+			</when>
+			<otherwise>
+			   ORDER BY A.REG_DTTM
+			</otherwise>
+		</choose>
+	</select>
+ 	<select id="listExcel" parameterType="orgReshAnsrVO" resultType="orgReshAnsrVO">
+		 SELECT D.USER_ID  
+		      , ( SELECT FN_GET_USER_NAME(D.USER_NO) ) AS USER_NM  
+		      , A.USER_NO  
+		      , C.RESH_SN  
+		      , B.RESH_ITEM_SN  
+		      , A.RESH_ANSR  
+		   FROM TB_ORG_RESH_ANSR A, TB_CRS_RESH_ITEM B, TB_CRS_CRE_CRS_RESH C  
+		      , TB_USR_LOGIN D  
+		  WHERE A.USER_NO = D.USER_NO  
+		    AND A.RESH_SN = B.RESH_SN  
+		    AND A.RESH_ITEM_SN = B.RESH_ITEM_SN  
+		    AND B.RESH_SN = D.RESH_SN  
+		    AND C.ORG_CD = #{orgCd}  
+		    AND C.RESH_SN = #{reshSn}  
+		  ORDER BY A.USER_NO, B.ITEM_ODR  
+	</select>
+ 	<select id="listNoReshSn" parameterType="orgReshAnsrVO" resultType="orgReshAnsrVO">
+		  SELECT ORG_CD 							
+		       , RESH_SN 								
+		       , USER_NO 								
+		    FROM TB_ORG_RESH_ANSR 						
+		   WHERE ORG_CD = #{orgCd}				
+		     AND USER_NO = #{userNo}
+	</select>
+
+	<select id="listCount" parameterType="orgReshAnsrVO" resultType="orgReshAnsrVO">
+		 SELECT COUNT(1) AS RESH_CNT					
+		    FROM TB_ORG_RESH_ANSR 						
+		   WHERE ORG_CD = #{orgCd}				
+		     AND RESH_SN = #{reshSn}	
+	</select>
+
+	<select id="selectAsrList" parameterType="orgReshAnsrVO" resultType="orgReshAnsrVO">
+		SELECT
+			 B.ITEM_ODR as itemOdr
+			,B.RESH_ITEM_SN reshItemSn
+			,B.RESH_ITEM_CTS as reshItemCts
+			,A.RESH_ANSR as reshAnsr
+			,B.RESH_ITEM_TYPE_CD as reshAnsrTypeCd		 
+		FROM 
+		  	TB_ORG_RESH_ANSR A, TB_ORG_RESH_ITEM B					
+		WHERE 				
+			A.RESH_ITEM_SN = B.RESH_ITEM_SN
+			AND A.RESH_SN = #{reshSn}
+			AND A.USER_NO = #{userNo}
+		ORDER BY
+			B.ITEM_ODR
+	</select>
+	
+	<select id="listReshAnsr" parameterType="egovframework.edutrack.modules.org.resh.service.OrgReshResultVO" resultType="egovframework.edutrack.modules.org.resh.service.OrgReshResultVO">
+		  SELECT RESH_SN 									
+		       , RESH_ITEM_SN 								
+		       , RESH_ITEM_TYPE_CD 						
+		       , ( SELECT FN_GET_CODE_NAME('RESH_ITEM_TYPE_CD', RESH_ITEM_TYPE_CD )	
+		             ) AS RESH_ITEM_TYPE_NM		
+		       , RESH_ITEM_CTS 							
+		       , ITEM_ODR 									
+		       , EMPL_1 									
+		       , EMPL_2 									
+		       , EMPL_3 									
+		       , EMPL_4 									
+		       , EMPL_5 									
+		       , EMPL_6 									
+		       , EMPL_7 									
+		       , EMPL_8 									
+		       , EMPL_9 									
+		       , EMPL_10 AS EMPL_1_0  									
+		       , EMPL_11 AS EMPL_1_1 									
+		       , EMPL_12 AS EMPL_1_2 									
+		       , EMPL_13 AS EMPL_1_3  									
+		       , EMPL_14 AS EMPL_1_4  									
+		       , EMPL_15 AS EMPL_1_5  									
+		       , EMPL_16 AS EMPL_1_6  									
+		       , EMPL_17 AS EMPL_1_7  									
+		       , EMPL_18 AS EMPL_1_8  									
+		       , EMPL_19 AS EMPL_1_9  									
+		       , EMPL_20 AS EMPL_2_0  									
+		       , EMPL_CNT 									
+		       , EMPL_VIEW_TYPE 							
+		       , ( SELECT RESH_ANSR
+		             FROM TB_ORG_RESH_ANSR					
+		            WHERE ORG_CD = #{orgCd}		
+		              AND RESH_SN = #{reshSn}	 	 		
+		              AND RESH_ITEM_SN = A.RESH_ITEM_SN	
+		              AND USER_NO = #{userNo}
+				)AS RESH_ANSR			
+		    FROM TB_ORG_RESH_ITEM A						
+		   WHERE RESH_SN = #{reshSn}							
+		   ORDER BY ITEM_ODR		
+	</select>
+
+ 	<select id="listAnsrList" parameterType="orgReshAnsrVO" resultType="orgReshAnsrVO">
+		SELECT
+			A.ORG_CD 							
+		,	A.RESH_SN 								
+		,	A.USER_NO 								
+		,	A.RESH_ITEM_SN 							
+		,	A.RESH_ANSR 							
+		,	A.REG_NO 		
+		,	FN_GET_RESH_ITEM_NAME(A.RESH_ITEM_SN ,A.RESH_SN ,A.RESH_ANSR) AS RESH_ITEM_CTSK
+		,	(SELECT FN_GET_USER_NAME(A.REG_NO))AS REG_NM			
+		,	A.REG_DTTM 								
+		,	A.MOD_NO 								
+		,	(SELECT FN_GET_USER_NAME(A.MOD_NO))AS MOD_NM				
+		,	A.MOD_DTTM 								
+		,	(SELECT RESH_ITEM_CTS FROM tb_org_resh_item WHERE A.RESH_SN = RESH_SN AND A.RESH_ITEM_SN = RESH_ITEM_SN) AS RESH_ITEM_CTS
+		,	(SELECT RESH_ITEM_TYPE_CD FROM tb_org_resh_item WHERE A.RESH_SN = RESH_SN AND A.RESH_ITEM_SN = RESH_ITEM_SN) AS RESH_ITEM_TYPE_CD
+		FROM tb_org_resh_ansr AS A 						
+		WHERE	ORG_CD = #{orgCd}				
+			AND RESH_SN = #{reshSn}						
+			AND USER_NO = #{userNo}	
+	</select>
+</mapper>	

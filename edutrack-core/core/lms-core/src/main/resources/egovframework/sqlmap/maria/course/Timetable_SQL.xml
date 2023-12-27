@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.createcoursetimetable.service.impl.TimetableMapper">	
+
+
+ 	<select id="listTimetable" parameterType="timetableVO" resultType="timetableVO">
+			SELECT  A.TMTAB_SN 																		
+		        ,  A.CRS_CRE_CD 																	
+		        ,  A.DECLS_NO	 																	
+		        ,  A.TMTAB_DAY 																	
+				 ,  A.TMTAB_MONTHDAY																
+		        ,  A.TMTAB_ODR 																	
+		        ,  A.TMTAB_TYPE 																	
+		        ,  (SELECT FN_GET_CODE_NAME('TMTAB_TYPE',A.TMTAB_TYPE)) AS TMTAB_TYPE_NM	
+		        ,  A.SBJ_CD 																		
+		        ,  ( SELECT SBJ_NM																	
+		               FROM tb_crs_ofln_sbj														
+		              WHERE SBJ_CD = A.SBJ_CD ) AS SBJ_NM											
+		        ,  A.EDU_TM 																		
+		        ,  A.USER_NO 																		
+		        ,  ( SELECT USER_NM																
+		               FROM tb_usr_user_info														
+		              WHERE USER_NO = A.USER_NO ) AS USER_NM										
+		        ,  A.ADD_TCH																		
+		        ,  A.EDU_CTS 																		
+		        ,  A.REG_NO 																		
+		        ,  A.REG_DTTM 																		
+		        ,  A.MOD_NO 																		
+		        ,  A.MOD_DTTM 																		
+			     ,  (SELECT FN_GET_USER_NAME(A.MOD_NO)) AS MOD_NM							
+			     ,  (SELECT FN_GET_USER_NAME(A.REG_NO)) AS REG_NM							
+		     FROM  tb_crs_ofln_crs_tmtab A 														
+		    WHERE  CRS_CRE_CD 	= #{crsCreCd}															
+		      AND  DECLS_NO     = (CASE WHEN #{declsNo} = null THEN DECLS_NO
+		      							WHEN #{declsNo} = 0 THEN DECLS_NO
+		      							ELSE #{declsNo}
+		      						END)										
+		      AND  TMTAB_DAY 	= (CASE WHEN #{tmtabDay} = null THEN TMTAB_DAY
+		      							WHEN #{tmtabDay} = 0 THEN TMTAB_DAY
+		      							ELSE #{tmtabDay}	
+		      						END)		      
+		 	 ORDER  BY TMTAB_DAY, TMTAB_ODR	
+	</select>
+ 	<select id="listTimetableDay" parameterType="timetableVO" resultType="timetableVO">
+			SELECT  A.TMTAB_DAY 										
+		      	 ,  COUNT(*) AS SUB_CNT									
+		  	  FROM  tb_crs_ofln_crs_tmtab A 							
+		 	 WHERE  CRS_CRE_CD = #{crsCreCd}								
+		 	   AND  DECLS_NO = #{declsNo}									
+		 	 GROUP  BY TMTAB_DAY										
+		 	 ORDER  BY TMTAB_DAY	
+	</select>
+
+	<select id="selectTimetable" parameterType="timetableVO" resultType="timetableVO">
+			SELECT  A.TMTAB_SN 																		
+		        ,  A.CRS_CRE_CD 																	
+		        ,  A.TMTAB_DAY 																	
+				 ,  A.TMTAB_MONTHDAY																
+		        ,  A.TMTAB_ODR 																	
+		        ,  A.TMTAB_TYPE 																	
+		        ,  (SELECT FN_GET_CODE_NAME('TMTAB_TYPE',A.TMTAB_TYPE)) AS TMTAB_TYPE_NM	
+		        ,  A.SBJ_CD 																		
+		        ,  ( SELECT SBJ_NM																	
+		               FROM tb_crs_ofln_sbj														
+		              WHERE SBJ_CD = A.SBJ_CD ) AS SBJ_NM											
+		        ,  A.EDU_TM 																		
+		        ,  A.USER_NO 																		
+		        ,  ( SELECT USER_NM																
+		               FROM tb_usr_user_info														
+		              WHERE USER_NO = A.USER_NO ) AS USER_NM										
+		        ,  A.ADD_TCH																		
+		        ,  A.EDU_CTS 																		
+		        ,  A.REG_NO 																		
+		        ,  A.REG_DTTM 																		
+		        ,  A.MOD_NO 																		
+		        ,  A.MOD_DTTM 																		
+			     ,  (SELECT FN_GET_USER_NAME(A.MOD_NO)) AS MOD_NM							
+			     ,  (SELECT FN_GET_USER_NAME(A.REG_NO)) AS REG_NM							
+		     FROM  tb_crs_ofln_crs_tmtab A															
+		 	 WHERE  CRS_CRE_CD 	= #{crsCreCd}															
+		 	   AND  DECLS_NO 	= #{declsNo}															
+		      AND  TMTAB_SN 	= #{tmtabSn}	
+	</select>
+	<select id="selectTmtabSn"  resultType="timetableVO">
+		SELECT nextval(SQ_CRS_OFLN_CRS_TMTAB) AS TMTAB_SN 
+	</select>
+
+   <insert id="insertTimetable" parameterType="timetableVO">
+	 	INSERT  INTO tb_crs_ofln_crs_tmtab ( 				
+	         	TMTAB_SN 									
+	        ,  CRS_CRE_CD 									
+	        ,  DECLS_NO 									
+	        ,  TMTAB_DAY 									
+	        ,  TMTAB_MONTHDAY								
+	        ,  TMTAB_ODR 									
+	        ,  TMTAB_TYPE 									
+	        ,  SBJ_CD 										
+	        ,  EDU_TM 										
+	        ,  USER_NO 									
+	        ,  ADD_TCH 									
+	        ,  EDU_CTS 									
+	        ,  REG_NO 										
+	        ,  REG_DTTM 									
+	        ,  MOD_NO 										
+	        ,  MOD_DTTM 	)								
+		SELECT 	#{tmtabSn} 									
+	        ,  #{crsCreCd} 									
+	        ,  #{declsNo} 									
+	        ,  #{tmtabDay} 									
+	        ,  #{tmtabMonthday}								
+	        ,  IFNULL(FN_GET_NULL(MAX(TMTAB_ODR)),0)+1					
+	        ,  #{tmtabType} 									
+	        ,  #{sbjCd} 										
+	        ,  #{eduTm} 										
+	        ,  #{userNo} 									
+	        ,  #{addTch} 									
+	        ,  #{eduCts} 									
+	        ,  #{regNo} 										
+	        ,  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 		
+	        ,  #{modNo} 										
+	        ,  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')			
+	     FROM  tb_crs_ofln_crs_tmtab						
+	    WHERE  CRS_CRE_CD 	= #{crsCreCd}						
+	      AND  TMTAB_DAY 	= #{tmtabDay}										
+							
+   </insert>
+
+  <update id="updateTimetable" parameterType="timetableVO">
+	 	UPDATE  tb_crs_ofln_crs_tmtab  										
+	      SET  TMTAB_DAY 		= #{tmtabDay}									
+	        ,  TMTAB_MONTHDAY 	= #{tmtabMonthday}							
+	        ,  TMTAB_ODR 		= #{tmtabOdr}									
+	        ,  TMTAB_TYPE 		= #{tmtabType}								
+	        ,  SBJ_CD 			= #{sbjCd}									
+	        ,  EDU_TM 			= #{eduTm}									
+	        ,  USER_NO 		= #{userNo}									
+	        ,  ADD_TCH 		= #{addTch}									
+	        ,  EDU_CTS 		= #{eduCts}									
+	        ,  MOD_NO 			= #{modNo}									
+	        ,  MOD_DTTM 		= DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')		
+	    WHERE  CRS_CRE_CD 		= #{crsCreCd}									
+	      AND  DECLS_NO 		= #{declsNo	}								
+	      AND  TMTAB_SN 		= #{tmtabSn}	
+    </update>
+	<update id="updateTimetableBatch" parameterType="list" >
+		<foreach collection="list" item="item" index="index" open="DECLARE BEGIN" close="; END;" separator=";">
+		  UPDATE  tb_crs_ofln_crs_tmtab 
+		  SET
+			       TMTAB_DAY 		= #{item.tmtabDay}									
+		        ,  TMTAB_MONTHDAY 	= #{item.tmtabMonthday}							
+		        ,  TMTAB_ODR 		= #{item.tmtabOdr}									
+		        ,  TMTAB_TYPE 		= #{item.tmtabType}								
+		        ,  SBJ_CD 			= #{item.sbjCd}									
+		        ,  EDU_TM 			= #{item.eduTm}									
+		        ,  USER_NO 		= #{item.userNo}									
+		        ,  ADD_TCH 		= #{item.addTch}									
+		        ,  EDU_CTS 		= #{item.eduCts}									
+		        ,  MOD_NO 			= #{item.modNo}									
+		        ,  MOD_DTTM 		= DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		   WHERE  CRS_CRE_CD 		= #{item.crsCreCd}									
+		      AND  DECLS_NO 		= #{item.declsNo}									
+		      AND  TMTAB_SN 		= #{item.tmtabSn}  
+		</foreach>	     
+	</update>
+
+	<delete id="deleteTimetable" parameterType="timetableVO">
+		DELETE  FROM tb_crs_ofln_crs_tmtab	
+	    WHERE  CRS_CRE_CD	= #{crsCreCd}		
+	      AND  TMTAB_SN 	= #{tmtabSn}		
+    </delete>
+
+
+</mapper>	

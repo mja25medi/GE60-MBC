@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="egovframework.edutrack.modules.etc.hrdapi.service.impl.HrdApiStdMapper">	
+
+	<select id="countStdApiStatus" parameterType="HrdApiStdVO" resultType="egovMap">
+		/*
+			 SQL ID : countApiStatus
+			 설  명 : 기수별 수강 전송 데이터 전체 카운트
+	 	*/
+	 	SELECT 
+			(SELECT COUNT(*) FROM tb_hrd_std_std THSS WHERE CRS_CD = #{crsCd}) AS TOTAL_CNT
+			, (SELECT COUNT(*) FROM tb_hrd_std_std THSS WHERE CRS_CD = #{crsCd} AND SYNC_STATUS = 'S') AS SUCCESS_CNT
+			, (SELECT COUNT(*) FROM tb_hrd_std_std THSS WHERE CRS_CD = #{crsCd} AND SYNC_STATUS = 'F') AS FAIL_CNT
+			, (SELECT COUNT(*) FROM tb_hrd_std_std THSS WHERE CRS_CD = #{crsCd} AND SYNC_STATUS = 'W') AS WAIT_CNT
+		FROM DUAL
+	</select>		
+	
+	<select id="listStdInfo" parameterType="HrdApiStdVO" resultType="egovMap">
+		/*
+			 SQL ID : countApiStatus
+			 설  명 : 기수별 수강 전송 데이터 전체 카운트
+	 	*/
+	 	SELECT 
+			NUM
+			, AGENT_PK
+			, SEQ
+			, USER_AGENT_PK
+			, COURSE_AGENT_PK
+			, CLASS_AGENT_PK
+			, PASS_FLAG
+			, ATTEND_VALID_FLAG
+			, CHANGE_STATE
+			, DATE_FORMAT(REG_DATE, '%Y-%m-%d %h:%m:%s') AS REG_DATE
+			, EMP_INS_FLAG
+			, PROGRESS_RATE
+			, TOTAL_SCORE
+		FROM tb_hrd_std_std
+		WHERE 1 = 1
+		<if test = 'crsCd != null and crsCd != ""'>
+		AND CRS_CD = #{crsCd}
+		</if>
+		<if test = 'syncStatus != null and syncStatus != ""'>
+		AND SYNC_STATUS = #{syncStatus}
+		</if>
+	</select>		
+	
+	<select id="countStdInfo" parameterType="HrdApiStdVO" resultType="Integer">
+		/*
+			 SQL ID : countApiStatus
+			 설  명 : 기수별 수강 전송 데이터 전체 카운트
+	 	*/
+	 	SELECT COUNT(*)
+		FROM tb_hrd_std_std
+		WHERE 1 = 1
+		<if test = 'crsCd != null and crsCd != ""'>
+		AND CRS_CD = #{crsCd}
+		</if>
+		<if test = 'syncStatus != null and syncStatus != ""'>
+		AND SYNC_STATUS = #{syncStatus}
+		</if>
+	</select>		
+	
+	<select id="listStdInfoPageing" parameterType="HrdApiStdVO" resultType="egovMap">
+		/*
+			 SQL ID : listPageingUserInfo
+			 설  명 : 년도 기수별 전송 데이터 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	SELECT 
+			NUM
+			, AGENT_PK
+			, SEQ
+			, USER_AGENT_PK
+			, COURSE_AGENT_PK
+			, CLASS_AGENT_PK
+			, PASS_FLAG
+			, ATTEND_VALID_FLAG
+			, CHANGE_STATE
+			, DATE_FORMAT(REG_DATE, '%Y-%m-%d %h:%m:%s') AS REG_DATE
+			, EMP_INS_FLAG
+			, PROGRESS_RATE
+			, TOTAL_SCORE
+			, SYNC_STATUS
+			, SYNC_RESULT_MSG
+			, MOD_DTTM
+		FROM tb_hrd_std_std
+		WHERE 1 = 1
+		<if test = 'crsCd != null and crsCd != ""'>
+		AND CRS_CD = #{crsCd}
+		</if>
+		<if test = 'syncStatus != null and syncStatus != ""'>
+		AND SYNC_STATUS = #{syncStatus}
+		</if>
+	 	<if test = "searchKey != null and searchKey == 'pk' and searchValue != null and searchValue != ''">
+			AND A.USER_AGENT_PK like CONCAT('%',#{searchValue},'%')
+		</if>
+		<if test = "searchKey != null and searchKey == 'pkNm' and searchValue != null and searchValue != ''">
+			AND A.USER_NAME like CONCAT('%',#{searchValue},'%')
+		</if>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		<if test = 'sortKey == null or sortKey == ""'>
+		   ORDER BY MOD_DTTM DESC
+		</if>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<insert id="insertHrdApiStd" parameterType="HrdApiStdVO">
+		  INSERT INTO tb_hrd_std_std  (										
+		         AGENT_PK
+			   , SEQ
+			   , USER_AGENT_PK
+			   , COURSE_AGENT_PK
+			   , CLASS_AGENT_PK
+			   , PASS_FLAG
+			   , ATTEND_VALID_FLAG
+			   , CHANGE_STATE
+			   , REG_DATE
+			   , EMP_INS_FLAG
+			   , PROGRESS_RATE
+			   , TOTAL_SCORE
+			   , CRS_CD
+			   , STD_NO
+			   , CRS_YEAR
+			   , CRS_TERM
+			   , SYNC_STATUS
+			   , SYNC_RESULT_MSG
+			   , REG_NO
+			   , REG_DTTM
+			   , MOD_NO
+			   , MOD_DTTM			   
+		 ) VALUES (														
+		         #{agentPk} 													
+		       , #{seq}												
+		       , #{userAgentPk} 													
+		       , #{courseAgentPk} 													
+		       , #{classAgentPk} 													
+		       , #{passFlag} 											
+		       , #{attendValidFlag} 												
+		       , #{changeState}				
+		       , DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')	       
+		       , #{empInsFlag} 											
+		       , #{progressRate} 											
+		       , #{totalScore} 											
+		       , #{crsCd} 													
+		       , #{stdNo} 													
+		       , #{crsYear} 												
+		       , #{crsTerm} 												
+		       , #{syncStatus}													
+		       , ''												
+		       , #{regNo} 													
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		       , #{modNo}
+			   , DATE_FORMAT( NOW(), '%Y%m%d%H%i%s')				
+		 ) 	
+	</insert>
+	
+	<update id="updateHrdApiStd" parameterType="HrdApiStdVO" >
+		/*
+			 SQL ID : updateHrdApiSync
+			 설  명 : api 년도 기수별 전송 데이터  수정
+	 	*/
+		UPDATE tb_hrd_std_std
+		   SET MOD_DTTM         =   DATE_FORMAT( NOW(), '%Y%m%d%H%i%s')  
+		     <if test = 'syncResultMsg != null'>
+		     , SYNC_RESULT_MSG  =   #{syncResultMsg}
+		     </if>
+		     <if test = 'modNo != null and modNo != ""'>
+		     , MOD_NO			=   #{modNo}
+		     </if>
+		     <if test = 'syncStatus != null and syncStatus != ""'>
+			 , SYNC_STATUS      =   #{syncStatus}
+		     </if>
+		WHERE CRS_CD = #{crsCd}
+		<if test = 'crsYear != null and crsYear != ""'>
+			AND CRS_YEAR = #{crsYear}
+		</if>
+		<if test = 'crsTerm != null and crsTerm != ""'>
+			AND CRS_TERM = #{crsTerm}
+		</if>
+		<if test = "searchKey != null and searchKey == 'syncStatus' and searchValue != null and searchValue != ''">
+		   AND SYNC_STATUS = #{searchValue}
+		</if>
+	</update>
+	
+</mapper>

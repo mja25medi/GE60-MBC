@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.log.tchactstatus.service.impl.LogTchActStatusMapper">	
+	<sql id="selectQuery">
+		 SELECT 
+		<![CDATA[
+		 		A.USER_NO 
+		      , A.USER_NM 
+		      , A.ORG_CD 
+		      , B.USER_ID 
+		      , A.EMAIL 
+		      , A.MOBILE_NO 
+		      , ( SELECT COUNT(*) 
+		            FROM TB_CRS_CRE_CRS_TCH T1, TB_CRS_CRE_CRS T2 
+		           WHERE T1.CRS_CRE_CD = T2.CRS_CRE_CD 
+		             AND T1.USER_NO = A.USER_NO 
+		             AND T2.ENRL_END_DTTM < TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+		        ) AS END_CRS_CNT 
+		      , ( SELECT COUNT(*) 
+		            FROM TB_CRS_CRE_CRS_TCH T1, TB_CRS_CRE_CRS T2 
+		           WHERE T1.CRS_CRE_CD = T2.CRS_CRE_CD 
+		             AND T1.USER_NO = A.USER_NO 
+		             AND TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') BETWEEN T2.ENRL_START_DTTM AND T2.ENRL_END_DTTM   
+		        ) AS ING_CRS_CNT 
+		      , ( SELECT COUNT(*) 
+		            FROM TB_CRS_CRE_CRS_TCH T1, TB_CRS_CRE_CRS T2 
+		           WHERE T1.CRS_CRE_CD = T2.CRS_CRE_CD 
+		             AND T1.USER_NO = A.USER_NO 
+		             AND T2.ENRL_START_DTTM > TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')   
+		        ) AS BEF_CRS_CNT 
+  		]]>		        
+		   FROM TB_USR_USER_INFO A, TB_USR_LOGIN B 
+		  WHERE A.USER_NO = B.USER_NO 
+		    AND A.ORG_CD = #{orgCd} 
+		    AND EXISTS ( SELECT USER_NO  
+		                   FROM TB_USR_USER_AUTH_GRP 
+		                  WHERE AUTH_GRP_CD IN('TEACHER', 'TUTOR')  
+		                    AND USER_NO = A.USER_NO ) 
+	</sql>
+	<sql id="selectCountQuery">
+		 SELECT 
+				COUNT(*)        
+		   FROM TB_USR_USER_INFO A, TB_USR_LOGIN B 
+		  WHERE A.USER_NO = B.USER_NO 
+		    AND A.ORG_CD = #{orgCd} 
+		    AND EXISTS ( SELECT USER_NO  
+		                   FROM TB_USR_USER_AUTH_GRP 
+		                  WHERE AUTH_GRP_CD IN('TEACHER', 'TUTOR')  
+		                    AND USER_NO = A.USER_NO ) 
+	</sql>
+	<sql id="selectlistWhereQuery">
+		<if test = 'searchValue != null and searchValue != ""'>
+			<if test = 'searchKey == "userid"'>
+				AND B.USER_ID like '%'||#{searchValue}||'%' 
+			</if>
+			<if test = 'searchKey != "userid"'>
+				AND A.USER_NM like '%'||#{searchValue}||'%' 
+			</if>
+		</if>
+		<if test = 'sortKey != null and sortKey != ""'>
+			<if test = 'sortKey == "USER_ID_ASC"'>
+				ORDER BY B.USER_ID ASC  
+			</if>
+			<if test = 'sortKey == "USER_NM_ASC"'>
+				ORDER BY A.USER_NM ASC   
+			</if>
+			<if test = 'sortKey == "USER_NM_DESC"'>
+				ORDER BY A.USER_NM DESC  
+			</if>
+		</if>
+	</sql>
+	<sql id="selectListQuery">
+		<include refid="selectQuery" />
+		<include refid="selectlistWhereQuery" />
+		<if test = 'sortKey == null or sortKey == ""'>
+			ORDER BY A.USER_NM 
+		</if>
+
+	</sql>
+	<sql id="selectListDetailQuery">
+		 SELECT A.CRS_CRE_NM 
+		      , A.CRS_CRE_CD 
+		      , A.CRE_YEAR 
+		      , A.CRE_TERM 
+		      , A.ENRL_START_DTTM 
+		      , A.ENRL_END_DTTM 
+		      , ( SELECT COUNT(*) 
+		            FROM TB_STD_STD 
+		           WHERE CRS_CRE_CD = A.CRS_CRE_CD 
+		             AND ENRL_STS IN ('S','C','F') ) AS STD_CNT 
+		      , NVL(( SELECT SUM(CONN_CNT) 
+		                FROM TB_LOG_CLASS_CONN_LOG 
+		               WHERE CRS_CRE_CD = A.CRS_CRE_CD 
+		                 AND USER_NO = B.USER_NO ),0) AS CLASS_CONN_CNT 
+		      , ( SELECT COUNT(*) 
+		            FROM TB_LEC_BBS_ATCL 
+		           WHERE CRS_CRE_CD = A.CRS_CRE_CD 
+		             AND REG_NO = B.USER_NO ) AS BBS_ATCL_CNT 
+		      , ( SELECT COUNT(*) 
+		            FROM TB_LEC_BBS_CMNT 
+		           WHERE CRS_CRE_CD = A.CRS_CRE_CD 
+		             AND REG_NO = B.USER_NO ) AS BBS_CMNT_CNT            
+		      , ( SELECT COUNT(*) 
+		            FROM TB_LEC_EXAM 
+		           WHERE CRS_CRE_CD = A.CRS_CRE_CD 
+		             AND REG_YN = 'Y' ) AS EXAM_CNT 
+		      , ( SELECT COUNT(*) 
+		            FROM TB_LEC_ASMT 
+		           WHERE CRS_CRE_CD = A.CRS_CRE_CD 
+		             AND REG_YN = 'Y' ) AS ASMT_CNT 
+		      , ( SELECT COUNT(*) 
+		            FROM TB_LEC_FORUM 
+		           WHERE CRS_CRE_CD = A.CRS_CRE_CD ) AS FORUM_CNT 
+		      , ( SELECT COUNT(*) 
+		            FROM TB_LEC_FORUM_ATCL 
+		           WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+		             AND REG_NO = B.USER_NO ) AS FORUM_ATCL_CNT           
+		      , ( SELECT COUNT(*) 
+		            FROM TB_LEC_FORUM_CMNT 
+		           WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+		             AND REG_NO = B.USER_NO ) AS FORUM_CMNT_CNT 
+		   FROM TB_CRS_CRE_CRS A, TB_CRS_CRE_CRS_TCH B 
+		  WHERE A.CRS_CRE_CD = B.CRS_CRE_CD 
+		    AND B.USER_NO = #{userNo} 
+		<if test = 'searchDuration == "end"'>
+		<![CDATA[
+			    AND A.ENRL_END_DTTM < TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 
+  		]]>			    
+		</if>	    
+		<if test = 'searchDuration == "ing"'>
+			    AND TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') BETWEEN A.ENRL_START_DTTM AND A.ENRL_END_DTTM 
+		</if>	    
+		<if test = 'searchDuration == "bef"'>
+			    AND A.ENRL_START_DTTM > TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 
+		</if>
+		  ORDER BY A.ENRL_END_DTTM DESC 
+
+	</sql>
+	
+	<sql id="selectListCountQuery">
+		 SELECT COUNT(*)
+		   FROM TB_CRS_CRE_CRS A, TB_CRS_CRE_CRS_TCH B 
+		  WHERE A.CRS_CRE_CD = B.CRS_CRE_CD 
+		    AND B.USER_NO = #{userNo} 
+		<if test = 'searchDuration == "end"'>
+		<![CDATA[
+			    AND A.ENRL_END_DTTM < TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 
+  		]]>			    
+		</if>	    
+		<if test = 'searchDuration == "ing"'>
+			    AND TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') BETWEEN A.ENRL_START_DTTM AND A.ENRL_END_DTTM 
+		</if>	    
+		<if test = 'searchDuration == "bef"'>
+			    AND A.ENRL_START_DTTM > TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 
+		</if>
+
+	</sql>
+	<select id="list" parameterType="logTchActStatusVO" resultType="logTchActStatusVO">
+		<include refid="selectListQuery" />
+	</select>
+	<select id="count" parameterType="logTchActStatusVO" resultType="Integer">
+		<include refid="selectCountQuery" />
+		<include refid="selectlistWhereQuery" />
+	</select>
+	<select id="listPageing" parameterType="logTchActStatusVO" resultType="logTchActStatusVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectListQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	<select id="listCourse" parameterType="logTchActStatusDetailVO" resultType="logTchActStatusDetailVO">
+		<include refid="selectListDetailQuery" />
+	</select>
+	<select id="courseCount" parameterType="logTchActStatusDetailVO" resultType="Integer">
+	    <include refid="selectListCountQuery" />
+	</select>
+	<select id="listCoursePageing" parameterType="logTchActStatusDetailVO" resultType="logTchActStatusDetailVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectListDetailQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	<select id="select" parameterType="logTchActStatusVO" resultType="logTchActStatusVO">
+		  SELECT A.USER_NO 																		
+		       , A.TCH_CTGR_CD 																	
+		       , ( SELECT FN_GET_CODE_NAME('TCH_CTGR_CD', A.TCH_CTGR_CD) FROM DUAL )				
+		         AS TCH_CTGR_NM																	
+		       , A.TCH_DIV_CD 																		
+		       , ( SELECT FN_GET_CODE_NAME('TCH_DIV_CD', A.TCH_DIV_CD) FROM DUAL )					
+		         AS TCH_DIV_NM																		
+		       , A.CRER 																			
+		       , A.MAJOR 																			
+		       , A.REG_NO 																			
+		       , A.REG_DTTM 																		
+		       , A.MOD_NO 																			
+		       , A.MOD_DTTM 																		
+		    FROM TB_TCH_TCH_INFO A																	
+		   WHERE USER_NO = #{userNo}
+	</select>
+	<select id="listMonth" parameterType="logTchActStatusDetailVO" resultType="logTchActStatusDetailVO">
+			SELECT  A.CODE_NM AS CODE_NM																	
+				 ,  NVL(SUM(B.CONN_CNT),0) AS CONN_CNT														
+			  FROM  TB_SYS_CODE A,																			
+					( SELECT TO_CHAR(TO_DATE(YEAR||MONTH||DAY,'YYYYMMDD'),'MM') AS MONTH					
+						   , NVL(CONN_CNT,0) AS CONN_CNT													
+						FROM TB_LOG_CLASS_CONN_LOG															
+					   WHERE YEAR||MONTH||DAY BETWEEN replace(#{startDt},'.','') AND replace(#{endDt},'.','')	
+					     AND USER_NO = #{userNo}															
+			<if test = 'orgCd != null and orgCd != ""'>
+					     AND ORG_CD = #{orgCd}		
+			</if>		     													
+			<if test = 'crsCreCd != null and crsCreCd != ""'>
+					     AND CRS_CRE_CD = #{crsCreCd}		
+			</if>		     													
+			<if test = 'crsCreCd == null or crsCreCd == ""'>
+					     AND CRS_CRE_CD IN (															
+					          	SELECT C.CRS_CRE_CD FROM TB_CRS_CRE_CRS C, TB_CRS_CRE_CRS_TCH D															
+					             WHERE C.CRS_CRE_CD = D.CRS_CRE_CD															
+					            AND D.USER_NO = #{userNo}		
+				<if test = 'searchDuration == "end"'>	            													
+					<![CDATA[
+			    			AND C.ENRL_END_DTTM < TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 
+  					]]>
+			    </if>			
+				<if test = 'searchDuration == "ing"'>	            													
+			    			AND TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') BETWEEN C.ENRL_START_DTTM AND C.ENRL_END_DTTM 
+			    </if>			
+				<if test = 'searchDuration == "bef"'>	            													
+			    			AND C.ENRL_START_DTTM > TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 
+				</if>
+					         )															
+			</if>
+					) B																						
+			 WHERE  A.CODE_CTGR_CD     = 'STAUS_MONTH'														
+			   AND  DECODE(LENGTH(A.CODE_CD), 1 , LPAD(A.CODE_CD,2,'0'),A.CODE_CD)  = B.MONTH (+)			
+			 GROUP  BY A.CODE_NM, A.CODE_ODR, B.MONTH														
+			 ORDER  BY A.CODE_ODR
+	</select>
+	<select id="listWeek" parameterType="logTchActStatusDetailVO" resultType="logTchActStatusDetailVO">
+		 	SELECT 	A.CODE_NM AS CODE_NM																	
+		        ,  NVL(SUM(B.CONN_CNT),0) AS CONN_CNT														
+		     FROM  TB_SYS_CODE A,																			
+		           ( SELECT TO_CHAR(TO_DATE(YEAR||MONTH||DAY,'YYYYMMDD'),'D') AS WEEK						
+		                  , NVL(CONN_CNT,0) AS CONN_CNT														
+				     	FROM TB_LOG_CLASS_CONN_LOG															
+		              WHERE YEAR||MONTH||DAY BETWEEN replace(#{startDt},'.','') AND replace(#{endDt},'.','')	
+					     AND USER_NO = #{userNo}															
+			<if test = 'orgCd != null and orgCd != ""'>
+						     AND ORG_CD = #{orgCd}	
+			</if>		     														
+			<if test = 'crsCreCd != null and crsCreCd != ""'>
+					     AND CRS_CRE_CD = #{crsCreCd}															
+			</if>
+			<if test = 'crsCreCd == null or crsCreCd == ""'>
+					     AND CRS_CRE_CD IN (															
+					          	SELECT C.CRS_CRE_CD FROM TB_CRS_CRE_CRS C, TB_CRS_CRE_CRS_TCH D															
+					             WHERE C.CRS_CRE_CD = D.CRS_CRE_CD															
+					            AND D.USER_NO = #{userNo}															
+				<if test = 'searchDuration == "end"'>	            													
+					<![CDATA[
+			    			AND C.ENRL_END_DTTM < TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 
+  					]]>
+			    </if>			
+				<if test = 'searchDuration == "ing"'>	            													
+			    			AND TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') BETWEEN C.ENRL_START_DTTM AND C.ENRL_END_DTTM 
+				</if>
+				<if test = 'searchDuration == "bef"'>	            													
+			    			AND C.ENRL_START_DTTM > TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 
+				</if>
+					         )															
+			</if>
+		        	) B																						
+		    WHERE  A.CODE_CTGR_CD 	= 'STATUS-WEEK'															
+		      AND  A.CODE_CD 		= B.WEEK (+)															
+		    GROUP  BY A.CODE_NM, A.CODE_ODR, B.WEEK															
+		    ORDER  BY A.CODE_ODR 			
+	</select>
+	<select id="listDay" parameterType="logTchActStatusDetailVO" resultType="logTchActStatusDetailVO">
+		 	SELECT  A.CODE_NM AS CODE_NM																	
+		        ,  NVL(SUM(B.CONN_CNT),0) AS CONN_CNT														
+		     FROM  TB_SYS_CODE A, (SELECT * FROM TB_LOG_CLASS_CONN_LOG WHERE CRS_CRE_CD IN (					
+		     		SELECT C.CRS_CRE_CD FROM TB_CRS_CRE_CRS C, TB_CRS_CRE_CRS_TCH D 			
+		     			WHERE C.CRS_CRE_CD = D.CRS_CRE_CD			
+		     			AND D.USER_NO = #{userNo}			
+				<if test = 'searchDuration == "end"'>	            													
+					<![CDATA[
+			    			AND C.ENRL_END_DTTM < TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 
+  					]]>
+			    </if>			
+				<if test = 'searchDuration == "ing"'>	            													
+			    			AND TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') BETWEEN C.ENRL_START_DTTM AND C.ENRL_END_DTTM 
+				</if>
+				<if test = 'searchDuration == "bef"'>	            													
+			    			AND C.ENRL_START_DTTM > TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 
+				</if>
+		     		 )        			
+		     ) B						
+		    WHERE  A.CODE_CTGR_CD = 'STATUS_DAY'															
+		      AND  YEAR(+)||MONTH(+)||DAY(+) BETWEEN replace(#{startDt},'.','') AND replace(#{endDt},'.','')	
+		      AND  A.CODE_CD = B.DAY (+)																	
+		      AND  B.USER_NO(+) = #{userNo}																	
+				if (ValidationUtils.isNotEmpty(dto.getOrgCd()))
+			      AND  B.ORG_CD (+) = #{orgCd}																	
+				if (ValidationUtils.isNotEmpty(dto.getCrsCreCd()))
+					AND B.CRS_CRE_CD(+) = #{crsCreCd}															
+		    GROUP  BY A.CODE_NM, A.CODE_ODR, B.DAY															
+		    ORDER  BY A.CODE_ODR 		
+	</select>
+
+</mapper>

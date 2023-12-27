@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.lecture.bbs.service.impl.LecBbsCmntMapper">
+	<select id="selectKey" resultType="Integer">
+		SELECT nextval(SQ_LEC_BBS_CMNT)
+	</select>
+
+	<sql id="selectColumnQuery">
+		 		CRS_CRE_CD  
+		      , BBS_CD  
+		      , CMNT_SN  
+		      , ATCL_SN  
+		      , CMNT_CTS  
+		      , EMOTICON_NO  
+		      , IFNULL(FN_GET_NULL(REG_NM), FN_GET_USER_NAME(REG_NO)) AS REG_NM 
+		      , REG_NO  
+		      , REG_DTTM  
+	</sql>
+	
+	<sql id="selectQuery">
+		SELECT 
+		<include refid="selectColumnQuery" />
+		FROM tb_lec_bbs_cmnt A  
+		WHERE A.ATCL_SN = #{atclSn}
+	</sql>
+
+	<select id="count" parameterType="lecBbsCmntVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM tb_lec_bbs_cmnt A  
+		WHERE A.ATCL_SN = #{atclSn}
+	</select>
+		
+	<select id="list" parameterType="lecBbsCmntVO" resultType="lecBbsCmntVO">
+		<!-- 게시물에 첨부된 덧글 목록을 조회한다.  -->
+		<include refid="selectQuery" />
+		 ORDER BY A.CMNT_SN ASC  
+	</select>
+	
+	<select id="listPageing"  parameterType="lecBbsCmntVO" resultType="lecBbsCmntVO">
+		<!-- 게시물에 첨부된 덧글 목록을 조회한다.  -->
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+			<include refid="selectQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		ORDER BY CMNT_SN DESC
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="select" parameterType="lecBbsCmntVO" resultType="lecBbsCmntVO">
+		<!--게시물 덧글의 단일항목을 조회한다.  -->
+		 <!-- @param commentVO (atclSn, cmntSn 이 포함된 예제 클래스) -->
+		<include refid="selectQuery" />
+		AND A.CMNT_SN = #{cmntSn}  
+	</select>
+	
+	<insert id="insert" parameterType="lecBbsCmntVO">
+		<!-- 게시물에 덧글을 저장한다.  -->
+	
+		INSERT INTO tb_lec_bbs_cmnt (  
+		        CRS_CRE_CD  
+		      , BBS_CD  
+		      , CMNT_SN  
+		      , ATCL_SN  
+		      , CMNT_CTS  
+		      , EMOTICON_NO  
+		      , REG_NM  
+		      , REG_NO  
+		      , REG_DTTM  
+		 ) VALUES (  
+		        #{crsCreCd}  
+		      , #{bbsCd}  
+		      , #{cmntSn}
+		      , #{atclSn}
+		      , #{cmntCts}  
+		      , #{emoticonNo}  
+		      , #{regNm}  
+		      , #{regNo}  
+		      , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		      )
+	</insert>
+	
+	<update id="update" parameterType="lecBbsCmntVO">
+		<!--게시물에 덧글을 수정한다.  -->
+		UPDATE tb_lec_bbs_cmnt  
+			SET CMNT_CTS = #{cmntCts}  
+		      , EMOTICON_NO	= #{emoticonNo}  
+			  , MOD_NO = #{modNo}  
+			  , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		  WHERE CMNT_SN = #{cmntSn}  
+			AND ATCL_SN = #{atclSn}
+	</update>
+	
+	<delete id="delete" parameterType="lecBbsCmntVO">
+		<!-- 게시물에 덧글을 삭제한다.  -->
+		DELETE FROM tb_lec_bbs_cmnt  
+		  WHERE CMNT_SN = #{cmntSn} 
+	</delete>
+	
+	<delete id="deleteAll" parameterType="lecBbsCmntVO">
+		<!--  게시물에 덧글을 삭제한다. -->
+		 DELETE FROM tb_lec_bbs_cmnt  
+		  WHERE ATCL_SN = #{atclSn}
+	</delete>
+	
+	<delete id="deleteForInfo" parameterType="lecBbsCmntVO">
+		<!-- 게시판의 덧글을 삭제한다.  -->
+		 DELETE FROM tb_lec_bbs_cmnt  
+		  WHERE BBS_CD = #{bbsCd}
+	</delete>
+	
+</mapper>

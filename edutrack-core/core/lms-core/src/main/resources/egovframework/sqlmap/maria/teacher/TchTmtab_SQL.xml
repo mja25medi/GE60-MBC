@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.teacher.tmtab.service.impl.TchTmtabMapper">
+	
+	<select id="listTmtab" parameterType="tchTmtabVO" resultType="tchTmtabVO">
+		  SELECT  TMTAB.TMTAB_SN, TMTAB.CRS_CRE_CD, TMTAB.TMTAB_DAY,       
+		          TMTAB.TMTAB_ODR, TMTAB.TMTAB_TYPE, TMTAB.SBJ_CD,         
+		          TMTAB.EDU_TM, TMTAB.USER_NO, TMTAB.EDU_CTS,              
+		          TMTAB.TMTAB_MONTHDAY, TMTAB.ADD_TCH,                     
+		          CRS.CRS_CRE_NM, SBJ.SBJ_NM                               
+		  FROM  tb_crs_ofln_crs_tmtab TMTAB,                               
+		            tb_crs_cre_crs CRS, tb_crs_ofln_sbj SBJ                
+		  WHERE TMTAB.CRS_CRE_CD = CRS.CRS_CRE_CD                          
+		    AND TMTAB.SBJ_CD = SBJ.SBJ_CD                                  
+		    AND TMTAB.USER_NO = #{userNo}                                    
+		    ORDER BY TMTAB.TMTAB_ODR                                       
+	</select>
+</mapper>

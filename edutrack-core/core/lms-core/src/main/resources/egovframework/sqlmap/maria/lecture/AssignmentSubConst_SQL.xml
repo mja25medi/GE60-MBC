@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.lecture.assignment.service.impl.AssignmentSubConstMapper">
+	<select id="selectKey" resultType="Integer">
+		SELECT nextval(SQ_LEC_ASMT_SUB_CONST)
+	</select>
+	
+	<select id="list" parameterType="assignmentSubConstVO" resultType="assignmentSubConstVO">
+		<!--   -->
+		SELECT  CRS_CRE_CD								
+		        ,  ASMT_SN									
+		        ,  ASMT_SUB_SN								
+		        ,  CONST_SN
+		        ,  CONST_CTS												
+		        ,  REG_NO									
+		        ,  REG_DTTM			
+		     FROM  tb_lec_asmt_sub_const											
+		    WHERE  CRS_CRE_CD 	= #{crsCreCd}									
+		      AND  ASMT_SN 	= #{asmtSn}									
+		      AND  ASMT_SUB_SN 	= #{asmtSubSn}									
+		    ORDER  BY REG_DTTM
+	</select>
+	
+	<insert id="insert" parameterType="assignmentSubConstVO">
+		<!--   -->
+		INSERT  INTO tb_lec_asmt_sub_const (					
+		           CRS_CRE_CD								
+		        ,  ASMT_SN									
+		        ,  ASMT_SUB_SN								
+		        ,  CONST_SN
+		        ,  CONST_CTS												
+		        ,  REG_NO									
+		        ,  REG_DTTM								
+			) VALUES (										
+		           #{crsCreCd}								
+		        ,  #{asmtSn}									
+		        ,  #{asmtSubSn}								
+		        ,  #{constSn}								
+		        ,  #{constCts}								
+		        ,  #{regNo}									
+		        ,  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 	
+			)
+	</insert>
+	
+	<delete id="deleteAll" parameterType="assignmentSubConstVO">
+		<!--   -->
+		DELETE  FROM tb_lec_asmt_sub_const              		
+		  	 WHERE  CRS_CRE_CD  = 		#{crsCreCd}         	
+		      AND  ASMT_SN      = 		#{asmtSn} 
+		      AND  ASMT_SUB_SN 	= 		#{asmtSubSn}			          	
+	</delete>
+	
+</mapper>

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.lecture.forum.service.impl.ForumMapper">
+	<select id="selectKey" resultType="Integer">
+		SELECT nextval(SQ_LEC_FORUM)
+	</select>
+	<sql id="selectQuery">
+	<![CDATA[
+	 	SELECT  CRS_CRE_CD																		
+			 ,  CASE WHEN FORUM_END_DTTM >= DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')				
+	      	      	 THEN 'Y' ELSE 'N' END PROCEED_YN											
+	         ,  (SELECT CRS_CRE_NM FROM tb_crs_cre_crs											
+	   		  WHERE CRS_CRE_CD = tb_lec_forum.CRS_CRE_CD )  CRS_CRE_NM						
+	    	 ,  FORUM_SN																		
+	  	     ,  (SELECT COUNT(*) FROM tb_lec_forum_atcl A										
+	  	       	  WHERE A.FORUM_SN= tb_lec_forum.FORUM_SN ) AS  ATCL_CNT						
+	    	 ,  FORUM_TITLE																		
+	    	 ,  SBJ_CD																			
+	    	 ,  (SELECT FN_GET_SBJ_NAME(SBJ_CD)) AS SBJ_NM							
+	    	 ,  FORUM_CTS																		
+	    	 ,  FORUM_REG_YN																	
+	    	 ,  FORUM_START_DTTM																
+	         , (SELECT FN_GET_DATE_FORMAT(FORUM_START_DTTM,'%H')) AS FORUM_START_HOUR  
+	         , (SELECT FN_GET_DATE_FORMAT(FORUM_START_DTTM,'%i')) AS FORUM_START_MIN  
+	    	 ,  FORUM_END_DTTM																	
+	         , (SELECT FN_GET_DATE_FORMAT(FORUM_END_DTTM,'%H')) AS FORUM_END_HOUR  
+	         , (SELECT FN_GET_DATE_FORMAT(FORUM_END_DTTM,'%i')) AS FORUM_END_MIN  
+	     	 ,  FORUM_REG_YN																	
+	    	 ,  (SELECT FN_GET_CODE_NAME('REG_YN',FORUM_REG_YN)) AS FORUM_REG_YN_NM	
+	    	 ,  REG_NO																			
+	    	 ,  REG_DTTM																		
+	    	 ,  MOD_NO																			
+	    	 ,  MOD_DTTM																		
+	         ,  (SELECT FN_GET_USER_NAME(REG_NO)) AS REG_NM							
+		     ,  (SELECT FN_GET_USER_NAME(MOD_NO)) AS MOD_NM							
+	         ,  PERIOD_AFTER_WRITE_YN															
+	         ,  (SELECT SCORE FROM tb_lec_forum_join_user										
+	           WHERE CRS_CRE_CD = tb_lec_forum.CRS_CRE_CD										
+	           AND FORUM_SN = tb_lec_forum.FORUM_SN											
+	           AND STD_NO = #{stdNo}) score														
+	         , CASE WHEN FORUM_END_DTTM < DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+	             THEN 'Y' ELSE 'N' END AS RSLT_YN  
+	         , IFNULL(( (SELECT SUM(FJU.SCORE) FROM tb_lec_forum_join_user FJU WHERE FJU.FORUM_SN = tb_lec_forum.FORUM_SN) /  
+	            	(SELECT COUNT(A.STD_NO) FROM tb_std_std A, tb_usr_user_info B, tb_usr_login C 
+	      				WHERE  B.USER_NO = C.USER_NO   
+	      				AND A.USER_NO = B.USER_NO   
+	      				AND A.CRS_CRE_CD = #{crsCreCd}    
+	      				AND C.USER_STS = 'U'   
+	      				AND A.ENRL_STS IN ('S','C') )  
+	      		),0) AS AVG_SCORE  
+	         ,  IFNULL((SELECT SUM(FJU.SCORE) FROM tb_lec_forum_join_user FJU   
+	      				WHERE FJU.FORUM_SN = tb_lec_forum.FORUM_SN AND FJU.STD_NO = #{stdNo}   
+	      		),0)  AS MY_SCORE  
+	     FROM  tb_lec_forum																	
+	    WHERE  CRS_CRE_CD	=#{crsCreCd}	
+		    ]]>
+	</sql>
+	<select id="select" parameterType="forumVO" resultType="forumVO">
+		<include refid="selectQuery" />
+		 AND  FORUM_SN    = #{forumSn}									
+	</select>
+	<select id="list" parameterType="forumVO" resultType="forumVO">
+		<include refid="selectQuery" />
+			AND  FORUM_TITLE	LIKE CONCAT('%',IFNULL(#{searchValue}, ''),'%')	
+			<if test = "sbjCd != null and sbjCd != ''">
+				AND SBJ_CD = #{sbjCd}
+			</if>
+			<if test = "forumRegYn != null and forumRegYn != ''">
+				AND FORUM_REG_YN = 'Y'
+			</if>
+ 		 ORDER  BY FORUM_SN	DESC										
+		
+	</select>
+	<select id="listStd" parameterType="forumVO" resultType="forumVO">
+	<![CDATA[
+		SELECT  A.CRS_CRE_CD			
+		     ,  CASE WHEN A.FORUM_END_DTTM >= DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+		             THEN 'Y' ELSE 'N' END PROCEED_YN			
+		     ,  (SELECT CRS_CRE_NM FROM tb_crs_cre_crs			
+		         WHERE CRS_CRE_CD = A.CRS_CRE_CD )  CRS_CRE_NM			
+		     ,  A.FORUM_SN			
+		     ,  (SELECT COUNT(*) FROM tb_lec_forum_atcl ATCL			
+		          WHERE A.FORUM_SN= ATCL.FORUM_SN ) AS  ATCL_CNT			
+		     ,  A.FORUM_TITLE			
+		     ,  A.SBJ_CD			
+		     ,  (SELECT FN_GET_SBJ_NAME(A.SBJ_CD)) AS SBJ_NM			
+		     ,  A.FORUM_CTS			
+		     ,  A.FORUM_REG_YN			
+	    	 ,  A.FORUM_START_DTTM																
+	         , (SELECT FN_GET_DATE_FORMAT(A.FORUM_START_DTTM,'%H')) AS FORUM_START_HOUR  
+	         , (SELECT FN_GET_DATE_FORMAT(A.FORUM_START_DTTM,'%i')) AS FORUM_START_MIN  
+	    	 ,  A.FORUM_END_DTTM																	
+	         , (SELECT FN_GET_DATE_FORMAT(A.FORUM_END_DTTM,'%H')) AS FORUM_END_HOUR  
+	         , (SELECT FN_GET_DATE_FORMAT(A.FORUM_END_DTTM,'%i')) AS FORUM_END_MIN  
+		     ,  A.FORUM_REG_YN			
+		     ,  (SELECT FN_GET_CODE_NAME('REG_YN',A.FORUM_REG_YN)) AS FORUM_REG_YN_NM			
+		     ,  A.REG_NO			
+		     ,  A.REG_DTTM			
+		     ,  A.MOD_NO			
+		     ,  A.MOD_DTTM			
+		     ,  (SELECT FN_GET_USER_NAME(A.REG_NO)) AS REG_NM			
+		     ,  (SELECT FN_GET_USER_NAME(A.MOD_NO)) AS MOD_NM			
+		     ,  A.PERIOD_AFTER_WRITE_YN			
+		     ,  IFNULL(FN_GET_NULL(B.SCORE),0) AS SCORE			
+	         , CASE WHEN FORUM_END_DTTM < DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+	             THEN 'Y' ELSE 'N' END AS RSLT_YN  
+		FROM  tb_lec_forum A
+		LEFT OUTER JOIN
+			tb_lec_forum_join_user B
+		ON 
+			(
+			  	  A.CRS_CRE_CD = B.CRS_CRE_CD			
+			  AND A.FORUM_SN = B.FORUM_SN			
+			  AND B.STD_NO = #{stdNo}				
+			)			
+		WHERE  A.CRS_CRE_CD	= #{crsCreCd}			
+		  AND  A.FORUM_REG_YN = 'Y'			
+		ORDER  BY FORUM_SN	DESC						
+		    ]]>
+	</select>
+    <insert id="insert" parameterType="forumVO">
+		INSERT  INTO tb_lec_forum (					
+				CRS_CRE_CD							
+			 ,  SBJ_CD								
+			 ,  FORUM_SN							
+	 		 ,  FORUM_TITLE							
+	 		 ,  FORUM_CTS							
+	 		 ,  FORUM_REG_YN						
+	 		 ,  FORUM_START_DTTM					
+	 		 ,  FORUM_END_DTTM						
+	 		 ,  REG_NO								
+	 		 ,  REG_DTTM							
+	 		 ,  MOD_NO								
+	 		 ,  MOD_DTTM							
+	 		 ,  PERIOD_AFTER_WRITE_YN				
+		)VALUES(									
+				#{crsCreCd}							
+			 ,  #{sbjCd}								
+			 ,  #{forumSn}							
+			 ,  #{forumTitle}							
+			 ,  #{forumCts}							
+			 ,  #{forumRegYn}							
+			 ,  #{forumStartDttm}						
+			 ,  #{forumEndDttm}						
+			 ,  #{regNo}								
+			 ,  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+			 ,  #{modNo	}							
+			 ,  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+			 ,  #{periodAfterWriteYn}					
+		)										  	
+    </insert>	
+   <update id="update" parameterType="forumVO">
+		UPDATE  tb_lec_forum													
+	      SET  FORUM_TITLE        		= #{forumTitle}							
+	        ,  FORUM_CTS          		= #{forumCts}								
+	        ,  FORUM_REG_YN       		= #{forumRegYn}							
+	        ,  FORUM_START_DTTM   		= #{forumStartDttm}						
+	        ,  FORUM_END_DTTM     		= #{forumEndDttm}							
+	        ,  MOD_NO             		= #{modNo}                                
+	        ,  MOD_DTTM           		= DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+	        ,  PERIOD_AFTER_WRITE_YN	= #{periodAfterWriteYn}					
+	    WHERE  CRS_CRE_CD				= #{crsCreCd}								
+	      AND  FORUM_SN    			= #{forumSn}													  	
+    </update>
+    <delete id="delete" parameterType="forumVO">
+		 DELETE  FROM tb_lec_forum		
+		 WHERE  CRS_CRE_CD  =  #{crsCreCd} AND  FORUM_SN    =  #{forumSn}	
+		 														  	
+    </delete>
+    
+    
+   	<select id="selectForumStatus" parameterType="forumVO" resultType="egovMap">
+		/*
+		 	SQL ID : forumMapper.selectForumStatus
+		 	설  명 : 토론 관련 정보 현황
+		*/
+	    SELECT  A.CRS_CRE_CD			
+	         ,  A.FORUM_SN			
+	         ,  A.FORUM_TITLE			
+	         ,  A.SBJ_CD			
+	         ,  (SELECT FN_GET_SBJ_NAME(A.SBJ_CD)) AS SBJ_NM			
+	         ,  A.FORUM_CTS			
+	         ,  A.FORUM_REG_YN			
+	         ,  A.FORUM_START_DTTM																
+	         , (SELECT FN_GET_DATE_FORMAT(A.FORUM_START_DTTM,'%H')) AS FORUM_START_HOUR  
+	         , (SELECT FN_GET_DATE_FORMAT(A.FORUM_START_DTTM,'%i')) AS FORUM_START_MIN  
+	         ,  A.FORUM_END_DTTM																	
+	         , (SELECT FN_GET_DATE_FORMAT(A.FORUM_END_DTTM,'%H')) AS FORUM_END_HOUR  
+	         , (SELECT FN_GET_DATE_FORMAT(A.FORUM_END_DTTM,'%i')) AS FORUM_END_MIN  
+	         ,  A.FORUM_REG_YN			
+	         ,  (SELECT FN_GET_CODE_NAME('REG_YN',A.FORUM_REG_YN)) AS FORUM_REG_YN_NM			
+	         ,  A.REG_NO			
+	         ,  A.REG_DTTM			
+	         ,  A.MOD_NO			
+	         ,  A.MOD_DTTM			
+	         , IFNULL(( SELECT COUNT(B.STD_NO)  
+	              		FROM tb_lec_forum_join_user  B 
+	              	   WHERE B.CRS_CRE_CD = A.CRS_CRE_CD  
+	                   	 AND B.FORUM_SN = A.FORUM_SN ),0) AS STARE_CNT  
+             , IFNULL(( SELECT COUNT(B.STD_NO)    
+	    		        FROM tb_lec_forum_join_user  B
+	                   WHERE B.CRS_CRE_CD = A.CRS_CRE_CD  
+	                     AND B.RATE_YN = 'Y'  
+	                     AND B.FORUM_SN = A.FORUM_SN ),0) AS RATE_CNT  
+	    FROM  tb_lec_forum A
+      	WHERE A.CRS_CRE_CD = #{crsCreCd}  
+        AND A.FORUM_SN = #{forumSn}
+        AND  A.FORUM_REG_YN 		= 'Y'
+	</select>
+</mapper>

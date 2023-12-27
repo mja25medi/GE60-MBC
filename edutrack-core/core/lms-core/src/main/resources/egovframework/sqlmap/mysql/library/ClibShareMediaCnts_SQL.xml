@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.library.share.media.service.impl.ClibShareMediaCntsMapper">	
+
+	<sql id="selectColumnQuery">
+		  		 A.CNTS_CD  
+		       , A.CTGR_CD  
+		       , ( SELECT CTGR_NM  
+		             FROM tb_clib_share_cnts_ctgr  
+		            WHERE ORG_CD = A.ORG_CD  
+		              AND CTGR_CD = A.CTGR_CD ) AS CTGR_NM 
+		       , A.ORG_CD  
+		       , A.ORIGIN_CNTS_CD  
+		       , A.ORIGIN_USER_NO  
+		       , A.CCL_CD  
+		       , A.THUMB_FILE_SN  
+		       , A.CNTS_NM  
+		       , A.CNTS_TAG  
+		       , A.CNTS_ODR  
+		       , A.USE_YN  
+		       , A.SHARE_STS_CD  
+		       , A.HITS  
+		       , A.PLAYER_DIV  
+		       , A.FILE_NM  
+		       , A.FILE_PATH  
+		       , A.ULD_FILE_KEY  
+		       , A.MEDIA_CNTS_KEY  
+		       , A.CHANL_KEY  
+		       , A.CHANL_NM  
+		       , A.PROFILE_KEY  
+		       , A.REG_NO  
+			     , (SELECT FN_GET_USER_NAME(A.REG_NO)) REG_NM 
+		       , A.REG_DTTM  
+		       , A.MOD_NO  
+			     , (SELECT FN_GET_USER_NAME(A.MOD_NO)) MOD_NM 
+		       , A.MOD_DTTM  
+		       , R.REQ_SN  
+		       , R.SHARE_DIV_CD  
+		       , R.SHARE_STS_CD AS SHARE_REQ_STS_CD  
+		       , R.CNTS_TYPE_CD
+	</sql>
+	
+	<sql id="selectQuery">
+			SELECT 
+		 	<include refid="selectColumnQuery" />
+		    FROM tb_clib_share_media_cnts A, tb_clib_cnts_share_req R 
+		    WHERE ORG_CD = #{orgCd} 
+		    	AND  A.CNTS_CD = R.CNTS_CD 
+	</sql>
+	<sql id="listQuery">
+		<include refid="selectQuery" />
+	     AND A.SHARE_STS_CD = 'S' 
+	     AND R.SHARE_STS_CD = '03'  
+
+		<if test = "shareDivCd != null and shareDivCd != ''">
+			AND R.SHARE_DIV_CD = #{shareDivCd} 
+		</if>
+		<if test = "useYn != null and useYn != ''">
+			AND A.USE_YN = #{useYn} 
+		</if>
+		<if test = "ctgrCd != null and ctgrCd != ''">
+			AND A.CTGR_CD = #{ctgrCd} 
+		</if>
+		<if test = "searchValue != null and searchValue != ''">
+			<if test = "searchKey != null and searchKey == 'cntsNm'">
+				 AND UPPER(A.CNTS_NM) LIKE CONCAT('%',#{searchValue},'%') 
+			</if>
+			<if test = "searchKey != null and searchKey == 'cntsTag'">
+				 AND UPPER(A.CNTS_TAG) LIKE CONCAT('%',#{searchValue},'%')
+			</if>
+			<if test = "searchKey != null and searchKey == 'regUser'">
+				 AND A.REG_NO IN (SELECT USER_NO FROM tb_usr_user_info WHERE ORG_CD = #{orgCd} AND UPPER(USER_NM) LIKE CONCAT('%',#{searchValue},'%'))
+			</if>
+			<if test = "searchKey != null and searchKey == 'ALL'">
+				 AND (											
+				     UPPER(A.CNTS_NM) LIKE CONCAT('%',#{searchValue},'%')  
+				     OR UPPER(A.CNTS_TAG) LIKE CONCAT('%',#{searchValue},'%') 
+				     OR A.REG_NO IN (SELECT USER_NO FROM tb_usr_user_info WHERE ORG_CD = #{orgCd} AND UPPER(USER_NM) LIKE CONCAT('%',#{searchValue},'%')) 				     
+				 )																
+			</if>
+		</if>
+	</sql>
+ 	<sql id="listMangeQuery">
+ 		<include refid="selectQuery" />
+     		AND A.SHARE_STS_CD = 'S' 
+		<if test = "useYn != null and useYn != ''">
+			AND A.USE_YN = #{useYn} 
+		</if>
+		<if test = "ctgrCd != null and ctgrCd != ''">
+			AND A.CTGR_CD = #{ctgrCd} 
+		</if>
+		<if test = "searchValue != null and searchValue != ''">
+			<if test = "searchKey != null and searchKey = 'cntsNm'">
+				 AND UPPER(A.CNTS_NM) LIKE CONCAT('%',#{searchValue},'%')
+			</if>
+			<if test = "searchKey != null and searchKey = 'cntsTag'">
+				 AND UPPER(A.CNTS_TAG) LIKE CONCAT('%',#{searchValue},'%')
+			</if>
+			<if test = "searchKey != null and searchKey = 'regUser'">
+				 AND A.REG_NO IN (SELECT USER_NO FROM tb_usr_user_info WHERE ORG_CD = #{orgCd} AND UPPER(USER_NM) LIKE CONCAT('%',#{searchValue},'%')) 
+			</if>
+			<if test = "searchKey != null and searchKey = 'ALL'">
+				 AND (											
+				     UPPER(A.CNTS_NM) LIKE CONCAT('%',#{searchValue},'%')  
+				     OR UPPER(A.CNTS_TAG) LIKE CONCAT('%',#{searchValue},'%') 
+				     OR A.REG_NO IN (SELECT USER_NO FROM tb_usr_user_info WHERE ORG_CD = #{orgCd} AND UPPER(USER_NM) LIKE CONCAT('%',#{searchValue},'%')) 				     
+				 )																
+			</if>
+		</if>
+		<if test = "searchCd != null and searchCd != ''">
+			AND R.SHARE_STS_CD = #{searchCd}  
+		</if>
+		<if test = "shareDivCd != null and shareDivCd != ''">
+			AND R.SHARE_DIV_CD = #{shareDivCd} 
+		</if>
+	</sql>
+
+	<sql id="listByOriginQuery">
+ 		<include refid="selectQuery" />
+	     	AND A.ORIGIN_CNTS_CD = #{originCntsCd} 
+	     	AND A.SHARE_STS_CD = 'S' 
+	
+ 		<if test = "useYn != null and useYn != ''">
+			AND A.USE_YN = #{useYn} 
+		</if>
+		<if test = "shareStsCd != null and shareStsCd != ''">
+			AND A.SHARE_STS_CD = #{shareStsCd} 
+		</if>
+		<if test = "ctgrCd != null and ctgrCd != ''">
+			AND A.CTGR_CD = #{ctgrCd} 
+		</if>
+		<if test = "searchValue != null and searchValue != ''">
+			AND CONCAT(A.CNTS_NM, A.CNTS_TAG) LIKE CONCAT('%', #{searchValue}, '%')
+		</if>
+	</sql>	
+	<select id="listPageingCount" parameterType="clibShareMediaCntsVO" resultType="Integer">
+		  SELECT 
+		 	COUNT(*)	
+		    FROM tb_clib_share_media_cnts A, tb_clib_cnts_share_req R 
+		    WHERE ORG_CD = #{orgCd} 
+	    	 AND A.CNTS_CD = R.CNTS_CD 
+		     AND A.SHARE_STS_CD = 'S' 
+		     AND R.SHARE_STS_CD = '03'  
+		<if test = "shareDivCd != null and shareDivCd != ''">
+			AND R.SHARE_DIV_CD = #{shareDivCd} 
+		</if>
+		<if test = "useYn != null and useYn != ''">
+			AND A.USE_YN = #{useYn} 
+		</if>
+		<if test = "ctgrCd != null and ctgrCd != ''">
+			AND A.CTGR_CD = #{ctgrCd} 
+		</if>
+		<if test = "searchValue != null and searchValue != ''">
+			<if test = "searchKey != null and searchKey == 'cntsNm'">
+				 AND UPPER(A.CNTS_NM) LIKE CONCAT('%',#{searchValue},'%') 
+			</if>
+			<if test = "searchKey != null and searchKey == 'cntsTag'">
+				 AND UPPER(A.CNTS_TAG) LIKE CONCAT('%',#{searchValue},'%')
+			</if>
+			<if test = "searchKey != null and searchKey == 'regUser'">
+				 AND A.REG_NO IN (SELECT USER_NO FROM tb_usr_user_info WHERE ORG_CD = #{orgCd} AND UPPER(USER_NM) LIKE CONCAT('%',#{searchValue},'%'))
+			</if>
+			<if test = "searchKey != null and searchKey == 'ALL'">
+				 AND (											
+				     UPPER(A.CNTS_NM) LIKE CONCAT('%',#{searchValue},'%')  
+				     OR UPPER(A.CNTS_TAG) LIKE CONCAT('%',#{searchValue},'%') 
+				     OR A.REG_NO IN (SELECT USER_NO FROM tb_usr_user_info WHERE ORG_CD = #{orgCd} AND UPPER(USER_NM) LIKE CONCAT('%',#{searchValue},'%')) 				     
+				 )																
+			</if>
+		</if>	
+	</select>
+		
+ 	<select id="list" parameterType="clibShareMediaCntsVO" resultType="clibShareMediaCntsVO">
+	    <include refid="listQuery" />
+	    ORDER BY A.REG_DTTM DESC, A.CTGR_CD, A.CNTS_ODR  
+	</select>
+
+     <select id="listPageing" parameterType="clibShareMediaCntsVO" resultType="clibShareMediaCntsVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="listQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		ORDER BY REG_DTTM DESC, CTGR_CD, CNTS_ODR
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+
+	<select id="listManagePageingCount" parameterType="clibShareMediaCntsVO" resultType="Integer">
+			  SELECT 
+			 	COUNT(*)	
+			    FROM tb_clib_share_media_cnts A, tb_clib_cnts_share_req R 
+			    WHERE ORG_CD = #{orgCd} 
+			    AND A.CNTS_CD = R.CNTS_CD 
+     			AND A.SHARE_STS_CD = 'S' 
+			<if test = "useYn != null and useYn != ''">
+				AND A.USE_YN = #{useYn} 
+			</if>
+			<if test = "ctgrCd != null and ctgrCd != ''">
+				AND A.CTGR_CD = #{ctgrCd} 
+			</if>
+			<if test = "searchValue != null and searchValue != ''">
+				<if test = "searchKey != null and searchKey = 'cntsNm'">
+					 AND UPPER(A.CNTS_NM) LIKE CONCAT('%',#{searchValue},'%')
+				</if>
+				<if test = "searchKey != null and searchKey = 'cntsTag'">
+					 AND UPPER(A.CNTS_TAG) LIKE CONCAT('%',#{searchValue},'%')
+				</if>
+				<if test = "searchKey != null and searchKey = 'regUser'">
+					 AND A.REG_NO IN (SELECT USER_NO FROM tb_usr_user_info WHERE ORG_CD = #{orgCd} AND UPPER(USER_NM) LIKE CONCAT('%',#{searchValue},'%')) 
+				</if>
+				<if test = "searchKey != null and searchKey = 'ALL'">
+					 AND (											
+					     UPPER(A.CNTS_NM) LIKE CONCAT('%',#{searchValue},'%')  
+					     OR UPPER(A.CNTS_TAG) LIKE CONCAT('%',#{searchValue},'%') 
+					     OR A.REG_NO IN (SELECT USER_NO FROM tb_usr_user_info WHERE ORG_CD = #{orgCd} AND UPPER(USER_NM) LIKE CONCAT('%',#{searchValue},'%')) 				     
+					 )																
+				</if>
+			</if>
+			<if test = "searchCd != null and searchCd != ''">
+				AND R.SHARE_STS_CD = #{searchCd}  
+			</if>
+			<if test = "shareDivCd != null and shareDivCd != ''">
+				AND R.SHARE_DIV_CD = #{shareDivCd} 
+			</if>	    
+	</select>
+		
+ 	<select id="listManage" parameterType="clibShareMediaCntsVO" resultType="clibShareMediaCntsVO">
+	    <include refid="listMangeQuery" />
+	    ORDER BY A.REG_DTTM DESC, A.CTGR_CD, A.CNTS_ODR  
+	</select>
+     <select id="listManagePageing" parameterType="clibShareMediaCntsVO" resultType="clibShareMediaCntsVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="listMangeQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		ORDER BY REG_DTTM DESC, CTGR_CD, CNTS_ODR
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/> 
+	</select>
+
+	<select id="select" parameterType="clibShareMediaCntsVO" resultType="clibShareMediaCntsVO">
+	    <include refid="selectQuery" />
+	    AND A.CNTS_CD = #{cntsCd}
+	</select>
+ 	<select id="listOlc" parameterType="clibShareMediaCntsVO" resultType="clibShareMediaCntsVO">
+	    <include refid="selectQuery" />
+		<if test = "ctgrCd != null and ctgrCd != ''">
+			AND A.CTGR_CD = #{ctgrCd} 
+		</if>
+		    AND A.USE_YN = 'Y' 
+   		ORDER BY A.CTGR_CD, A.CNTS_ODR  
+	</select>
+
+    <insert id="insert" parameterType="clibShareMediaCntsVO">
+		  INSERT INTO tb_clib_share_media_cnts ( 
+		         CNTS_CD  
+		       , CTGR_CD  
+		       , ORG_CD  
+		       , ORIGIN_CNTS_CD  
+		       , ORIGIN_USER_NO  
+		       , CCL_CD  
+		       , THUMB_FILE_SN  
+		       , CNTS_NM  
+		       , CNTS_TAG  
+		       , CNTS_ODR  
+		       , USE_YN  
+		       , SHARE_STS_YN  
+		       , HITS  
+		       , PLAYER_DIV  
+		       , FILE_NM  
+		       , FILE_PATH  
+		       , ULD_FILE_KEY  
+		       , MEDIA_CNTS_KEY  
+		       , CHANL_KEY  
+		       , CHANL_NM  
+		       , PROFILE_KEY  
+		       , REG_NO  
+		       , REG_DTTM  
+		       , MOD_NO  
+		       , MOD_DTTM  
+		 ) VALUES ( 
+		         #{cntsCd}  
+		       , #{ctgrCd}  
+		       , #{orgCd}  
+		       , #{originCntsCd}  
+		       , #{originUserNo}  
+		       , #{cclCd}  
+		       , #{thumbFileSn}  
+		       , #{cntsNm}  
+		       , #{cntsTag}  
+		       , ( SELECT NVL((MAX(CNTS_ODR)),0) + 1 
+		             FROM tb_clib_share_media_cnts AS SUBQUERY 
+		            WHERE ORG_CD = #{orgCd} 
+		              AND CTGR_CD = #{ctgrCd} ) 
+		       , #{useYn}  
+		       , #{shareStsCd}  
+		       , 0  
+		       , #{playerDiv}  
+		       , #{fileNm}  
+		       , #{filePath}  
+		       , #{uldFileKey}  
+		       , #{mediaCntsKey}  
+		       , #{chanlKey}  
+		       , #{chanlNm}  
+		       , #{profileKey}  
+		       , #{regNo}  
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		       , #{modNo}  
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		 ) 
+    </insert>
+
+	<select id="selectCntsCd" resultType="clibShareMediaCntsVO">
+	    SELECT CONCAT('SMC',LPAD(nextval('SQ_CLIB_SHARE_MEDIA_CNTS'),17,'0')) AS CNTS_CD
+	</select>
+
+   <update id="update" parameterType="clibShareMediaCntsVO">
+		  UPDATE tb_clib_share_media_cnts  
+		     SET CTGR_CD = #{ctgrCd}  
+		       , ORIGIN_CNTS_CD = #{originCntsCd}  
+		       , ORIGIN_USER_NO = #{originUserNo}  
+		       , CCL_CD = #{cclCd}  
+		       , THUMB_FILE_SN = #{thumbFileSn}  
+		       , CNTS_NM = #{cntsNm}  
+		       , CNTS_TAG = #{cntsTag}  
+		       , CNTS_ODR = #{cntsOdr}  
+		       , USE_YN = #{useYn}  
+		       , SHARE_STS_YN = #{shareStsCd}  
+		       , HITS = #{hits}  
+		       , PLAYER_DIV = #{playerDiv}  
+		       , FILE_NM = #{fileNm}  
+		       , FILE_PATH = #{filePath}  
+		       , ULD_FILE_KEY = #{uldFileKey}  
+		       , MEDIA_CNTS_KEY = #{mediaCntsKey}  
+		       , CHANL_KEY = #{chanlKey}  
+		       , CHANL_NM = #{chanlNm}  
+		       , PROFILE_KEY = #{profileKey}  
+		       , MOD_NO = #{modNo}  
+		       , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 
+		   WHERE CNTS_CD = #{cntsCd}  
+		     AND ORG_CD = #{orgCd}  
+    </update>
+	<update id="updateBatch" parameterType="list" >
+		<foreach collection="list" item="item" index="index" open="DECLARE BEGIN" close="; END;" separator=";">
+		  UPDATE tb_clib_share_media_cnts  
+		  SET
+		  		CTGR_CD = #{item.ctgrCd}  
+		       , ORIGIN_CNTS_CD = #{item.originCntsCd } 
+		       , ORIGIN_USER_NO = #{item.originUserNo } 
+		       , CCL_CD = #{item.cclCd}  
+		       , THUMB_FILE_SN = #{item.thumbFileSn}  
+		       , CNTS_NM = #{item.cntsNm}  
+		       , CNTS_TAG = #{item.cntsTag}  
+		       , CNTS_ODR = #{item.cntsOdr}  
+		       , USE_YN = #{item.useYn}  
+		       , SHARE_STS_YN = #{item.shareStsCd } 
+		       , HITS = #{item.hits}  
+		       , PLAYER_DIV = #{item.playerDiv}  
+		       , FILE_NM = #{item.fileNm } 
+		       , FILE_PATH = #{item.filePath}  
+		       , ULD_FILE_KEY = #{item.uldFileKey } 
+		       , MEDIA_CNTS_KEY = #{item.mediaCntsKey}  
+		       , CHANL_KEY = #{item.chanlKey}  
+		       , CHANL_NM = #{item.chanlNm}  
+		       , PROFILE_KEY = #{item.profileKey}  
+		       , MOD_NO = #{item.modNo}  
+		       , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 
+		  WHERE CNTS_CD = #{item.cntsCd}  
+		     AND ORG_CD = #{item.orgCd}     
+		</foreach>	     
+	</update>
+	
+	<delete id="delete" parameterType="clibShareMediaCntsVO">
+		  DELETE FROM tb_clib_share_media_cnts 
+	   	  WHERE ORG_CD = #{orgCd} 
+	     		AND CNTS_CD = #{cntsCd} 
+   </delete>
+   
+	<select id="listByOriginPageingCount" parameterType="clibShareMediaCntsVO" resultType="Integer">
+			  SELECT 
+			 	COUNT(*)	
+			    FROM tb_clib_share_media_cnts A, tb_clib_cnts_share_req R 
+			    WHERE ORG_CD = #{orgCd} 
+				    AND A.CNTS_CD = R.CNTS_CD
+			     	AND A.ORIGIN_CNTS_CD = #{originCntsCd} 
+			     	AND A.SHARE_STS_CD = 'S' 
+		 		<if test = "useYn != null and useYn != ''">
+					AND A.USE_YN = #{useYn} 
+				</if>
+				<if test = "shareStsCd != null and shareStsCd != ''">
+					AND A.SHARE_STS_CD = #{shareStsCd} 
+				</if>
+				<if test = "ctgrCd != null and ctgrCd != ''">
+					AND A.CTGR_CD = #{ctgrCd} 
+				</if>
+				<if test = "searchValue != null and searchValue != ''">
+					AND CONCAT(A.CNTS_NM, A.CNTS_TAG) LIKE CONCAT('%', #{searchValue}, '%')
+				</if>   		
+	</select> 
+	   
+ 	<select id="listByOrigin" parameterType="clibShareMediaCntsVO" resultType="clibShareMediaCntsVO">
+	    <include refid="listByOriginQuery" />
+	    ORDER BY A.REG_DTTM DESC, A.CTGR_CD, A.CNTS_ODR  
+	</select>
+     <select id="listByOriginPageing" parameterType="clibShareMediaCntsVO" resultType="clibShareMediaCntsVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="listByOriginQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		ORDER BY REG_DTTM DESC, CTGR_CD, CNTS_ODR
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+   <update id="updateNoShare" parameterType="clibShareMediaCntsVO">
+		  UPDATE tb_clib_share_media_cnts  
+		     SET SHARE_STS_CD = 'U'  
+		         , MOD_NO = #{modNo}  
+		         , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		   WHERE CNTS_CD = #{cntsCd}  
+		     AND ORG_CD = #{orgCd}  
+    </update>
+ 
+   <update id="updateShareMedia" parameterType="clibShareMediaCntsVO">
+		   UPDATE tb_clib_share_media_cnts  
+		     SET CTGR_CD = #{ctgrCd}  
+		         , MOD_NO = #{modNo}  
+		         , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		   WHERE CNTS_CD = #{cntsCd}  
+		     AND ORG_CD = #{orgCd}  
+    </update>
+
+
+
+
+</mapper>	

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.lecture.project.assignment.service.impl.PrjAssignmentMapper">
+	<select id="selectKey" resultType="Integer">
+		SELECT SQ_LEC_PRJT_ASMT.nextVal FROM DUAL
+	</select>
+
+	<sql id="selectQuery">
+		SELECT CRS_CRE_CD	                                                                  
+		        , PRJT_SN	                                                                      
+		        , ASMT_SN	                                                                      
+		        , ASMT_TITLE                                                                     
+		        , ASMT_CTS	                                                                      
+		   	 , FN_GET_DATE_FORMAT(ASMT_START_DTTM, 'YYYY.MM.DD HH24:MI ') ASMT_START_DATE	  
+		   	 , FN_GET_DATE_FORMAT(ASMT_START_DTTM, 'YYYY.MM.DD') ASMT_START_DTTM	         	
+		   	 , FN_GET_DATE_FORMAT(ASMT_START_DTTM, 'HH24') ASMT_START_HOUR	                  
+		   	 , FN_GET_DATE_FORMAT(ASMT_START_DTTM, 'MI') ASMT_START_MIN	                      
+		        , FN_GET_DATE_FORMAT(ASMT_END_DTTM, 'YYYY.MM.DD HH24:MI') ASMT_END_DATE	      
+		        , FN_GET_DATE_FORMAT(ASMT_END_DTTM, 'YYYY.MM.DD') ASMT_END_DTTM	              
+		        , FN_GET_DATE_FORMAT(ASMT_END_DTTM, 'HH24') ASMT_END_HOUR	                      
+		        , FN_GET_DATE_FORMAT(ASMT_END_DTTM, 'MI') ASMT_END_MIN	                          
+		        , REG_NO	                                                                      
+		        , REG_DTTM	                                                                      
+		        , MOD_NO	                                                                      
+		        , MOD_DTTM                                                                       
+		    FROM TB_LEC_PRJT_ASMT  
+	</sql>
+	
+	<select id="select" parameterType="prjAssignmentVO" resultType="prjAssignmentVO">
+		<!-- 팀프로젝트 과제 조회  -->
+		<include refid="selectQuery" />
+		WHERE CRS_CRE_CD = #{crsCreCd}										
+		      AND PRJT_SN 	  = #{prjtSn}											
+	</select>
+	
+	<insert id="insert" parameterType="prjAssignmentVO">
+		<!--  팀프로젝트 과제 등록 -->
+		
+		INSERT INTO TB_LEC_PRJT_ASMT (		                     
+		         CRS_CRE_CD	   		                             
+		       , PRJT_SN	       		                             
+		       , ASMT_SN	       		                             
+		       , ASMT_TITLE       									 
+		       , ASMT_CTS	       									 
+		       , ASMT_START_DTTM										
+		       , ASMT_END_DTTM	   		                             
+		       , REG_NO	       			            	         
+		       , REG_DTTM	       		                             
+		       , MOD_NO	       		                             
+		       , MOD_DTTM         		                             
+		  		) VALUES (					                         
+		         #{crsCreCd}	                                        
+		        , #{prjtSn}	   
+				, #{asmtSn}
+				, #{asmtTitle}                                        
+		       , #{asmtCts}	                                        
+		       , #{asmtStartDttm}				                    
+		       , #{asmtEndDttm}	  			                        
+		       , #{regNo}	      			                        
+		       , TO_CHAR(sysdate, 'YYYYMMDDHH24MISS')	       		
+		       , #{modNo}
+		       , TO_CHAR(sysdate, 'YYYYMMDDHH24MISS')              
+		       )							                         
+		
+	</insert>
+	
+	<update id="update" parameterType="prjAssignmentVO">
+		<!--  -->
+		 UPDATE TB_LEC_PRJT_ASMT 				            		  					 
+		     SET ASMT_TITLE			=	#{asmtTitle}                    				 
+		       , ASMT_CTS				=	#{asmtCts}		   							 
+		       , ASMT_START_DTTM		=	#{asmtStartDttm}   							 
+		       , ASMT_END_DTTM			=	#{asmtEndDttm}    							 
+		       , MOD_NO				=	#{modNo}                        				 
+		       , MOD_DTTM				=	TO_CHAR(sysdate, 'YYYYMMDDHH24MISS')        
+		 	WHERE  CRS_CRE_CD 			= 	#{crsCreCd}                      		 	 	 
+		     AND  PRJT_SN	  			=	#{prjtSn}                      		  	  	
+		     AND  ASMT_SN	  			=	#{asmtSn} 
+	</update>
+	
+	
+	<delete id="delete" parameterType="prjAssignmentVO">
+		<!--   -->
+		DELETE FROM TB_LEC_PRJT_ASMT				
+		   WHERE ASMT_SN		= #{asmtSn}	
+	</delete>
+	
+	<delete id="deletePrjAll" parameterType="prjAssignmentVO">
+		<!--   -->
+		DELETE FROM TB_LEC_PRJT_ASMT				
+		   WHERE PRJT_SN		= #{prjtSn}
+	</delete>
+
+</mapper>

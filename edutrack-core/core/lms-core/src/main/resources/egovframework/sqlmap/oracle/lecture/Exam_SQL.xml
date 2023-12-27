@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.lecture.exam.service.impl.ExamMapper">
+	
+	<sql id="selectQuery">
+	<![CDATA[
+		SELECT A.CRS_CRE_CD  
+		      , A.EXAM_SN  
+		      , A.EXAM_TITLE  
+		      , A.EXAM_CTS  
+		      , A.EXAM_TYPE_CD  
+		      , A.EXAM_STARE_TYPE_CD  
+		      , A.EXAM_START_DTTM  
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_START_DTTM,'hh24') FROM DUAL) AS EXAM_START_HOUR  
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_START_DTTM,'mi') FROM DUAL) AS EXAM_START_MIN  
+		      , A.EXAM_END_DTTM  
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_END_DTTM,'hh24') FROM DUAL) AS EXAM_END_HOUR  
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_END_DTTM,'mi') FROM DUAL) AS EXAM_END_MIN  
+		      , A.RSLT_CFRM_DTTM  
+		      , (SELECT FN_GET_DATE_FORMAT(A.RSLT_CFRM_DTTM,'hh24') FROM DUAL) AS RSLT_CFRM_HOUR  
+		      , (SELECT FN_GET_DATE_FORMAT(A.RSLT_CFRM_DTTM,'mi') FROM DUAL) AS RSLT_CFRM_MIN  
+		      , A.EXAM_STARE_TM  
+		      , A.EXAM_VIEW_TYPE_CD  
+		      , A.STARE_TM_USE_YN  
+		      , NVL(A.STARE_CRIT_PRGR_RATIO,0) AS STARE_CRIT_PRGR_RATIO  
+		      , A.STARE_LIMIT_CNT  
+		      , A.REG_YN  
+		      , A.REG_NO  
+		      , A.REG_DTTM  
+		      , A.MOD_NO  
+			  , (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) AS MOD_NM  
+			  , (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) AS REG_NM  
+		      , A.MOD_DTTM  
+		      , NVL(( SELECT STARE_CNT  
+		          		FROM TB_LEC_EXAM_STARE  
+		          	   WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+		               	 AND STD_NO = #{stdNo}  
+		               	 AND EXAM_SN = A.EXAM_SN ),0) AS STARE_CNT  
+		      , NVL(( SELECT RATE_YN  
+				        FROM TB_LEC_EXAM_STARE  
+		               WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+		                 AND STD_NO = #{stdNo}  
+		                 AND EXAM_SN = A.EXAM_SN ),'N') AS RATE_YN  
+		      , CASE WHEN TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+		                  BETWEEN A.EXAM_START_DTTM AND A.EXAM_END_DTTM  
+                     THEN 'Y' ELSE 'N' END AS CONN_YN	
+		      , CASE WHEN A.RSLT_CFRM_DTTM < TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+		             THEN 'Y' ELSE 'N' END AS RSLT_YN  
+		      , (SELECT FN_GET_CRS_STD_PRGR(#{stdNo},#{crsCreCd}) FROM DUAL) AS STD_RATIO  
+		      , NVL(( (SELECT SUM(STR.TOT_GET_SCORE) FROM TB_LEC_EXAM_STARE STR WHERE STR.EXAM_SN = A.EXAM_SN AND STR.RATE_YN = 'Y') /  
+		            	(SELECT COUNT(A.STD_NO) FROM TB_STD_STD A, TB_USR_USER_INFO B, TB_USR_LOGIN C   
+		      				WHERE  B.USER_NO = C.USER_NO   
+		      				AND A.USER_NO = B.USER_NO   
+		      				AND A.CRS_CRE_CD = #{crsCreCd}   
+		      				AND C.USER_STS = 'U'   
+		      				AND A.ENRL_STS IN ('S','C') )  
+		      		),0) AS AVG_SCORE  
+		      ,  NVL((SELECT SUM(STR.TOT_GET_SCORE) FROM TB_LEC_EXAM_STARE STR   
+		      				WHERE STR.EXAM_SN = A.EXAM_SN AND STR.STD_NO = #{stdNo} AND STR.RATE_YN = 'Y'  
+		      		),0)  AS MY_SCORE  
+		   FROM TB_LEC_EXAM A 
+		  WHERE A.CRS_CRE_CD = #{crsCreCd}
+		  ]]>
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery" />
+	</sql>
+	
+	<select id="list" parameterType="examVO" resultType="examVO">
+		<!-- 시험의 목록을 반환한다.
+	 * 등록여부에 따라 시험 목록 반환
+	 * @param vo.regYn (등록여부)  -->
+		<include refid="listQuery" />
+		<if test = 'sbjCd != null and sbjCd != ""'>
+			    AND A.SBJ_CD = DECODE(#{sbjCd},'',A.SBJ_CD,#{sbjCd})  
+		</if>
+		    AND NVL(A.REG_YN,'N') = NVL(#{regYn}, NVL(A.REG_YN,'N'))  
+		    ORDER BY A.EXAM_STARE_TYPE_CD ASC, A.EXAM_END_DTTM DESC, STARE_CRIT_PRGR_RATIO ASC 
+	</select>
+	
+	<select id="selectExam" parameterType="examVO" resultType="examVO">
+		<!-- 시험 정보 단일항목 반환.  -->
+		<![CDATA[
+		SELECT A.CRS_CRE_CD  
+		      , A.EXAM_SN  
+		      , A.EXAM_TITLE  
+		      , A.EXAM_CTS  
+		      , A.EXAM_TYPE_CD  
+		      , A.EXAM_STARE_TYPE_CD  
+		      , A.EXAM_START_DTTM  
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_START_DTTM,'hh24') FROM DUAL) AS EXAM_START_HOUR  
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_START_DTTM,'mi') FROM DUAL) AS EXAM_START_MIN  
+		      , A.EXAM_END_DTTM  
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_END_DTTM,'hh24') FROM DUAL) AS EXAM_END_HOUR  
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_END_DTTM,'mi') FROM DUAL) AS EXAM_END_MIN  
+		      , A.RSLT_CFRM_DTTM  
+		      , (SELECT FN_GET_DATE_FORMAT(A.RSLT_CFRM_DTTM,'hh24') FROM DUAL) AS RSLT_CFRM_HOUR  
+		      , (SELECT FN_GET_DATE_FORMAT(A.RSLT_CFRM_DTTM,'mi') FROM DUAL) AS RSLT_CFRM_MIN  
+		      , A.EXAM_STARE_TM  
+		      , A.EXAM_VIEW_TYPE_CD  
+		      , A.STARE_TM_USE_YN  
+		      , NVL(A.STARE_CRIT_PRGR_RATIO,0) AS STARE_CRIT_PRGR_RATIO  
+		      , A.STARE_LIMIT_CNT  
+		      , A.REG_YN  
+		      , A.REG_NO  
+		      , A.REG_DTTM  
+		      , A.MOD_NO  
+			  , (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) AS MOD_NM  
+			  , (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) AS REG_NM  
+		      , A.MOD_DTTM  
+		      , NVL(( SELECT COUNT(STARE_CNT)  
+		          		FROM TB_LEC_EXAM_STARE  
+		          	   WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+		               	 AND EXAM_SN = A.EXAM_SN ),0) AS STARE_CNT  
+		      , NVL(( SELECT RATE_YN  
+				        FROM TB_LEC_EXAM_STARE  
+		               WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+		                 AND STD_NO = #{stdNo}  
+		                 AND EXAM_SN = A.EXAM_SN ),'N') AS RATE_YN  
+		      , CASE WHEN TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+		                  BETWEEN A.EXAM_START_DTTM AND A.EXAM_END_DTTM  
+                     THEN 'Y' ELSE 'N' END AS CONN_YN	
+		      , CASE WHEN A.RSLT_CFRM_DTTM < TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+		             THEN 'Y' ELSE 'N' END AS RSLT_YN  
+		      , (SELECT FN_GET_CRS_STD_PRGR(#{stdNo},#{crsCreCd}) FROM DUAL) AS STD_RATIO  
+		   FROM TB_LEC_EXAM A 
+		  WHERE A.CRS_CRE_CD = #{crsCreCd}  
+		    AND A.EXAM_SN = #{examSn}
+		    ]]>
+	</select>
+	
+	<select id="listExamStd" parameterType="examVO" resultType="examVO">
+		<!-- 학습자의 목록을 반환한다.
+	 * 시험응시 정보 포함(응시횟수, 취득점수) -->
+	 <![CDATA[
+	 	SELECT A.CRS_CRE_CD  
+		      , A.EXAM_SN  
+		      , A.EXAM_TITLE  
+		      , A.EXAM_CTS  
+		      , A.RSLT_CFRM_DTTM  
+		      , NVL(B.STARE_CNT,0) AS STARE_CNT  
+		      , CASE   
+		      		WHEN A.EXAM_STARE_TYPE_CD = 'S' THEN NVL(B.TOT_GET_SCORE,0)   
+		      		WHEN A.RSLT_CFRM_DTTM <= TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') THEN NVL(B.TOT_GET_SCORE,0)   
+		      		ELSE 0   
+		      END AS TOT_GET_SCORE   
+
+		      , NVL(B.RATE_YN,'N') AS RATE_YN  
+		   FROM TB_LEC_EXAM A, TB_LEC_EXAM_STARE B  
+		  WHERE A.CRS_CRE_CD = #{crsCreCd}  
+		    AND A.REG_YN = 'Y'  
+		    AND A.CRS_CRE_CD = B.CRS_CRE_CD (+)  
+		    AND A.EXAM_SN = B.EXAM_SN (+)  
+		    AND B.STD_NO (+) = #{stdNo}  
+		    ORDER BY A.EXAM_STARE_TYPE_CD ASC, A.EXAM_END_DTTM DESC, STARE_CRIT_PRGR_RATIO ASC
+		    ]]>
+	</select>
+	
+	<insert id="insertExam" parameterType="examVO">
+		<!-- 시험의 정보를 등록하고 결과를 반환한다.  -->
+		INSERT INTO TB_LEC_EXAM  (	 
+		        CRS_CRE_CD  
+		      , EXAM_SN  
+		      , SBJ_CD  
+		      , EXAM_TITLE  
+		      , EXAM_CTS  
+		      , EXAM_TYPE_CD  
+		      , EXAM_STARE_TYPE_CD  
+		      , EXAM_START_DTTM  
+		      , EXAM_END_DTTM  
+		      , RSLT_CFRM_DTTM  
+		      , EXAM_STARE_TM  
+		      , EXAM_VIEW_TYPE_CD  
+		      , STARE_TM_USE_YN  
+		      , STARE_CRIT_PRGR_RATIO  
+		      , STARE_LIMIT_CNT  
+		      , REG_YN  
+		      , REG_NO  
+		      , REG_DTTM  
+		      , MOD_NO  
+		      , MOD_DTTM  
+		 ) VALUES (  
+		        #{crsCreCd}  
+		      , #{examSn}  
+		      , #{sbjCd}  
+		      , #{examTitle}  
+		      , #{examCts}  
+		      , #{examTypeCd}  
+		      , #{examStareTypeCd}  
+		      , #{examStartDttm}  
+		      , #{examEndDttm}  
+		      , #{rsltCfrmDttm}
+		      , #{examStareTm}  
+		      , #{examViewTypeCd}  
+		      , #{stareTmUseYn}  
+		      , #{stareCritPrgrRatio}  
+		      , #{stareLimitCnt}  
+		      , #{regYn}  
+		      , #{regNo}  
+		      , TO_CHAR(SYSDATE,'yyyymmddhh24miss')  
+		      , #{modNo}  
+		      , TO_CHAR(SYSDATE,'yyyymmddhh24miss')	 
+		 )
+	</insert>
+	
+	<update id="updateExam" parameterType="examVO">
+		<!-- 시험의 정보를 수정하고 결과를 반환한다. -->
+		UPDATE TB_LEC_EXAM	  
+		    SET SBJ_CD = #{sbjCd}  
+		      , EXAM_TITLE = #{examTitle}  
+		      , EXAM_CTS = #{examCts}  
+		      , EXAM_TYPE_CD = #{examTypeCd}  
+		      , EXAM_STARE_TYPE_CD = #{examStareTypeCd}  
+		      , EXAM_START_DTTM = #{examStartDttm}  
+		      , EXAM_END_DTTM = #{examEndDttm}  
+		      , RSLT_CFRM_DTTM = #{rsltCfrmDttm}  
+		      , EXAM_STARE_TM = #{examStareTm}  
+		      , EXAM_VIEW_TYPE_CD = #{examViewTypeCd}  
+		      , STARE_TM_USE_YN = #{stareTmUseYn}  
+		      , STARE_CRIT_PRGR_RATIO = #{stareCritPrgrRatio}  
+		      , STARE_LIMIT_CNT = #{stareLimitCnt}  
+		      , REG_YN = #{regYn}  
+		      , MOD_NO = #{modNo}  
+		      , MOD_DTTM = TO_CHAR(SYSDATE,'yyyymmddhh24miss')  
+		    WHERE  CRS_CRE_CD = #{crsCreCd}  
+		      AND  EXAM_SN = #{examSn} 
+	</update>
+	
+	<delete id="deleteExam" parameterType="examVO">
+		<!-- 시험 정보를 삭제하고 결과를 반환한다.  -->
+		DELETE FROM TB_LEC_EXAM  
+		  WHERE CRS_CRE_CD = #{crsCreCd}  
+		    AND EXAM_SN = #{examSn}
+	</delete>
+	
+	<select id="selectExamSn" parameterType="examVO" resultType="examVO">
+	<!-- 시험 고유 번호를 검색하여 반환한다. -->
+		SELECT SQ_LEC_EXAM.nextVal AS EXAM_SN FROM DUAL 
+	</select>
+	
+</mapper>

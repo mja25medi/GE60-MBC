@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.teacher.thesis.service.impl.TchThesisMapper">
+	
+	<select id="selectKey" resultType="Integer">
+		SELECT nextval('SQ_TB_TCH_THESIS_SN')
+	</select>
+	<select id="listThesis" parameterType="tchThesisVO" resultType="tchThesisVO">
+		  SELECT                                    
+		     THESIS.THESIS_SN,                      
+		     THESIS.USER_NO,                        
+		     DATE_FORMAT(STR_TO_DATE(THESIS.RECEIPT_DT,'%Y%m%d%H%i%s'),'%Y.%m.%d') AS RECEIPT_DT, 
+		     THESIS.MAGAZINE_NM,                    
+		     THESIS.PBLS_TITLE_NO,                  
+		     THESIS.CTS,                            
+		     THESIS.PBLSR_PHONENO,                  
+		     THESIS.PBLS_DEPT_NM,                   
+		     THESIS.REG_NO,                         
+		     THESIS.REG_DTTM,                       
+		     THESIS.MOD_NO,                         
+		     THESIS.MOD_DTTM                        
+			  , FN_GET_USER_NAME(THESIS.MOD_NO) AS MOD_NM		
+			  , FN_GET_USER_NAME(THESIS.REG_NO) AS REG_NM		
+		  FROM tb_tch_thesis THESIS          
+		  WHERE THESIS.USER_NO = #{userNo}            
+		  ORDER BY THESIS.THESIS_SN                 
+	</select>
+	
+
+	
+	<select id="selectThesis" parameterType="tchThesisVO" resultType="tchThesisVO">
+		  SELECT                                    
+		     THESIS.THESIS_SN,                      
+		     THESIS.USER_NO,                        
+		     DATE_FORMAT(STR_TO_DATE(THESIS.RECEIPT_DT,'%Y%m%d%H%i%s'),'%Y.%m.%d') AS RECEIPT_DT, 
+		     THESIS.MAGAZINE_NM,                    
+		     THESIS.PBLS_TITLE_NO,                  
+		     THESIS.CTS,                            
+		     THESIS.PBLSR_PHONENO,                  
+		     THESIS.PBLS_DEPT_NM,                   
+		     THESIS.REG_NO,                         
+		     THESIS.REG_DTTM,                       
+		     THESIS.MOD_NO,                         
+		     THESIS.MOD_DTTM                        
+			  , FN_GET_USER_NAME(THESIS.MOD_NO) AS MOD_NM		
+			  , FN_GET_USER_NAME(THESIS.REG_NO) AS REG_NM		
+		  FROM tb_tch_thesis THESIS          
+		  WHERE THESIS.USER_NO   = #{userNo}          
+		    AND THESIS.THESIS_SN = #{thesisSn}        
+	</select>
+	
+	<insert id="insertThesis" parameterType="tchThesisVO">
+		INSERT INTO tb_tch_thesis
+		    THESIS_SN, USER_NO, RECEIPT_DT,                
+		    MAGAZINE_NM, PBLS_TITLE_NO, CTS,               
+		    PBLSR_PHONENO, PBLS_DEPT_NM, REG_NO,           
+		    REG_DTTM, MOD_NO, MOD_DTTM)                    
+		 VALUES (                                          
+		  #{thesisSn}, #{userNo}, replace(#{receiptDt},'.',''),  
+		  #{magazineNm}, #{pblsTitleNo}, #{cts},                 
+		  #{pblsrPhoneno}, #{pblsDeptNm},                      
+		  #{regNo},DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'),      
+		  #{modNo},DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'))      
+
+
+	</insert>
+	
+	<update id="update" parameterType="tchThesisVO">
+		 UPDATE tb_tch_thesis                                        
+		 SET    RECEIPT_DT    = replace(#{receiptDt},'.',''),          
+		        MAGAZINE_NM   = #{magazineNm},                         
+		        PBLS_TITLE_NO = #{pblsTitleNo},                        
+		        CTS           = #{cts},                                
+		        PBLSR_PHONENO = #{pblsrPhoneno},                       
+		        PBLS_DEPT_NM  = #{pblsDeptNm},                         
+		        MOD_NO        = #{modNo},                  			  
+		        MOD_DTTM      = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')  
+		  WHERE USER_NO       = #{userNo}                  		      
+		    AND THESIS_SN 	   = #{thesisSn}                      	  
+	</update>
+	
+	
+	<delete id="deleteThesis" parameterType="tchThesisVO">
+		   DELETE FROM tb_tch_thesis   						
+		         WHERE USER_NO     = #{userNo}                   
+		           AND THESIS_SN 	= #{thesisSn}                 
+	</delete>
+	
+</mapper>

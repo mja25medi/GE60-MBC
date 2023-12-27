@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.log.usercert.service.impl.LogUserCertLogMapper">	
+	
+	<sql id="selectQuery">
+			SELECT
+				  A.CRS_CD
+				, (SELECT CRS_YEAR FROM tb_crs_crs WHERE CRS_CD = A.CRS_CD ) AS CRS_YEAR
+				, (SELECT CRS_TERM FROM tb_crs_crs WHERE CRS_CD = A.CRS_CD ) AS CRS_TERM	
+				, A.STD_NO
+				, (SELECT FN_GET_USER_ID(#{userNo})) AS USER_ID	
+				, A.CRS_CRE_CD
+				, (SELECT CRS_CRE_NM FROM tb_crs_cre_crs WHERE CRS_CRE_CD =A.CRS_CRE_cD) AS CRS_CRE_NM
+				, A.CERT_MTHD
+				, (SELECT FN_GET_CODE_NAME('CERT_MTHD', A.CERT_MTHD)) AS CERT_MTHD_NM
+				, A.CERT_EVAL_CD
+				, (SELECT FN_GET_CODE_NAME('CERT_EVAL_CD', A.CERT_EVAL_CD)) AS CERT_EVAL_NM
+				, A.CONN_IP
+				, A.CERT_DTTM
+			FROM tb_log_user_cert_log A
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		WHERE STD_NO IN (SELECT STD_NO FROM tb_std_std WHERE USER_NO = #{userNo}) 
+	</sql>		
+	
+	<select id="listPageing" parameterType="logUserCertLogVO" resultType="logUserCertLogVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 사용자 본인인증 로그의 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="listQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		ORDER BY CERT_DTTM DESC
+ 		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="logUserCertLogVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 사용자 본인인증 로그의 페이징 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>	
+	
+	<insert id="insert" parameterType="logUserCertLogVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 본인인증(motp) 성공 시 로그 저장
+	 	*/
+		INSERT INTO tb_log_user_cert_log (
+		       CRS_CD
+		     , STD_NO
+		     , CRS_CRE_CD
+		     , CERT_MTHD
+		     , CERT_EVAL_CD
+		     , CONN_IP
+		     , CERT_DTTM
+		) VALUES (
+		       #{crsCd}
+		     , #{stdNo}
+		     , #{crsCreCd}
+		     , #{certMthd}
+		     , #{certEvalCd}
+		     , #{connIp}
+		     , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		)
+	</insert>
+	
+	
+</mapper>
+
+
+	

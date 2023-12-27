@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.etc.relatedsite.service.impl.EtcRelatedSiteMapper">	
+	
+	<sql id="selectQuery">
+		SELECT ORG_CD as orgCd
+		     , CTGR_CD as ctgrCd
+		     , SITE_SN as siteSn
+		     , TITLE as title
+		     , SITE_DESC as siteDesc
+		     , SITE_URL as siteUrl
+		     , REG_NO as regNo
+		     , (SELECT FN_GET_USER_NAME(REG_NO)) as regNm
+		     , REG_DTTM as regDttm
+		     , MOD_NO as modNo
+		     , (SELECT FN_GET_USER_NAME(MOD_NO)) as modNm
+		     , MOD_DTTM as modDttm
+		     , SITE_ODR as siteOdr
+		  FROM tb_etc_related_site
+		 WHERE ORG_CD = #{orgCd}
+		   AND CTGR_CD = #{ctgrCd}	
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+	</sql>		
+
+	<select id="list" parameterType="etcRelatedSiteVO" resultType="etcRelatedSiteVO">
+		/*
+			 SQL ID : list
+			 설  명 : 관련사이트의 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	 	ORDER BY SITE_ODR
+	</select>
+	
+	<select id="listPageing" parameterType="etcRelatedSiteVO" resultType="etcRelatedSiteVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 관련사이트의 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		ORDER BY SITEODR
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="etcRelatedSiteVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 관련사이트의 전체 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>	
+	
+	<select id="select" parameterType="etcRelatedSiteVO" resultType="etcRelatedSiteVO">
+		/*
+			 SQL ID : select
+			 설  명 : 관련사이트의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+           AND SITE_SN = #{siteSn}	 	
+	</select>
+	
+	<select id="selectKey" resultType="Integer">
+		/*
+			 SQL ID : selectKey
+			 설  명 : 관련사이트의 키 생성
+	 	*/
+	 	SELECT nextval(SQ_ETC_RELATED_SITE)	 	
+	</select>	
+	
+	<insert id="insert" parameterType="etcRelatedSiteVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 관련사이트의 정보 등록
+	 	*/
+		INSERT INTO tb_etc_related_site (
+		       ORG_CD
+		     , CTGR_CD
+		     , SITE_SN
+		     , TITLE
+		     , SITE_DESC
+		     , SITE_ODR
+		     , SITE_URL
+		     , REG_NO
+		     , REG_DTTM
+		     , MOD_NO
+		     , MOD_DTTM
+		) VALUES (
+		       #{orgCd}
+		     , #{ctgrCd}
+		     , ( SELECT NVL((MAX(SUBQUERY.SITE_SN)),0)+1
+		           FROM tb_etc_related_site AS SUBQUERY
+		          WHERE ORG_CD = #{orgCd} )
+		     , #{title}
+		     , #{siteDesc}
+		     , ( SELECT NVL((MAX(SUBQUERY.SITE_ODR)),0)+1
+		           FROM tb_etc_related_site AS SUBQUERY
+		          WHERE ORG_CD = #{orgCd}
+		            AND CTGR_CD = #{ctgrCd} )
+		     , #{siteUrl}
+		     , #{regNo}
+		     , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		     , #{modNo}
+		     , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		)	 	
+	</insert>
+	
+	<update id="update" parameterType="etcRelatedSiteVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 관련사이트의 정보 수정
+	 	*/
+		UPDATE tb_etc_related_site
+		   SET TITLE = #{title}
+		     , SITE_DESC = #{siteDesc}
+		     , SITE_ODR = #{siteOdr}
+		     , SITE_URL = #{siteUrl}
+		     , MOD_NO = #{modNo}
+		     , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		 WHERE ORG_CD = #{orgCd}
+		   AND CTGR_CD = #{ctgrCd}
+		   AND SITE_SN = #{siteSn}
+	</update>	
+
+	<delete id="delete" parameterType="etcRelatedSiteVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 관련사이트의 정보 삭제
+	 	*/
+	 	DELETE FROM tb_etc_related_site 
+		 WHERE ORG_CD = #{orgCd}
+		   AND CTGR_CD = #{ctgrCd}
+		   AND SITE_SN = #{siteSn}
+	</delete>
+	
+	<delete id="deleteAll" parameterType="etcRelatedSiteVO" >
+		/*
+			 SQL ID : deleteAll
+			 설  명 : 관련사이트의 정보 삭제 : 분류에 속한 모든 사이트 삭제함.
+	 	*/
+	 	DELETE FROM tb_etc_related_site 
+		 WHERE ORG_CD = #{orgCd}
+		   AND CTGR_CD = #{ctgrCd}
+	</delete>	
+	 
+</mapper>

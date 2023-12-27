@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.org.crscert.service.impl.OrgCrsCertMapper">	
+	
+	<sql id="selectQuery">
+		<![CDATA[
+		SELECT ORG_CD as orgCd
+		     , IMG_FILE_SN as imgFileSn
+		     , PRN_DIREC as prnDirec
+		     , CPLTNO_X as cpltnoX
+		     , CPLTNO_Y as cpltnoY
+		     , CRS_NM_X as crsNmX
+		     , CRS_NM_Y as crsNmY
+		     , PRNDAY_X as prndayX
+		     , PRNDAY_Y as prndayY
+		     , REG_NO as regNo
+		     , ( SELECT FN_GET_USER_NAME(REG_NO)
+		           ) as regNm
+		     , REG_DTTM as regDttm
+		     , MOD_NO as modNo
+		     , ( SELECT FN_GET_USER_NAME(MOD_NO)
+		           ) as modNm
+		     , MOD_DTTM as modDttm
+		  FROM tb_org_crs_cert
+		 WHERE ORG_CD = #{orgCd}		
+		]]>
+	</sql>
+	
+	<select id="select" parameterType="ortCrsCertVO" resultType="ortCrsCertVO">
+		/*
+			 SQL ID : select
+			 설  명 : 기관 수료증의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+	</select>	
+	
+	<insert id="insert" parameterType="ortCrsCertVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 기관 수료증의 정보 등록
+	 	*/
+	 	INSERT INTO tb_org_crs_cert (
+		       ORG_CD
+		     , IMG_FILE_SN
+		     , PRN_DIREC
+		     , CPLTNO_X
+		     , CPLTNO_Y
+		     , CRS_NM_X
+		     , CRS_NM_Y
+		     , PRNDAY_X
+		     , PRNDAY_Y
+		     , REG_NO
+		     , REG_DTTM
+		     , MOD_NO
+		     , MOD_DTTM
+		) VALUES (
+		       #{orgCd}
+		     , #{imgFileSn}
+		     , #{prnDirec}
+		     , #{cpltnoX}
+		     , #{cpltnoY}
+		     , #{crsNmX}
+		     , #{crsNmY}
+		     , #{prndayX}
+		     , #{prndayY}
+		     , #{regNo}
+		     , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		     , #{modNo}
+		     , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		) 	
+	</insert>
+	
+	<update id="update" parameterType="ortCrsCertVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 기관 수료증의 정보 수정
+	 	*/
+	 	UPDATE tb_org_crs_cert
+		   SET IMG_FILE_SN = #{imgFileSn}
+		     , PRN_DIREC = #{prnDirec}
+		     , CPLTNO_X = #{cpltnoX}
+		     , CPLTNO_Y = #{cpltnoY}
+		     , CRS_NM_X = #{crsNmX}
+		     , CRS_NM_Y = #{crsNmY}
+		     , PRNDAY_X = #{prndayX}
+		     , PRNDAY_Y = #{prndayY}
+		     , MOD_NO = #{modNo}
+		     , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		 WHERE ORG_CD = #{orgCd}
+	</update>	
+
+	<delete id="delete" parameterType="ortCrsCertVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 기관 수료증의 정보 삭제
+	 	*/
+		DELETE FROM tb_org_crs_cert
+		 WHERE ORG_CD = #{orgCd}
+	</delete>
+</mapper>

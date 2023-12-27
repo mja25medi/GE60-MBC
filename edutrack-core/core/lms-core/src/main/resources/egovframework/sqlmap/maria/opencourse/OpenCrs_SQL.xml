@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.opencourse.course.service.impl.OpenCrsMapper">	
+	<select id="selectKey" resultType="String">
+		SELECT CONCAT('OC',LPAD(nextval(SQ_CRO_OPEN_CRS),8,'0')) AS crsCd
+	</select>
+	<sql id="selectColumnQuery">
+				 A.CRS_CD  
+               , A.CTGR_CD  
+               , B.CTGR_NM  
+               , A.CRS_NM  
+               , A.CRS_DESC  
+               , A.CRS_IMG  
+               , A.CRS_IMG_DESC  
+               , A.USER_LVL_CD  
+               , A.USE_YN  
+               , A.CRS_ODR  
+               , A.EXPOSURE_YN  
+               , (SELECT FN_GET_OPEN_CNTS_PATH(A.CRS_CD)) AS SAMPLE_CNTS_PATH  
+               , A.REG_NO  
+               , (SELECT FN_GET_USER_NAME(A.REG_NO)) AS REG_NM  
+               , A.REG_DTTM  
+               , A.MOD_NO  
+               , (SELECT FN_GET_USER_NAME(A.MOD_NO)) AS MOD_NM  
+               , A.MOD_DTTM  
+               , (SELECT COUNT(SBJ_CD) FROM tb_cro_open_crs_sbj C WHERE A.CRS_CD = C.CRS_CD) AS SBJ_CNT 
+	</sql>
+	
+	<sql id="selectQuery">
+		SELECT 
+		<include refid="selectColumnQuery" />
+        FROM tb_cro_open_crs A, tb_cro_open_crs_ctgr B  
+        WHERE A.CTGR_CD = B.CTGR_CD  
+	      AND B.ORG_CD = #{orgCd}  
+	</sql>
+		
+	<select id="count" parameterType="openCrsVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+        FROM tb_cro_open_crs A, tb_cro_open_crs_ctgr B  
+        WHERE A.CTGR_CD = B.CTGR_CD  
+	      AND B.ORG_CD = #{orgCd}  	
+	      AND A.CTGR_CD = #{ctgrCd}  
+	    <if test = "exposureYn != null and exposureYn != ''">
+			AND A.EXPOSURE_YN = #{exposureYn}    
+		</if>	
+	</select>
+		
+	<sql id="listQuery">
+		<include refid="selectQuery" />
+		 AND A.CTGR_CD = #{ctgrCd}  
+		 <if test = "exposureYn != null and exposureYn != ''">
+		 	AND A.EXPOSURE_YN = #{exposureYn}    
+		 </if>
+	</sql>
+	
+	<select id="list" parameterType="openCrsVO" resultType="openCrsVO">
+		<!-- 공개강좌 목록  -->
+		<include refid="listQuery" />
+		ORDER BY CRS_ODR 
+	</select>
+	
+	<select id="listPageing"  parameterType="openCrsVO" resultType="openCrsVO">
+		<!-- 공개강좌 페이징 목록  -->
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+			<include refid="listQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>	
+		ORDER BY CRS_ODR 
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="select" parameterType="openCrsVO" resultType="openCrsVO">
+		<!-- 공개강좌 정보  -->
+		<include refid="selectQuery" />
+		AND CRS_CD = #{crsCd}  
+	</select>
+	
+	<insert id="insert" parameterType="openCrsVO">
+		<!-- 공개강좌 정보 등록  -->
+		
+		INSERT INTO tb_cro_open_crs (  
+		         CRS_CD  
+		       , CTGR_CD  
+		       , CRS_NM  
+		       , CRS_DESC  
+		       , CRS_IMG  
+		       , CRS_IMG_DESC  
+		       , USER_LVL_CD  
+		       , USE_YN  
+		       , CRS_ODR  
+		       , EXPOSURE_YN  
+		       , REG_NO  
+		       , REG_DTTM  
+		       , MOD_NO  
+		       , MOD_DTTM  
+		  ) VALUES (  
+				 #{crsCd}
+		       , #{ctgrCd}
+		       , #{crsNm}  
+		       , #{crsDesc}  
+		       , #{crsImg}  
+		       , #{crsImgDesc}  
+		       , #{userLvlCd} 
+		       , #{useYn}  
+		       , ( SELECT IFNULL(FN_GET_NULL(MAX(CRS_ODR)),0)+1  
+		             FROM tb_cro_open_crs AS SUBQUERY  
+		            WHERE CTGR_CD = #{ctgrCd} )  
+		       , #{exposureYn}  
+		       , #{regNo}  
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		       , #{modNo}  
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		  )  
+	</insert>
+	
+	<update id="update" parameterType="openCrsVO">
+		<!-- 공개강좌 정보 수정 -->
+		UPDATE tb_cro_open_crs  
+		     SET CTGR_CD = #{ctgrCd}  
+		       , CRS_NM = #{crsNm}  
+		       , CRS_DESC = #{crsDesc}  
+		       , CRS_IMG = #{crsImg}  
+		       , CRS_IMG_DESC = #{crsImgDesc}  
+		       , USER_LVL_CD = #{userLvlCd}  
+		       , USE_YN = #{useYn}  
+		       , CRS_ODR = #{crsOdr}  
+		       , EXPOSURE_YN = #{exposureYn}  
+		       , MOD_NO = #{modNo}  
+		       , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		   WHERE CRS_CD = #{crsCd}
+	</update>
+	
+	<update id="updateBatch" parameterType="list">
+	<!-- 공개강좌 정보 일괄 수정  -->
+	<!-- List<OpenCrsVO> itemArray  -->
+		<foreach collection="list" item="item" index="index" open="DECLARE BEGIN" close="; END;" separator=";">
+			UPDATE tb_cro_open_crs  
+		    SET
+		     	 CTGR_CD = #{item.ctgrCd}  
+		       , CRS_NM = #{item.crsNm}  
+		       , CRS_DESC = #{item.crsDesc}  
+		       , CRS_IMG = #{item.crsImg}  
+		       , CRS_IMG_DESC = #{item.crsImgDesc}  
+		       , USER_LVL_CD = #{item.userLvlCd}  
+		       , USE_YN = #{item.useYn}  
+		       , CRS_ODR = #{item.crsOdr}  
+		       , EXPOSURE_YN = #{item.exposureYn}  
+		       , MOD_NO = #{item.modNo}  
+		       , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+			WHERE CRS_CD = #{item.crsCd}
+		</foreach>
+	</update>
+	
+	<delete id="delete" parameterType="openCrsVO">
+		 DELETE FROM tb_cro_open_crs  
+		   WHERE CRS_CD = #{crsCd}  
+	</delete>
+	
+	<select id="listCourse"  parameterType="openCrsVO" resultType="openCrsVO">
+		<!-- 홈페이지 공개강좌 목록  -->
+		<include refid="selectQuery" />
+		   AND A.USE_YN = 'Y'  
+		   AND B.USE_YN = 'Y'  
+		   AND EXISTS (SELECT Z.SBJ_CD FROM tb_cro_open_crs_sbj Z WHERE Z.CRS_CD = A.CRS_CD) 
+		<if test = "crsNm != null and crsNm != ''">
+			AND A.CRS_NM LIKE CONCAT('%',#{crsNm},'%')
+		</if>
+		<if test = "exposureYn != null and exposureYn != ''">
+			 AND A.EXPOSURE_YN = #{exposureYn}
+		</if>
+		<if test = "searchValue != null and searchValue != ''">
+			AND A.CRS_NM like CONCAT('%',#{searchValue},'%')
+		</if>
+		
+		ORDER BY CRS_ODR 
+	</select>
+
+	<select id="listCoursePageingCount" parameterType="openCrsVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+        FROM tb_cro_open_crs A, tb_cro_open_crs_ctgr B  
+        WHERE A.CTGR_CD = B.CTGR_CD  
+	     	AND B.ORG_CD = #{orgCd} 
+			AND A.USE_YN = 'Y'  
+		    AND B.USE_YN = 'Y'  
+		    AND EXISTS (SELECT Z.SBJ_CD FROM tb_cro_open_crs_sbj Z WHERE Z.CRS_CD = A.CRS_CD) 
+		    <if test = "crsNm != null and crsNm != ''">
+				AND A.CRS_NM LIKE CONCAT('%',#{crsNm},'%')
+			</if>
+			<if test = "exposureYn != null and exposureYn != ''">
+				 AND A.EXPOSURE_YN = #{exposureYn}
+			</if>
+			<if test = "searchValue != null and searchValue != ''">
+				AND A.CRS_NM like CONCAT('%',#{searchValue},'%')
+			</if>	       	
+	</select>
+		
+	<select id="listCoursePageing"  parameterType="openCrsVO" resultType="openCrsVO">
+		<!-- 공개강좌 페이징 목록  -->
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+			<include refid="selectQuery" />
+			AND A.USE_YN = 'Y'  
+		    AND B.USE_YN = 'Y'  
+		    AND EXISTS (SELECT Z.SBJ_CD FROM tb_cro_open_crs_sbj Z WHERE Z.CRS_CD = A.CRS_CD) 
+		    <if test = "crsNm != null and crsNm != ''">
+				AND A.CRS_NM LIKE CONCAT('%',#{crsNm},'%')
+			</if>
+			<if test = "exposureYn != null and exposureYn != ''">
+				 AND A.EXPOSURE_YN = #{exposureYn}
+			</if>
+			<if test = "searchValue != null and searchValue != ''">
+				AND A.CRS_NM like CONCAT('%',#{searchValue},'%')
+			</if>
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="listSubInfo"  parameterType="openCrsVO" resultType="openCrsVO">
+		<!-- 공개강좌 페이징 목록  -->
+		SELECT A.CRS_CD  
+               , A.CTGR_CD  
+               , B.CTGR_NM  
+               , A.CRS_NM  
+               , A.CRS_DESC  
+               , A.CRS_IMG  
+               , A.CRS_IMG_DESC  
+               , A.USER_LVL_CD  
+               , A.USE_YN  
+               , A.CRS_ODR  
+               , A.EXPOSURE_YN  
+               , (SELECT FN_GET_OPEN_CNTS_PATH(A.CRS_CD)) AS SAMPLE_CNTS_PATH  
+               , A.REG_NO  
+               , (SELECT FN_GET_USER_NAME(A.REG_NO)) AS REG_NM  
+               , A.REG_DTTM  
+               , A.MOD_NO  
+               , (SELECT FN_GET_USER_NAME(A.MOD_NO)) AS MOD_NM  
+               , A.MOD_DTTM  
+               , (SELECT COUNT(SBJ_CD) FROM tb_cro_open_crs_sbj C WHERE A.CRS_CD = C.CRS_CD) AS SBJ_CNT 
+            FROM tb_cro_open_crs A, tb_cro_open_crs_ctgr B, tb_cro_open_crs_sbj C  
+           WHERE A.CTGR_CD = B.CTGR_CD  
+             AND A.CRS_CD = C.CRS_CD  
+             AND B.ORG_CD = #{orgCd}  
+             AND C.SBJ_CD = #{sbjCd}  
+           ORDER BY CRS_ODR  
+	</select>
+	
+</mapper>

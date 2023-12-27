@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.etc.hrdapi.service.impl.HrdApiUserLoginMapper">	
+
+	<sql id="selectQuery">
+		SELECT 
+		  A.NUM
+		, A.AGENT_PK
+		, A.SEQ
+		, A.USER_AGENT_PK
+		, DATE_FORMAT( A.LOGIN_DATE, '%Y-%m-%d %H:%i:%s') as LOGIN_DATE
+		, A.LOGIN_IP
+		, A.SYNC_STATUS
+		, A.SYNC_RESULT_MSG
+		, A.REG_NO
+		, A.REG_DTTM
+		, A.MOD_NO
+		, A.MOD_DTTM
+	</sql>
+	<sql id="fromQuery">
+		FROM tb_hrd_usr_login A
+	</sql>
+	<sql id="whereQuery">
+		WHERE 1=1
+		<if test = 'userAgentPk != null and userAgentPk != ""'>
+		   AND A.USER_AGENT_PK = #{userAgentPk}
+		</if>
+		<if test = 'num != null and num != ""'>
+		   AND A.NUM = #{num}
+		</if>
+		<if test = 'syncStatus != null and syncStatus != ""'>
+		   AND A.SYNC_STATUS = #{syncStatus}
+		</if>
+		<if test = "searchFrom != null and searchFrom != '' and searchTo != null and searchTo != ''">
+			AND DATE_FORMAT(A.REG_DTTM , '%Y%m%d') BETWEEN DATE_FORMAT(#{searchFrom} , '%Y%m%d') AND DATE_FORMAT(#{searchTo} , '%Y%m%d')
+		</if>
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		<include refid="fromQuery"/>
+		<include refid="whereQuery"/>
+	</sql>
+	<sql id="selectCountQuery">
+		SELECT COUNT(*)
+        <include refid="fromQuery"/>
+	</sql>
+	<select id="selectUserLogin" parameterType="hrdApiUserLoginVO" resultType="egovMap">
+		/*
+			 SQL ID : selectUserLogin
+			 설  명 : api 년도 기수별 전송 데이터 조회
+	 	*/
+		<include refid="selectQuery"/>
+		<include refid="fromQuery"/>
+		<include refid="whereQuery"/>
+		ORDER BY A.MOD_DTTM DESC
+	</select>
+	
+	<select id="listUserLogin" parameterType="hrdApiUserLoginVO" resultType="egovMap">
+		/*
+			 SQL ID : listUserLogin
+			 설  명 : api 년도 기수별 전송 데이터  리스트 조회
+	 	*/
+		<include refid="selectQuery"/>
+		<include refid="fromQuery"/>
+		<include refid="whereQuery"/>
+		<if test = "searchKey != null and searchKey == 'pk' and searchValue != null and searchValue != ''">
+			AND A.USER_AGENT_PK like CONCAT('%',#{searchValue},'%')
+		</if>
+		<if test = 'sortKey == null or sortKey == ""'>
+		   ORDER BY A.MOD_DTTM DESC
+		</if>
+	</select>
+	
+	<select id="listPageingUserLogin" parameterType="hrdApiUserLoginVO" resultType="egovMap">
+		/*
+			 SQL ID : listPageingUserLogin
+			 설  명 : 년도 기수별 전송 데이터 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<if test = "searchKey != null and searchKey == 'pk' and searchValue != null and searchValue != ''">
+			AND A.USER_AGENT_PK like CONCAT('%',#{searchValue},'%')
+		</if>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		<if test = 'sortKey == null or sortKey == ""'>
+		   ORDER BY MOD_DTTM DESC
+		</if>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="countUserLogin" parameterType="hrdApiUserLoginVO" resultType="Integer">
+		/*
+			 SQL ID : countUserLogin
+			 설  명 : 년도 기수별 전송 데이터 전체 카운트
+	 	*/
+		<include refid="selectCountQuery"/>
+		<include refid="whereQuery"/>
+	</select>		
+	
+	<insert id="insertUserLogin" parameterType="hrdApiUserLoginVO" >
+		/*
+			 SQL ID : insertUserLogin
+			 설  명 : api 년도 기수별 전송 데이터  등록
+	 	*/
+		INSERT INTO tb_hrd_usr_login (
+			  AGENT_PK
+			, SEQ
+			, USER_AGENT_PK
+			, LOGIN_DATE
+			, LOGIN_IP
+			, SYNC_STATUS
+			, SYNC_RESULT_MSG
+			, REG_NO
+			, REG_DTTM
+			, MOD_NO
+			, MOD_DTTM
+		) VALUES (
+			  #{agentPk}
+			, #{seq}
+			, #{userAgentPk}
+			, #{loginDate}
+			, #{loginIp}
+		    , #{syncStatus}
+		    , #{syncResultMsg} 
+		    , #{regNo}
+		    , DATE_FORMAT( NOW(), '%Y%m%d%H%i%s') 
+		    , #{modNo}
+		    , DATE_FORMAT( NOW(), '%Y%m%d%H%i%s') 
+		)	 	
+	</insert>
+	
+	<update id="updateUserLogin" parameterType="hrdApiUserLoginVO" >
+		/*
+			 SQL ID : updateUserLogin
+			 설  명 : api 년도 기수별 전송 데이터  수정
+	 	*/
+		UPDATE tb_hrd_usr_login
+		   SET MOD_DTTM         =   DATE_FORMAT( NOW(), '%Y%m%d%H%i%s')  
+			<if test = 'syncResultMsg != null'>
+			 , SYNC_RESULT_MSG  =   #{syncResultMsg}
+			</if>
+			<if test = 'modNo != null and modNo != ""'>
+			 , MOD_NO			=   #{modNo}
+			</if>
+			<if test = 'seq != null and seq != ""'>
+			 , SEQ			=   #{seq}
+			</if>
+			<if test = 'syncStatus != null and syncStatus != ""'>
+			 , SYNC_STATUS      =   #{syncStatus}
+			</if>
+			<if test = 'loginIp != null and loginIp != ""'>
+			 , LOGIN_IP      =   #{loginIp}
+			</if>
+		WHERE 1 = 1
+		AND USER_AGENT_PK = #{userAgentPk}
+		<if test = 'num != null and num != ""'>
+			AND NUM = #{num}
+		</if>
+		<if test = "searchKey != null and searchKey == 'syncStatus' and searchValue != null and searchValue != ''">
+		   AND SYNC_STATUS = #{searchValue}
+		</if>
+	</update>
+	
+	<delete id="deleteUserLogin" parameterType="hrdApiUserLoginVO" >
+		/*
+			 SQL ID : deleteUserLogin
+			 설  명 : api 년도 기수별 전송 데이터  삭제
+	 	*/
+		DELETE FROM tb_hrd_usr_login
+		WHERE USER_AGENT_PK = #{userAgentPk}
+		<if test = 'num != null and num != ""'>
+			AND NUM = #{num}
+		</if>
+	</delete>
+	
+	<select id="listUserLoginHrdApiSync" parameterType="hrdApiUserLoginVO" resultType="egovMap">
+		/*
+			 SQL ID : listUserLoginHrdApiSync
+			 설  명 : api 년도 기수별 전송 데이터 싱크
+	 	*/
+		SELECT 
+		  A.NUM
+		, A.AGENT_PK		
+		, ROW_NUMBER() OVER()  as SEQ		
+		, A.USER_AGENT_PK	
+		, DATE_FORMAT( A.LOGIN_DATE, '%Y-%m-%d %H:%i:%s') as LOGIN_DATE
+		, A.LOGIN_IP		
+		FROM tb_hrd_usr_login A
+		WHERE 1=1
+		   AND A.SYNC_STATUS != 'S'
+		<if test = 'userAgentPk != null and userAgentPk != ""'>
+		   AND A.USER_AGENT_PK = #{userAgentPk}
+		</if>
+		<if test = 'num != null and num != ""'>
+		   AND A.NUM = #{num}
+		</if>
+		<if test = "searchFrom != null and searchFrom != '' and searchTo != null and searchTo != ''">
+			AND DATE_FORMAT(A.REG_DTTM , '%Y%m%d') BETWEEN DATE_FORMAT(#{searchFrom} , '%Y%m%d') AND DATE_FORMAT(#{searchTo} , '%Y%m%d')
+		</if>
+		<if test = "searchKey != null and searchKey == 'syncStatus' and searchValue != null and searchValue != ''">
+		   AND A.SYNC_STATUS = #{searchValue}
+		</if>
+	</select>
+	
+</mapper>

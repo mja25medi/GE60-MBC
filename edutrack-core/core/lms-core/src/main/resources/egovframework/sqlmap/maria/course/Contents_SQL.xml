@@ -1,0 +1,1215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.contents.service.impl.ContentsMapper">	
+
+
+	<select id="selectUnitCd" resultType="String">
+	    SELECT CONCAT('CNT',LPAD(nextval(SQ_CRS_SBJ_CNTS),9,'0')) AS UNIT_CD 
+	</select>
+	<sql id="selectContentsQuery">
+		<![CDATA[
+		  SELECT A.SBJ_CD  
+		       , A.UNIT_CD  
+		       , A.PAR_UNIT_CD  
+		       , A.UNIT_NM  
+		       , A.UNIT_LVL  
+		       , A.UNIT_ODR  
+		       , A.UNIT_TYPE  
+		       , A.CNTS_TYPE_CD  
+		       , A.UNIT_FILE_PATH  
+		       , A.QUIZ_CNT  
+		       , A.QUIZ_PASS_SCORE  
+		       , A.PRGR_CHK_TYPE  
+		       , A.CRIT_TM  
+		       , A.TOTAL_PAGE  
+		       , A.PRGR_CHK_YN  
+		       , A.ATCH_FILE_PATH  
+		       , A.MOBILE_FILE_PATH  
+		       , A.MOBILE_FILE_PATH_2  
+		       , A.MOBILE_YN  
+		       , A.OLC_YN  
+		       , A.REG_NO  
+		       , A.REG_DTTM  
+		       , A.MOD_NO  
+		       , A.MOD_DTTM  
+		       , A.ZOOM_URL
+		       , A.SCENE_ID 
+		       , (SELECT FN_GET_USER_NAME(A.MOD_NO) ) MOD_NM  
+		       , (SELECT FN_GET_USER_NAME(A.REG_NO) ) REG_NM  
+		       , IFNULL(( SELECT UNIT_NM
+		                 FROM tb_crs_sbj_cnts  
+		                WHERE UNIT_CD = A.PAR_UNIT_CD),'ROOT') AS PAR_UNIT_NM  
+		       , CASE WHEN (A.UNIT_LVL -1) < 0 THEN 0 ELSE (A.UNIT_LVL -1) END PAR_UNIT_LVL  
+		       , ( SELECT MAX(UNIT_ODR)  
+		             FROM tb_crs_sbj_cnts  
+		            WHERE IFNULL( FN_GET_NULL(PAR_UNIT_CD),'1') = IFNULL( FN_GET_NULL(A.PAR_UNIT_CD),'1') AND SBJ_CD = A.SBJ_CD) AS MAX_ODR
+		       , ( SELECT COUNT(*)  
+		             FROM tb_crs_sbj_cnts  
+		            WHERE PAR_UNIT_CD = A.UNIT_CD AND SBJ_CD = A.SBJ_CD) AS SUB_CNT  
+		       , ( SELECT COUNT(*)  
+		             FROM tb_lec_bookmark  
+		            WHERE SBJ_CD = A.SBJ_CD  
+		              AND UNIT_CD = A.UNIT_CD ) AS BOOKMARK_CNT 
+		       , ( SELECT MAX(UNIT_CD) FROM TB_CRS_CRE_SBJ_CNTS B WHERE CNTS_TYPE_CD IN ('CDN','VOD','MLINK') AND B.SBJ_CD = A.SBJ_CD AND B.UNIT_ODR < A.UNIT_ODR  ) AS PRE_UNIT_CD
+               , ( SELECT MIN(UNIT_CD) FROM TB_CRS_CRE_SBJ_CNTS B WHERE CNTS_TYPE_CD IN ('CDN','VOD','MLINK') AND B.SBJ_CD = A.SBJ_CD AND B.UNIT_ODR > A.UNIT_ODR  ) AS NEXT_UNIT_CD
+		    FROM  tb_crs_sbj_cnts A 
+		   WHERE SBJ_CD = #{sbjCd} 
+		   ]]> 
+
+	</sql>
+	
+	<sql id="selectCreContentsQuery">
+		<![CDATA[
+		  SELECT A.SBJ_CD  
+		       , A.UNIT_CD  
+		       , A.PAR_UNIT_CD  
+		       , A.UNIT_NM  
+		       , A.UNIT_LVL  
+		       , A.UNIT_ODR  
+		       , A.UNIT_TYPE  
+		       , A.CNTS_TYPE_CD  
+		       , A.UNIT_FILE_PATH  
+		       , A.QUIZ_CNT  
+		       , A.QUIZ_PASS_SCORE  
+		       , A.PRGR_CHK_TYPE  
+		       , A.CRIT_TM  
+		       , A.TOTAL_PAGE  
+		       , A.PRGR_CHK_YN  
+		       , A.ATCH_FILE_PATH  
+		       , A.MOBILE_FILE_PATH  
+		       , A.MOBILE_FILE_PATH_2  
+		       , A.MOBILE_YN  
+		       , A.OLC_YN  
+		       , A.REG_NO  
+		       , A.REG_DTTM  
+		       , A.MOD_NO  
+		       , A.MOD_DTTM  
+		       , A.ZOOM_URL
+		       , A.SCENE_ID 
+		       , (SELECT FN_GET_USER_NAME(A.MOD_NO) ) MOD_NM  
+		       , (SELECT FN_GET_USER_NAME(A.REG_NO) ) REG_NM  
+		       , IFNULL(( SELECT UNIT_NM
+		                 FROM tb_crs_sbj_cnts  
+		                WHERE UNIT_CD = A.PAR_UNIT_CD),'ROOT') AS PAR_UNIT_NM  
+		       , CASE WHEN (A.UNIT_LVL -1) < 0 THEN 0 ELSE (A.UNIT_LVL -1) END PAR_UNIT_LVL  
+		       , ( SELECT MAX(UNIT_ODR)  
+		             FROM tb_crs_sbj_cnts  
+		            WHERE IFNULL( FN_GET_NULL(PAR_UNIT_CD),'1') = IFNULL( FN_GET_NULL(A.PAR_UNIT_CD),'1') AND SBJ_CD = A.SBJ_CD) AS MAX_ODR
+		       , ( SELECT COUNT(*)  
+		             FROM tb_crs_sbj_cnts  
+		            WHERE PAR_UNIT_CD = A.UNIT_CD AND SBJ_CD = A.SBJ_CD) AS SUB_CNT  
+		       , ( SELECT COUNT(*)  
+		             FROM tb_lec_bookmark  
+		            WHERE SBJ_CD = A.SBJ_CD  
+		              AND UNIT_CD = A.UNIT_CD ) AS BOOKMARK_CNT 
+		       , ( SELECT MAX(UNIT_CD) FROM TB_CRS_CRE_SBJ_CNTS B WHERE CNTS_TYPE_CD IN ('CDN','VOD','MLINK') AND B.SBJ_CD = A.SBJ_CD AND B.UNIT_ODR < A.UNIT_ODR  ) AS PRE_UNIT_CD
+               , ( SELECT MIN(UNIT_CD) FROM TB_CRS_CRE_SBJ_CNTS B WHERE CNTS_TYPE_CD IN ('CDN','VOD','MLINK') AND B.SBJ_CD = A.SBJ_CD AND B.UNIT_ODR > A.UNIT_ODR  ) AS NEXT_UNIT_CD
+		    FROM  tb_crs_cre_sbj_cnts A 
+		   WHERE SBJ_CD = #{sbjCd} 
+		   ]]>
+
+	</sql>
+
+
+ 	<select id="listContentsDel" parameterType="contentsVO" resultType="contentsVO">
+	    <include refid="selectContentsQuery" />
+	    AND IFNULL( FN_GET_NULL(PAR_UNIT_CD),'1') = IFNULL(FN_GET_NULL(#{parUnitCd}) ,'1')
+	    ORDER BY UNIT_ODR
+	</select>
+<!--	
+ 	<select id="listContents" parameterType="contentsVO" resultType="contentsVO">
+	    <include refid="selectContentsQuery" />
+	    AND IFNULL( FN_GET_NULL(PAR_UNIT_CD),'1') = IFNULL(FN_GET_NULL(#{parUnitCd}) ,'1')
+	    ORDER BY UNIT_ODR
+	</select>
+ --> 
+ <!--
+	<select id="listContents" parameterType="contentsVO" resultType="contentsVO">
+		WITH RECURSIVE CTE AS
+		(
+			SELECT  
+				  SBJ_CD
+				, UNIT_CD
+				, PAR_UNIT_CD
+				, UNIT_NM
+				, UNIT_LVL
+				, UNIT_ODR
+				, CRIT_TM
+				, CNTS_TYPE_CD
+				, CONCAT(UNIT_ODR,'/',UNIT_CD) AS PATH
+			FROM
+				tb_crs_sbj_cnts
+			WHERE
+				UNIT_LVL = 1
+			 AND SBJ_CD = #{sbjCd}
+		UNION ALL
+			SELECT  
+				  A.SBJ_CD
+				, A.UNIT_CD
+				, A.PAR_UNIT_CD
+				, A.UNIT_NM
+				, A.UNIT_LVL
+				, A.UNIT_ODR
+				, A.CRIT_TM
+				, A.CNTS_TYPE_CD
+				, CONCAT(CTE.path ,'/', A.UNIT_ODR) AS PATH
+			FROM
+				tb_crs_sbj_cnts AS A
+			INNER JOIN 
+				CTE ON A.PAR_UNIT_CD = CTE.UNIT_CD
+		)
+		SELECT * FROM CTE 
+		ORDER BY PATH
+	</select>
+ -->
+	<select id="listContents" parameterType="contentsVO" resultType="contentsVO">
+			SELECT  
+				  SBJ_CD
+				, UNIT_CD
+				, PAR_UNIT_CD
+				, UNIT_NM
+				, UNIT_LVL
+				, UNIT_ODR
+				, CRIT_TM
+				, CNTS_TYPE_CD
+				, CONCAT(LPAD(UNIT_ODR,'3','0'),'/',UNIT_CD) AS PATH
+			FROM
+				tb_crs_sbj_cnts
+			WHERE
+				UNIT_LVL = 1
+			 AND SBJ_CD = #{sbjCd}
+		UNION ALL
+			SELECT  
+				  A.SBJ_CD
+				, A.UNIT_CD
+				, A.PAR_UNIT_CD
+				, A.UNIT_NM
+				, A.UNIT_LVL
+				, A.UNIT_ODR
+				, A.CRIT_TM
+				, A.CNTS_TYPE_CD
+				, CONCAT(LPAD(CTE.UNIT_ODR,'3','0'),'/', CTE.UNIT_CD,'/', LPAD(A.UNIT_ODR, '3', '0')) AS PATH
+			FROM
+				tb_crs_sbj_cnts AS A
+			INNER JOIN 
+				tb_crs_sbj_cnts AS CTE ON A.PAR_UNIT_CD = CTE.UNIT_CD
+					AND A.SBJ_CD = #{sbjCd}
+		ORDER BY PATH
+	</select> 
+	
+	<select id="listContentsVer5" parameterType="contentsVO" resultType="contentsVO">
+		 SELECT a.SBJ_CD 
+			 , a.UNIT_CD
+		     , a.PAR_UNIT_CD
+		     , a.UNIT_NM
+		     , a.UNIT_LVL 
+		     , a.UNIT_ODR 
+		     , a.CRIT_TM 
+		     , CONCAT_WS('>', b.UNIT_CD, a.UNIT_CD) PATH
+		  FROM tb_crs_sbj_cnts a
+		  LEFT OUTER JOIN tb_crs_sbj_cnts b ON a.PAR_UNIT_CD = b.UNIT_CD
+		  where a.SBJ_CD = #{sbjCd}
+		  ORDER BY PATH
+	</select>
+	
+	<select id="parListContents" parameterType="contentsVO" resultType="contentsVO">
+	    <include refid="selectContentsQuery" />
+	    AND IFNULL(FN_GET_NULL(UNIT_CD),'1') = IFNULL(FN_GET_NULL(#{parUnitCd}) ,'1')
+	    ORDER BY UNIT_ODR
+	</select>	
+		
+	<select id="selectContents" parameterType="contentsVO" resultType="contentsVO">
+	    <include refid="selectContentsQuery" />
+	    <if test = 'crsCreCd != null and crsCreCd != ""'> 
+		   	AND A.CRS_CRE_CD = #{crsCreCd}
+		</if>
+	    <choose>
+		    <when test = 'parUnitCd != null and parUnitCd != ""'>
+				AND UNIT_CD = #{parUnitCd}
+			</when>
+			<otherwise>
+				AND  IFNULL(UNIT_CD,'') = IFNULL(#{unitCd},'')
+			</otherwise>	    
+	    </choose>
+	</select>
+	
+	<select id="selectCreContents" parameterType="contentsVO" resultType="contentsVO">
+	    <include refid="selectCreContentsQuery" />
+	    <if test = 'crsCreCd != null and crsCreCd != ""'> 
+		   	AND A.CRS_CRE_CD = #{crsCreCd}
+		</if>
+	    <choose>
+		    <when test = 'parUnitCd != null and parUnitCd != ""'>
+				AND UNIT_CD = #{parUnitCd}
+			</when>
+			<otherwise>
+				AND  IFNULL(UNIT_CD,'') = IFNULL(#{unitCd},'')
+			</otherwise>	    
+	    </choose>
+	</select>
+
+    <insert id="insertContents" parameterType="contentsVO">
+		  INSERT INTO tb_crs_sbj_cnts (  
+		         SBJ_CD  
+		       , UNIT_CD  
+		       , PAR_UNIT_CD  
+		       , UNIT_NM  
+		       , UNIT_LVL  
+		       , UNIT_ODR  
+		       , UNIT_TYPE  
+		       , CNTS_TYPE_CD  
+		       , UNIT_FILE_PATH  
+		       , QUIZ_CNT  
+		       , QUIZ_PASS_SCORE  
+		       , PRGR_CHK_TYPE  
+		       , CRIT_TM  
+		       , TOTAL_PAGE  
+		       , PRGR_CHK_YN  
+		       , ATCH_FILE_PATH  
+		       , MOBILE_FILE_PATH  
+		       , MOBILE_FILE_PATH_2  
+		       , MOBILE_YN  
+		       , OLC_YN  
+		       , REG_NO  
+		       , REG_DTTM  
+		       , MOD_NO  
+		       , MOD_DTTM 
+		       , ZOOM_URL
+		       , SCENE_ID  
+		  ) VALUES (  
+		         #{sbjCd}  
+			   , #{unitCd}
+		       , #{parUnitCd}  
+		       , #{unitNm}  
+		       , #{unitLvl}  
+		       , ( SELECT IFNULL(FN_GET_NULL(MAX(UNIT_ODR)) ,0)+1
+		             FROM tb_crs_sbj_cnts AS SUBQUERY
+		            WHERE SBJ_CD = #{sbjCd}  
+		              AND IFNULL(FN_GET_NULL(PAR_UNIT_CD),'1') = IFNULL(FN_GET_NULL(#{parUnitCd}),'1') )
+		       , #{unitType}  
+		       , #{cntsTypeCd}  
+		       , #{unitFilePath}  
+		       , #{quizCnt}  
+		       , #{quizPassScore}  
+		       , #{prgrChkType}  
+		       , #{critTm}  
+		       , #{totalPage}  
+		       , #{prgrChkYn}  
+		       , #{atchFilePath}  
+		       , #{mobileFilePath}  
+		       , #{mobileFilePath2}  
+		       , #{mobileYn}  
+		       , #{olcYn}  
+		       , #{regNo}  
+		       ,DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		       , #{modNo}  
+		       ,DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		       , #{zoomUrl}
+		       , #{sceneId}
+		  )  
+    </insert>
+ 	<insert id="insertContentsBatch" parameterType="list" >
+		  INSERT INTO tb_crs_sbj_cnts (  
+		         SBJ_CD  
+		       , UNIT_CD  
+		       , PAR_UNIT_CD  
+		       , UNIT_NM  
+		       , UNIT_LVL  
+		       , UNIT_ODR  
+		       , UNIT_TYPE  
+		       , CNTS_TYPE_CD  
+		       , UNIT_FILE_PATH  
+		       , QUIZ_CNT  
+		       , QUIZ_PASS_SCORE  
+		       , PRGR_CHK_TYPE  
+		       , CRIT_TM  
+		       , TOTAL_PAGE  
+		       , PRGR_CHK_YN  
+		       , ATCH_FILE_PATH  
+		       , MOBILE_FILE_PATH  
+		       , MOBILE_FILE_PATH_2  
+		       , MOBILE_YN  
+		       , OLC_YN  
+		       , REG_NO  
+		       , REG_DTTM  
+		       , MOD_NO  
+		       , MOD_DTTM  
+		       , ZOOM_URL
+		       , SCENE_ID 
+		  ) 
+		  VALUES 
+		<foreach collection="list" item="item" index="index" separator=",">
+			(  
+		         #{item.sbjCd}  
+			   , #{item.unitCd}
+		       , #{item.parUnitCd }
+		       , #{item.unitNm}  
+		       , #{item.unitLvl } 
+		       , ( SELECT IFNULL(FN_GET_NULL(MAX(UNIT_ODR)),0)+1  
+		             FROM tb_crs_sbj_cnts AS SUBQUERY
+		            WHERE SBJ_CD = #{item.sbjCd}  
+		              AND IFNULL(FN_GET_NULL(PAR_UNIT_CD),'1') = IFNULL(#{item.parUnitCd}),'1') )
+		       , #{item.unitType}  
+		       , #{item.cntsTypeCd}  
+		       , #{item.unitFilePath}  
+		       , #{item.quizCnt}  
+		       , #{item.quizPassScore}  
+		       , #{item.prgrChkType}  
+		       , #{item.critTm}  
+		       , #{item.totalPage}  
+		       , #{item.prgrChkYn}  
+		       , #{item.atchFilePath}  
+		       , #{item.mobileFilePath}  
+		       , #{item.mobileFilePath2}  
+		       , #{item.mobileYn}  
+		       , #{item.olcYn}  
+		       , #{item.regNo}  
+		       ,DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		       , #{item.modNo}  
+		       ,DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		       , #{zoomUrl}
+		       , #{sceneId}
+		  	)  		
+		</foreach>
+		;
+	</insert>
+
+   <update id="updateContents" parameterType="contentsVO">
+		  UPDATE tb_crs_sbj_cnts  
+		     SET UNIT_NM = #{unitNm}  
+		       , PAR_UNIT_CD = IFNULL(FN_GET_NULL(#{parUnitCd}), PAR_UNIT_CD)
+		       , UNIT_LVL = #{unitLvl}  
+		       , UNIT_ODR = #{unitOdr}  
+		       , UNIT_TYPE = #{unitType}  
+		       , CNTS_TYPE_CD = #{cntsTypeCd}  
+		       , UNIT_FILE_PATH	= #{unitFilePath}	  
+		       , QUIZ_CNT = #{quizCnt}  
+		       , QUIZ_PASS_SCORE = #{quizPassScore}  
+		       , PRGR_CHK_TYPE = #{prgrChkType}  
+		       , CRIT_TM = #{critTm}  
+		       , TOTAL_PAGE = #{totalPage}
+		       , PRGR_CHK_YN = (CASE WHEN #{prgrChkYn} ='Y' THEN 'Y' ELSE 'N' END)
+		       , ATCH_FILE_PATH = #{atchFilePath}  
+		       , MOBILE_FILE_PATH = #{mobileFilePath}  
+		       , MOBILE_FILE_PATH_2 = #{mobileFilePath2}  
+		       , MOBILE_YN = #{mobileYn}  
+		       , OLC_YN	= #{olcYn}  
+		       , MOD_NO = #{modNo}  
+		       , REG_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		       , ZOOM_URL = #{zoomUrl}
+		       , SCENE_ID = #{sceneId}
+		   WHERE SBJ_CD = #{sbjCd}  
+		     AND UNIT_CD = #{unitCd} 
+    </update>
+	<update id="updateContentsBatch" parameterType="list" >
+		<foreach collection="list" item="item" index="index" separator=";">
+		  UPDATE tb_crs_sbj_cnts  
+		  SET
+		         UNIT_NM = #{item.unitNm}  
+		       , PAR_UNIT_CD = IFNULL(FN_GET_NULL(#{item.parUnitCd}), PAR_UNIT_CD)
+		       , UNIT_LVL = #{item.unitLvl}  
+		       , UNIT_ODR = #{item.unitOdr}  
+		       , UNIT_TYPE = #{item.unitType}  
+		       , CNTS_TYPE_CD = #{item.cntsTypeCd}  
+		       , UNIT_FILE_PATH	= #{item.unitFilePath}	  
+		       , QUIZ_CNT = #{item.quizCnt}  
+		       , QUIZ_PASS_SCORE = #{item.quizPassScore}  
+		       , PRGR_CHK_TYPE = #{item.prgrChkType}  
+		       , CRIT_TM = #{item.critTm}  
+		       , TOTAL_PAGE =#{item.totalPage}  
+		       , PRGR_CHK_YN = (CASE WHEN #{item.prgrChkYn} = 'Y' THEN 'Y' ELSE 'N' END)
+		       , ATCH_FILE_PATH = #{item.atchFilePath}  
+		       , MOBILE_FILE_PATH = #{item.mobileFilePath}  
+		       , MOBILE_FILE_PATH_2 = #{item.mobileFilePath2}  
+		       , MOBILE_YN = #{item.mobileYn}  
+		       , OLC_YN	= #{item.olcYn}  
+		       , MOD_NO = #{item.modNo}  
+		       , REG_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		       , ZOOM_URL = #{item.zoomUrl}
+		       , SCENE_ID = #{item.sceneId}
+		   WHERE SBJ_CD = #{item.sbjCd}  
+		     AND UNIT_CD = #{item.unitCd} 
+		</foreach>	     
+	</update>
+	
+	<delete id="deleteContents" parameterType="contentsVO">
+		 DELETE FROM tb_crs_sbj_cnts  
+  		 WHERE SBJ_CD = #{sbjCd} 
+     		AND UNIT_CD = #{unitCd}   
+    </delete>
+
+	<delete id="deleteAllContents" parameterType="string">
+		 DELETE FROM tb_crs_sbj_cnts  
+  		 WHERE SBJ_CD = #{value} 
+    </delete>
+
+	<select id="listSort" parameterType="ContentsVO" resultType="ContentsVO">
+		WITH RECURSIVE CTE AS
+		(
+			SELECT  
+				  SBJ_CD
+				, UNIT_CD
+				, PAR_UNIT_CD
+				, UNIT_NM
+				, UNIT_LVL
+				, UNIT_ODR
+				, CONCAT(UNIT_ODR,'/',UNIT_CD) AS PATH
+			FROM
+				tb_crs_sbj_cnts
+			WHERE
+				UNIT_LVL = 1
+			 AND SBJ_CD = #{sbjCd}
+		UNION ALL
+			SELECT  
+				  A.SBJ_CD
+				, A.UNIT_CD
+				, A.PAR_UNIT_CD
+				, A.UNIT_NM
+				, A.UNIT_LVL
+				, A.UNIT_ODR
+				, CONCAT(CTE.path ,'/', A.UNIT_ODR) AS PATH
+			FROM
+				tb_crs_sbj_cnts AS A
+			INNER JOIN 
+				CTE ON A.PAR_UNIT_CD = CTE.UNIT_CD
+		)
+		 	SELECT * 																					
+		     FROM ( 																					
+		<![CDATA[
+		  SELECT A.SBJ_CD  
+		       , A.UNIT_CD  
+		       , A.PAR_UNIT_CD  
+		       , A.UNIT_NM  
+		       , A.UNIT_LVL  
+		       , A.UNIT_ODR  
+		       , A.UNIT_TYPE  
+		       , A.CNTS_TYPE_CD  
+		       , A.UNIT_FILE_PATH  
+		       , A.QUIZ_CNT  
+		       , A.QUIZ_PASS_SCORE  
+		       , A.PRGR_CHK_TYPE  
+		       , A.CRIT_TM  
+		       , A.TOTAL_PAGE  
+		       , A.PRGR_CHK_YN  
+		       , A.ATCH_FILE_PATH  
+		       , A.MOBILE_FILE_PATH  
+		       , A.MOBILE_FILE_PATH_2  
+		       , A.MOBILE_YN  
+		       , A.OLC_YN  
+		       , A.REG_NO  
+		       , A.REG_DTTM  
+		       , A.MOD_NO  
+		       , A.MOD_DTTM  
+		       , A.ZOOM_URL
+		       , A.SCENE_ID
+		       , (SELECT FN_GET_USER_NAME(A.MOD_NO) ) MOD_NM  
+		       , (SELECT FN_GET_USER_NAME(A.REG_NO) ) REG_NM  
+		       , IFNULL(( SELECT UNIT_NM
+		                 FROM tb_crs_sbj_cnts  
+		                WHERE UNIT_CD = A.PAR_UNIT_CD),'ROOT') AS PAR_UNIT_NM  
+		       , CASE WHEN (A.UNIT_LVL -1) < 0 THEN 0 ELSE (A.UNIT_LVL -1) END PAR_UNIT_LVL  
+		       , ( SELECT MAX(UNIT_ODR)  
+		             FROM tb_crs_sbj_cnts  
+		            WHERE IFNULL( FN_GET_NULL(PAR_UNIT_CD),'1') = IFNULL( FN_GET_NULL(A.PAR_UNIT_CD),'1') AND SBJ_CD = A.SBJ_CD) AS MAX_ODR
+		       , ( SELECT COUNT(*)  
+		             FROM tb_crs_sbj_cnts  
+		            WHERE PAR_UNIT_CD = A.UNIT_CD AND SBJ_CD = A.SBJ_CD) AS SUB_CNT  
+		       , ( SELECT COUNT(*)  
+		             FROM tb_lec_bookmark  
+		            WHERE SBJ_CD = A.SBJ_CD  
+		              AND UNIT_CD = A.UNIT_CD ) AS BOOKMARK_CNT  
+		       , B.PATH
+		    FROM tb_crs_sbj_cnts A, CTE AS B
+		    WHERE A.SBJ_CD = B.SBJ_CD
+		    AND A.UNIT_CD = B.UNIT_CD
+		           ) T 																					
+		  	 WHERE SUB_CNT > 0 
+		  	ORDER BY PATH
+		]]>
+	</select>
+	
+	<select id="listSortVer5" parameterType="ContentsVO" resultType="ContentsVO">
+		<![CDATA[
+		select * from (
+			 SELECT a.SBJ_CD  
+			   , a.UNIT_CD  
+			   , a.PAR_UNIT_CD  
+			   , a.UNIT_NM  
+			   , a.UNIT_LVL  
+			   , a.UNIT_ODR  
+			   , a.UNIT_TYPE  
+			   , a.CNTS_TYPE_CD  
+			   , a.UNIT_FILE_PATH  
+			   , a.QUIZ_CNT  
+			   , a.QUIZ_PASS_SCORE  
+			   , a.PRGR_CHK_TYPE  
+			   , a.CRIT_TM  
+			   , a.TOTAL_PAGE  
+			   , a.PRGR_CHK_YN  
+			   , a.ATCH_FILE_PATH  
+			   , a.MOBILE_FILE_PATH  
+			   , a.MOBILE_FILE_PATH_2  
+			   , a.MOBILE_YN  
+			   , a.OLC_YN  
+			   , a.REG_NO  
+			   , a.REG_DTTM  
+			   , a.MOD_NO  
+			   , a.MOD_DTTM  
+			   , a.ZOOM_URL
+		       , a.SCENE_ID
+			   , (SELECT FN_GET_USER_NAME(a.MOD_NO) ) MOD_NM  
+			   , (SELECT FN_GET_USER_NAME(a.REG_NO) ) REG_NM  
+			   , NVL(( SELECT UNIT_NM
+			             FROM tb_crs_sbj_cnts  
+			            WHERE UNIT_CD = a.PAR_UNIT_CD),'ROOT') AS PAR_UNIT_NM  
+			   , CASE WHEN (a.UNIT_LVL -1) < 0 THEN 0 ELSE (a.UNIT_LVL -1) END PAR_UNIT_LVL  
+			   , ( SELECT MAX(UNIT_ODR)  
+			         FROM tb_crs_sbj_cnts  
+			        WHERE NVL((PAR_UNIT_CD),'1') = NVL((a.PAR_UNIT_CD),'1') AND SBJ_CD = a.SBJ_CD) AS MAX_ODR
+			   , ( SELECT COUNT(*)  
+			         FROM tb_crs_sbj_cnts  
+			        WHERE PAR_UNIT_CD = a.UNIT_CD AND SBJ_CD = a.SBJ_CD) AS SUB_CNT  
+			   , ( SELECT COUNT(*)  
+			         FROM tb_lec_bookmark  
+			        WHERE SBJ_CD = a.SBJ_CD  
+			          AND UNIT_CD = a.UNIT_CD ) AS BOOKMARK_CNT
+			     , CONCAT_WS('>', b.UNIT_CD, a.UNIT_CD) path
+			  FROM tb_crs_sbj_cnts a
+			  LEFT OUTER JOIN tb_crs_sbj_cnts b ON a.PAR_UNIT_CD = b.UNIT_CD
+			  where a.SBJ_CD = #{sbjCd} 
+			  ORDER BY path
+			  ) T
+			where T.SUB_CNT > 0
+		]]>
+	</select>
+	
+	<select id="listSub" parameterType="ContentsVO" resultType="ContentsVO">
+	    <include refid="selectContentsQuery" />
+	    AND IFNULL( FN_GET_NULL(PAR_UNIT_CD),'1') = IFNULL(FN_GET_NULL(#{parUnitCd}) ,'1')
+	    ORDER BY UNIT_ODR
+	</select>
+	
+	<update id="updateBatch" parameterType="list" >
+		  <foreach collection="list" item="item" index="index" separator=";">
+		  UPDATE  tb_crs_sbj_cnts 
+		  SET
+				  UNIT_ODR 		= #{item.unitOdr}								
+		   WHERE  UNIT_CD 		= #{item.unitCd}
+		</foreach>
+	</update>
+	
+	<select id="listAttendContents" parameterType="contentsVO" resultType="contentsVO">
+			SELECT A.SBJ_CD  
+		       , A.UNIT_CD  
+		       , A.PAR_UNIT_CD  
+		       , A.UNIT_NM  
+		       , A.UNIT_LVL  
+		       , A.UNIT_ODR  
+		       , A.UNIT_TYPE  
+		       , A.CNTS_TYPE_CD  
+		       , A.UNIT_FILE_PATH  
+		       , A.QUIZ_CNT  
+		       , A.QUIZ_PASS_SCORE  
+		       , A.PRGR_CHK_TYPE  
+		       , A.CRIT_TM  
+		       , A.TOTAL_PAGE  
+		       , A.PRGR_CHK_YN  
+		       , A.ATCH_FILE_PATH  
+		       , A.MOBILE_FILE_PATH  
+		       , A.MOBILE_FILE_PATH_2  
+		       , A.MOBILE_YN  
+		       , A.OLC_YN  
+		       , A.REG_NO  
+		       , A.REG_DTTM  
+		       , A.MOD_NO  
+		       , A.MOD_DTTM
+		       , A.ZOOM_URL
+		       , A.SCENE_ID  
+		    FROM tb_crs_sbj_cnts A 
+		   WHERE A.SBJ_CD = #{sbjCd}
+		   	AND A.UNIT_LVL = 1
+		   ORDER BY UNIT_ODR
+	</select>
+		
+	<select id="countChildContents" parameterType="contentsVO" resultType="Integer">
+	    SELECT COUNT(*) as totalPage FROM tb_crs_sbj_cnts TCSC  WHERE SBJ_CD = #{sbjCd} AND PAR_UNIT_CD = #{unitCd}
+	</select>
+	
+	<insert id="insertCopy" parameterType="contentsVO" >
+		INSERT  INTO tb_crs_cre_sbj_cnts (
+				CRS_CRE_CD 			
+	 	   		, SBJ_CD  
+		       , UNIT_CD  
+		       , PAR_UNIT_CD  
+		       , UNIT_NM  
+		       , UNIT_LVL  
+		       , UNIT_ODR  
+		       , UNIT_TYPE  
+		       , CNTS_TYPE_CD  
+		       , UNIT_FILE_PATH  
+		       , QUIZ_CNT  
+		       , QUIZ_PASS_SCORE  
+		       , PRGR_CHK_TYPE  
+		       , CRIT_TM  
+		       , TOTAL_PAGE  
+		       , PRGR_CHK_YN  
+		       , ATCH_FILE_PATH  
+		       , MOBILE_FILE_PATH  
+		       , MOBILE_FILE_PATH_2  
+		       , MOBILE_YN  
+		       , OLC_YN  
+		       , REG_NO  
+		       , REG_DTTM  
+		       , MOD_NO  
+		       , MOD_DTTM
+		       , ZOOM_URL
+		       , SCENE_ID )						
+		SELECT 	#{crsCreCd}							
+	        , SBJ_CD  
+	        , UNIT_CD  
+	        , PAR_UNIT_CD  
+	        , UNIT_NM  
+	        , UNIT_LVL  
+	        , UNIT_ODR  
+	        , UNIT_TYPE  
+	        , CNTS_TYPE_CD  
+	        , UNIT_FILE_PATH  
+	        , QUIZ_CNT  
+	        , QUIZ_PASS_SCORE  
+	        , PRGR_CHK_TYPE  
+	        , CRIT_TM  
+	        , TOTAL_PAGE  
+	        , PRGR_CHK_YN  
+	        , ATCH_FILE_PATH  
+	        , MOBILE_FILE_PATH  
+	        , MOBILE_FILE_PATH_2  
+	        , MOBILE_YN  
+	        , OLC_YN 							
+	        ,  #{regNo}								
+	        ,  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+	        ,  #{modNo}								
+	        ,  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+	        , ZOOM_URL
+	        , SCENE_ID
+	     FROM  tb_crs_sbj_cnts						
+	    WHERE  SBJ_CD = #{sbjCd}	
+    </insert>
+    
+    <select id="listCreateContents" parameterType="contentsVO" resultType="contentsVO">
+			SELECT 
+				CRS_CRE_CD 
+				,  SBJ_CD
+				, UNIT_CD
+				, PAR_UNIT_CD
+				, UNIT_NM
+				, UNIT_LVL
+				, UNIT_TYPE
+				, UNIT_ODR
+				, CRIT_TM
+				, CNTS_TYPE_CD
+				, CONCAT(LPAD(UNIT_ODR,'3','0'),'/',UNIT_CD) AS PATH
+				, TEACHER_NO
+				, CLASS_START_TIME
+				, (SELECT FN_GET_DATE_FORMAT(CLASS_START_TIME,'%H')) AS CLASS_START_HOUR
+				, (SELECT FN_GET_DATE_FORMAT(CLASS_START_TIME,'%i')) AS CLASS_START_MIN
+				, CLASS_END_TIME
+				, (SELECT FN_GET_DATE_FORMAT(CLASS_END_TIME,'%H')) AS CLASS_END_HOUR
+				, (SELECT FN_GET_DATE_FORMAT(CLASS_END_TIME,'%i')) AS CLASS_END_MIN
+			FROM
+				tb_crs_cre_sbj_cnts
+			WHERE
+				UNIT_LVL = 1
+			 AND CRS_CRE_CD = #{crsCreCd}
+			 AND SBJ_CD = #{sbjCd}
+		UNION ALL
+			SELECT
+				A.CRS_CRE_CD  
+				,  A.SBJ_CD
+				, A.UNIT_CD
+				, A.PAR_UNIT_CD
+				, A.UNIT_NM
+				, A.UNIT_LVL
+				, A.UNIT_TYPE
+				, A.UNIT_ODR
+				, A.CRIT_TM
+				, A.CNTS_TYPE_CD
+				, CONCAT(LPAD(CTE.UNIT_ODR,'3','0'),'/', CTE.UNIT_CD,'/', LPAD(A.UNIT_ODR, '3', '0')) AS PATH
+				, A.TEACHER_NO
+				, A.CLASS_START_TIME
+				, (SELECT FN_GET_DATE_FORMAT(A.CLASS_START_TIME,'%H')) AS CLASS_START_HOUR
+				, (SELECT FN_GET_DATE_FORMAT(A.CLASS_START_TIME,'%i')) AS CLASS_START_MIN
+				, A.CLASS_END_TIME
+				, (SELECT FN_GET_DATE_FORMAT(A.CLASS_END_TIME,'%H')) AS CLASS_END_HOUR
+				, (SELECT FN_GET_DATE_FORMAT(A.CLASS_END_TIME,'%i')) AS CLASS_END_MIN
+			FROM
+				tb_crs_cre_sbj_cnts AS A
+			INNER JOIN 
+				tb_crs_cre_sbj_cnts AS CTE ON A.PAR_UNIT_CD = CTE.UNIT_CD
+					AND A.CRS_CRE_CD = #{crsCreCd}
+					AND A.SBJ_CD = #{sbjCd}
+		ORDER BY PATH
+	</select>
+	
+	<update id="updateCreateContents" parameterType="contentsVO">
+		  UPDATE tb_crs_cre_sbj_cnts  
+		     SET UNIT_NM = #{unitNm}
+		       , PAR_UNIT_CD = IFNULL(FN_GET_NULL(#{parUnitCd}), PAR_UNIT_CD)
+		      <if test = 'unitLvl != null and unitLvl != ""'>  
+		       , UNIT_LVL = #{unitLvl}
+		       </if>
+		       <if test = 'unitOdr != null and unitOdr != ""'>    
+		       , UNIT_ODR = #{unitOdr}
+		       </if>
+		       <if test = 'unitType != null and unitType != ""'>  
+		       , UNIT_TYPE = #{unitType}
+		       </if>
+		       <if test = 'cntsTypeCd != null and cntsTypeCd != ""'>   
+		       , CNTS_TYPE_CD = #{cntsTypeCd}
+		       </if>
+		       <if test = 'unitFilePath != null and unitFilePath != ""'>   
+		       , UNIT_FILE_PATH	= #{unitFilePath}
+		       </if>
+		       <if test = 'quizCnt != null and quizCnt != ""'> 	  
+		       , QUIZ_CNT = #{quizCnt}
+		       </if>
+		       <if test = 'quizPassScore != null and quizPassScore != ""'>   
+		       , QUIZ_PASS_SCORE = #{quizPassScore}
+		       </if>
+		       <if test = 'prgrChkType != null and prgrChkType != ""'>   
+		       , PRGR_CHK_TYPE = #{prgrChkType}
+		       </if>
+		       <if test = 'critTm != null and critTm != ""'>   
+		       , CRIT_TM = #{critTm}
+		       </if>
+		       <if test = 'totalPage != null and totalPage != ""'>   
+		       , TOTAL_PAGE = #{totalPage}
+		       </if>
+		       <if test = 'prgrChkYn != null and prgrChkYn != ""'> 
+		       , PRGR_CHK_YN = (CASE WHEN #{prgrChkYn} ='Y' THEN 'Y' ELSE 'N' END)
+		       </if>
+		       <if test = 'atchFilePath != null and atchFilePath != ""'> 
+		       , ATCH_FILE_PATH = #{atchFilePath}
+		       </if>
+		       <if test = 'mobileFilePath != null and mobileFilePath != ""'>   
+		       , MOBILE_FILE_PATH = #{mobileFilePath}
+		       </if>
+		       <if test = 'mobileFilePath2 != null and mobileFilePath2 != ""'>   
+		       , MOBILE_FILE_PATH_2 = #{mobileFilePath2}
+		       </if>
+		       <if test = 'mobileYn != null and mobileYn != ""'> 
+		       , MOBILE_YN = #{mobileYn}
+		       </if>
+		       <if test = 'olcYn != null and olcYn != ""'>   
+		       , OLC_YN	= #{olcYn}
+		       </if>
+		       <if test = 'modNo != null and modNo != ""'>   
+		       , MOD_NO = #{modNo} 
+		       </if>
+		       <if test = 'classStartTime != null and classStartTime != ""'>   
+		       , CLASS_START_TIME = #{classStartTime} 
+		       </if>
+		       <if test = 'classEndTime != null and classEndTime != ""'>   
+		       , CLASS_END_TIME = #{classEndTime} 
+		       </if>
+		       <if test = 'teacherNo != null and teacherNo != ""'>   
+		       , TEACHER_NO = #{teacherNo} 
+		       </if>
+		       <if test = 'zoomUrl != null and zoomUrl != ""'>   
+		       , ZOOM_URL = #{zoomUrl} 
+		       </if> 
+		       <if test = 'sceneId != null and sceneId != ""'>   
+		       , SCENE_ID = #{sceneId} 
+		       </if> 
+		       <if test = 'asmtSn != null and asmtSn != ""'>   
+		       , ASMT_SN = #{asmtSn} 
+		       </if> 
+		       , REG_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		       
+		   WHERE CRS_CRE_CD = #{crsCreCd}
+		   	 AND SBJ_CD = #{sbjCd}  
+		     AND UNIT_CD = #{unitCd} 
+    </update>
+    
+    <select id="selectCreateContents" parameterType="contentsVO" resultType="contentsVO">
+	     <![CDATA[
+		  SELECT A.CRS_CRE_CD
+		  	   , A.SBJ_CD  
+		       , A.UNIT_CD  
+		       , A.PAR_UNIT_CD  
+		       , A.UNIT_NM  
+		       , A.UNIT_LVL  
+		       , A.UNIT_ODR  
+		       , A.UNIT_TYPE  
+		       , A.CNTS_TYPE_CD  
+		       , A.UNIT_FILE_PATH  
+		       , A.QUIZ_CNT  
+		       , A.QUIZ_PASS_SCORE  
+		       , A.PRGR_CHK_TYPE  
+		       , A.CRIT_TM  
+		       , A.TOTAL_PAGE  
+		       , A.PRGR_CHK_YN  
+		       , A.ATCH_FILE_PATH  
+		       , A.MOBILE_FILE_PATH  
+		       , A.MOBILE_FILE_PATH_2  
+		       , A.MOBILE_YN  
+		       , A.OLC_YN  
+		       , A.REG_NO  
+		       , A.REG_DTTM  
+		       , A.MOD_NO  
+		       , A.MOD_DTTM
+		       , A.ZOOM_URL  
+		       , A.SCENE_ID
+		       , A.ASMT_SN
+		       , (SELECT FN_GET_USER_NAME(A.MOD_NO) ) MOD_NM  
+		       , (SELECT FN_GET_USER_NAME(A.REG_NO) ) REG_NM  
+		       , IFNULL(( SELECT UNIT_NM
+		                 FROM tb_crs_sbj_cnts  
+		                WHERE UNIT_CD = A.PAR_UNIT_CD),'ROOT') AS PAR_UNIT_NM  
+		       , CASE WHEN (A.UNIT_LVL -1) < 0 THEN 0 ELSE (A.UNIT_LVL -1) END PAR_UNIT_LVL  
+		       , ( SELECT MAX(UNIT_ODR)  
+		             FROM tb_crs_sbj_cnts  
+		            WHERE IFNULL( FN_GET_NULL(PAR_UNIT_CD),'1') = IFNULL( FN_GET_NULL(A.PAR_UNIT_CD),'1') AND SBJ_CD = A.SBJ_CD) AS MAX_ODR
+		       , ( SELECT COUNT(*)  
+		             FROM tb_crs_sbj_cnts  
+		            WHERE PAR_UNIT_CD = A.UNIT_CD AND SBJ_CD = A.SBJ_CD) AS SUB_CNT  
+		       , ( SELECT COUNT(*)  
+		             FROM tb_lec_bookmark  
+		            WHERE SBJ_CD = A.SBJ_CD  
+		              AND UNIT_CD = A.UNIT_CD ) AS BOOKMARK_CNT  
+		    FROM tb_crs_cre_sbj_cnts A 
+		   WHERE SBJ_CD = #{sbjCd}
+		   		AND	CRS_CRE_CD = #{crsCreCd}  
+		]]>
+	    <choose>
+		    <when test = 'parUnitCd != null and parUnitCd != ""'>
+				AND UNIT_CD = #{parUnitCd}
+			</when>
+			<otherwise>
+				AND  IFNULL(UNIT_CD,'') = IFNULL(#{unitCd},'')
+			</otherwise>	    
+	    </choose>
+	</select>
+	
+	<delete id="deleteAllCreateContents" parameterType="contentsVO">
+		 DELETE FROM tb_crs_cre_sbj_cnts  
+  		 WHERE CRS_CRE_CD = #{crsCreCd}
+  		 	AND SBJ_CD = #{sbjCd}
+    </delete>
+    
+    <select id="listCreateContentsDel" parameterType="contentsVO" resultType="contentsVO">
+	    <![CDATA[
+		  SELECT A.SBJ_CD  
+		       , A.UNIT_CD  
+		       , A.PAR_UNIT_CD  
+		       , A.UNIT_NM  
+		       , A.UNIT_LVL  
+		       , A.UNIT_ODR  
+		       , A.UNIT_TYPE  
+		       , A.CNTS_TYPE_CD  
+		       , A.UNIT_FILE_PATH  
+		       , A.QUIZ_CNT  
+		       , A.QUIZ_PASS_SCORE  
+		       , A.PRGR_CHK_TYPE  
+		       , A.CRIT_TM  
+		       , A.TOTAL_PAGE  
+		       , A.PRGR_CHK_YN  
+		       , A.ATCH_FILE_PATH  
+		       , A.MOBILE_FILE_PATH  
+		       , A.MOBILE_FILE_PATH_2  
+		       , A.MOBILE_YN  
+		       , A.OLC_YN  
+		       , A.REG_NO  
+		       , A.REG_DTTM  
+		       , A.MOD_NO  
+		       , A.MOD_DTTM 
+		       , A.ZOOM_URL  
+		       , A.SCENE_ID 
+		       , (SELECT FN_GET_USER_NAME(A.MOD_NO) ) MOD_NM  
+		       , (SELECT FN_GET_USER_NAME(A.REG_NO) ) REG_NM  
+		       , IFNULL(( SELECT UNIT_NM
+		                 FROM tb_crs_sbj_cnts  
+		                WHERE UNIT_CD = A.PAR_UNIT_CD),'ROOT') AS PAR_UNIT_NM  
+		       , CASE WHEN (A.UNIT_LVL -1) < 0 THEN 0 ELSE (A.UNIT_LVL -1) END PAR_UNIT_LVL  
+		       , ( SELECT MAX(UNIT_ODR)  
+		             FROM tb_crs_sbj_cnts  
+		            WHERE IFNULL( FN_GET_NULL(PAR_UNIT_CD),'1') = IFNULL( FN_GET_NULL(A.PAR_UNIT_CD),'1') AND SBJ_CD = A.SBJ_CD) AS MAX_ODR
+		       , ( SELECT COUNT(*)  
+		             FROM tb_crs_sbj_cnts  
+		            WHERE PAR_UNIT_CD = A.UNIT_CD AND SBJ_CD = A.SBJ_CD) AS SUB_CNT  
+		       , ( SELECT COUNT(*)  
+		             FROM tb_lec_bookmark  
+		            WHERE SBJ_CD = A.SBJ_CD  
+		              AND UNIT_CD = A.UNIT_CD ) AS BOOKMARK_CNT  
+		    FROM tb_crs_cre_sbj_cnts A 
+		   WHERE SBJ_CD = #{sbjCd} AND CRS_CRE_CD = #{crsCreCd}  
+		]]>
+	    AND IFNULL( FN_GET_NULL(PAR_UNIT_CD),'1') = IFNULL(FN_GET_NULL(#{parUnitCd}) ,'1')
+	    ORDER BY UNIT_ODR
+	</select>
+	
+	<delete id="deleteCreateContents" parameterType="contentsVO">
+		 DELETE FROM tb_crs_cre_sbj_cnts  
+  		 WHERE SBJ_CD = #{sbjCd} 
+     		AND UNIT_CD = #{unitCd}
+     		AND CRS_CRE_CD = #{crsCreCd}   
+    </delete>
+    
+    <select id="parListCreateContents" parameterType="contentsVO" resultType="contentsVO">
+	    <![CDATA[
+		  SELECT A.SBJ_CD  
+		       , A.UNIT_CD  
+		       , A.PAR_UNIT_CD  
+		       , A.UNIT_NM  
+		       , A.UNIT_LVL  
+		       , A.UNIT_ODR  
+		       , A.UNIT_TYPE  
+		       , A.CNTS_TYPE_CD  
+		       , A.UNIT_FILE_PATH  
+		       , A.QUIZ_CNT  
+		       , A.QUIZ_PASS_SCORE  
+		       , A.PRGR_CHK_TYPE  
+		       , A.CRIT_TM  
+		       , A.TOTAL_PAGE  
+		       , A.PRGR_CHK_YN  
+		       , A.ATCH_FILE_PATH  
+		       , A.MOBILE_FILE_PATH  
+		       , A.MOBILE_FILE_PATH_2  
+		       , A.MOBILE_YN  
+		       , A.OLC_YN  
+		       , A.REG_NO  
+		       , A.REG_DTTM  
+		       , A.MOD_NO  
+		       , A.MOD_DTTM  
+		       , A.ZOOM_URL  
+		       , A.SCENE_ID
+		       , (SELECT FN_GET_USER_NAME(A.MOD_NO) ) MOD_NM  
+		       , (SELECT FN_GET_USER_NAME(A.REG_NO) ) REG_NM  
+		       , IFNULL(( SELECT UNIT_NM
+		                 FROM tb_crs_sbj_cnts  
+		                WHERE UNIT_CD = A.PAR_UNIT_CD),'ROOT') AS PAR_UNIT_NM  
+		       , CASE WHEN (A.UNIT_LVL -1) < 0 THEN 0 ELSE (A.UNIT_LVL -1) END PAR_UNIT_LVL  
+		       , ( SELECT MAX(UNIT_ODR)  
+		             FROM tb_crs_sbj_cnts  
+		            WHERE IFNULL( FN_GET_NULL(PAR_UNIT_CD),'1') = IFNULL( FN_GET_NULL(A.PAR_UNIT_CD),'1') AND SBJ_CD = A.SBJ_CD) AS MAX_ODR
+		       , ( SELECT COUNT(*)  
+		             FROM tb_crs_sbj_cnts  
+		            WHERE PAR_UNIT_CD = A.UNIT_CD AND SBJ_CD = A.SBJ_CD) AS SUB_CNT  
+		       , ( SELECT COUNT(*)  
+		             FROM tb_lec_bookmark  
+		            WHERE SBJ_CD = A.SBJ_CD  
+		              AND UNIT_CD = A.UNIT_CD ) AS BOOKMARK_CNT  
+		    FROM tb_crs_sbj_cnts A 
+		   WHERE SBJ_CD = #{sbjCd} AND CRS_CRE_CD = #{crsCreCd}
+		]]>
+	    AND IFNULL(FN_GET_NULL(UNIT_CD),'1') = IFNULL(FN_GET_NULL(#{parUnitCd}) ,'1')
+	    ORDER BY UNIT_ODR
+	</select>
+	
+	<insert id="insertCreateContents" parameterType="contentsVO">
+		  INSERT INTO tb_crs_cre_sbj_cnts (
+		  		 CRS_CRE_CD  
+		       , SBJ_CD  
+		       , UNIT_CD  
+		       , PAR_UNIT_CD  
+		       , UNIT_NM  
+		       , UNIT_LVL  
+		       , UNIT_ODR  
+		       , UNIT_TYPE  
+		       , CNTS_TYPE_CD  
+		       , UNIT_FILE_PATH  
+		       , QUIZ_CNT  
+		       , QUIZ_PASS_SCORE  
+		       , PRGR_CHK_TYPE  
+		       , CRIT_TM  
+		       , TOTAL_PAGE  
+		       , PRGR_CHK_YN  
+		       , ATCH_FILE_PATH  
+		       , MOBILE_FILE_PATH  
+		       , MOBILE_FILE_PATH_2  
+		       , MOBILE_YN  
+		       , OLC_YN  
+		       , REG_NO  
+		       , REG_DTTM  
+		       , MOD_NO  
+		       , MOD_DTTM 
+		       , ZOOM_URL
+		       , SCENE_ID  
+		  ) VALUES (  
+		         #{crsCreCd}
+		       , #{sbjCd}  
+			   , #{unitCd}
+		       , #{parUnitCd}  
+		       , #{unitNm}  
+		       , #{unitLvl}  
+		       , ( SELECT IFNULL(FN_GET_NULL(MAX(UNIT_ODR)) ,0)+1
+		             FROM tb_crs_cre_sbj_cnts AS SUBQUERY
+		            WHERE SBJ_CD = #{sbjCd} AND CRS_CRE_CD = #{crsCreCd} 
+		              AND IFNULL(FN_GET_NULL(PAR_UNIT_CD),'1') = IFNULL(FN_GET_NULL(#{parUnitCd}),'1') )
+		       , #{unitType}  
+		       , #{cntsTypeCd}  
+		       , #{unitFilePath}  
+		       , #{quizCnt}  
+		       , #{quizPassScore}  
+		       , #{prgrChkType}  
+		       , #{critTm}  
+		       , #{totalPage}  
+		       , 'N'  
+		       , #{atchFilePath}  
+		       , #{mobileFilePath}  
+		       , #{mobileFilePath2}  
+		       , #{mobileYn}  
+		       , #{olcYn}  
+		       , #{regNo}  
+		       ,DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		       , #{modNo}  
+		       ,DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		       , #{zoomUrl}
+		       , #{sceneId}
+		  )  
+    </insert>
+    
+    <select id="listCreCntSub" parameterType="ContentsVO" resultType="ContentsVO">
+    	<![CDATA[
+	     SELECT A.SBJ_CD  
+		       , A.UNIT_CD  
+		       , A.PAR_UNIT_CD  
+		       , A.UNIT_NM  
+		       , A.UNIT_LVL  
+		       , A.UNIT_ODR  
+		       , A.UNIT_TYPE  
+		       , A.CNTS_TYPE_CD  
+		       , A.UNIT_FILE_PATH  
+		       , A.QUIZ_CNT  
+		       , A.QUIZ_PASS_SCORE  
+		       , A.PRGR_CHK_TYPE  
+		       , A.CRIT_TM  
+		       , A.TOTAL_PAGE  
+		       , A.PRGR_CHK_YN  
+		       , A.ATCH_FILE_PATH  
+		       , A.MOBILE_FILE_PATH  
+		       , A.MOBILE_FILE_PATH_2  
+		       , A.MOBILE_YN  
+		       , A.OLC_YN  
+		       , A.REG_NO  
+		       , A.REG_DTTM  
+		       , A.MOD_NO  
+		       , A.MOD_DTTM  
+		       , (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) MOD_NM  
+		       , (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) REG_NM  
+		       , NVL(( SELECT UNIT_NM  
+		                 FROM TB_CRS_SBJ_CNTS  
+		                WHERE UNIT_CD = A.PAR_UNIT_CD),'ROOT') AS PAR_UNIT_NM  
+		       , CASE WHEN (A.UNIT_LVL -1) < 0 THEN 0 ELSE (A.UNIT_LVL -1) END PAR_UNIT_LVL  
+		       , ( SELECT MAX(UNIT_ODR)  
+		             FROM TB_CRS_SBJ_CNTS  
+		            WHERE NVL(PAR_UNIT_CD,'1') = NVL(A.PAR_UNIT_CD,'1') ) AS MAX_ODR  
+		       , ( SELECT COUNT(*)  
+		             FROM TB_CRS_SBJ_CNTS  
+		            WHERE PAR_UNIT_CD = A.UNIT_CD ) AS SUB_CNT  
+		       , ( SELECT COUNT(*)  
+		             FROM TB_LEC_BOOKMARK  
+		            WHERE SBJ_CD = A.SBJ_CD  
+		              AND UNIT_CD = A.UNIT_CD ) AS BOOKMARK_CNT  
+		    FROM TB_CRS_CRE_SBJ_CNTS A  
+		   WHERE CRS_CRE_CD = #{crsCreCd} 
+		   AND SBJ_CD = #{sbjCd}  
+		]]>
+	    AND IFNULL( FN_GET_NULL(PAR_UNIT_CD),'1') = IFNULL(FN_GET_NULL(#{parUnitCd}) ,'1')
+	    ORDER BY UNIT_ODR
+	</select>
+	
+	<update id="updateCreBatch" parameterType="list" >
+		  <foreach collection="list" item="item" index="index" separator=";">
+		  UPDATE  tb_crs_cre_sbj_cnts 
+		  SET
+				  UNIT_ODR 		= #{item.unitOdr}								
+		   WHERE  UNIT_CD 		= #{item.unitCd}
+		</foreach>
+	</update>
+	
+	<select id="listCreCntSort" parameterType="ContentsVO" resultType="ContentsVO">
+		WITH RECURSIVE CTE AS
+		(
+			SELECT  
+				  SBJ_CD
+				, UNIT_CD
+				, PAR_UNIT_CD
+				, UNIT_NM
+				, UNIT_LVL
+				, UNIT_ODR
+				, CONCAT(UNIT_ODR,'/',UNIT_CD) AS PATH
+			FROM
+				tb_crs_cre_sbj_cnts
+			WHERE
+				UNIT_LVL = 1
+			 AND SBJ_CD = #{sbjCd}
+		UNION ALL
+			SELECT  
+				  A.SBJ_CD
+				, A.UNIT_CD
+				, A.PAR_UNIT_CD
+				, A.UNIT_NM
+				, A.UNIT_LVL
+				, A.UNIT_ODR
+				, CONCAT(CTE.path ,'/', A.UNIT_ODR) AS PATH
+			FROM
+				tb_crs_cre_sbj_cnts AS A
+			INNER JOIN 
+				CTE ON A.PAR_UNIT_CD = CTE.UNIT_CD
+		)
+		 	SELECT * 																					
+		     FROM ( 																					
+		<![CDATA[
+		  SELECT A.SBJ_CD  
+		       , A.UNIT_CD  
+		       , A.PAR_UNIT_CD  
+		       , A.UNIT_NM  
+		       , A.UNIT_LVL  
+		       , A.UNIT_ODR  
+		       , A.UNIT_TYPE  
+		       , A.CNTS_TYPE_CD  
+		       , A.UNIT_FILE_PATH  
+		       , A.QUIZ_CNT  
+		       , A.QUIZ_PASS_SCORE  
+		       , A.PRGR_CHK_TYPE  
+		       , A.CRIT_TM  
+		       , A.TOTAL_PAGE  
+		       , A.PRGR_CHK_YN  
+		       , A.ATCH_FILE_PATH  
+		       , A.MOBILE_FILE_PATH  
+		       , A.MOBILE_FILE_PATH_2  
+		       , A.MOBILE_YN  
+		       , A.OLC_YN  
+		       , A.REG_NO  
+		       , A.REG_DTTM  
+		       , A.MOD_NO  
+		       , A.MOD_DTTM  
+		       , A.ZOOM_URL
+		       , A.SCENE_ID
+		       , (SELECT FN_GET_USER_NAME(A.MOD_NO) ) MOD_NM  
+		       , (SELECT FN_GET_USER_NAME(A.REG_NO) ) REG_NM  
+		       , IFNULL(( SELECT UNIT_NM
+		                 FROM tb_crs_sbj_cnts  
+		                WHERE UNIT_CD = A.PAR_UNIT_CD),'ROOT') AS PAR_UNIT_NM  
+		       , CASE WHEN (A.UNIT_LVL -1) < 0 THEN 0 ELSE (A.UNIT_LVL -1) END PAR_UNIT_LVL  
+		       , ( SELECT MAX(UNIT_ODR)  
+		             FROM tb_crs_sbj_cnts  
+		            WHERE IFNULL( FN_GET_NULL(PAR_UNIT_CD),'1') = IFNULL( FN_GET_NULL(A.PAR_UNIT_CD),'1') AND SBJ_CD = A.SBJ_CD) AS MAX_ODR
+		       , ( SELECT COUNT(*)  
+		             FROM tb_crs_sbj_cnts  
+		            WHERE PAR_UNIT_CD = A.UNIT_CD AND SBJ_CD = A.SBJ_CD) AS SUB_CNT  
+		       , ( SELECT COUNT(*)  
+		             FROM tb_lec_bookmark  
+		            WHERE SBJ_CD = A.SBJ_CD  
+		              AND UNIT_CD = A.UNIT_CD ) AS BOOKMARK_CNT  
+		       , B.PATH
+		    FROM tb_crs_cre_sbj_cnts A, CTE AS B
+		    WHERE A.SBJ_CD = B.SBJ_CD
+		    AND A.UNIT_CD = B.UNIT_CD
+		           ) T 																					
+		  	 WHERE SUB_CNT > 0 
+		  	ORDER BY PATH
+		]]>
+	</select>
+	
+</mapper>	

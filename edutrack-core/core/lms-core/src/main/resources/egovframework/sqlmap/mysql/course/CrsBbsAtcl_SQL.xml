@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.crsbbs.atcl.service.impl.CrsBbsAtclMapper">	
+	<select id="selectKey" resultType="Integer">
+	    SELECT nextval('SQ_CRS_CRS_BBS_ATCL') AS ATCL_SN 
+	</select>
+
+	<sql id="selectColumnQuery">
+				 CRS_CD 												
+		       , BBS_CD 												
+		       , ATCL_SN 												
+		       , PAR_ATCL_SN 											
+		       , ATCL_LVL 												
+		       , ATCL_ODR 												
+		       , TITLE 												
+		       , CTS 													
+		       , HITS 													
+		       , EDITOR_YN												
+		       , REG_NO 												
+		       , REG_NM 												
+		       , REG_DTTM 												
+		       , MOD_NO 												
+			    , (SELECT FN_GET_USER_NAME(MOD_NO) ) AS MOD_NM			
+		       , MOD_DTTM 												
+		       , (SELECT COUNT(*) 										
+		            FROM tb_crs_crs_bbs_cmnt							
+		           WHERE CRS_CD = A.CRS_CD								
+		             AND BBS_CD = A.BBS_CD								
+		             AND ATCL_SN = A.ATCL_SN ) AS CMNT_CNT				
+	</sql>
+	
+	<sql id="selectQuery">
+		  SELECT 
+		  <include refid="selectColumnQuery" />			
+		  FROM tb_crs_crs_bbs_atcl A									
+		  WHERE CRS_CD = #{crsCd}										
+		  	AND BBS_CD = #{bbsCd}
+	</sql>
+
+	<select id="list" parameterType="crsBbsAtclVO" resultType="crsBbsAtclVO">
+	    WITH RECURSIVE CTE AS (
+		    SELECT
+		     ATCL_SN , ATCL_SN AS PATH
+		    FROM tb_brd_bbs_atcl
+		     WHERE CRS_CD = #{crsCd}										
+		  	AND BBS_CD = #{bbsCd}
+	    	AND PAR_ATCL_SN IS NULL
+	    	UNION ALL
+		    SELECT
+		       A.ATCL_SN, CONCAT(CTE.path,',',A.ATCL_SN) as path
+		    FROM tb_brd_bbs_atcl A
+		    inner join CTE on A.PAR_ATCL_SN = CTE.ATCL_SN
+	    	AND CRS_CD = #{crsCd}										
+		  	AND BBS_CD = #{bbsCd}
+		)
+	    SELECT
+	    	<include refid="selectColumnQuery" />	
+	    FROM tb_crs_crs_bbs_atcl A, CTE B
+	    WHERE A.ATCL_SN = B.ATCL_SN
+		<if test = "searchValue != null and searchValue != ''">                          			
+	    	AND (CASE WHEN #{searchKey} = 'regNm' THEN REG_NM ELSE TITLE END) LIKE CONCAT('%', #{searchValue}, '%')			
+	    </if>	
+		ORDER BY PATH
+		
+	</select>
+
+	<select id="count" parameterType="crsBbsAtclVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM tb_crs_crs_bbs_atcl A									
+		WHERE CRS_CD = #{crsCd}										
+		  AND BBS_CD = #{bbsCd}
+		<if test = "searchValue != null and searchValue != ''">                          			
+	    	AND (CASE WHEN #{searchKey} = 'regNm' THEN REG_NM ELSE TITLE END) LIKE CONCAT('%', #{searchValue}, '%')			
+	    </if>				  
+	</select>
+		
+   <select id="listPageing" parameterType="crsBbsAtclVO" resultType="crsBbsAtclVO">
+		
+		WITH RECURSIVE CTE AS (
+		    SELECT
+		     ATCL_SN , ATCL_SN AS PATH
+		    FROM tb_brd_bbs_atcl
+		     WHERE CRS_CD = #{crsCd}										
+		  	AND BBS_CD = #{bbsCd}
+	    	AND PAR_ATCL_SN IS NULL
+	    	UNION ALL
+		    SELECT
+		       A.ATCL_SN, CONCAT(CTE.path,',',A.ATCL_SN) as path
+		    FROM tb_brd_bbs_atcl A
+		    inner join CTE on A.PAR_ATCL_SN = CTE.ATCL_SN
+	    	AND CRS_CD = #{crsCd}										
+		  	AND BBS_CD = #{bbsCd}
+		)
+	   	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    SELECT
+	    	<include refid="selectColumnQuery" />	
+	    FROM tb_crs_crs_bbs_atcl A, CTE B
+	    WHERE A.ATCL_SN = B.ATCL_SN
+		<if test = "searchValue != null and searchValue != ''">                          			
+	    	AND (CASE WHEN #{searchKey} = 'regNm' THEN REG_NM ELSE TITLE END) LIKE CONCAT('%', #{searchValue}, '%')			
+	    </if>	
+		ORDER BY PATH
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+
+	<select id="select" parameterType="crsBbsAtclVO" resultType="crsBbsAtclVO">
+	    <include refid="selectQuery" />
+	     AND ATCL_SN = #{atclSn}	
+	</select>
+
+	
+   <insert id="insert" parameterType="crsBbsAtclVO">
+   		
+		  INSERT INTO tb_crs_crs_bbs_atcl (								
+		         CRS_CD 													
+		       , BBS_CD 													
+		       , ATCL_SN 													
+		       , PAR_ATCL_SN 												
+		       , ATCL_LVL 													
+		       , ATCL_ODR 													
+		       , TITLE 													
+		       , CTS 														
+		       , HITS 														
+		       , EDITOR_YN													
+		       , REG_NO 													
+		       , REG_NM 													
+		       , REG_DTTM 													
+		       , MOD_NO 													
+		       , MOD_DTTM 													
+		 ) VALUES (														
+		         #{crsCd} 													
+		       , #{bbsCd} 													
+		       , #{atclSn} 													
+		       , #{parAtclSn}												
+		       , #{atclLvl} 													
+		       , NVL(( SELECT MAX(NVL((ATCL_ODR),0)) + 1					
+		                 FROM tb_crs_crs_bbs_atcl AS SUBQUERY							
+		                WHERE CRS_CD = #{crsCd}								
+		                  AND BBS_CD = #{bbsCd}								
+		                  AND NVL((PAR_ATCL_SN),1) = NVL((#{parAtclSn}),1) ),1)	
+		       , #{title} 													
+		       , #{cts} 														
+		       , 0 														
+		       , #{editorYn}													
+		       , #{regNo} 													
+		       , #{regNm} 													
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 						
+		       , #{modNo} 													
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')						
+		 )	
+    </insert>
+	
+   <update id="update" parameterType="crsBbsAtclVO">
+		  UPDATE tb_crs_crs_bbs_atcl									
+		     SET ATCL_LVL = #{atclLvl} 									
+		       , ATCL_ODR = #{atclOdr} 									
+		       , TITLE = #{title} 										
+		       , CTS = #{cts} 											
+		       , MOD_NO = #{modNo} 										
+		       , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 		
+		   WHERE CRS_CD = #{crsCd} 										
+		     AND BBS_CD = #{bbsCd} 										
+		     AND ATCL_SN = #{atclSn} 
+    </update>
+	
+
+	<delete id="delete" parameterType="crsBbsAtclVO">
+		  DELETE FROM tb_crs_crs_bbs_atcl							
+		  WHERE CRS_CD = #{crsCd} 									
+		     AND BBS_CD = #{bbsCd} 									
+		     AND ATCL_SN = #{atclSn} 		
+    </delete>
+
+   <update id="hitsup" parameterType="crsBbsAtclVO">
+		  UPDATE tb_crs_crs_bbs_atcl		
+			  SET HITS  =	 HITS +	1		
+		   WHERE CRS_CD = #{crsCd} 			
+		     AND BBS_CD = #{bbsCd} 			
+		     AND ATCL_SN = #{atclSn} 	
+    </update>	
+
+
+</mapper>		

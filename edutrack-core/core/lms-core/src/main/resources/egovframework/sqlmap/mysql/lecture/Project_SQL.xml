@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.module.lecture.project.info.service.impl.ProjectMapper">	
+	<select id="selectKey" resultType="Integer">
+		SELECT nextval('SQ_LEC_PRJT') AS PRJT_SN
+	</select>
+	<sql id="selectQuery">
+		  SELECT A.CRS_CRE_CD				                                				
+		       , A.PRJT_SN																	
+		       , A.PRJT_TITLE				                                				
+		       , A.SCORE_OPEN_YN				                                            
+		       , (SELECT FN_GET_CODE_NAME('OPEN_YN',SCORE_OPEN_YN)							
+		  					 ) AS SCORE_OPEN_YN_NM   								
+		       , (SELECT COUNT(*) 															
+		       	 FROM TB_LEC_PRJT_TEAM													
+		       	WHERE CRS_CRE_CD = A.CRS_CRE_CD 										
+		          	  AND PRJT_SN 	 = A.PRJT_SN) TEAM_CNT                              	
+		       , FN_GET_DATE_FORMAT(PRJT_START_DTTM, '%Y.%m.%d') PRJT_START_DTTM	    	
+		       , FN_GET_DATE_FORMAT(PRJT_END_DTTM  , '%Y.%m.%d') PRJT_END_DTTM			
+		       , FN_GET_DATE_FORMAT(SCORE_CFRM_DTTM, '%Y.%m.%d') SCORE_CFRM_DTTM			
+		       ,(SELECT COUNT(*)            					   							
+		           FROM TB_LEC_PRJT_TEAM_MBR  					   							
+		          WHERE CRS_CRE_CD = A.CRS_CRE_CD				   							
+		            AND PRJT_SN = A.PRJT_SN	) MBR_CNT   								
+		       , A.PRJT_CTS						                                        
+		       , A.REG_NO					                                                
+		       , A.REG_DTTM					                       		        		
+		       , A.MOD_NO					                                                
+		       , A.MOD_DTTM					                                            
+		   FROM TB_LEC_PRJT A													
+	</sql>
+	<sql id="selectStuQuery">
+		    SELECT  A.CRS_CRE_CD				                                				        
+		              ,  A.PRJT_SN																	    
+		              , A.PRJT_TITLE				                                				    
+		              , A.SCORE_OPEN_YN				                                                
+		              , (SELECT FN_GET_CODE_NAME('OPEN_YN',SCORE_OPEN_YN)							    
+		                   ) AS SCORE_OPEN_YN_NM   								            
+		              , (SELECT COUNT(*) 															    
+		                 FROM TB_LEC_PRJT_TEAM													        
+		                WHERE CRS_CRE_CD = A.CRS_CRE_CD 										        
+		                    AND PRJT_SN 	 = A.PRJT_SN) TEAM_CNT                              	    
+		              , FN_GET_DATE_FORMAT(PRJT_START_DTTM, '%Y.%m.%d') PRJT_START_DTTM	    	    
+		              , FN_GET_DATE_FORMAT(PRJT_END_DTTM  , '%Y.%m.%d') PRJT_END_DTTM			    
+		              , FN_GET_DATE_FORMAT(SCORE_CFRM_DTTM, '%Y.%m.%d') SCORE_CFRM_DTTM			    
+		              ,(SELECT COUNT(*)            					   							    
+		                  FROM TB_LEC_PRJT_TEAM_MBR  					   							    
+		                 WHERE CRS_CRE_CD = A.CRS_CRE_CD				   							    
+		                   AND PRJT_SN = A.PRJT_SN	) MBR_CNT   								        
+		              , A.PRJT_CTS						                                    	        
+		              , A.REG_NO					                                                    
+		              , A.REG_DTTM					                       		        		        
+		              , A.MOD_NO					                                            	    
+		              , A.MOD_DTTM				                                                        
+		              , B.USER_NO		                                                               
+		              , B.STD_NO	                                                                   
+		              , C.TEAM_LEADER_DIV                                                             
+		              , C.PRJT_TEAM_SN                                                                
+		      FROM  TB_LEC_PRJT  A, tb_std_std B, TB_LEC_PRJT_TEAM_MBR C	     	     	           
+		      WHERE  A.CRS_CRE_CD = B.CRS_CRE_CD  	     	     	                                   
+		      AND  A.CRS_CRE_CD = C.CRS_CRE_CD	     	     	                                       
+		      AND  A.PRJT_SN = C.PRJT_SN		     	     	                                       
+		      AND C.STD_NO = B.STD_NO	   
+	</sql>
+ 	<select id="list" parameterType="projectVO" resultType="projectVO">
+	    <include refid="selectQuery" />
+
+	</select>
+
+     <select id="listPageing" parameterType="projectVO" resultType="projectVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+
+	<select id="select" parameterType="projectVO" resultType="projectVO">
+	    <include refid="selectQuery" />
+		    WHERE A.CRS_CRE_CD = #{crsCreCd}			
+		    ORDER BY A.PRJT_SN 						    
+	</select>
+
+    <insert id="insert" parameterType="projectVO">
+		  INSERT INTO TB_LEC_PRJT (		                               
+		         CRS_CRE_CD				                               
+		       , PRJT_SN					                               
+		       , PRJT_TITLE				                               
+		       , PRJT_START_DTTM										   
+		       , PRJT_END_DTTM											   
+		       , SCORE_CFRM_DTTM										   
+		       , SCORE_OPEN_YN				                               
+		       , PRJT_CTS						            	          	
+		       , REG_NO					                               
+		       , REG_DTTM					                               
+		       , MOD_NO					                               
+		       , MOD_DTTM					                               
+		  		) VALUES (					                               
+		         #{crsCreCd}            		                               
+		       , #{prjtSn}									              
+		       , #{prjtTitle}           		                               
+		       , #{prjtStartDttm}	   									   
+		       , #{prjtEndDttm}     										   
+		       , #{scoreCfrmDttm}    									   
+		       , #{scoreOpenYn}   			                               
+		       , #{prjtCts}             		                               
+		       , #{regNo}               		                               
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')                     
+		       , #{modNo}               		                               
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')                    
+		       )	
+    </insert>
+
+
+   <update id="update" parameterType="projectVO">
+		  UPDATE TB_LEC_PRJT 				               			  					 
+		     SET PRJT_TITLE			=	#{prjtTitle}                    				 
+		       , PRJT_START_DTTM		=	#{prjtStartDttm}   							 
+		       , PRJT_END_DTTM			=	#{prjtEndDttm}    							 
+		       , SCORE_CFRM_DTTM		=	#{scoreCfrmDttm}   							 
+		       , SCORE_OPEN_YN			=	#{scoreOpenYn}   		      	  				 
+		       , PRJT_CTS				=	#{prjtCts}                      					
+		       , MOD_NO				=	#{modNo}                        				 
+		       , MOD_DTTM				=	DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')         
+		 	WHERE  CRS_CRE_CD 			= 	#{crsCreCd}                      		 	 	 
+		     AND  PRJT_SN	  			=	#{prjtSn}                      	
+    </update>
+	
+	<delete id="delete" parameterType="projectVO">
+			  DELETE FROM TB_LEC_PRJT					
+		   WHERE PRJT_SN		= #{prjtSn}			
+   </delete>
+ 	<select id="listPrjStudent" parameterType="projectVO" resultType="projectVO">
+	    <include refid="selectStuQuery" />
+		         AND A.CRS_CRE_CD = #{crsCreCd}	  	    				
+		         AND B.USER_NO = #{userNo}			    				
+		         ORDER BY A.PRJT_SN 			
+	</select>
+ 	<select id="selectPrjStudent" parameterType="projectVO" resultType="projectVO">
+	    <include refid="selectStuQuery" />
+		         AND A.CRS_CRE_CD = #{crsCreCd}	  	    				
+		         AND B.USER_NO = #{userNo}			    				
+		         AND A.PRJT_SN  = #{prjtSn}			    				
+		         AND C.PRJT_TEAM_SN  = #{prjtTeamSn}	    				
+		         ORDER BY A.PRJT_SN 						
+	</select>
+	
+
+
+
+</mapper>

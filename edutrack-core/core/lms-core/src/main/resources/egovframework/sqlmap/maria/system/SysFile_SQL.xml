@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.system.file.service.impl.SysFileMapper">	
+
+	<select id="selectKey" resultType="Integer">
+		/*
+			 SQL ID : selectKey
+			 설  명 : 파일 키 생성
+	 	*/
+	 	SELECT nextval(SQ_SYS_FILE)
+	</select>		
+
+	<sql id="selectQuery">
+		SELECT A.FILE_SN as fileSn
+		     , A.FILE_NM as fileNm
+		     , A.FILE_SAVE_NM as fileSaveNm
+		     , A.FILE_PATH as filePath
+		     , A.FILE_EXT as fileExt
+		     , A.FILE_SIZE as fileSize
+		     , A.FILE_TYPE as fileType
+		     , A.ORG_CD as orgCd
+		     , ( 
+			  	SELECT TB.ORG_DOMAIN 
+			  	FROM(
+			  		SELECT ORG_DOMAIN
+			  			,	ORG_CD
+			  			,	RPRST_YN 
+			  			,	ROW_NUMBER() OVER () AS ROWNO
+		          	 FROM tb_org_domain
+		          	  ) AS TB
+		        WHERE TB.ORG_CD = A.ORG_CD
+		          AND TB.RPRST_YN = 'Y'
+				  AND TB.ROWNO = 1
+		             ) AS doaminUrl
+		     , A.REPO_CD as repoCd
+		     , A.REPO_PATH as repoPath
+		     , A.MIME_TYPE as mimeType
+		     , A.HITS as hits
+		     , A.LAST_INQ_DTTM as lastInqDttm
+		     , A.REG_NO as regNo
+		     , A.REG_DTTM as regDttm
+		     , A.FILE_BIND_DATA_SN as fileBindDataSn
+		     , A.ETC_INFO_1 as etcInfo1
+			 , A.ETC_INFO_2 as etcInfo2
+			 , A.ETC_INFO_3 as etcInfo3
+		     , ( SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL ) AS regNm
+		     , B.REPO_NM as repoNm
+	         , B.PAR_TABLE_NM as parTableNm
+	         , B.PAR_FIELD_NM as parFieldNm
+		<if test = "parFieldNm != null and parFieldNm != ''">
+			<if test = "isUsingTable == 'true'">
+		     , ( SELECT COUNT(*) FROM ${parTableNm}
+	              WHERE ${parFieldNm} = A.FILE_BIND_DATA_SN ) AS usingCnt
+			</if>
+			<if test = "isUsingTable != 'true'">
+			, -1 as usingCnt
+			</if>
+		</if>
+		<if test = "parFieldNm == null or parFieldNm == ''">
+		     , -1 as usingCnt
+		</if>
+		  FROM tb_sys_file A, tb_sys_file_repo B
+		 WHERE A.REPO_CD = B.REPO_CD
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		AND A.REPO_CD	= #{repoCd}
+		<if test = "fileBindDataSn != null and fileBindDataSn != ''">
+		   AND A.FILE_BIND_DATA_SN = #{fileBindDataSn}
+		</if>
+		<if test = "fileNm != null and fileNm != ''">
+		   AND A.FILE_NM LIKE CONCAT('%',#{fileNm},'%')		
+		</if>
+		<if test = "fileExt != null and fileExt != ''">
+		   AND A.FILE_EXT LIKE CONCAT('%',#{fileExt},'%')		
+		</if>
+	</sql>	
+	
+	<select id="list" parameterType="sysFileVO" resultType="sysFileVO">
+		/*
+			 SQL ID : list
+			 설  명 : 파일 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	 	 ORDER  BY A.FILE_SN DESC
+	</select>
+	
+	<select id="listPageing" parameterType="sysFileVO" resultType="sysFileVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 파일 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+	 	ORDER  BY FILESN DESC	
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="sysFileVO" resultType="Integer">
+		/*
+			 SQL ID : TbSysCfgCtgrDAO.count
+			 설  명 : 파일 페이징 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>	
+
+	<select id="select" parameterType="sysFileVO" resultType="sysFileVO">
+		/*
+			 SQL ID : select
+			 설  명 : 파일 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+           AND A.FILE_SN = #{fileSn}
+	</select>
+	
+	<insert id="insert" parameterType="sysFileVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 파일 정보 등록
+	 	*/
+		INSERT INTO tb_sys_file (
+		       FILE_SN
+		     , FILE_NM
+		     , FILE_SAVE_NM
+		     , FILE_PATH
+		     , FILE_EXT
+		     , FILE_SIZE
+		     , FILE_TYPE
+		     , ORG_CD
+		     , REPO_CD
+		     , REPO_PATH
+		     , MIME_TYPE
+		     , HITS
+		     , LAST_INQ_DTTM
+		     , REG_NO
+		     , REG_DTTM
+		     , FILE_BIND_DATA_SN
+		     , ETC_INFO_1
+		     , ETC_INFO_2
+		     , ETC_INFO_3
+		) VALUES (
+			   #{fileSn}
+			 , #{fileNm}
+			 , #{fileSaveNm}
+			 , #{filePath}
+			 , #{fileExt}
+			 , #{fileSize}
+			 , #{fileType}
+			 , #{orgCd}
+			 , #{repoCd}
+			 , #{repoPath}
+			 , #{mimeType}
+			 , #{hits}
+			 , #{lastInqDttm}
+			 , #{regNo}
+			 , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+			 , #{fileBindDataSn}
+			 , #{etcInfo1}
+			 , #{etcInfo2}
+			 , #{etcInfo3}
+		)	 	
+	</insert>
+	
+	<update id="updateFileBindData" parameterType="sysFileVO" >
+		/*
+			 SQL ID : updateFileBindData
+			 설  명 : 파일 바인딩 정보 수정
+	 	*/
+		UPDATE tb_sys_file
+		   SET FILE_BIND_DATA_SN  = #{fileBindDataSn}
+		     , ETC_INFO_1 = #{etcInfo1}
+		     , ETC_INFO_2 = #{etcInfo2}
+		     , ETC_INFO_3 = #{etcInfo3}
+		 WHERE FILE_SN = #{fileSn}
+	</update>
+	
+	<update id="deleteFileBindData" parameterType="sysFileVO" >
+		/*
+			 SQL ID : updateFileBindData
+			 설  명 : 파일 바인딩 정보 삭제
+	 	*/
+		UPDATE tb_sys_file
+		   SET FILE_BIND_DATA_SN = NULL
+		 WHERE REPO_CD = #{repoCd}
+		   AND FILE_BIND_DATA_SN = #{fileBindDataSn}
+	</update>
+
+	<delete id="delete" parameterType="sysFileVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 파일 정보 삭제
+	 	*/
+		DELETE FROM tb_sys_file
+		 WHERE FILE_SN = #{fileSn}
+	</delete>
+	
+	<update id="updateFileLastInqDttm" parameterType="sysFileVO" >
+		/*
+			 SQL ID : updateFileLastInqDttm
+			 설  명 : 시스템 파일 조회에 따른 마지막 접속일시와 조회수 증가 업데이트
+	 	*/
+		UPDATE tb_sys_file
+		   SET HITS = HITS + 1
+		     , LAST_INQ_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		 WHERE FILE_SN = #{fileSn}
+	</update>	
+	 
+</mapper>

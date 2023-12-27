@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.teacher.sche.service.impl.ScheduleMapper">
+	<select id="selectSchSnKey" resultType="Integer">
+		SELECT nextval('SQ_TB_TCH_INSD_TCH_SCH_SN')
+	</select>
+	<select id="selectSchDetlSnKey" resultType="Integer">
+		SELECT nextval('SQ_TB_TCH_INSD_TCH_SCH_DETL_SN')
+	</select>
+
+	<select id="profList" parameterType="scheduleProfVO" resultType="scheduleProfVO">
+		   SELECT                                      
+		       A.USER_NO,                              
+		       B.USER_NM                               
+		   FROM                                        
+		       tb_tch_tch_info A                
+		   LEFT OUTER JOIN
+		 	   tb_usr_user_info B      
+		   ON ( A.USER_NO = B.USER_NO )        
+		   WHERE 
+			  A.TCH_CTGR_CD = 'T01'                <!-- //원내강사만 조회 --> 
+	</select>
+	
+	<select id="scheduleListContents"  parameterType="ScheduleDetailVO" resultType="ScheduleDetailVO">
+	<![CDATA[
+		 SELECT                                                                                                             
+		     2000+replace(SUBSTR(STR_TO_DATE(#{startDay},'%Y%m%d') + LEVEL -1 , 0,3),'/','')year ,                             
+		     replace(SUBSTR(STR_TO_DATE(#{startDay},'%Y%m%d') + LEVEL -1 , 3,4),'/','')month,                                   
+		     replace(SUBSTR(STR_TO_DATE(#{startDay},'%Y%m%d') + LEVEL -1 , 6,6),'/','')day,                                      
+		     ((STR_TO_DATE(#{startDay},'%Y%m%d') + LEVEL -1) +7)-next_day((STR_TO_DATE(#{startDay},'%Y%m%d') + LEVEL -1),1)+1 dday    
+		 FROM                                                                                                                   
+		     DUAL                                                                                                               
+		 WHERE                                                                                                                  
+		     ((STR_TO_DATE(#{startDay},'%Y%m%d') + LEVEL -1) +7)-next_day((STR_TO_DATE(#{startDay},'%Y%m%d') + LEVEL -1),1)+1 
+		     in ( #{dDay} + " ) CONNECT BY (STR_TO_DATE(#{startDay}) + LEVEL -1)  <= STR_TO_DATE(#{endDay})                                                            
+		]]>
+	</select>
+	
+	
+	<insert id="insertSchedule" parameterType="scheduleVO">
+			  INSERT INTO tb_tch_insd_tch_sch (                                 
+		         USER_NO                      ,                                
+		         SCH_SN                       ,                                
+		         SCH_DIV_CD                   ,                                
+		         LEC_DIV_CD                   ,                               
+		         OTSD_LEC_GOING_DTTM          ,                               
+		         OTSD_LEC_RETURN_DTTM         ,                               
+		         REQ_ORG_NM                   ,                               
+		         PLACE                        ,                               
+		         TRAINING_CRS                 ,                               
+		         EDU_TARGET                   ,                               
+		         LEC_TITLE                    ,                               
+		         EDU_NOP_CNT                  ,                               
+		         OFFICIAL_DOC_RECV_YN         ,                               
+		         OTSD_LEC_REPT_RELEV_YN       ,                               
+		         OTSD_LEC_REPT_DATA_SEND_YN   ,                               
+		         APPROVAL_YN                  ,																											                                
+		         EXTRN_LEC_RSLT_REPT_SEND_YN  ,								 																				                                
+		         SCH_DESC                     ,                               
+		         REG_NO                       ,                               
+		         REG_DTTM                     ,                               
+		         MOD_NO                       ,																											                                
+		         MOD_DTTM                     		     						 																				                                
+		         ) VALUES(                                                    
+		         #{userNo}                      ,                               
+		         #{schSn}                    ,                                    
+		         #{schDivCd}                   ,                                 
+		         #{lecDivCd}                   ,                                 
+		         #{otsdLecGoingDttm}  ,           									
+		         #{otsdLecReturnDttm}   ,      										
+		         #{reqOrgNm}                   ,                                 
+		         #{place}                        ,  								
+		         #{trainingCrs}                 ,  							
+		         #{eduTarget}                   ,                            
+		         #{lecTitle}                    ,                            
+		         #{eduNopCnt}                  ,                            
+		         #{officialDocRecvYn}         ,                              
+		         #{otsdLecReptRelevYn}       ,                              
+		         #{otsdLecReptDataSendYn}   ,                               
+		         #{approvalYn}                  ,	                     																				                                
+		         #{extrnLecRsltReptSendYn}  ,	                         																				                                
+		         #{schDesc}                     ,                        
+		         #{regNo}                      ,                        
+		         DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'),                 
+		         #{modNo}                      ,	                       																				                                
+		         DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'))               																				                                
+		
+	</insert>
+	
+	<insert id="insertScheduleDetail" parameterType="scheduleDetailVO">
+			INSERT INTO tb_tch_insd_tch_sch_detl (	              	
+		   	USER_NO,                                                         
+		   	SCH_SN,                                                          
+		   	SCH_DETL_SN,                                                          
+		   	YEAR,                                                            
+		   	MONTH,                                                           
+		   	DAY,                                                             
+		   	START_TM,                                                        
+		   	END_TM                                                           
+		   	)                                                                
+		   VALUES(                                                              
+		   	#{userNo}               ,                                     
+		   	#{schSn}                ,                                    
+		   	#{schDetlSn}            ,                                     
+		   	#{year}                 ,                                     
+		   	#{month}                ,                                     
+		   	#{day}                  ,                                     
+		   	#{startTm}				,                                     
+		   	#{endTm}                                          
+		   )                      
+		
+	</insert>
+	
+	<insert id="updateScheduleBatch" parameterType="list">
+			INSERT INTO tb_tch_insd_tch_sch_detl (	              	
+		   		USER_NO,                                                         
+		   		SCH_SN,                                                          
+		   		SCH_DETL_SN,                                                          
+		   		YEAR,                                                            
+		   		MONTH,                                                           
+		   		DAY,                                                             
+		   		START_TM,                                                        
+		   		END_TM                                                           
+		   	) 
+		   	 SELECT nextval('SQ_TB_TCH_INSD_TCH_SCH_DETL_SN') AS SCH_DETL_SN, A.* FROM( 
+		   	 <foreach collection="list" item="item" index="index"  separator=",">                                                              
+		   		SELECT                                                         
+		   		#{item.userNo} AS userNo ,                                     
+		   		#{item.schSn} AS schSn,                                     
+		   		#{item.schDetlSn} AS schDetlSn,                                     
+		   		#{item.year} AS year,                                     
+		   		#{item.month} AS month,                                     
+		   		#{item.day} AS day,                                     
+		   		#{item.startTm} AS startTm,                                     
+		   		#{item.endTm} AS endTm
+		   		FROM DUAL
+		   		</foreach>)A                                       
+		</insert>
+			
+	
+	<select id="listSchedule" parameterType="calendarVO" resultType="calendarVO">
+	 		SELECT                                                                                       
+			         CONCAT((CASE WHEN SCHM.SCH_DIV_CD = 'I' THEN '내부' ELSE '외부' END),'-',INFO.USER_NM) AS TITLE,                           
+			         STR_TO_DATE(CONCAT(SCHD.YEAR,SCHD.MONTH,SCHD.DAY),'%Y%m%d') as START_DATE,    
+			         STR_TO_DATE(CONCAT(SCHD.YEAR,SCHD.MONTH,SCHD.DAY),'%Y%m%d')  AS END_DATE,         
+			         CONCAT(SCHM.SCH_SN,'-',SCHD.SCH_DETL_SN) AS SCH_ID ,
+			         SCHD.YEAR,
+			         SCHD.MONTH, 
+			         SCHD.DAY,                                      
+			         SUBSTR(SCHD.START_TM,1,2)  AS START_HH_TIME,                                                     
+			         SUBSTR(SCHD.START_TM,3,4)  AS START_MM_TIME,                                                     
+			         SUBSTR(SCHD.END_TM,1,2)  AS END_HH_TIME,                                                           
+			         SUBSTR(SCHD.END_TM,3,4)  AS END_MM_TIME,                                                         
+			         SCHD.START_TM,SCHD.END_TM,  SCHM.SCH_SN,SCHD.SCH_DETL_SN,                                        
+			         INFO.EMAIL                                                                                       
+			  FROM   tb_tch_insd_tch_sch SCHM,                                                                        
+			         tb_tch_insd_tch_sch_detl SCHD,                                                                   
+			         tb_usr_user_info INFO,                                                                           
+			         tb_usr_login LOGI                                                                                
+			  WHERE SCHM.USER_NO = SCHD.USER_NO                                                                       
+			    AND SCHM.USER_NO = INFO.USER_NO                                                                       
+			    AND SCHM.USER_NO = LOGI.USER_NO                                                                       
+			    AND SCHM.SCH_SN  = SCHD.SCH_SN                                                                        
+			    AND SCHD.YEAR  = #{searchYear}                                           
+			    AND SCHD.MONTH  =#{searchMonth}                                          
+			    AND INFO.USER_NM  like CONCAT('%',(CASE WHEN #{searchName} = '' THEN '%' ELSE #{searchName} END))    
+			    AND SCHM.SCH_DIV_CD like CONCAT('%',(CASE WHEN #{searchIo} = '' THEN '%' ELSE #{searchIo} END))     
+	</select>
+	
+	<select id="listScheduleResult" parameterType="calendarVO" resultType="calendarVO">
+		  SELECT                                                                                                                  
+		     SCHM.USER_NO,                                                                                                        
+		     SCHM.SCH_SN,                                                                                                         
+		     CONCAT(DECODE(CASE WHEN SCHM.SCH_DIV_CD ='I' THEN '내부' ELSE '외부' END),'-',FN_GET_CODE_NAME('LEC_DIV_CD',SCHM.LEC_DIV_CD)) AS LEC_DIV_CD,        
+		     FN_GET_CODE_NAME('SCH_PURP_DIV_CD',SCHM.SCH_PURP_DIV_CD) AS SCH_PURP_DIV_CD,                                         
+		     SCHM.OTSD_LEC_GOING_DTTM,                                                                                            
+		     SCHM.OTSD_LEC_RETURN_DTTM,                                                                                           
+		     SCHM.REQ_ORG_NM,                                                                                                     
+		     SCHM.PLACE,                                                                                                          
+		     SCHM.TRAINING_CRS,                                                                                                   
+		     SCHM.EDU_TARGET,                                                                                                     
+		     SCHM.LEC_TITLE,                                                                                                      
+		     SCHM.EDU_NOP_CNT,                                                                                                    
+		     SCHM.ORG_CHRG_PRSN_PHONENO,                                                                                          
+		      FN_GET_CODE_NAME('OFFICIAL_DOC_RECV_YN',SCHM.OFFICIAL_DOC_RECV_YN) AS OFFICIAL_DOC_RECV_YN,                         
+		     FN_GET_CODE_NAME('LEC_REPT_RELEV_YN',SCHM.OTSD_LEC_REPT_RELEV_YN) AS OTSD_LEC_REPT_RELEV_YN,                         
+		     FN_GET_CODE_NAME('DATA_SEND_YN',SCHM.OTSD_LEC_REPT_DATA_SEND_YN) AS OTSD_LEC_REPT_DATA_SEND_YN,                      
+		     FN_GET_CODE_NAME('APPROVAL_YN',SCHM.APPROVAL_YN) AS APPROVAL_YN,                                                     
+		     FN_GET_CODE_NAME('DATA_SEND_YN',SCHM.EXTRN_LEC_RSLT_REPT_SEND_YN) AS EXTRN_LEC_RSLT_REPT_SEND_YN,                    
+		     SCHM.SCH_DESC,                                                                                                       
+		     INFO.USER_NM,                                                                                               
+		     DATE_FORMAT(STR_TO_DATE(CONCAT(SCHD.YEAR,SCHD.MONTH,SCHD.DAY),'%Y%m%d'),'%Y.%m.%d')  AS START_DAY,                            
+		     CONCAT(SCHD.START_TM ,'-',SCHD.END_TM)   AS START_TM                                                                  
+		  FROM tb_tch_insd_tch_sch SCHM,                                                                                          
+		       tb_tch_insd_tch_sch_detl SCHD,                                                                                     
+		       tb_usr_user_info INFO                                                                                              
+		    WHERE SCHM.USER_NO = SCHD.USER_NO                                                                                     
+		      AND SCHM.USER_NO = INFO.USER_NO                                                                                     
+		      AND SCHM.SCH_SN  = SCHD.SCH_SN                                                                                      
+		    AND SCHD.YEAR  = #{searchYear}                                           
+		    AND SCHD.MONTH  =#{searchMonth}                                          
+		      ORDER BY   DATE_FORMAT(STR_TO_DATE(CONCAT(SCHD.YEAR,SCHD.MONTH,SCHD.DAY),'%Y%m%d'),'%Y.%m.%d'), SCHD.START_TM,SCHD.END_TM     
+	</select>
+	
+	<select id="selectSchedule" parameterType="scheduleVO" resultType="scheduleVO">
+	 SELECT SCHM.USER_NO, SCHM.SCH_SN,SCHM.SCH_DIV_CD ,                                                             
+		        FN_GET_CODE_NAME('SCH_DIV_CD',SCHM.SCH_DIV_CD) AS SCH_DIV_CDNM,                                         
+		        SCHM.LEC_DIV_CD,                                                                                        
+		        FN_GET_CODE_NAME('LEC_DIV_CD',SCHM.LEC_DIV_CD) AS LEC_DIV_CDNM,                                         
+		        SCHM.SCH_PURP_DIV_CD,                                                                                   
+		        FN_GET_CODE_NAME('SCH_PURP_DIV_CD',SCHM.SCH_PURP_DIV_CD) AS SCH_PURP_DIV_CDNM,                          
+		        SCHM.OTSD_LEC_GOING_DTTM, SCHM.OTSD_LEC_RETURN_DTTM,                                                         
+		        CONCAT(SUBSTR(SCHM.OTSD_LEC_GOING_DTTM,1,4),'.',SUBSTR(SCHM.OTSD_LEC_GOING_DTTM,5,2),'.',SUBSTR(SCHM.OTSD_LEC_GOING_DTTM,7,2)) AS OTSD_LEC_GOING_DTTM_DAY,                                                            
+		        SUBSTR(SCHM.OTSD_LEC_GOING_DTTM,9,2)  AS OTSD_LEC_GOING_DTTM_HOUR,  SUBSTR(SCHM.OTSD_LEC_GOING_DTTM,11,2) AS OTSD_LEC_GOING_DTTM_MINUTE,  
+		        CONCAT(SUBSTR(SCHM.OTSD_LEC_RETURN_DTTM,1,4),'.',SUBSTR(SCHM.OTSD_LEC_RETURN_DTTM,5,2),'.',SUBSTR(SCHM.OTSD_LEC_RETURN_DTTM,7,2)) AS OTSD_LEC_RETURN_DTTM_DAY,                                                            
+		        SUBSTR(SCHM.OTSD_LEC_RETURN_DTTM,9,2)  AS OTSD_LEC_RETURN_DTTM_HOUR,  SUBSTR(SCHM.OTSD_LEC_RETURN_DTTM,11,2) AS OTSD_LEC_RETURN_DTTM_MINUTE,  
+		        SCHM.REQ_ORG_NM, SCHM.PLACE,SCHM.TRAINING_CRS, SCHM.EDU_TARGET,                                         
+		        SCHM.LEC_TITLE, SCHM.EDU_NOP_CNT,                                                                       
+		        SCHM.ORG_CHRG_PRSN_PHONENO,                                                                             
+		        SCHM.OFFICIAL_DOC_RECV_YN,                                                                              
+		        FN_GET_CODE_NAME('OFFICIAL_DOC_RECV_YN',SCHM.OFFICIAL_DOC_RECV_YN)  AS OFFICIAL_DOC_RECV_YNNM,          
+		        SCHM.OTSD_LEC_REPT_RELEV_YN,                                                                            
+		        FN_GET_CODE_NAME('LEC_REPT_RELEV_YN',SCHM.OTSD_LEC_REPT_RELEV_YN)  AS OTSD_LEC_REPT_RELEV_YNNM,              
+		        SCHM.OTSD_LEC_REPT_DATA_SEND_YN,                                                                        
+		        FN_GET_CODE_NAME('DATA_SEND_YN',SCHM.OTSD_LEC_REPT_DATA_SEND_YN)  AS OTSD_LEC_REPT_DATA_SEND_YNNM,                   
+		        SCHM.APPROVAL_YN,                                                                                       
+		        FN_GET_CODE_NAME('APPROVAL_YN',SCHM.APPROVAL_YN) AS APPROVAL_YNNM,                                      
+		        SCHM.EXTRN_LEC_RSLT_REPT_SEND_YN,                                                                       
+		        FN_GET_CODE_NAME('DATA_SEND_YN',SCHM.EXTRN_LEC_RSLT_REPT_SEND_YN) AS EXTRN_LEC_RSLT_REPT_SEND_YNNM,     
+		        SCHM.SCH_DESC,SCHM.REG_NO,SCHM.REG_DTTM,SCHM.MOD_NO, SCHM.MOD_DTTM, SCHD.SCH_DETL_SN,     
+		        SCHD.YEAR, SCHD.MONTH,  SCHD.DAY,  CONCAT(SCHD.YEAR,'.',SCHD.MONTH,'.',SCHD.DAY) AS START_DAY,              
+		        SCHD.START_TM, SCHD.END_TM, SUBSTR(SCHD.START_TM,1,2)  AS START_HOUR,                                   
+		        SUBSTR(SCHD.START_TM,3,4)  AS START_MINUTE,  SUBSTR(SCHD.END_TM,1,2)  AS END_HOUR,                      
+		        SUBSTR(SCHD.END_TM,3,4)  AS END_MINUTE,  INFO.USER_NM,ECL_DECRPART(INFO.MOBILE_NO,4) as MOBILE_NO,INFO.EMAIL, LOGI.USER_ID,          			
+		        (SELECT (CASE WHEN COUNT(*) = 1 THEN 'Y' ELSE 'N' END) CNT FROM tb_tch_insd_tch_sch_detl B                                   
+		           WHERE SCHM.SCH_SN = B.SCH_SN) DEL_YN                                                                 
+		 FROM   tb_tch_insd_tch_sch SCHM,                                                                               
+		        tb_tch_insd_tch_sch_detl SCHD,                                                                          
+		        tb_usr_user_info INFO,                                                                                  
+		        tb_usr_login LOGI                                                                                       
+		 WHERE SCHM.USER_NO = SCHD.USER_NO                                                                              
+		   AND SCHM.USER_NO = INFO.USER_NO                                                                              
+		   AND SCHM.USER_NO = LOGI.USER_NO                                                                              
+		   AND SCHM.SCH_SN  = SCHD.SCH_SN                                                                               	
+		   AND SCHD.SCH_SN  = #{searchSchSn}                                         
+		   AND SCHD.SCH_DETL_SN  = #{searchSchDtlSn}                                  
+	</select>
+	
+	<select id="listScheduleMy" parameterType="calendarVO" resultType="calendarVO">
+			 SELECT                                                                                       
+			         CONCAT((CASE WHEN SCHM.SCH_DIV_CD = 'O' THEN '외부' ELSE '내부' END),'-',INFO.USER_NM) AS TITLE,                           
+			         STR_TO_DATE(CONCAT(SCHD.YEAR,SCHD.MONTH,SCHD.DAY),'%Y%m%d') as START_DATE,    
+			         STR_TO_DATE(CONCAT(SCHD.YEAR,SCHD.MONTH,SCHD.DAY),'%Y%m%d')  AS END_DATE,         
+			         CONCAT(SCHM.SCH_SN,'-',SCHD.SCH_DETL_SN) AS SCH_ID ,SCHD.YEAR,SCHD.MONTH, SCHD.DAY,                                      
+			         SUBSTR(SCHD.START_TM,1,2)  AS START_HH_TIME,                                                     
+			         SUBSTR(SCHD.START_TM,3,4)  AS START_MM_TIME,                                                     
+			         SUBSTR(SCHD.END_TM,1,2)  AS END_HH_TIME,                                                           
+			         SUBSTR(SCHD.END_TM,3,4)  AS END_MM_TIME,                                                         
+			         SCHD.START_TM,SCHD.END_TM,  SCHM.SCH_SN,SCHD.SCH_DETL_SN,                                        
+			         INFO.EMAIL                                                                                       
+			  FROM   tb_tch_insd_tch_sch SCHM,                                                                        
+			         tb_tch_insd_tch_sch_detl SCHD,                                                                   
+			         tb_usr_user_info INFO,                                                                           
+			         tb_usr_login LOGI                                                                                
+			  WHERE SCHM.USER_NO = SCHD.USER_NO                                                                       
+			    AND SCHM.USER_NO = INFO.USER_NO                                                                       
+			    AND SCHM.USER_NO = LOGI.USER_NO                                                                       
+			    AND SCHM.SCH_SN  = SCHD.SCH_SN                                                                        
+			    AND SCHD.YEAR    = #{searchYear}                                          
+			    AND SCHD.MONTH   =#{searchMonth}                                          
+			    AND SCHM.USER_NO =#{searchNo}                                              
+	
+	</select>
+	
+	<update id="editSchedule" parameterType="scheduleVO">
+		 UPDATE tb_tch_insd_tch_sch_detl    
+		 SET    YEAR        = #{year},        
+		        MONTH       = #{month},       
+		        DAY         = #{day},         
+		        START_TM    = #{startTm},     
+		        END_TM      = #{endTm}        
+		 WHERE  USER_NO     = #{userNo}       
+		 AND    SCH_SN      = #{schSn}        
+		 AND    SCH_DETL_SN = #{schDetlSn}   
+	</update>
+	
+	<delete id="deleteSchedule" parameterType="scheduleVO">
+	     DELETE FROM tb_tch_insd_tch_sch_detl  
+		   WHERE USER_NO = #{userNo}             
+		   AND SCH_SN    = #{schSn}             
+		<if test = "schDetlSn != 0">
+		AND SCH_DETL_SN = #{schDetlSn} 
+		</if> 
+    </delete>
+	
+	<delete id="deleteAllSchedule" parameterType="scheduleVO">
+		   DELETE FROM tb_tch_insd_tch_sch       
+		   WHERE USER_NO = #{userNo}             
+		   AND SCH_SN    = #{schSn}  														  	
+    </delete>
+    
+	
+</mapper>

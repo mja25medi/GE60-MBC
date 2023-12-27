@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.lecture.assignment.service.impl.AssignmentMapper">
+
+	<select id="selectKey" resultType="assignmentVO">
+		SELECT SQ_LEC_ASMT.nextVal AS ASMT_SN FROM DUAL
+	</select>
+	
+	<select id="list" parameterType="assignmentVO" resultType="assignmentVO">
+		<!-- 과제 리스트 조회  -->
+		SELECT	A.CRS_CRE_CD																												
+		        ,  A.ASMT_SN																													
+		        ,  A.SBJ_CD																													
+		        ,  (SELECT FN_GET_SBJ_NAME(A.SBJ_CD) FROM DUAL) AS SBJ_NM																		
+		        ,  A.ASMT_TITLE																												
+		        ,  A.ASMT_CTS																													
+		        ,  A.ASMT_TYPE_CD																												
+		        ,  (SELECT FN_GET_CODE_NAME('ASMT_TYPE_CD', A.ASMT_TYPE_CD) FROM DUAL) AS ASMT_TYPE_NM											
+		        ,  A.ASMT_SELECT_TYPE_CD        																								
+		        ,  (SELECT FN_GET_CODE_NAME('ASMT_SELECT_TYPE_CD', A.ASMT_SELECT_TYPE_CD) FROM DUAL) AS ASMT_SELECT_TYPE_NM					
+		        ,  SUBSTR(ASMT_START_DTTM,0,4)||'.'||SUBSTR(ASMT_START_DTTM,5,2)||'.'||SUBSTR(ASMT_START_DTTM,7,2)  AS  ASMT_START_DTTM    	
+		        ,  SUBSTR(ASMT_END_DTTM,0,4)||'.'||SUBSTR(ASMT_END_DTTM,5,2)||'.'||SUBSTR(ASMT_END_DTTM,7,2)	AS  ASMT_END_DTTM				
+		        ,  TO_CHAR(TO_DATE(A.ASMT_START_DTTM,'yyyymmddhh24miss'),'YYYY.MM.DD HH24:MI')||' ~ '||TO_CHAR(TO_DATE(A.ASMT_END_DTTM,'yyyymmddhh24miss'),'YYYY.MM.DD HH24:MI') AS ASMT_DURATION		
+		        ,  TO_CHAR(TO_DATE(A.ASMT_START_DTTM,'yyyymmddhh24miss'),'YYYY.MM.DD HH24:MI') AS START_DTTM									
+		        ,  TO_CHAR(TO_DATE(A.ASMT_END_DTTM,'yyyymmddhh24miss'),'YYYY.MM.DD HH24:MI') AS END_DTTM										
+		        ,  A.EXT_SEND_DTTM																												
+		        ,  A.ASMT_LIMIT_CNT																											
+		        ,  A.REG_YN																													
+		        ,  (SELECT FN_GET_CODE_NAME('REG_YN',A.REG_YN) FROM DUAL) AS REG_YN_NM															
+		        ,  A.REG_NO																													
+		        ,  A.REG_DTTM																													
+		        ,  A.MOD_NO																													
+		        ,  A.MOD_DTTM																													
+			     ,  (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) AS MOD_NM																		
+			     ,  (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) AS REG_NM																		
+			     , NVL(( (SELECT SUM(SEND.SCORE) FROM TB_LEC_ASMT_SEND SEND WHERE SEND.ASMT_SN = A.ASMT_SN AND SEND.RATE_YN = 'Y') /				
+			 		    (SELECT COUNT(A.STD_NO) FROM TB_STD_STD A, TB_USR_USER_INFO B, TB_USR_LOGIN C   				
+			  				   WHERE  B.USER_NO = C.USER_NO   				
+			     				AND A.USER_NO = B.USER_NO   				
+			    				AND A.CRS_CRE_CD = #{crsCreCd}    				
+			     				AND C.USER_STS = 'U'   				
+			     				AND A.ENRL_STS IN ('S','C') )  				
+			     ),0) AS AVG_SCORE  					
+		      ,  NVL((SELECT SUM(SEND.SCORE) FROM TB_LEC_ASMT_SEND SEND   
+		      				WHERE SEND.ASMT_SN = A.ASMT_SN AND SEND.STD_NO = #{stdNo} AND SEND.RATE_YN = 'Y'  
+		      		),0)  AS MY_SCORE  
+		     FROM  TB_LEC_ASMT A																												
+		    WHERE  A.CRS_CRE_CD	= #{crsCreCd}	
+		    <if test = "sbjCd != null and sbjCd != ''">
+		    	AND  A.SBJ_CD		= DECODE(#{sbjCd},'',A.SBJ_CD,#{sbjCd})
+			</if> 																								
+		    ORDER  BY ASMT_END_DTTM DESC, ASMT_START_DTTM DESC, A.ASMT_SN 
+	</select>
+	
+	<!-- 과제 정보 조회  -->
+	<select id="select" parameterType="assignmentVO" resultType="assignmentVO">
+		<![CDATA[
+		SELECT  A.CRS_CRE_CD																											
+		        ,  A.ASMT_SN																												
+		        ,  A.SBJ_CD																												
+		        ,  (SELECT FN_GET_SBJ_NAME(A.SBJ_CD) FROM DUAL) AS SBJ_NM																	
+		        ,  A.ASMT_TITLE																											
+		        ,  A.ASMT_CTS																												
+		        ,  A.ASMT_TYPE_CD																											
+		        ,  (SELECT FN_GET_CODE_NAME('ASMT_TYPE_CD', A.ASMT_TYPE_CD) FROM DUAL) AS ASMT_TYPE_NM										
+		        ,  A.ASMT_SELECT_TYPE_CD        																							
+		        ,  (SELECT FN_GET_CODE_NAME('ASMT_SELECT_TYPE_CD', A.ASMT_SELECT_TYPE_CD) FROM DUAL) AS ASMT_SELECT_TYPE_NM				
+		        ,  (SELECT FN_GET_DATE_FORMAT(A.ASMT_START_DTTM,'YYYY.MM.DD') FROM DUAL) AS ASMT_START_DTTM								
+		        ,  (SELECT FN_GET_DATE_FORMAT(A.ASMT_START_DTTM,'HH24') FROM DUAL) AS ASMT_START_HOUR										
+		        ,  (SELECT FN_GET_DATE_FORMAT(A.ASMT_START_DTTM,'MI') FROM DUAL) AS ASMT_START_MIN											
+		        ,  (SELECT FN_GET_DATE_FORMAT(A.ASMT_END_DTTM,'YYYY.MM.DD') FROM DUAL) AS ASMT_END_DTTM									
+		        ,  (SELECT FN_GET_DATE_FORMAT(A.ASMT_END_DTTM,'HH24') FROM DUAL) AS ASMT_END_HOUR											
+		        ,  (SELECT FN_GET_DATE_FORMAT(A.ASMT_END_DTTM,'MI') FROM DUAL) AS ASMT_END_MIN												
+		        ,  (SELECT FN_GET_DATE_FORMAT(A.EXT_SEND_DTTM,'YYYY.MM.DD') FROM DUAL) AS EXT_SEND_DTTM									
+		        ,  (SELECT FN_GET_DATE_FORMAT(A.EXT_SEND_DTTM,'HH24') FROM DUAL) AS EXT_SEND_HOUR											
+		        ,  (SELECT FN_GET_DATE_FORMAT(A.EXT_SEND_DTTM,'MI') FROM DUAL) AS EXT_SEND_MIN												
+		        ,  A.ASMT_LIMIT_CNT																										
+		        ,  A.REG_YN																												
+		        ,  CASE WHEN SYSDATE BETWEEN TO_DATE(A.ASMT_START_DTTM,'yyyymmddhh24miss') AND TO_DATE(A.EXT_SEND_DTTM,'yyyymmddhh24miss') THEN 'Y' ELSE 'N' END AS SEND_CAN_YN		
+		        ,  (SELECT FN_GET_CODE_NAME('REG_YN',A.REG_YN) FROM DUAL) AS REG_YN_NM														
+		        ,  A.REG_NO																												
+		        ,  A.REG_DTTM																												
+		        ,  A.MOD_NO																												
+		        ,  A.MOD_DTTM																												
+			     ,  (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) AS MOD_NM																	
+			     ,  (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) AS REG_NM																	
+		        ,  ( SELECT COUNT(*)																										
+		               FROM TB_LEC_ASMT_SUB																								
+		              WHERE CRS_CRE_CD = A.CRS_CRE_CD																						
+		                AND ASMT_SN 	= A.ASMT_SN ) AS SUB_CNT																			
+		        ,  ( SELECT COUNT(*)																										
+		               FROM TB_LEC_ASMT_SEND																								
+		          	   WHERE CRS_CRE_CD = A.CRS_CRE_CD																						
+		            	 AND ASMT_SN 	= A.ASMT_SN AND NVL(SEND_CNT,0) > 0) AS SEND_CNT													
+			 	, 	(SELECT DECLS_NO 																										
+			     	   FROM TB_CRS_CRE_CRS_DECLS      																						
+			     	  WHERE CRS_CRE_CD = A.CRS_CRE_CD																						
+			     	 	AND DECLS_NO = #{declsNo}) AS DECLS_NO																					
+		        ,  ( SELECT ATCH_CTS																										
+		               FROM TB_LEC_ASMT_SEND																								
+		          	   WHERE CRS_CRE_CD = A.CRS_CRE_CD																						
+		            	 AND ASMT_SN 	= A.ASMT_SN AND STD_NO = #{stdNo}) AS ATCH_CTS														
+		        , CASE WHEN A.EXT_SEND_DTTM < TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+		             THEN 'Y' ELSE 'N' END AS RSLT_YN  
+			  FROM  TB_LEC_ASMT A																											
+		    WHERE  A.CRS_CRE_CD 	= #{crsCreCd}																								
+		      AND  A.ASMT_SN 		= #{asmtSn}
+	      ]]>   
+	</select>
+	
+	<insert id="insert" parameterType="assignmentVO">
+		<!--  과제 정보 등록 -->
+		INSERT  INTO  TB_LEC_ASMT (										
+		        	CRS_CRE_CD												
+		        ,  ASMT_SN													
+		        ,  SBJ_CD													
+		        ,  ASMT_TITLE												
+		        ,  ASMT_CTS												
+		        ,  ASMT_TYPE_CD											
+		        ,  ASMT_SELECT_TYPE_CD										
+		        ,  ASMT_START_DTTM											
+		        ,  ASMT_END_DTTM											
+		        ,  EXT_SEND_DTTM											
+		        ,  ASMT_LIMIT_CNT											
+		        ,  REG_YN													
+		        ,  REG_NO													
+		        ,  REG_DTTM												
+		        ,  MOD_NO													
+		        ,  MOD_DTTM												
+		 	)	VALUES (													
+		           #{crsCreCd}			
+				,  #{asmtSn}
+		        ,  #{sbjCd}													
+		        ,  #{asmtTitle}												
+		        ,  #{asmtCts}												
+		        ,  #{asmtTypeCd}												
+		        ,  #{asmtSelectTypeCd}										
+		        ,  #{asmtStartDttm}											
+		        ,  #{asmtEndDttm}											
+		        ,  #{extSendDttm}
+		        ,  #{asmtLimitCnt}											
+		        ,  #{regYn}													
+		        ,  #{regNo}													
+		        ,  NVL(#{regDttm}, TO_CHAR(SYSDATE,'yyyymmddhh24miss'))		
+		        ,  #{modNo}													
+		        ,  NVL(#{modDttm}, TO_CHAR(SYSDATE,'yyyymmddhh24miss'))		
+		 	)
+	</insert>
+	
+	<update id="update" parameterType="assignmentVO">
+		<!-- 과제 정보 수정 -->
+		UPDATE  TB_LEC_ASMT 												
+		      SET  SBJ_CD 				= #{sbjCd}								
+		        ,  ASMT_TITLE 			= #{asmtTitle}							
+		        ,  ASMT_CTS 			= #{asmtCts}								
+		        ,  ASMT_TYPE_CD 		= #{asmtTypeCd}							
+		        ,  ASMT_SELECT_TYPE_CD = #{asmtSelectTypeCd}      				
+		        ,  ASMT_START_DTTM 	= #{asmtStartDttm}          				
+		        ,  ASMT_END_DTTM 		= #{asmtEndDttm}							
+		        ,  EXT_SEND_DTTM 		= #{extSendDttm}							
+		        ,  ASMT_LIMIT_CNT 		= #{asmtLimitCnt}
+		        ,  REG_YN 				= #{regYn}								
+		        ,  MOD_NO 				= #{modNo}
+		        ,  MOD_DTTM 			= TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')	
+		    WHERE  CRS_CRE_CD 			= #{crsCreCd}								
+		 	   AND  ASMT_SN    			= #{asmtSn}
+	</update>
+	
+	<delete id="delete" parameterType="assignmentVO">
+		<!-- 과제 삭제  -->
+		DELETE  FROM TB_LEC_ASMT			
+		    WHERE  CRS_CRE_CD  = #{crsCreCd}		
+		 	   AND  ASMT_SN = #{asmtSn}
+	</delete>
+	
+	<select id="listStd" parameterType="assignmentVO" resultType="assignmentVO">
+		<![CDATA[
+		SELECT	A.CRS_CRE_CD																									
+		        ,  A.ASMT_SN																										
+		        ,  A.SBJ_CD																										
+		        ,  (SELECT FN_GET_SBJ_NAME(A.SBJ_CD) FROM DUAL) AS SBJ_NM															
+		        ,  A.ASMT_TITLE																									
+		        ,  A.ASMT_CTS																										
+		        ,  A.ASMT_TYPE_CD																									
+		        ,  (SELECT FN_GET_CODE_NAME('ASMT_TYPE_CD', A.ASMT_TYPE_CD) FROM DUAL) AS ASMT_TYPE_NM								
+		        ,  A.ASMT_SELECT_TYPE_CD        																					
+		        ,  (SELECT FN_GET_CODE_NAME('ASMT_SELECT_TYPE_CD', A.ASMT_SELECT_TYPE_CD) FROM DUAL) AS ASMT_SELECT_TYPE_NM		
+		        ,  (SELECT FN_GET_DATE_FORMAT(A.ASMT_START_DTTM,'yyyy.mm.dd hh24:MI') FROM DUAL)  AS  ASMT_START_DTTM  		      		
+		        ,  (SELECT FN_GET_DATE_FORMAT(A.ASMT_END_DTTM,'yyyy.mm.dd hh24:MI') FROM DUAL) AS  ASMT_END_DTTM							
+		        ,  (SELECT FN_GET_DATE_FORMAT(A.ASMT_START_DTTM,'YYYY.MM.DD HH24:MI') FROM DUAL)||'~'||(SELECT FN_GET_DATE_FORMAT(A.ASMT_END_DTTM,'YYYY.MM.DD HH24:MI') FROM DUAL) AS ASMT_DURATION		
+		        ,  A.EXT_SEND_DTTM																									
+		        ,  A.ASMT_LIMIT_CNT																								
+		        ,  A.REG_YN																										
+		        ,  (SELECT FN_GET_CODE_NAME('REG_YN',A.REG_YN) FROM DUAL) AS REG_YN_NM												
+		        ,  NVL(B.SEND_CNT,0) AS SEND_CNT																					
+		        ,  NVL(B.SCORE,0) AS SCORE																							
+		        ,  A.REG_NO																										
+		        ,  A.REG_DTTM																										
+		        ,  A.MOD_NO																										
+		        ,  A.MOD_DTTM																										
+		        , CASE WHEN TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  							
+		             BETWEEN A.ASMT_START_DTTM AND A.EXT_SEND_DTTM  							
+                     THEN 'Y' ELSE 'N' END AS CONN_YN							
+                , CASE WHEN A.EXT_SEND_DTTM < TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+		             THEN 'Y' ELSE 'N' END AS RSLT_YN  
+        	     , NVL(( (SELECT SUM(SEND.SCORE) FROM TB_LEC_ASMT_SEND SEND WHERE SEND.ASMT_SN = A.ASMT_SN AND SEND.RATE_YN = 'Y') /				
+			 		    (SELECT COUNT(A.STD_NO) FROM TB_STD_STD A, TB_USR_USER_INFO B, TB_USR_LOGIN C   				
+			  				   WHERE  B.USER_NO = C.USER_NO   				
+			     				AND A.USER_NO = B.USER_NO   				
+			    				AND A.CRS_CRE_CD = #{crsCreCd}    				
+			     				AND C.USER_STS = 'U'   				
+			     				AND A.ENRL_STS IN ('S','C') )  				
+			     ),0) AS AVG_SCORE  					
+		      ,  NVL((SELECT SUM(SEND.SCORE) FROM TB_LEC_ASMT_SEND SEND   
+		      				WHERE SEND.ASMT_SN = A.ASMT_SN AND SEND.STD_NO = #{stdNo} AND SEND.RATE_YN = 'Y'  
+		      		),0)  AS MY_SCORE  
+		     FROM  TB_LEC_ASMT A, TB_LEC_ASMT_SEND B																				
+		    WHERE  A.CRS_CRE_CD	= #{crsCreCd}																						
+		      AND  A.CRS_CRE_CD 	= B.CRS_CRE_CD (+)																				
+		      AND  A.ASMT_SN 		= B.ASMT_SN(+)																					
+		      AND  A.REG_YN 		= 'Y'																							
+		      AND  B.STD_NO (+) 	= #{stdNo}																						
+		    ORDER  BY ASMT_END_DTTM DESC, ASMT_START_DTTM DESC, A.ASMT_SN 			
+		    ]]>  												
+	</select>
+	
+</mapper>

@@ -1,0 +1,14 @@
+@charset "UTF-8";
+
+/*Main*/
+#section_mid ul.lst li {margin:0 0 8px 0;}
+
+.box_explain_notice {top:0;}
+.box_explain_notice ul {padding:5px 30px 0 112px;}
+
+.box_notice_mid {padding:7px 0 5px 141px;}
+
+/*강의실*/
+#Box_group .section_condition dl dt, #Box_group .section_condition dl dd {margin-bottom:6px;}
+
+

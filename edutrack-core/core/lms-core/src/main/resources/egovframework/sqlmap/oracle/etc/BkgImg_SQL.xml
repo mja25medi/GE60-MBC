@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.etc.bkgimg.service.impl.BkgImgMapper">	
+
+	<select id="selectKey" resultType="Integer">
+		SELECT SQ_ETC_BKGR_IMG.nextVal FROM DUAL
+	</select>
+	
+	<sql id="selectColumnQuery">
+	  		 BKGR_IMG_SN  
+	       , ORG_CD  
+	       , BKGR_IMG_NM  
+	       , BKGR_IMG_ODR  
+	       , MAIN_IMG_FILE_SN  
+	       , USE_YN  
+	       , REG_NO  
+		   , (SELECT FN_GET_USER_NAME(REG_NO) FROM DUAL) AS REG_NM	 
+	       , REG_DTTM  
+	       , MOD_NO  
+		   , (SELECT FN_GET_USER_NAME(MOD_NO) FROM DUAL) AS MOD_NM	 
+	       , MOD_DTTM  
+	</sql>
+	
+	<sql id="selectQuery">
+		  SELECT 
+		  <include refid="selectColumnQuery" />
+		  FROM TB_ETC_BKGR_IMG  
+		  WHERE ORG_CD = #{orgCd}  
+	</sql>
+	
+	<sql id="listQuery">
+		  <include refid="selectQuery"/>
+		  ORDER BY BKGR_IMG_ODR
+	</sql>
+
+	<select id="count" parameterType="bkgImgVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM TB_ETC_BKGR_IMG  
+		WHERE ORG_CD = #{orgCd}  
+	</select>
+		
+	<select id="listPageing" parameterType="bkgImgVO" resultType="bkgImgVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 시스템 템플릿 전테 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	<select id="list" parameterType="bkgImgVO" resultType="bkgImgVO">
+	 	<include refid="listQuery"/>
+	</select>
+
+	<select id="select" parameterType="bkgImgVO" resultType="bkgImgVO">
+		/*
+			 SQL ID : select
+			 설  명 : 배경이미지의 단일 항목 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+           AND BKGR_IMG_SN = #{bkgrImgSn}	
+	</select>
+
+	<insert id="insert" parameterType="bkgImgVO" >
+		  INSERT INTO TB_ETC_BKGR_IMG (  
+		         BKGR_IMG_SN  
+		       , ORG_CD  
+		       , BKGR_IMG_NM  
+		       , BKGR_IMG_ODR  
+		       , MAIN_IMG_FILE_SN  
+		       , USE_YN  
+		       , REG_NO  
+		       , REG_DTTM  
+		       , MOD_NO  
+		       , MOD_DTTM  
+		 ) VALUES (  
+		         #{bkgrImgSn}  
+		       , #{orgCd}  
+		       , #{bkgrImgNm } 
+		       , ( SELECT NVL(MAX(BKGR_IMG_ODR),0)+1  
+		             FROM TB_ETC_BKGR_IMG )  
+		       , #{mainImgFileSn } 
+		       , #{useYn}  
+		       , #{regNo}  
+		       , TO_CHAR(SYSDATE, 'yyyymmddhh24miss')   
+		       , #{modNo}  
+		       , TO_CHAR(SYSDATE, 'yyyymmddhh24miss')   
+		 ) 
+	</insert>
+
+	<update id="update" parameterType="bkgImgVO" >
+		  UPDATE TB_ETC_BKGR_IMG  
+		     SET BKGR_IMG_NM = #{bkgrImgNm}  
+		       , BKGR_IMG_ODR = #{bkgrImgOdr}  
+		       , MAIN_IMG_FILE_SN = #{mainImgFileSn}  
+		       , USE_YN = #{useYn}  
+		       , MOD_NO = #{modNo}  
+		       , MOD_DTTM = TO_CHAR(SYSDATE, 'yyyymmddhh24miss')  
+		   WHERE BKGR_IMG_SN = #{bkgrImgSn}  
+	</update>	
+
+	<update id="updateBatch" parameterType="list">
+
+		<foreach collection="list" item="item" index="index" open="DECLARE BEGIN" close="; END;" separator=";">
+			UPDATE TB_ETC_BKGR_IMG
+			SET								
+		     	BKGR_IMG_NM = #{item.bkgrImgNm}  
+		       , BKGR_IMG_ODR = #{item.bkgrImgOdr}  
+		       , MAIN_IMG_FILE_SN = #{item.mainImgFileSn}  
+		       , USE_YN = #{item.useYn}  
+		       , MOD_NO = #{item.modNo}  
+		       , MOD_DTTM = TO_CHAR(SYSDATE, 'yyyymmddhh24miss') 	
+		    WHERE  BKGR_IMG_SN = #{item.bkgrImgSn}  
+		</foreach>
+	</update>
+
+	<delete id="delete" parameterType="etcBnnrVO" >
+	 	DELETE FROM TB_ETC_BKGR_IMG
+	 	WHERE BKGR_IMG_SN = #{bkgrImgSn}
+	</delete>
+
+	 
+</mapper>

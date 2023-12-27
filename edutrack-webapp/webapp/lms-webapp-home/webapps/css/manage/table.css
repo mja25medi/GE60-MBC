@@ -1,0 +1,181 @@
+@charset "UTF-8";
+
+table.table_list {
+    border-collapse: collapse;
+    font-size: 9pt;
+    font-family:Meiryo,"돋움", Tahoma, sans-serif;
+}
+
+table.table_list th {
+    color: #6F6F6F;
+    height: 30px;
+    background-color: #f3f3f3;
+    font-weight: bold;
+    text-decoration: none;
+    text-align: center;
+    border-top-color: #484E5E;
+    border-top-style: solid;
+    border-top-width: 2px;
+    border-bottom-color: #DADADA;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+}
+
+table.table_list td.right {
+/* 오른쪽 정렬 */
+    text-align: right;
+    margin-right: 0.2em
+}
+
+table.table_list td {
+    color: #6F6F6F;
+    height: 30px;
+    text-decoration: none;
+    text-align: center;
+    border-bottom-color: #DADADA;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    word-break:break-all;
+}
+
+table.table_list td.left, th.left {
+/* 왼쪽 정렬 */
+    text-align: left;
+    margin-left: 0.2em
+}
+
+table.table_list td.right, th.right {
+/* 오른쪽 정렬 */
+    text-align: right;
+    margin-right: 0.2em
+}
+
+table.table_list caption {
+	display:none;
+}
+
+table.table_dtl {
+    border-collapse: collapse;
+    font-size: 9pt;
+    font-family:Meiryo,"돋움", Tahoma, sans-serif;
+    margin: 0 auto;
+    padding: 10px;
+    display: table;
+    border-bottom: #dadada 1px solid;
+}
+
+table.table_dtl th {
+    color: #6F6F6F;
+    height: 30px;
+    background-color: #f3f3f3;
+    font-weight: bold;
+    text-decoration: none;
+    border-bottom-color: #DADADA;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+}
+
+table.table_dtl td {
+    color: #6F6F6F;
+    background-color: #FFFFFF;
+    text-decoration: none;
+    border-bottom-color: #DADADA;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    padding-left: 5px;
+    word-break:break-all;
+    text-align:left;
+}
+
+table.table_dtl th.noborder {
+	border : 0px;
+}
+
+table.table_dtl td.noborder {
+	border : 0px;
+}
+
+table.table_dtl th.top {
+    height: 30px;
+    background-color: #f3f3f3;
+    border-top-color: #484E5E;
+    border-top-style: solid;
+    border-top-width: 2px;
+}
+
+.table_dtl td.top {
+    height: 30px;
+    border-top-color: #484E5E;
+    border-top-style: solid;
+    border-top-width: 2px;
+}
+
+/* 왼쪽 정렬 */
+.table_dtl td.left, th.left {
+    text-align: left;
+    margin-left: 0.2em
+}
+
+/* 오른쪽 정렬 */
+table.table_dtl td.right, th.right {
+    text-align: right;
+    margin-right: 0.2em
+}
+
+table.table_dtl caption {
+	display:none;
+}
+
+table.table_none {
+	border:0px;
+}
+
+table.table_none td{
+    border:0px;
+    padding:0px;
+}
+
+/* ----- daumeditor 컨트롤 ----- */
+#contentTextArea {
+	display: none;
+	width: 0px; height: 0px;
+}
+
+.hiddenTextarea {
+	display: none; width: 0px; height: 0px;
+}
+
+/* Paging */
+.paging	{overflow:hidden; width:100%; margin:20px 0 30px 0; padding:0; font-size:11px; font-family:Arial, Verdana, 'Apple Gothic', sans-serif; line-height:1.3em; text-align:center;}
+.paging a, .paging a:link, .paging a:visited	{color:#777; text-decoration:none;}
+.paging a:hover, .paging a:active	{color:#ed5400; text-decoration:none;}
+.paging ol	{height:22px; padding:0;}
+.paging ol li {display:inline; line-height:1.3em; margin:0 5px; padding:0;}
+.paging ol li.first {margin-left:5px;}
+.paging strong, .paging ol li strong {color:#d5487f; font-weight:bold;}
+.paging ol li.nomargin {margin: 0;}
+.paging ol li.pcurrent {color:#ed5400; font-weight:bold;}
+
+/* -------- selectbox.js 로 생성되는 테이블 셀랙트박스의 스타일 ----- */
+div.div_selectbox {
+	margin: 0px; padding: 0px;
+}
+
+table.table_selectbox, table.table_selectbox_in {
+	padding:0; border-spacing:0px; border:0; border-collapse:collapse; /* cellspacing-0 */
+}
+
+table.table_selectbox td, th {
+	border: 0px;
+	padding: 0px;
+}
+
+table.table_selectbox_in td, th {
+	padding: 1px;
+	border: 0px;
+}
+
+table.table_selectbox_item td, th {
+	padding: 2px 0px 2px;	/* 셀렉트박스 아이템별 간격 */
+	border: 0px;
+}

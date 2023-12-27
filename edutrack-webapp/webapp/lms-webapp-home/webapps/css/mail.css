@@ -1,0 +1,48 @@
+@charset "euc-kr";
+ @import url('reset.css');
+
+/*===============
+	LAYOUT
+=================*/
+#mail_wrap {overflow:hidden; width:668x;background-color:#ffffff;}
+
+/*===============
+	GLOBAL
+=================*/
+
+/* Basic Setting */
+*	{font-family:"µ¸¿ò", Tahoma, sans-serif; font-size:12px; color:#878787; }
+html, body {height: 100% !important; font-size:12px; line-height: 1.3em; margin: 0; padding: 0;}
+img {vertical-align:middle;}
+
+/*Link*/
+a,a:link,a:visited	{color:#878787; text-decoration:none;}
+a:hover,a:active	{color:#878787; text-decoration:none;}
+
+
+/*Margin*/
+.tm5	{margin-top:5px;}
+.tm9	{margin-top:9px;}
+.tm10	{margin-top:10px;}
+.tm15	{margin-top:15px;}
+.tm20	{margin-top:20px;}
+.tm25	{margin-top:25px;}
+.tm30	{margin-top:30px;}
+.tm40	{margin-top:40px;}
+.tm45	{margin-top:45px;}
+.tm50	{margin-top:50px;}
+
+.lm16 {margin-left:16px;}
+.lm20 {margin-left:20px;}
+
+
+
+.box_mail_top {height:19px; background:url(../img/uniedu/home/mail/box_mail_top.gif) no-repeat 0 0;}
+.box_mail_ctr {width:668px; background:url(../img/uniedu/home/mail/box_mail_ctr.gif) repeat-y 0 0;}
+.box_mail_mid {margin:15px 0px 15px 23px;}
+.box_mail_cen {margin:15px 0px 15px 0px;}
+.box_mail_btm {height:50px; background:url(../img/uniedu/home/mail/box_mail_btm.gif) no-repeat 0 100%;}
+
+h1 {position:relative; height:52px; background:url(../img/uniedu/home/mail/mail_head.gif) no-repeat;}
+
+h1 .logo {position:absolute; top:29px; left:44px;}

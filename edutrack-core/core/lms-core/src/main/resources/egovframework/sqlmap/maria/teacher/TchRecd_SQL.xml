@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.teacher.recd.service.impl.TchRecdMapper">
+
+	<sql id="listRecd">
+		SELECT  USER_NO,                        
+		           LEC_RECD_SN,                    
+		           LEC_NM,                         
+		           LEC_ORG_NM,                     
+		           LEC_DT,                         
+		           START_TM,                       
+		           END_TM,                         
+		           EDU_TARGET,                     
+		           EDU_NOP_CNT,                    
+		           LEC_TYPE,                       
+		           REG_NO,                         
+		           REG_DTTM,                       
+		           MOD_NO,                         
+		           MOD_DTTM                        
+		   FROM    tb_tch_lec_recd                 
+		   WHERE   USER_NO     = #{userNo}           
+		<choose>
+		<when test = "lecRecdSn != null and lecRecdSn != '0'">
+			   AND   LEC_RECD_SN = #{lecRecdSn}        
+		</when>
+		<otherwise>
+				ORDER BY LEC_RECD_SN ASC      
+		</otherwise>
+	</choose>	
+	</sql>
+		
+	<select id="selectKey" resultType="Integer">
+		SELECT nextval(SQ_TB_TCH_LEC_RECD_SN)
+	</select>
+
+	<select id="selectRecd" parameterType="tchRecdVO" resultType="tchRecdVO">
+		   <include refid="listRecd" />
+	</select>
+
+	<insert id="insertRecd" parameterType="tchRecdVO">
+		<selectKey keyProperty="lecRecdSn" resultType="string" order="BEFORE"> 
+				 SELECT nextval(SQ_TB_TCH_LEC_RECD_SN) AS LEC_RECD_SN 
+		</selectKey>
+		  INSERT INTO tb_tch_lec_recd (                       
+		     USER_NO, LEC_RECD_SN, LEC_NM,                    
+		     LEC_ORG_NM, LEC_DT, START_TM,                    
+		     END_TM, EDU_TARGET, EDU_NOP_CNT,                 
+		     LEC_TYPE, REG_NO, REG_DTTM,                      
+		     MOD_NO, MOD_DTTM)                                
+		  VALUES ( #{userNo}, #{lecRecdSn}, #{lecNm},                
+		           #{lecOrgNm}, replace(#{lecDt},'.',''), #{startTm},
+		           #{endTm}, #{eduTarget}, #{eduNopCnt},            
+		           #{lecType},                                  
+		           #{regNo},DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'),     
+		           #{modNo},DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'))     
+	</insert>
+	
+	<update id="updateRecd" parameterType="tchRecdVO">
+		 UPDATE tb_tch_lec_recd                                    
+		 SET    LEC_NM      = #{lecNm},                              
+		        LEC_ORG_NM  = #{lecOrgNm},                           
+		        LEC_DT      =  replace(#{lecDt},'.',''),             
+		        START_TM    = #{startTm},                            
+		        END_TM      = #{endTm},                              
+		        EDU_TARGET  = #{eduTarget},                          
+		        EDU_NOP_CNT = #{eduNopCnt},                          
+		        LEC_TYPE    = #{lecType},                            
+		        MOD_NO      = #{modNo},                  	        
+		        MOD_DTTM    = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')  
+		 WHERE  USER_NO     = #{userNo}                  	        
+		   AND  LEC_RECD_SN = #{lecRecdSn}                           
+	</update>
+
+	
+	<delete id="deleteRecd" parameterType="tchRecdVO">
+		   DELETE FROM tb_tch_lec_recd   						
+		         WHERE USER_NO     = #{userNo}                   
+		           AND LEC_RECD_SN = #{lecRecdSn}              
+	</delete>
+	
+</mapper>

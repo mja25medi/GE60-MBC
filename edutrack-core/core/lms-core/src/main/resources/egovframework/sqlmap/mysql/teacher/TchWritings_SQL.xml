@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.teacher.writings.service.impl.TchWritingsMapper">
+	<select id="selectKey" resultType="Integer">
+		SELECT nextval('SQ_TCH_LEC_WRITINGS')
+	</select>
+
+	<sql id="selectColumnQuery">
+			  	 LEC_WRITINGS_SN 			
+		       , USER_NO 					
+		       , PBLS_DT 					
+		       , BOOK_NM 					
+		       , CTS 						
+		       , PBLS_CNT 					
+		       , PBLSR_PHONENO 			
+		       , PBLS_DEPT_NM 				
+		       , REG_NO 					
+		       , REG_DTTM 					
+		       , MOD_NO 					
+		       , MOD_DTTM 					
+	</sql>
+		
+	<sql id="selectQuery">
+			SELECT 
+			<include refid="selectColumnQuery" />		
+		    FROM tb_tch_lec_writings		
+		   WHERE USER_NO = #{userNo}		
+	</sql>
+
+	<select id="count" parameterType="tchWritingsVO" resultType="Integer">
+		SELECT
+			COUNT(*)
+	    FROM tb_tch_lec_writings		
+		WHERE USER_NO = #{userNo}	
+		AND LEC_WRITINGS_SN = #{lecWritingsSn}			
+	</select>
+		
+	<select id="select" parameterType="tchWritingsVO" resultType="tchWritingsVO">
+		<include refid="selectQuery" />
+		     AND LEC_WRITINGS_SN = #{lecWritingsSn}	
+	</select>
+		
+	<select id="listPageing"  parameterType="tchWritingsVO" resultType="tchWritingsVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+			<include refid="selectQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		ORDER BY LEC_WRITINGS_SN 
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="list" parameterType="tchWritingsVO" resultType="tchWritingsVO">
+		<include refid="selectQuery" />
+		   ORDER BY LEC_WRITINGS_SN 				
+	</select>
+	
+	<insert id="insert" parameterType="tchWritingsVO">
+
+		  INSERT INTO tb_tch_lec_writings (			
+		         LEC_WRITINGS_SN 						
+		       , USER_NO 								
+		       , PBLS_DT 								
+		       , BOOK_NM 								
+		       , CTS 									
+		       , PBLS_CNT 								
+		       , PBLSR_PHONENO 						
+		       , PBLS_DEPT_NM 							
+		       , REG_NO 								
+		       , REG_DTTM 								
+		       , MOD_NO 								
+		       , MOD_DTTM 								
+		 ) VALUES (									
+		         #{lecWritingsSn} 						
+		       , #{userNo}								
+		       , replace(#{pblsDt},'.','') 				
+		       , #{bookNm} 								
+		       , #{cts} 									
+		       , #{pblsCnt} 								
+		       , #{pblsrPhoneno} 						
+		       , #{pblsDeptNm} 							
+		       , #{regNo} 								
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 	
+		       , #{modNo} 								
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 	
+		 )												
+	</insert>
+	
+	<update id="update" parameterType="tchWritingsVO">
+		 UPDATE tb_tch_lec_writings                                        
+		 SET    PBLS_DT         = replace(#{pblsDt},'.',''),                 
+		        BOOK_NM         = #{bookNm},                                 
+		        CTS             = #{cts},                                    
+		        PBLS_CNT        = #{pblsCnt},                                
+		        PBLSR_PHONENO   = #{pblsrPhoneno},                           
+		        PBLS_DEPT_NM    = #{pblsDeptNm},                             
+		        MOD_NO          = #{modNo},                  	            
+		        MOD_DTTM        = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')      
+		 WHERE  LEC_WRITINGS_SN = #{lecWritingsSn}                           
+		   AND  USER_NO         = #{userNo}                                  
+	</update>
+		
+	<delete id="delete" parameterType="tchWritingsVO">
+		   DELETE FROM tb_tch_lec_writings   						
+		         WHERE USER_NO     = #{userNo}                   
+		           AND LEC_WRITINGS_SN = #{lecWritingsSn}                   
+	</delete>
+	
+</mapper>

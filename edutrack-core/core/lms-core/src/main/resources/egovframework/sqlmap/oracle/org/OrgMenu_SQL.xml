@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.org.menu.service.impl.OrgMenuMapper">	
+	
+	<sql id="selectQuery">
+		SELECT A.ORG_CD as orgCd
+		     , A.MENU_CD as menuCd
+		     , A.PAR_MENU_CD as parMenuCd
+		     , A.MENU_TYPE as menuType
+		     , A.MENU_NM as menuNm
+		     , A.MENU_LVL as menuLvl
+		     , A.MENU_ODR as menuOdr
+		     , A.MENU_URL as menuUrl
+		     , A.MENU_PATH as menuPath
+		     , A.MENU_DESC as menuDesc
+		     , A.USE_YN as useYn
+		     , A.TOP_MENU_YN as topMenuYn
+		     , A.TOP_MENU_IMG as otpMenuImg
+		     , A.LEFT_MENU_IMG as leftMenuImg
+		     , A.LEFT_MENU_TITLE as leftMenuTitle
+		     , A.MENU_TITLE as menuTitle
+		     , A.OPTN_CTGR_CD_1 as optnCtgrCd1
+		     , A.OPTN_CD_1 as optnCd1
+		     , A.OPTN_CTGR_CD_2 as optnCtgrCd2
+		     , A.OPTN_CD_2 as optnCd2
+		     , A.OPTN_CTGR_CD_3 as optnCtgrCd3
+		     , A.OPTN_CD_3 as optnCd3
+		     , A.OPTN_CTGR_CD_4 as optnCtgrCd4
+		     , A.OPTN_CD_4 as optnCd4
+		     , A.OPTN_CTGR_CD_5 as optnCtgrCd5
+		     , A.OPTN_CD_5 as optnCd5
+		     , A.SSL_YN as sslYn
+		     , A.DIV_LINE_USE_YN as divLineUseYn
+		     , A.CHRG_PRSN_INFO_1 as chrgPrsnInfo1
+		     , A.CHRG_PRSN_INFO_2 as chrgPrsnInfo2
+		     , A.CHRG_PRSN_INFO_3 as chrgPrsnInfo3
+		     , A.DFLT_YN as dfltYn
+		     , A.MENU_VIEW_YN as menuViewYn
+		     , A.REG_NO as regNo
+		     , A.REG_DTTM as regDttm
+		     , A.MOD_NO as modNo
+		     , A.MOD_DTTM as modDttm
+		     , ( SELECT COUNT(*)
+		           FROM TB_ORG_MENU
+		          WHERE ORG_CD = A.ORG_CD
+		            AND MENU_TYPE = A.MENU_TYPE
+		            AND PAR_MENU_CD = A.MENU_CD ) AS subCnt
+		     , NVL( (SELECT VIEW_AUTH
+		               FROM TB_ORG_AUTH_GRP_MENU
+		              WHERE ORG_CD = A.ORG_CD
+		                AND MENU_TYPE = A.MENU_TYPE
+		                AND AUTH_GRP_CD = #{authGrpCd}
+		                AND MENU_CD = A.MENU_CD ),'N') AS viewAuth
+		     , NVL( (SELECT CRE_AUTH
+		               FROM TB_ORG_AUTH_GRP_MENU
+		              WHERE ORG_CD = A.ORG_CD
+		                AND MENU_TYPE = A.MENU_TYPE
+		                AND AUTH_GRP_CD = #{authGrpCd}
+		                AND MENU_CD = A.MENU_CD ),'N') AS creAuth
+		  FROM TB_ORG_MENU A
+		 WHERE A.ORG_CD = #{orgCd}	
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		<if test = "menuType != null and menuType != ''">
+		   AND A.MENU_TYPE = #{menuType}
+		</if>
+		<if test = "parMenuCd != null and parMenuCd != ''">
+		   AND A.PAR_MENU_CD = #{parMenuCd}
+		</if>
+		 ORDER BY MENU_LVL, MENU_ODR		
+	</sql>		
+
+	<select id="list" parameterType="orgMenuVO" resultType="orgMenuVO">
+		/*
+			 SQL ID : list
+			 설  명 : 기관 메뉴의 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	</select>
+	
+	<select id="select" parameterType="orgMenuVO" resultType="orgMenuVO">
+		/*
+			 SQL ID : select
+			 설  명 : 기관 메뉴의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+		<if test = "menuType != null and menuType != ''">
+		   AND A.MENU_TYPE = #{menuType}
+		</if>
+		   AND A.MENU_CD = #{menuCd}
+	</select>
+	
+	<select id="selectAuthorizeByMenu" parameterType="orgMenuVO" resultType="orgMenuVO">
+		/*
+			 SQL ID : selectAuthorizeByMenu
+			 설  명 : 메뉴 코드 및 사용자 권한으로 메뉴의 권한
+	 	*/
+		SELECT MENU_CD as menuCd
+		     , MAX(VIEW_AUTH) AS viewAuth
+		     , MAX(CRE_AUTH) AS creAuth
+		  FROM TB_ORG_AUTH_GRP_MENU
+		 WHERE ORG_CD = #{orgCd}
+		   AND MENU_TYPE = NVL(#{menuType}, MENU_TYPE)
+		   AND MENU_CD = #{menuCd}
+		   AND #{authGrpCd} like '%'||AUTH_GRP_CD||'%'
+		 GROUP BY MENU_CD	 	
+	</select>	
+	
+	<select id="listAuthGrpMenu" parameterType="orgMenuVO" resultType="orgMenuVO">
+		/*
+			 SQL ID : listAuthGrpMenu
+			 설  명 : 입력된 권한 그룹의 전체 메뉴 목록
+	 	*/
+	 	SELECT DISTINCT A.ORG_CD as orgCd
+		     , A.MENU_CD as menuCd
+		     , A.PAR_MENU_CD as parMenuCd
+		     , A.MENU_TYPE as menuType
+		     , A.MENU_NM as menuNm
+		     , A.MENU_LVL as menuLvl
+		     , A.MENU_ODR as menuOdr
+		     , A.MENU_URL as menuUrl
+		     , A.MENU_PATH as menuPath
+		     , A.MENU_DESC as menuDesc
+		     , A.USE_YN as useYn
+		     , A.TOP_MENU_YN as topMenuYn
+		     , A.TOP_MENU_IMG as topMenuImg
+		     , A.LEFT_MENU_IMG as leftMenuImg
+		     , A.LEFT_MENU_TITLE as leftMenuTitle
+		     , A.MENU_TITLE as menuTitle
+		     , A.OPTN_CTGR_CD_1 as optnCtgrCd1
+		     , A.OPTN_CD_1 as optnCd1
+		     , A.OPTN_CTGR_CD_2 as optnCtgrCd2
+		     , A.OPTN_CD_2 as optnCd2
+		     , A.OPTN_CTGR_CD_3 as optnCtgrCd3
+		     , A.OPTN_CD_3 as optnCd3
+		     , A.OPTN_CTGR_CD_4 as optnCtgrCd4
+		     , A.OPTN_CD_4 as optnCd4
+		     , A.OPTN_CTGR_CD_5 as optnCtgrCd5
+		     , A.OPTN_CD_5 as optnCd5
+		     , A.SSL_YN as sslYn
+		     , A.DIV_LINE_USE_YN as divLineUseYn
+		     , A.DFLT_YN as dfltYn
+		     , A.CHRG_PRSN_INFO_1 as chrgPrsnInfo1
+		     , A.CHRG_PRSN_INFO_2 as chrgPrsnInfo2
+		     , A.CHRG_PRSN_INFO_3 as chrgPrsnInfo3
+		     , A.MENU_VIEW_YN as menuViewYn
+		     , A.REG_NO as regNo
+		     , A.REG_DTTM as regDttm
+		     , A.MOD_NO as modNo
+		     , A.MOD_DTTM as modDttm
+		     , ( SELECT COUNT(*)
+		           FROM TB_ORG_MENU
+		          WHERE ORG_CD = A.ORG_CD
+		            AND MENU_TYPE = A.MENU_TYPE
+		            AND PAR_MENU_CD = A.MENU_CD ) as subCnt
+		  FROM TB_ORG_MENU A, TB_ORG_AUTH_GRP_MENU B
+		 WHERE A.ORG_CD = #{orgCd}
+		   AND A.MENU_TYPE = #{menuType}
+		   AND A.USE_YN = 'Y'
+		   AND A.ORG_CD = B.ORG_CD
+		   AND A.MENU_TYPE = B.MENU_TYPE
+		   AND A.MENU_CD = B.MENU_CD
+		<if test = "parMenuCd != null and parMenuCd != ''">
+		    AND A.PAR_MENU_CD = #{parMenuCd}
+		</if>
+		   AND #{authGrpCd} LIKE '%'||B.AUTH_GRP_CD||'%'
+		 ORDER BY MENU_LVL, MENU_ODR
+	</select>
+	
+	<select id="selectKey" resultType="String">
+		/*
+			 SQL ID : selectKey
+			 설  명 : 메뉴 코드의 키 생성
+	 	*/
+	 	SELECT 'MC'||LPAD(SQ_ORG_MENU.nextVal, 8, '0') FROM DUAL
+	</select>	
+	
+	<insert id="insert" parameterType="orgMenuVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 기관 메뉴의 정보 등록
+	 	*/
+		INSERT INTO TB_ORG_MENU (
+		       ORG_CD
+		     , MENU_CD
+		     , PAR_MENU_CD
+		     , MENU_TYPE
+		     , MENU_NM
+		     , MENU_LVL
+		     , MENU_ODR
+		     , MENU_URL
+		     , MENU_PATH
+		     , MENU_DESC
+		     , USE_YN
+		     , TOP_MENU_YN
+		     , TOP_MENU_IMG
+		     , LEFT_MENU_IMG
+		     , LEFT_MENU_TITLE
+		     , MENU_TITLE
+		     , OPTN_CTGR_CD_1
+		     , OPTN_CD_1
+		     , OPTN_CTGR_CD_2
+		     , OPTN_CD_2
+		     , OPTN_CTGR_CD_3
+		     , OPTN_CD_3
+		     , OPTN_CTGR_CD_4
+		     , OPTN_CD_4
+		     , OPTN_CTGR_CD_5
+		     , OPTN_CD_5
+		     , SSL_YN
+		     , DIV_LINE_USE_YN
+		     , DFLT_YN
+		     , CHRG_PRSN_INFO_1
+		     , CHRG_PRSN_INFO_2
+		     , CHRG_PRSN_INFO_3
+		     , MENU_VIEW_YN
+		     , REG_NO
+		     , REG_DTTM
+		     , MOD_NO
+		     , MOD_DTTM
+		) VALUES (     
+		       #{orgCd}
+		     , #{menuCd}
+		     , #{parMenuCd}
+		     , #{menuType}
+		     , #{menuNm}
+		     , #{menuLvl}
+		     , ( SELECT MAX(NVL(MENU_ODR,0)) + 1
+		           FROM TB_ORG_MENU
+		          WHERE ORG_CD = #{orgCd}
+		            AND MENU_TYPE = #{menuType}
+		            AND NVL(PAR_MENU_CD,'1') = NVL(#{parMenuCd},'1') )
+		     , #{menuUrl}
+		     , #{menuPath}
+		     , #{menuDesc}
+		     , #{useYn}
+		     , #{topMenuYn}
+		     , #{topMenuImg}
+		     , #{leftMenuImg}
+		     , #{leftMenuTitle}
+		     , #{menuTitle}
+		     , #{optnCtgrCd1}
+		     , #{optnCd1}
+		     , #{optnCtgrCd2}
+		     , #{optnCd2}
+		     , #{optnCtgrCd3}
+		     , #{optnCd3}
+		     , #{optnCtgrCd4}
+		     , #{optnCd4}
+		     , #{optnCtgrCd5}
+		     , #{optnCd5}
+		     , #{sslYn}
+		     , #{divLineUseYn}
+		     , 'N' 
+		     , #{chrgPrsnInfo1}
+		     , #{chrgPrsnInfo2}
+		     , #{chrgPrsnInfo3}
+		     , #{menuViewYn}
+		     , #{regNo}
+		     , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		     , #{modNo}
+		     , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		)
+	</insert>
+	
+	<update id="update" parameterType="orgMenuVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 기관 메뉴의 정보 수정
+	 	*/
+		UPDATE TB_ORG_MENU
+		   SET PAR_MENU_CD = #{parMenuCd}
+		     , MENU_NM = #{menuNm}
+		     , MENU_LVL = #{menuLvl}
+		     , MENU_ODR = #{menuOdr}
+		     , MENU_URL = #{menuUrl}
+		     , MENU_PATH = #{menuPath}
+		     , MENU_DESC = #{menuDesc}
+		     , USE_YN = #{useYn}
+		     , TOP_MENU_YN = #{topMenuYn}
+		     , TOP_MENU_IMG = #{topMenuImg}
+		     , LEFT_MENU_IMG = #{leftMenuImg}
+		     , LEFT_MENU_TITLE = #{leftMenuTitle}
+		     , MENU_TITLE = #{menuTitle}
+		     , OPTN_CTGR_CD_1 = #{optnCtgrCd1}
+		     , OPTN_CD_1 = #{optnCd1}
+		     , OPTN_CTGR_CD_2 = #{optnCtgrCd2}
+		     , OPTN_CD_2 = #{optnCd2}
+		     , OPTN_CTGR_CD_3 = #{optnCtgrCd3}
+		     , OPTN_CD_3 = #{optnCd3}
+		     , OPTN_CTGR_CD_4 = #{optnCtgrCd4}
+		     , OPTN_CD_4 = #{optnCd4}
+		     , OPTN_CTGR_CD_5 = #{optnCtgrCd5}
+		     , OPTN_CD_5 = #{optnCd5}
+		     , SSL_YN = #{sslYn}
+		     , DIV_LINE_USE_YN = #{divLineUseYn}
+		     , CHRG_PRSN_INFO_1 = #{chrgPrsnInfo1}
+		     , CHRG_PRSN_INFO_2 = #{chrgPrsnInfo2}
+		     , CHRG_PRSN_INFO_3 = #{chrgPrsnInfo3}
+		     , MENU_VIEW_YN = #{menuViewYn}
+		     , MOD_NO = #{modNo}
+		     , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		 WHERE ORG_CD = #{orgCd}
+		   AND MENU_TYPE = #{menuType}
+		   AND MENU_CD = #{menuCd}
+	</update>	
+
+	<delete id="delete" parameterType="orgMenuVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 기관 메뉴의 정보 삭제
+	 	*/
+		DELETE FROM TB_ORG_MENU
+		 WHERE ORG_CD = #{orgCd}
+		   AND MENU_TYPE = #{menuType}
+		   AND MENU_CD = #{menuCd}
+	</delete>
+
+	<insert id="insertInit" parameterType="orgMenuVO" >
+		/*
+			 SQL ID : insertInit
+			 설  명 : 기관 메뉴의 초기화 등록
+	 	*/
+		INSERT INTO TB_ORG_MENU (
+		       ORG_CD
+		     , MENU_CD
+		     , PAR_MENU_CD
+		     , MENU_TYPE
+		     , MENU_NM
+		     , MENU_LVL
+		     , MENU_ODR
+		     , MENU_URL
+		     , MENU_PATH
+		     , MENU_DESC
+		     , USE_YN
+		     , TOP_MENU_YN
+		     , TOP_MENU_IMG
+		     , LEFT_MENU_IMG
+		     , LEFT_MENU_TITLE
+		     , MENU_TITLE
+		     , OPTN_CTGR_CD_1
+		     , OPTN_CD_1
+		     , OPTN_CTGR_CD_2
+		     , OPTN_CD_2
+		     , OPTN_CTGR_CD_3
+		     , OPTN_CD_3
+		     , OPTN_CTGR_CD_4
+		     , OPTN_CD_4
+		     , OPTN_CTGR_CD_5
+		     , OPTN_CD_5
+		     , SSL_YN
+		     , DIV_LINE_USE_YN
+		     , DFLT_YN
+		     , MENU_VIEW_YN
+		     , REG_NO
+		     , REG_DTTM
+		     , MOD_NO
+		     , MOD_DTTM
+		)
+		SELECT #{orgCd}
+		     , MENU_CD
+		     , PAR_MENU_CD
+		     , MENU_TYPE
+		     , MENU_NM
+		     , MENU_LVL
+		     , MENU_ODR
+		     , MENU_URL
+		     , MENU_PATH
+		     , MENU_DESC
+		     , USE_YN
+		     , TOP_MENU_YN
+		     , TOP_MENU_IMG
+		     , LEFT_MENU_IMG
+		     , LEFT_MENU_TITLE
+		     , MENU_TITLE
+		     , OPTN_CTGR_CD_1
+		     , OPTN_CD_1
+		     , OPTN_CTGR_CD_2
+		     , OPTN_CD_2
+		     , OPTN_CTGR_CD_3
+		     , OPTN_CD_3
+		     , OPTN_CTGR_CD_4
+		     , OPTN_CD_4
+		     , OPTN_CTGR_CD_5
+		     , OPTN_CD_5
+		     , SSL_YN
+		     , DIV_LINE_USE_YN
+		     , 'Y' 
+		     , 'Y'
+		     , #{regNo}
+		     , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		     , #{modNo}
+		     , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		  FROM TB_SYS_MENU
+		 WHERE MENU_TYPE = #{menuType}
+		 ORDER BY MENU_LVL ASC
+	</insert>
+	
+	<delete id="deleteByMenuLvl" parameterType="orgMenuVO" >
+		/*
+			 SQL ID : deleteByMenuLvl
+			 설  명 : 기관 메뉴의 초기화 삭제 (레벨별로 삭제)
+	 	*/
+	 	DELETE FROM TB_ORG_MENU
+		 WHERE ORG_CD = #{orgCd}
+		   AND MENU_TYPE = #{menuType}
+		   AND MENU_LVL = #{menuLvl}
+	</delete>
+</mapper>

@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.lecture.bookmark.service.impl.BookmarkMapper">
+	
+	<select id="listBookmark" parameterType="bookmarkVO" resultType="bookmarkVO">
+		SELECT  A.SBJ_CD																								
+		        ,  A.UNIT_CD																								
+		        ,  A.PAR_UNIT_CD																							
+		        ,  A.UNIT_NM																								
+		        ,  A.UNIT_LVL																								
+		        ,  A.UNIT_ODR																								
+		        ,  A.UNIT_TYPE																								
+		        ,  A.UNIT_FILE_PATH																						
+		        ,  A.ATCH_FILE_PATH																						
+		        ,  A.QUIZ_CNT																								
+		        ,  A.QUIZ_PASS_SCORE  																						
+		        ,  CONCAT(CASE WHEN A.QUIZ_CNT > 0 THEN A.UNIT_CD ELSE '' END, '/', IFNULL(B.QUIZ_PASS_YN,'')) AS QUIZ_UNIT_CD 		
+		        ,  A.PRGR_CHK_TYPE																							
+		        ,  A.CRIT_TM																								
+		        ,  A.TOTAL_PAGE																							
+		        ,  IFNULL(FN_GET_NULL(A.PRGR_CHK_YN),'N') AS PRGR_CHK_YN 					
+		        ,  A.ATCH_FILE_PATH																						
+		        ,  A.OLC_YN																								
+		        ,  ( SELECT COUNT(*)																						
+		           	FROM tb_crs_sbj_cnts																				
+		              WHERE PAR_UNIT_CD = A.UNIT_CD AND SBJ_CD = A.SBJ_CD) AS SUB_CNT															
+		        ,  IFNULL(FN_GET_NULL(CASE WHEN A.PAR_UNIT_CD IS NULL OR A.PAR_UNIT_CD = '' THEN 
+			        B.STUDY_YN
+			        ELSE (SELECT TLBD.STUDY_YN FROM tb_lec_bookmark_detail TLBD WHERE STD_NO = #{stdNo} AND SBJ_CD = A.SBJ_CD AND UNIT_CD = A.UNIT_CD)
+			        END),'N') AS STUDY_YN																					
+		        ,  IFNULL(FN_GET_NULL(B.STUDY_DTTM),'') AS STUDY_DTTM																		
+		        ,  IFNULL(FN_GET_NULL(B.QUIZ_PASS_YN),'') AS QUIZ_PASS_YN																	
+		        ,  IFNULL(FN_GET_NULL(B.PASS_SCORE), 0) AS PASS_SCORE																		
+		        ,  IFNULL(FN_GET_NULL(B.MAX_SCORE), 0) AS MAX_SCORE																		
+		        ,  IFNULL(FN_GET_NULL(B.MIN_SCORE), 0) AS MIN_SCORE																		
+		        ,  IFNULL(FN_GET_NULL(B.CONN_TOT_TM), 0) AS CONN_TOT_TM																	
+		        ,  IFNULL(FN_GET_NULL(B.CONN_TM), 0) AS CONN_TM																			
+		        ,  IFNULL(FN_GET_NULL(B.FINAL_CONN_PAGE),'') AS FINAL_CONN_PAGE															
+		        ,  IFNULL(FN_GET_NULL(B.ACCM_CONN_PAGE),'') AS ACCM_CONN_PAGE															 	
+		        ,  IFNULL(FN_GET_NULL(B.CONN_PAGE_CNT),0) AS CONN_PAGE_CNT																	
+		        ,  IFNULL(FN_GET_NULL(B.TOT_PAGE_CNT),0) AS TOT_PAGE_CNT																	
+		        ,  IFNULL(FN_GET_NULL(B.PRGR_RATIO),0) AS PRGR_RATIO																		
+		        ,  IFNULL(FN_GET_NULL(B.CONN_CNT),0) AS CONN_CNT																			
+		        ,  IFNULL(FN_GET_NULL(B.STUDY_DIV),'PER') AS STUDY_DIV																		
+		        ,  IFNULL(FN_GET_NULL(B.SEEK_TIME),'0') AS SEEK_TIME																		
+		        ,  IFNULL(FN_GET_NULL(B.MOBILE_TM),'0') AS MOBILE_TM		
+		        ,  IFNULL(FN_GET_NULL(B.STUDY_BLOCK_INFO),'') AS STUDY_BLOCK_INFO
+		        ,  B.STD_NO
+		        ,  A.ZOOM_URL
+		        ,  A.SCENE_ID
+		        ,  A.CNTS_TYPE_CD  
+		        ,  A.CLASS_START_TIME
+				,  (SELECT FN_GET_DATE_FORMAT(A.CLASS_START_TIME,'%H')) AS CLASS_START_HOUR
+				,  (SELECT FN_GET_DATE_FORMAT(A.CLASS_START_TIME,'%i')) AS CLASS_START_MIN
+				,  A.CLASS_END_TIME
+				,  (SELECT FN_GET_DATE_FORMAT(A.CLASS_END_TIME,'%H')) AS CLASS_END_HOUR
+				,  (SELECT FN_GET_DATE_FORMAT(A.CLASS_END_TIME,'%i')) AS CLASS_END_MIN     
+				,  FN_GET_USER_NAME(A.TEACHER_NO) AS TEACHER_NM
+				,  A.ASMT_SN
+		     FROM  tb_crs_cre_sbj_cnts A
+		     LEFT OUTER JOIN
+		     	tb_lec_bookmark B																	
+			 ON 
+			 	(
+			 		A.SBJ_CD 	= B.SBJ_CD																				
+		       AND  A.UNIT_CD	= B.UNIT_CD	
+		       AND  B.STD_NO	= #{stdNo}	
+			 	)
+		    WHERE  																		
+		      	 A.SBJ_CD 	= #{sbjCd}
+		    AND  A.CRS_CRE_CD = #{crsCreCd}																					
+		    ORDER  BY A.UNIT_LVL, A.UNIT_ODR
+	</select>
+	
+	<select id="listCntsForClass" parameterType="bookmarkVO" resultType="bookmarkVO">
+		SELECT A.SBJ_CD 														
+		        , A.UNIT_CD 														
+		        , A.PAR_UNIT_CD 													
+		        , A.UNIT_NM 														
+		        , A.UNIT_LVL 														
+		        , A.UNIT_ODR 														
+		        , A.UNIT_TYPE 														
+		        , A.UNIT_FILE_PATH 												
+		        , A.ATCH_FILE_PATH 												
+		        , A.QUIZ_CNT 														
+		        , A.QUIZ_PASS_SCORE   												
+		        , A.PRGR_CHK_TYPE 													
+		        , A.CRIT_TM 														
+		        , A.TOTAL_PAGE 													
+		        , A.PRGR_CHK_YN 													
+		        , A.ATCH_FILE_PATH 												
+		        , A.OLC_YN															
+		        , ( SELECT COUNT(*) 												
+		              FROM tb_crs_sbj_cnts 										
+		             WHERE PAR_UNIT_CD = A.UNIT_CD AND SBJ_CD = A.SBJ_CD ) AS SUB_CNT 					
+		        , ( SELECT COUNT(*) 												
+		              FROM tb_std_std 												
+		             WHERE CRS_CRE_CD = #{crsCreCd} 									
+		               AND ENRL_STS IN ('S','C','F')) AS STD_CNT 					
+		        , ( SELECT COUNT(*) 												
+		              FROM tb_lec_bookmark 										
+		             WHERE STD_NO IN ( SELECT STD_NO  								
+		                                 FROM tb_std_std 							
+		                                WHERE CRS_CRE_CD = #{crsCreCd} 				
+		                                  AND ENRL_STS IN ('S','C','F') ) 			
+		               AND SBJ_CD = A.SBJ_CD 										
+		               AND UNIT_CD = A.UNIT_CD										
+		               AND STUDY_DIV = 'CLS') AS interface_STUDY_CNT 					
+		        , IFNULL(( SELECT SUM(PRGR_RATIO)  									
+		                  FROM tb_lec_bookmark 									
+		                 WHERE STD_NO IN ( SELECT STD_NO  							
+		                                     FROM tb_std_std 						
+		                                    WHERE CRS_CRE_CD = #{crsCreCd} 			
+		                                      AND ENRL_STS IN ('S','C','F') ) 		
+		                   AND SBJ_CD = A.SBJ_CD  									
+		                   AND UNIT_CD = A.UNIT_CD ),0) AS PRGR_RATIO				
+		     FROM tb_crs_sbj_cnts A 												
+		    WHERE A.SBJ_CD = #{sbjCd} 												
+		    ORDER BY A.UNIT_LVL, A.UNIT_ODR
+	</select>
+	
+	<select id="selectBookmarkStd" parameterType="bookmarkVO" resultType="bookmarkVO">
+	<!-- 학습자의 통합 학습 결과를 가져온다. -->
+		SELECT  (SELECT FN_GET_CRS_STD_PRGR(#{stdNo}, #{crsCreCd})) AS PRGR_RATIO  			
+		     	 ,  ROUND((SELECT FN_GET_BOOKMARK_TIME(#{stdNo}, #{crsCreCd}))/60) AS CONN_TM	  	
+		     	 ,  (SELECT FN_GET_BOOKMARK_CNT(#{stdNo}, #{crsCreCd})) AS CONN_CNT		  		
+		  	  FROM 	DUAL
+	</select>
+	
+	<select id="selectBookmark" parameterType="bookmarkVO" resultType="bookmarkVO">
+	<!-- 학습자의 단위 학습 결과를 가져온다. -->
+		SELECT  STD_NO													
+		   	 ,	SBJ_CD													
+		   	 ,	UNIT_CD													
+		   	 ,	STUDY_YN
+		   	 ,	ATTEND_STS_CD
+		   	 ,	STUDY_DTTM												
+		   	 ,	QUIZ_PASS_YN											
+		   	 ,	PASS_SCORE												
+		   	 ,	MAX_SCORE												
+		   	 ,	MIN_SCORE												
+		   	 ,	CONN_TOT_TM												
+		   	 ,	CONN_TM													
+		   	 ,	FINAL_CONN_PAGE											
+		   	 ,	ACCM_CONN_PAGE											
+		   	 ,	CONN_PAGE_CNT											
+		   	 ,	TOT_PAGE_CNT											
+		   	 ,	PRGR_RATIO												
+		   	 ,	CONN_CNT												
+		   	 ,	STUDY_DIV												
+		   	 ,	SEEK_TIME												
+		   	 ,	MOBILE_TM												
+		   	 ,	STUDY_BLOCK_INFO										
+		   	 ,	REG_NO													
+		   	 ,	REG_DTTM												
+		   	 ,	MOD_NO													
+		   	 ,	MOD_DTTM												
+			     ,  (SELECT FN_GET_USER_NAME(MOD_NO)) AS MOD_NM	
+			     ,  (SELECT FN_GET_USER_NAME(REG_NO)) AS REG_NM	
+		        ,  'true' as RESULT										
+		     FROM  tb_lec_bookmark											
+		    WHERE  STD_NO  = #{stdNo}										
+		      AND  SBJ_CD  = #{sbjCd}										
+		      AND  UNIT_CD = #{unitCd}
+	</select>
+	
+	<select id="selectContents" parameterType="bookmarkVO" resultType="bookmarkVO">
+	<!-- 학습자의 단위 학습 결과를 가져온다. -->
+		WITH RECURSIVE CTE AS (
+		    SELECT
+		     	SBJ_CD, UNIT_CD , CAST(UNIT_CD AS CHAR(200)) AS UNIT_PATH
+		    FROM tb_crs_sbj_cnts
+			WHERE 
+				SBJ_CD  = #{sbjCd}													
+		      AND  UNIT_CD = #{unitCd} 
+			AND (PAR_UNIT_CD IS NULL OR PAR_UNIT_CD = '')
+		    UNION ALL
+		    SELECT
+		       A.SBJ_CD, A.UNIT_CD, CONCAT(CTE.UNIT_PATH,',',A.UNIT_CD) as UNIT_PATH
+		    FROM tb_crs_sbj_cnts A
+		    inner join CTE on A.par_UNIT_CD = CTE.UNIT_CD
+		    	AND A.SBJ_CD  = #{sbjCd}													
+		      	AND A.UNIT_CD = #{unitCd} 
+		     )
+		     SELECT  *
+			FROM CTE
+	</select>
+	
+	<select id="selectContentsVer5" parameterType="bookmarkVO" resultType="bookmarkVO">
+	<!-- 학습자의 단위 학습 결과를 가져온다. -->
+		SELECT
+		     	 a.SBJ_CD, a.UNIT_CD , 
+			     CONCAT_WS(',', d.UNIT_CD, c.UNIT_CD, b.UNIT_CD, a.UNIT_CD) as UNIT_PATH
+		    FROM tb_crs_sbj_cnts a
+		    LEFT OUTER JOIN tb_crs_sbj_cnts b ON  a.PAR_UNIT_CD=b.UNIT_CD AND a.SBJ_CD = b.SBJ_CD
+			LEFT OUTER JOIN tb_crs_sbj_cnts c ON  b.PAR_UNIT_CD=c.UNIT_CD AND b.SBJ_CD = c.SBJ_CD
+			LEFT OUTER JOIN tb_crs_sbj_cnts d ON  c.PAR_UNIT_CD=d.UNIT_CD AND c.SBJ_CD = d.SBJ_CD
+			WHERE a.SBJ_CD  = #{sbjCd}													
+		      AND a.UNIT_CD = #{unitCd} 
+	</select>
+	
+	<insert id="insertBookmark" parameterType="bookmarkVO">
+		<!-- 학습 결과를 저장한다.  -->
+		INSERT  INTO tb_lec_bookmark (									
+		           STD_NO													
+		        ,  SBJ_CD													
+		        ,  UNIT_CD													
+		        ,  STUDY_YN
+   		   	 	,  ATTEND_STS_CD												
+		        ,  STUDY_DTTM												
+		        ,  QUIZ_PASS_YN											
+		        ,  PASS_SCORE												
+		        ,  MAX_SCORE												
+		        ,  MIN_SCORE												
+		        ,  CONN_TOT_TM												
+		        ,  CONN_TM													
+		        ,  FINAL_CONN_PAGE											
+		        ,  ACCM_CONN_PAGE											
+		        ,  CONN_PAGE_CNT											
+		        ,  TOT_PAGE_CNT											
+		        ,  PRGR_RATIO												
+		        ,  CONN_CNT												
+		        ,  STUDY_DIV												
+		        ,  SCHL_STUDY_DT											
+		        ,  SCHL_STUDY_START_TM										
+		        ,  SCHL_STUDY_END_TM										
+		        ,  SCHL_STUDY_DIV_CD										
+		        ,  APRV_USER_NO											
+		        ,  SEEK_TIME												
+		        ,  MOBILE_TM												
+		   	 ,	STUDY_BLOCK_INFO										
+		        ,  REG_NO													
+		        ,  REG_DTTM												
+		        ,  MOD_NO													
+		        ,  MOD_DTTM												
+			) VALUES (														
+		       	#{stdNo}													
+		        ,  #{sbjCd}													
+		        ,  #{unitCd}
+		        ,  #{studyYn}
+		        ,  #{attendStsCd}										
+		        ,  IFNULL(FN_GET_NULL(#{studyDttm}),DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')) 		
+		        ,  #{quizPassYn}												
+		        ,  #{passScore}												
+		        ,  #{maxScore}												
+		        ,  #{minScore}												
+		        ,  #{connTotTm}												
+		        ,  #{connTm}													
+		        ,  #{finalConnPage}											
+		        ,  #{accmConnPage}											
+		        ,  #{connPageCnt}											
+		        ,  (SELECT COUNT(*) FROM tb_crs_sbj_cnts TCSC  WHERE SBJ_CD = #{sbjCd} AND PAR_UNIT_CD = #{unitCd}) 									
+		        ,  #{prgrRatio}												
+		        ,  #{connCnt}												
+		        ,  IFNULL(FN_GET_NULL(#{studyDiv}),'PER') 						
+		        ,  #{schlStudyDt}											
+		        ,  #{schlStudyStartTm}										
+		        ,  #{schlStudyEndTm}											
+		        ,  #{schlStudyDivCd}											
+		        ,  #{aprvUserNo}												
+		        ,  #{seekTime}												
+		        ,  #{mobileTm}												
+		   	 ,	#{studyBlockInfo}											
+		        ,  #{regNo}													
+		        ,  IFNULL(FN_GET_NULL(#{regDttm}), DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'))
+		        ,  #{modNo}													
+		        ,  IFNULL(FN_GET_NULL(#{modDttm}), DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')) 
+			)
+	</insert>
+	
+	<insert id="insertBookmarkDetail" parameterType="bookmarkVO">
+		<!-- 학습 결과를 저장한다.  -->
+		INSERT  INTO tb_lec_bookmark_detail (									
+		           STD_NO													
+		        ,  SBJ_CD													
+		        ,  UNIT_CD													
+		        ,  PAR_UNIT_CD													
+		        ,  STUDY_YN												
+		        ,  STUDY_DTTM												
+		        ,  REG_NO													
+		        ,  REG_DTTM												
+			) VALUES (														
+		       	   #{stdNo}													
+		        ,  #{sbjCd}													
+		        ,  #{unitCd}
+		        ,  #{parUnitCd}
+		        ,  ''										
+		        ,  IFNULL(FN_GET_NULL(#{studyDttm}),DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')) 		
+		        ,  #{regNo}													
+		        ,  IFNULL(FN_GET_NULL(#{regDttm}), DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'))
+			) ON DUPLICATE KEY
+				UPDATE MOD_NO          	=  #{modNo}								
+		        	,  MOD_DTTM        	=  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+			
+	</insert>
+	
+	<update id="updateBookmark" parameterType="bookmarkVO">
+		<!-- 학습 결과를 Update한다. -->
+		UPDATE  tb_lec_bookmark	A											
+		      SET  A.STD_NO          	=  #{stdNo}								
+		        ,  A.SBJ_CD          	=  #{sbjCd}								
+		        ,  A.UNIT_CD         	=  #{unitCd}								
+		        ,  A.STUDY_YN        	=  'Y'
+		        ,  A.ATTEND_STS_CD      =  #{attendStsCd}									
+		        ,  A.STUDY_DTTM      	=  (CASE WHEN #{studyDttm} = 'null' THEN '' ELSE IFNULL(FN_GET_NULL(#{studyDttm}),DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'))END)
+		        ,  A.QUIZ_PASS_YN    	=  IFNULL(FN_GET_NULL(#{quizPassYn}), QUIZ_PASS_YN)		
+		        ,  A.PASS_SCORE      	=  IFNULL(FN_GET_NULL(#{passScore}), PASS_SCORE)			
+		        ,  A.MAX_SCORE       	=  IFNULL(FN_GET_NULL(#{maxScore}), MAX_SCORE)			
+		        ,  A.MIN_SCORE       	=  IFNULL(FN_GET_NULL(#{minScore}), MIN_SCORE)			        
+		        ,  A.CONN_TOT_TM     	=  #{connTotTm}							
+		        ,  A.CONN_TM         	=  #{connTm}								
+		        ,  A.FINAL_CONN_PAGE	=  #{finalConnPage}						
+		        ,  A.ACCM_CONN_PAGE  	=  #{accmConnPage}						
+		        ,  A.CONN_PAGE_CNT   	=  CASE WHEN A.CONN_PAGE_CNT > #{connPageCnt} THEN A.CONN_PAGE_CNT ELSE #{connPageCnt} END			
+		        ,  A.TOT_PAGE_CNT    	=  #{totPageCnt}							
+		        ,  A.PRGR_RATIO      	=  CASE WHEN A.PRGR_RATIO > #{prgrRatio} THEN A.PRGR_RATIO ELSE #{prgrRatio} END			
+		        ,  A.CONN_CNT        	=  #{connCnt}								
+		        ,  A.STUDY_DIV        	=  IFNULL(FN_GET_NULL(#{studyDiv}) ,'PER')				
+		        ,  A.SCHL_STUDY_DT		= #{schlStudyDt}							
+		        ,  A.SCHL_STUDY_START_TM = #{schlStudyStartTm}					
+		        ,  A.SCHL_STUDY_END_TM = #{schlStudyEndTm}						
+		        ,  A.SCHL_STUDY_DIV_CD	= #{schlStudyDivCd}						
+		        ,  A.SEEK_TIME			= #{seekTime}								
+		        ,  A.MOBILE_TM			= #{mobileTm}								
+		        ,  A.APRV_USER_NO		= #{aprvUserNo}							
+		   	 	,  A.STUDY_BLOCK_INFO	= #{studyBlockInfo}						
+		        ,  A.MOD_NO          	=  #{modNo}								
+		        ,  A.MOD_DTTM        	=  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+		    WHERE  A.STD_NO  			=  #{stdNo}								
+		      AND  A.SBJ_CD  			=  #{sbjCd}								
+		      AND  A.UNIT_CD 			=  #{unitCd}
+	</update>
+	
+	<update id="updateDetailStudyYn" parameterType="bookmarkVO">
+		<!-- 학습 결과를 Update한다. -->
+		UPDATE  tb_lec_bookmark_detail	A											
+		      SET  A.STUDY_YN        	=  'Y'									
+		        ,  A.MOD_NO          	=  #{modNo}								
+		        ,  A.MOD_DTTM        	=  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+		    WHERE  A.STD_NO  			=  #{stdNo}								
+		      AND  A.SBJ_CD  			=  #{sbjCd}								
+		      AND  A.UNIT_CD 			=  #{unitCd}
+	</update>
+	
+	<update id="updateHitsup" parameterType="bookmarkVO">
+		<!-- 학습 횟수를 증가 시킨다. -->
+		 UPDATE tb_lec_bookmark A  
+		     SET A.CONN_CNT =  A.CONN_CNT + 1  
+		   WHERE A.STD_NO =  #{stdNo}  
+		     AND A.SBJ_CD =  #{sbjCd}  
+		     AND A.UNIT_CD =  #{unitCd}
+	</update>
+	
+	<update id="updateAttendSts" parameterType="bookmarkVO">
+		 UPDATE tb_lec_bookmark A  
+		     SET A.ATTEND_STS_CD = #{attendStsCd}
+		     	,  A.STUDY_YN = #{studyYn}
+		     	,  A.PRGR_RATIO = #{prgrRatio}
+		        ,  A.MOD_NO = #{modNo}								
+		        ,  A.MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')			     	
+		   WHERE A.STD_NO =  #{stdNo}  
+		     AND A.SBJ_CD =  #{sbjCd}  
+		     AND A.UNIT_CD =  #{unitCd}
+	</update>	
+	
+	<delete id="deleteBookmark" parameterType="bookmarkVO">
+		<!-- 학습 결과를 삭제 한다.  -->
+		DELETE  FROM tb_lec_bookmark   
+		    WHERE  STD_NO  = #{stdNo}       
+		      AND  SBJ_CD  = #{sbjCd}       
+		      AND  UNIT_CD = #{unitCd}
+	</delete>
+	
+	<delete id="deleteBookmarkStdNo" parameterType="bookmarkVO">
+		<!-- 학습자 번호로 수강내역 전체 삭제 -->
+		DELETE  FROM tb_lec_bookmark   
+		    WHERE  STD_NO  = #{stdNo}
+	</delete>
+	
+	<select id="selectTodayStudyYn" parameterType="bookmarkVO" resultType="bookmarkVO">
+	<!-- 해당 일자에 수강을 할 수 있는지 결과를 반환한다. -->
+		SELECT  (SELECT FN_GET_STUDY_YN(#{stdNo}, #{unitCd})) AS TODAY_STUDY_YN 
+		     FROM  DUAL
+	</select>
+	
+<!-- 	<select id="selectTodayStudyYn" parameterType="bookmarkVO" resultType="bookmarkVO">
+	해당 일자에 수강을 할 수 있는지 결과를 반환한다.
+	SELECT CASE
+		WHEN TODAYSTUDYCNT >= DAYSTUDYLIMIT THEN 'N'
+		ELSE 'Y'
+		END AS TODAYSTUDYCNTYN
+		FROM 
+		(SELECT COUNT(*) AS TODAYSTUDYCNT,
+			(SELECT DAY_STUDY_LIMIT 
+				FROM TB_CRS_CRE_CRS
+			WHERE CRS_CRE_CD = 'CE00000185') AS DAYSTUDYLIMIT
+		FROM
+		(
+		SELECT
+			SSB.ROOT_UNIT_CD,
+			MIN(SSB.FIRST_STUDY_DTTM) AS FIRST_STUDY_DT
+		FROM
+			(
+			SELECT
+				A.UNIT_CD,
+				A.PAR_UNIT_CD,
+				A.UNIT_NM,
+				A.UNIT_LVL,
+				A.UNIT_ODR,
+				A.UNIT_TYPE,
+				A.ROOT_UNIT_CD,
+				SUBSTR(IFNULL(B.REG_DTTM, '99991231235959'), 0, 8) AS FIRST_STUDY_DTTM
+			FROM
+				(
+				SELECT
+					SBJ_CD,
+					UNIT_CD,
+					PAR_UNIT_CD,
+					UNIT_NM,
+					UNIT_LVL,
+					UNIT_ODR,
+					UNIT_TYPE,
+					UNIT_CD AS ROOT_UNIT_CD
+				FROM
+					TB_CRS_SBJ_CNTS
+				WHERE
+					SBJ_CD IN (
+					SELECT
+						SBJ_CD
+					FROM
+						TB_CRS_CRE_CRS_ONLN_SBJ
+					WHERE
+						CRS_CRE_CD = 'CE00000185' ) ) A
+			LEFT OUTER JOIN TB_LEC_BOOKMARK B
+			ON A.SBJ_CD = B.SBJ_CD
+				AND A.UNIT_CD = B.UNIT_CD
+				AND STD_NO = 'EN0000000327' ) SSB
+		GROUP BY
+			ROOT_UNIT_CD ) SB
+		WHERE SB.FIRST_STUDY_DT = DATE_FORMAT(SYSDATE(), '%Y%M%D')) SK
+	</select> -->
+	
+	<select id="listStdBookmark" parameterType="BookmarkVO" resultType="BookmarkVO">
+		<!-- 해당 단원의 학습자 진도율 목록을 반환한다. -->
+		SELECT A.STD_NO 												
+			     , B.USER_NO 												
+			     , B.USER_NM 												
+			     , C.USER_ID 												
+			     , IFNULL(FN_GET_NULL(D.PRGR_RATIO),0) AS PRGR_RATIO 						
+			     , IFNULL(D.STUDY_DTTM,'') AS STUDY_DTTM 						
+			     , IFNULL(D.CONN_TOT_TM,0) AS CONN_TOT_TM 					
+			     , IFNULL(D.CONN_CNT,0) AS CONN_CNT 							
+			     , IFNULL(D.STUDY_DIV,'') AS STUDY_DIV 						
+			     , IFNULL(D.SCHL_STUDY_DT,'') AS SCHL_STUDY_DT				
+			     , IFNULL(D.SCHL_STUDY_START_TM,'') AS SCHL_STUDY_START_TM	
+			     , IFNULL(D.SCHL_STUDY_END_TM,'') AS SCHL_STUDY_END_TM		
+			     , IFNULL(D.SCHL_STUDY_DIV_CD,'') AS SCHL_STUDY_DIV_CD		
+			     , IFNULL(D.APRV_USER_NO,'') AS APRV_USER_NO			     
+			     , FN_GET_APRV_USER_NM(D.APRV_USER_NO) AS APRV_USER_NM		
+			  FROM tb_std_std A
+			  LEFT OUTER JOIN
+			  	 tb_lec_bookmark D
+			  ON 
+			  	(
+			   	   A.STD_NO  = D.STD_NO							
+			   AND D.SBJ_CD  = #{sbjCd} 									
+			   AND D.UNIT_CD = #{unitCd} 				  	
+			  	)
+			   	 , tb_usr_user_info B 						
+			     , tb_usr_login C 					
+			 WHERE A.CRS_CRE_CD = #{crsCreCd} 								
+			   AND A.ENRL_STS IN ('S','C','F') 							
+			   AND A.USER_NO = B.USER_NO 									
+			   AND B.USER_NO = C.USER_NO 									
+			   
+		<if test = "userNm != null and userNm != ''">
+			AND CONCAT(B.USER_NM, C.USER_ID) like CONCAT('%', #{userNm}, '%') 
+		</if>			
+		<if test = "gradeCd != null and gradeCd != ''">
+			AND SUBSTR(C.USER_ID,-5,1) = #{gradeCd}	
+		</if>
+		<if test = "banCd != null and banCd != ''">
+			AND SUBSTR(C.USER_ID,-4,2) = #{banCd}	
+		</if>
+		<if test = "searchFrom != null and searchFrom != ''">
+			<![CDATA[
+			AND IFNULL(FN_GET_NULL(D.PRGR_RATIO),0) < #{searchFrom} 
+				]]>
+		</if>
+		<if test = "searchTo != null and searchTo != ''">
+			<![CDATA[
+			AND IFNULL(FN_GET_NULL(D.PRGR_RATIO),0) >= #{searchTo} 
+				]]>
+		</if>
+		 ORDER BY C.USER_ID ASC
+		
+	</select>
+	
+	<select id="selectLastStudyDttm" parameterType="bookmarkVO" resultType="bookmarkVO">
+		<!-- 과정의 최종 학습일자를 검색한다. -->
+		 SELECT MAX(MOD_DTTM) AS MOD_DTTM  
+		   FROM tb_lec_bookmark  
+		  WHERE STD_NO = #{stdNo  
+		    AND SBJ_CD IN ( SELECT SBJ_CD  
+		                      FROM tb_crs_cre_crs_onln_sbj  
+		                     WHERE CRS_CRE_CD = #{crsCreCd )
+	</select>
+	
+	<select id="checkDayLimit" parameterType="bookmarkVO" resultType="bookmarkVO">
+		<!-- 과정의 최종 학습일자를 검색한다. -->
+		<![CDATA[
+		SELECT CASE WHEN (SELECT DAY_STUDY_LIMIT FROM tb_crs_cre_crs TCCC WHERE CRS_CRE_CD = #{crsCreCd} ) <= 
+						 (SELECT COUNT(*) FROM tb_lec_bookmark TLB WHERE STD_NO = #{stdNo} 
+						 											 AND SBJ_CD = #{sbjCd} 
+						 											 AND SUBSTR(STUDY_DTTM,1,8) = DATE_FORMAT(NOW(), '%Y%m%d') 
+						 											 AND UNIT_CD != #{unitCd}
+						 ) THEN 'N'
+			ELSE 'Y' END AS TODAY_STUDY_YN
+ 		FROM DUAL
+ 		]]>
+	</select>
+	
+	<select id="selectSbjBookmarkCnt" parameterType="bookmarkVO" resultType="bookmarkVO">
+		<!-- 과정의 최종 학습일자를 검색한다. -->
+		<![CDATA[
+		SELECT COUNT(*) AS SBJ_BOOKMARK_CNT
+		FROM tb_lec_bookmark TLB 
+		WHERE STD_NO = #{stdNo} 
+		AND SBJ_CD = #{sbjCd} 
+ 		]]>
+	</select>
+	
+	<select id="selectBookmarkInfo" parameterType="bookmarkVO" resultType="bookmarkVO">
+		<!-- 진행단계평가 및 북마크 정보 조회. -->
+		<![CDATA[
+		SELECT CASE WHEN (SELECT DAY_STUDY_LIMIT FROM tb_crs_cre_crs TCCC WHERE CRS_CRE_CD = #{crsCreCd} ) <= 
+						 (SELECT COUNT(*) FROM tb_lec_bookmark TLB WHERE STD_NO = #{stdNo} 
+						 											 AND SBJ_CD = #{sbjCd} 
+						 											 AND SUBSTR(STUDY_DTTM,1,8) = DATE_FORMAT(NOW(), '%Y%m%d') 
+						 											 AND UNIT_CD != #{unitCd}
+						 ) THEN 'N'
+			ELSE 'Y' END AS TODAY_STUDY_YN
+		,  (SELECT COUNT(*) FROM tb_lec_bookmark TLB WHERE STD_NO = #{stdNo} AND SBJ_CD = #{sbjCd} ) AS SBJ_BOOKMARK_CNT
+		, (SELECT COUNT(*) FROM tb_lec_bookmark WHERE STD_NO = #{stdNo} AND SBJ_CD = #{sbjCd} AND PRGR_RATIO > 90) AS PRGR_LEC_COUNT
+		, (SELECT COUNT(*) FROM tb_lec_exam WHERE CRS_CRE_CD =#{crsCreCd} AND SEMI_EXAM_YN='Y' AND REG_YN='Y' AND EXAM_TYPE_CD ='ON') AS STARE_LEC_COUNT
+		, (SELECT COUNT(*) from tb_lec_exam_stare tles, tb_lec_exam lle WHERE tles.EXAM_SN  = lle.EXAM_SN AND lle.SEMI_EXAM_YN='Y' and lle.EXAM_TYPE_CD ='ON' and tles.CRS_CRE_CD =#{crsCreCd} AND tles.STD_NO =#{stdNo} AND tles.END_DTTM IS NOT NULL) AS STARE_SEMI_EXAM
+		FROM DUAL
+ 		]]>
+	</select>
+	
+	<insert id="insertBookmarkLog" parameterType="bookmarkVO">
+		<!-- 학습 결과를 저장한다.  -->
+		INSERT  INTO tb_log_lec_unit (				
+		     	LOGIN_DTTM							
+		     ,  SBJ_CD								
+		     ,  UNIT_CD								
+		     ,  STD_NO								
+		     ,  USER_NO								
+		     ,  DEVICE_TYPE							
+		     ,  BROWSER_TYPE						
+		     ,  APP_TYPE							
+		     ,  CONN_IP								
+		     ,  MOBILE_TYPE							
+		) VALUES (									
+		    	DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		     ,  #{sbjCd} 						
+		     ,  #{unitCd}					
+		     ,  #{stdNo} 							
+		     ,  #{userNo}						
+		     ,  #{deviceType}							
+		     ,  #{browserType}						
+		     ,  #{appType}							
+		     ,  #{connIp}								
+		     ,  #{mobileType}							
+)                                           
+	</insert>
+		
+	<select id="listBookmarkLog" parameterType="bookmarkVO" resultType="bookmarkVO">
+		<!-- 과정의 최종 학습일자를 검색한다. -->
+		SELECT LLU.LOGIN_DTTM ,LLU.DEVICE_TYPE ,LLU.BROWSER_TYPE ,LLU.CONN_IP	                                
+		,CSC.UNIT_NM	                                                                                        
+		,(SELECT CRE.CRS_CRE_NM FROM tb_crs_cre_crs CRE WHERE CRE.CRS_CRE_CD = STD.CRS_CRE_CD ) AS CRS_CRE_NM	
+		FROM tb_log_lec_unit LLU, tb_crs_sbj_cnts CSC , tb_std_std STD	                                        
+		WHERE 1=1	                                                                                            
+		AND LLU.SBJ_CD = CSC.SBJ_CD	                                                                            
+		AND LLU.UNIT_CD = CSC.UNIT_CD	                                                                        
+		AND LLU.STD_NO = STD.STD_NO 	     
+		<if test = "unitCd != null and unitCd != ''">                                                                   
+			and CSC.UNIT_CD = #{unitCd}
+		</if>
+		<if test = "stdNo != null and stdNo != ''">
+			AND LLU.STD_NO = #{stdNo}      
+		</if>  
+		<if test = "userNo != null and userNo != ''">                                                                 
+			AND LLU.USER_NO = #{userNo}
+		</if>
+	</select>
+	
+</mapper>

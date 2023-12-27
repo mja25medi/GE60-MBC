@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.oflnsbjtch.service.impl.OflnSbjTchMapper">	
+
+	<sql id="selectColumnQuery">
+		 		 CRS_CRE_CD 												
+		       , SBJ_CD 													
+		       , USER_NO 													
+			    , (SELECT FN_GET_USER_NAME(A.USER_NO) FROM DUAL) AS USER_NM	
+		       , DECLS_NO 													
+		       , TCH_DIV_CD 												
+		       , ( SELECT FN_GET_CODE_NAME('TCH_DIV_CD',TCH_DIV_CD)		
+		             FROM DUAL) AS TCH_DIV_NM								
+		       , LEC_KIND_CD 												
+		       , ( SELECT FN_GET_CODE_NAME('LEC_KIND_CD',LEC_KIND_CD)		
+		             FROM DUAL) AS LEC_KIND_NM								
+		       , TCH_LVL_CD 												
+		       , ( SELECT FN_GET_CODE_NAME('TCH_LVL_CD',TCH_LVL_CD)		
+		             FROM DUAL) AS TCH_LVL_NM								
+		       , TCH_POS_CD 												
+		       , ( SELECT FN_GET_CODE_NAME('TCH_POS_CD',TCH_POS_CD)		
+		             FROM DUAL) AS TCH_POS_NM										
+		       , LEC_TM 													
+		       , TCHFEE 													
+		       , REG_NO 													
+			    , (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) AS REG_NM	
+		       , REG_DTTM 													
+		       , MOD_NO 													
+			    , (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) AS MOD_NM		
+		       , MOD_DTTM 													
+	</sql>
+	
+	<sql id="selectQuery">
+		SELECT 
+		<include refid="selectColumnQuery" />												
+		FROM TB_CRS_OFLN_SBJ_TCH A										
+		WHERE CRS_CRE_CD = #{crsCreCd}									
+			AND SBJ_CD = #{sbjCd}
+	</sql>
+	
+	<sql id="selectQuery2">
+		   SELECT A.CRS_CRE_CD 										
+		       , A.SBJ_CD 											
+		       , (SELECT SBJ_NM 									
+		            FROM TB_CRS_OFLN_SBJ							
+		           WHERE SBJ_CD = A.SBJ_CD) AS SBJ_NM				
+		       , A.USER_NO 										
+			    , (SELECT FN_GET_USER_NAME(A.USER_NO) 				
+		            FROM DUAL) AS USER_NM							
+		       , A.DECLS_NO 										
+		       , A.REG_NO 											
+			    , (SELECT FN_GET_USER_NAME(A.REG_NO) 				
+		            FROM DUAL) AS REG_NM							
+		       , A.REG_DTTM 										
+		       , A.MOD_NO 											
+			    , (SELECT FN_GET_USER_NAME(A.MOD_NO)				
+		            FROM DUAL) AS MOD_NM								
+		       , A.MOD_DTTM 										
+		    FROM TB_CRS_OFLN_SBJ_TCH A, TB_CRS_CRE_CRS_OFLN_SBJ B	
+		   WHERE A.CRS_CRE_CD = #{crsCreCd}							
+		     AND A.CRS_CRE_CD = B.CRS_CRE_CD						
+		     AND A.SBJ_CD = B.SBJ_CD								
+		   ORDER BY B.SBJ_ODR
+	</sql>
+
+	<select id="count" parameterType="oflnSbjTchVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM TB_CRS_OFLN_SBJ_TCH A										
+		WHERE CRS_CRE_CD = #{crsCreCd}									
+			AND SBJ_CD = #{sbjCd}			
+	</select>
+		
+ 	<select id="list" parameterType="oflnSbjTchVO" resultType="oflnSbjTchVO">
+	    <include refid="selectQuery" />
+	</select>
+     <select id="listPageing" parameterType="crsOflnSbjVO" resultType="oflnSbjTchVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	<select id="select" parameterType="oflnSbjTchVO" resultType="oflnSbjTchVO">
+	    <include refid="selectQuery" />
+	     AND USER_NO = #{userNo}
+	     AND DECLS_NO = #{declsNo}
+	</select>
+
+    <insert id="insert" parameterType="oflnSbjTchVO">
+		  INSERT INTO TB_CRS_OFLN_SBJ_TCH (			
+		         CRS_CRE_CD 							
+		       , SBJ_CD 								
+		       , USER_NO 								
+		       , DECLS_NO 								
+		       , TCH_DIV_CD 							
+		       , LEC_KIND_CD 							
+		       , TCH_LVL_CD 							
+		       , TCH_POS_CD 							
+		       , LEC_TM 								
+		       , TCHFEE 								
+		       , REG_NO 								
+		       , REG_DTTM 								
+		       , MOD_NO 								
+		       , MOD_DTTM 								
+		 ) VALUES (									
+		         #{crsCreCd} 							
+		       , #{sbjCd} 								
+		       , #{userNo} 								
+		       , #{declsNo} 								
+		       , #{tchDivCd} 							
+		       , #{lecKindCd} 							
+		       , #{tchLvlCd }							
+		       , #{tchPosCd} 							
+		       , #{lecTm} 								
+		       , #{tchfee} 								
+		       , #{regNo} 								
+		       , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')	
+		       , #{modNo} 								
+		       , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')	
+		 ) 
+    </insert>
+   <update id="update" parameterType="oflnSbjTchVO">
+		  UPDATE TB_CRS_OFLN_SBJ_TCH								
+		     SET TCH_DIV_CD = #{tchDivCd} 							
+		       , LEC_KIND_CD = #{lecKindCd} 							
+		       , TCH_LVL_CD = #{tchLvlCd} 							
+		       , TCH_POS_CD = #{tchPosCd} 							
+		       , LEC_TM = #{lecTm} 									
+		       , TCHFEE = #{tchfee} 									
+		       , MOD_NO = #{modNo} 									
+		       , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')	
+		   WHERE CRS_CRE_CD = #{crsCreCd} 							
+		     AND SBJ_CD = #{sbjCd} 									
+		     AND USER_NO = #{userNo} 								
+		     AND DECLS_NO = #{declsNo} 
+    </update>
+	<delete id="delete" parameterType="crsOflnSbjVO">
+		  DELETE FROM TB_CRS_OFLN_SBJ_TCH				
+		   WHERE CRS_CRE_CD = #{crsCreCd} 				
+		     AND SBJ_CD = #{sbjCd} 						
+		     AND USER_NO = #{userNo} 					
+		     AND DECLS_NO = #{declsNo}  			
+    </delete>
+
+ 	<select id="listForRate" parameterType="oflnSbjTchVO" resultType="oflnSbjTchVO">
+	    <include refid="selectQuery2" />
+	</select>
+	
+</mapper>	

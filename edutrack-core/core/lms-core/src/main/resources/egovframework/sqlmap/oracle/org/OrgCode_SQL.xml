@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.org.code.service.impl.OrgCodeMapper">	
+
+	
+	<sql id="selectQuery">
+		SELECT ORG_CD as orgCd
+		     , CODE_CTGR_CD as codeCtgrCd
+		     , CODE_CD as codeCd
+		     , CODE_NM as codeNm
+		     , CODE_ODR as codeOdr
+		     , CODE_DESC as codeDesc
+		     , CODE_OPTN as codeOptn
+		     , USE_YN as useYn
+		     , REG_NO as regNo
+		     , (SELECT FN_GET_USER_NAME(REG_NO) FROM DUAL) AS regNm
+		     , REG_DTTM as regDttm
+		     , MOD_NO as modNo
+		     , (SELECT FN_GET_USER_NAME(MOD_NO) FROM DUAL) AS modNm
+		     , MOD_DTTM as modDttm		     
+		  FROM TB_ORG_CODE
+         WHERE ORG_CD = #{orgCd}
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		   AND CODE_CTGR_CD = #{codeCtgrCd}
+		<if test = "searchValue != null and searchValue != ''">
+			<if test = "searchKey != null and searchKey == 'CODE'">
+			   AND CODE_CD like '%'||#{searchValue}||'%'
+			</if>
+			<if test = "searchKey != null and searchKey == 'NAME'">
+			   AND CODE_NM like '%'||#{searchValue}||'%'
+			</if>
+		</if>
+		<if test = "useYn != null and useYn != ''">
+		   AND USE_YN = #{useYn}
+		</if>
+		 ORDER BY CODE_ODR ASC
+	</sql>		
+
+	<select id="list" parameterType="orgCodeVO" resultType="orgCodeVO">
+		/*
+			 SQL ID : list
+			 설  명 : 코드의 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	</select>
+
+	<select id="listPageing" parameterType="orgCodeVO" resultType="orgCodeVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 코드의 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="orgCodeVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 코드의 전체체 카운트 수
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>	
+
+	<select id="select" parameterType="orgCodeVO" resultType="orgCodeVO">
+		/*
+			 SQL ID : select
+			 설  명 : 코드의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+	 	   AND CODE_CTGR_CD = #{codeCtgrCd}
+           AND CODE_CD = #{codeCd}
+	</select>
+	
+	<select id="selectCheck" parameterType="orgCodeVO" resultType="orgCodeVO">
+		/*
+			 SQL ID : selectCheck
+			 설  명 : 코드의 사용 가능 여부 체크
+	 	*/
+	 	SELECT CASE WHEN COUNT(*) = 0 THEN 'Y' ELSE 'N' END AS isUseable
+		  FROM TB_ORG_CODE
+		 WHERE ORG_CD = #{orgCd}
+		   AND CODE_CD = #{codeCd}
+		   AND CODE_CTGR_CD = #{codeCtgrCd}
+	</select>
+	
+	<insert id="insert" parameterType="orgCodeVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 코드의 정보 등록
+	 	*/
+		INSERT INTO TB_ORG_CODE (
+		       ORG_CD
+		     , CODE_CTGR_CD
+		     , CODE_CD
+		     , CODE_NM
+		     , CODE_ODR
+		     , CODE_DESC
+		     , CODE_OPTN
+		     , USE_YN
+		     , REG_NO
+		     , REG_DTTM
+		     , MOD_NO
+		     , MOD_DTTM
+		) VALUES (
+		       #{orgCd}			     
+		     , #{codeCtgrCd}
+		     , #{codeCd}
+		     , #{codeNm}
+			 , ( SELECT NVL(MAX(CODE_ODR),0)+1
+			       FROM TB_SYS_CODE
+			      WHERE CODE_CTGR_CD = #{codeCtgrCd} )		     
+		     , #{codeDesc}
+		     , #{codeOptn}
+		     , #{useYn}
+		     , #{regNo}
+		     , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		     , #{modNo}
+		     , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		)		   
+	</insert>
+	
+	<update id="update" parameterType="orgCodeVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 코드의 정보 수정
+	 	*/
+		UPDATE TB_ORG_CODE
+		   SET CODE_NM = #{codeNm}
+		     , CODE_ODR = #{codeOdr}
+		     , CODE_DESC = #{codeDesc}
+		     , CODE_OPTN = #{codeOptn}
+		     , USE_YN = #{useYn}
+		     , MOD_NO = #{modNo}
+		     , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		 WHERE ORG_CD = #{orgCd}
+		   AND CODE_CTGR_CD = #{codeCtgrCd}
+		   AND CODE_CD = #{codeCd}
+	</update>	
+
+	<delete id="delete" parameterType="orgCodeVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 코드의 정보 삭제
+	 	*/	
+		DELETE FROM TB_ORG_CODE
+		 WHERE ORG_CD = #{orgCd}
+		   AND CODE_CTGR_CD = #{codeCtgrCd}
+		   AND CODE_CD = #{codeCd}
+	</delete>
+
+	<delete id="deleteAll" parameterType="orgCodeVO" >
+		/*
+			 SQL ID : deleteAll
+			 설  명 : 분류 하위의 전체 코드 정보를 삭제
+	 	*/	
+		DELETE FROM TB_ORG_CODE
+		 WHERE ORG_CD = #{orgCd}
+		   AND CODE_CTGR_CD = #{codeCtgrCd}
+	</delete>
+	
+	<update id="updateVersion" parameterType="orgCodeVO">
+		/*
+			 SQL ID : updateVersion
+			 설  명 : 설정 테이블에 코드의 버전 값을 증가 시킴
+	 	*/
+		UPDATE TB_SYS_CFG
+		   SET CFG_VAL = CFG_VAL + 1
+		 WHERE CFG_CTGR_CD = 'CACHE'
+		   AND CFG_CD = 'CODE_VER'
+	</update>
+	
+	<select id="selectVersion" resultType="Integer">
+		/*
+			 SQL ID : selectVersion
+			 설  명 : 설정 테이블에서 코드의 버전 정보를 가져옴.
+	 	*/
+	 	SELECT FN_GET_CONFIG_VALUE('CACHE', 'CODE_VER') FROM DUAL
+	</select>	
+	
+	<select id="selectKey" resultType="String" parameterType="orgCodeVO">
+		/*
+			 SQL ID : selectKey
+			 설  명 : 키를 가져옴
+	 	*/
+	 	SELECT #{codeCtgrCd}||LPAD(SQ_ORG_CODE.nextVal,6,'0') AS codeCd FROM DUAL
+	</select>	
+ 
+</mapper>

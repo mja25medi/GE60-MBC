@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.log.sysconn.service.impl.LogSysConnLogMapper">	
+
+	
+	<select id="listMonth" parameterType="logSysConnLogVO" resultType="logSysConnLogVO">
+		/*
+			 SQL ID : listMonth
+			 설  명 : 월별 접속 로그 목록
+	 	*/
+	 	<![CDATA[
+			SELECT A.CODE_NM AS codeNm
+				 , IFNULL(SUM(B.CONN_CNT),0) AS connCnt
+			  FROM tb_sys_code A
+			  LEFT OUTER JOIN
+				   ( SELECT DATE_FORMAT(STR_TO_DATE(CONCAT(YEAR,MONTH,DAY),'%Y%m%d'),'%m') AS MONTH
+					      , IFNULL(FN_GET_NULL(CONN_CNT),0) AS CONN_CNT
+					   FROM tb_log_sys_conn_log
+					  WHERE CONCAT(YEAR,MONTH,DAY) BETWEEN replace(#{startDt},'.','') AND replace(#{endDt},'.','')
+					    AND IFNULL(FN_GET_NULL(ORG_CD),'1') = IFNULL(FN_GET_NULL(#{orgCd}),IFNULL(FN_GET_NULL(ORG_CD),'1'))				   
+				   ) B
+			  ON ((CASE  WHEN LENGTH(A.CODE_CD) = 1 THEN LPAD(A.CODE_CD,2,'0') ELSE A.CODE_CD END)  = B.MONTH )   
+		     WHERE A.CODE_CTGR_CD = 'STAUS_MONTH'
+		     GROUP BY A.CODE_NM, A.CODE_ODR, B.MONTH
+			 ORDER BY A.CODE_ODR
+		]]>
+	</select>
+	
+	<select id="AllListMonth" parameterType="logSysConnLogVO" resultType="logSysConnLogVO">
+		/*
+			 SQL ID : AllListMonth
+			 설  명 : 월별 모든 접속 로그 목록
+	 	*/
+	 	<![CDATA[
+			 SELECT A.CODE_NM AS codeNm
+				 , IFNULL(SUM(B.CONN_CNT),0) AS connCnt
+			  FROM tb_sys_code A
+			  LEFT OUTER JOIN
+				   ( SELECT DATE_FORMAT(STR_TO_DATE(CONCAT(YEAR,MONTH,DAY),'%Y%m%d'),'%m') AS MONTH
+					      , IFNULL(FN_GET_NULL(CONN_CNT),0) AS CONN_CNT
+					   FROM tb_log_sys_conn_log
+					  WHERE CONCAT(YEAR,MONTH,DAY) BETWEEN replace(#{startDt},'.','') AND replace(#{endDt},'.','')				   
+				   ) B
+			  ON ((CASE WHEN LENGTH(A.CODE_CD) = 1 THEN LPAD(A.CODE_CD,2,'0') ELSE A.CODE_CD END)  = B.MONTH )
+		     WHERE A.CODE_CTGR_CD = 'STAUS_MONTH'
+		     GROUP BY A.CODE_NM, A.CODE_ODR, B.MONTH
+			 ORDER BY A.CODE_ODR
+		]]>
+	</select>
+		
+	<select id="listWeek" parameterType="logSysConnLogVO" resultType="logSysConnLogVO">
+		/*
+			 SQL ID : listWeek
+			 설  명 : 주별 접속 로그 목록
+	 	*/
+	 	<![CDATA[
+			SELECT A.CODE_NM AS codeNm
+		         , IFNULL(SUM(B.CONN_CNT),0) AS connCnt
+		      FROM tb_sys_code A
+		      LEFT OUTER JOIN
+		           ( SELECT DAYOFWEEK(CONCAT(YEAR,'-',MONTH,'-',DAY)) AS WEEK
+		                  , IFNULL(FN_GET_NULL(CONN_CNT),0) AS CONN_CNT
+				       FROM tb_log_sys_conn_log
+		              WHERE CONCAT(YEAR, MONTH, DAY) BETWEEN replace(#{startDt},'.','') AND replace(#{endDt},'.','')
+		                AND IFNULL(FN_GET_NULL(ORG_CD),'1') = IFNULL(FN_GET_NULL(#{orgCd}),IFNULL(FN_GET_NULL(ORG_CD),'1'))		           
+		           ) B
+		     ON A.CODE_CD = B.WEEK
+		     WHERE A.CODE_CTGR_CD = 'STATUS-WEEK'
+		     GROUP BY A.CODE_NM, A.CODE_ODR, B.WEEK
+		     ORDER BY A.CODE_ODR
+		]]>
+	</select>
+	
+	<select id="AllListWeek" parameterType="logSysConnLogVO" resultType="logSysConnLogVO">
+		/*
+			 SQL ID : AllListWeek
+			 설  명 : 주별 모든  접속 로그 목록
+	 	*/
+	 	<![CDATA[
+		     SELECT A.CODE_NM AS codeNm
+		         , IFNULL(SUM(B.CONN_CNT),0) AS connCnt
+		      FROM tb_sys_code A
+		      LEFT OUTER JOIN
+		           ( SELECT DAYOFWEEK(CONCAT(YEAR,'-',MONTH,'-',DAY)) AS WEEK
+		                  , IFNULL(FN_GET_NULL(CONN_CNT),0) AS CONN_CNT
+				       FROM tb_log_sys_conn_log
+		              WHERE CONCAT(YEAR, MONTH, DAY) BETWEEN replace(#{startDt},'.','') AND replace(#{endDt},'.','')		           
+		           ) B
+		      ON A.CODE_CD = B.WEEK 
+		     WHERE A.CODE_CTGR_CD = 'STATUS-WEEK'
+		     GROUP BY A.CODE_NM, A.CODE_ODR, B.WEEK
+		     ORDER BY A.CODE_ODR
+		]]>
+	</select>
+	
+	<select id="listDay" parameterType="logSysConnLogVO" resultType="logSysConnLogVO">
+		/*
+			 SQL ID : listDay
+			 설  명 : 일별 접속 로그 목록
+	 	*/
+	 	<![CDATA[
+			SELECT A.CODE_NM AS codeNm
+			     , IFNULL(SUM(B.CONN_CNT),0) AS connCnt
+			  FROM tb_sys_code A
+			  LEFT OUTER JOIN
+			  	tb_log_sys_conn_log B
+			  ON 
+			  (
+			  	   A.CODE_CD = B.DAY 
+			   AND B.ORG_CD  = #{orgCd}
+			   AND CONCAT(YEAR,MONTH,DAY) BETWEEN replace(#{startDt},'.','') AND replace(#{endDt},'.','')
+			  )
+			 WHERE A.CODE_CTGR_CD = 'STATUS_DAY'
+			 GROUP BY A.CODE_NM, A.CODE_ODR, B.DAY
+			 ORDER BY A.CODE_ODR	 
+		]]>
+	</select>
+	
+	<select id="AllListDay" parameterType="logSysConnLogVO" resultType="logSysConnLogVO">
+		/*
+			 SQL ID : AllListDay
+			 설  명 : 일별 모든 접속 로그 목록
+	 	*/
+	 	<![CDATA[
+			SELECT A.CODE_NM AS codeNm
+			     , IFNULL(SUM(B.CONN_CNT),0) AS connCnt
+			  FROM tb_sys_code A
+			  LEFT OUTER JOIN
+			  	tb_log_sys_conn_log B
+			  ON A.CODE_CD = B.DAY
+			 WHERE A.CODE_CTGR_CD = 'STATUS_DAY'
+			   AND CONCAT(YEAR,MONTH,DAY) BETWEEN replace(#{startDt},'.','') AND replace(#{endDt},'.','')
+			 GROUP BY A.CODE_NM, A.CODE_ODR, B.DAY
+			 ORDER BY A.CODE_ODR	 
+		]]>
+	</select>
+	
+	<select id="listHour" parameterType="logSysConnLogVO" resultType="logSysConnLogVO">
+		/*
+			 SQL ID : listHour
+			 설  명 : 시간별 접속 로그 목록
+	 	*/
+	 	<![CDATA[
+			SELECT A.CODE_NM AS codeNm
+			     , IFNULL(SUM(B.CONN_CNT),0) AS connCnt
+			  FROM tb_sys_code A
+			  LEFT OUTER JOIN
+			  	tb_log_sys_conn_log B
+			  ON 
+			  	(
+			   	   A.CODE_CD = B.TM
+			   AND B.ORG_CD = #{orgCd}
+			   AND CONCAT(YEAR,MONTH,DAY) BETWEEN replace(#{startDt},'.','') AND replace(#{endDt},'.','')			  	
+			  	)
+			 WHERE A.CODE_CTGR_CD = 'STATUS-HOUR'
+			 GROUP BY A.CODE_NM, A.CODE_ODR, B.TM
+			 ORDER BY A.CODE_ODR	 
+		]]>
+	</select>
+	
+	<select id="AllListHour" parameterType="logSysConnLogVO" resultType="logSysConnLogVO">
+		/*
+			 SQL ID : AllListHour
+			 설  명 : 시간별 모든 접속 로그 목록
+	 	*/
+	 	<![CDATA[
+			SELECT A.CODE_NM AS codeNm
+			     , IFNULL(SUM(B.CONN_CNT),0) AS connCnt
+			  FROM tb_sys_code A
+			  LEFT OUTER JOIN
+			  	tb_log_sys_conn_log B
+			  ON A.CODE_CD = B.TM
+			 WHERE A.CODE_CTGR_CD = 'STATUS-HOUR'
+			   AND CONCAT(YEAR,MONTH,DAY) BETWEEN replace(#{startDt},'.','') AND replace(#{endDt},'.','')
+			 GROUP BY A.CODE_NM, A.CODE_ODR, B.TM
+			 ORDER BY A.CODE_ODR	 
+		]]>
+	</select>
+	
+	<select id="sysListMonth" parameterType="logSysConnLogVO" resultType="logSysConnLogVO">
+		/*
+			 SQL ID : sysListMonth
+			 설  명 : 월별 지식 학습 로그 목록
+	 	*/
+	 	<![CDATA[
+			SELECT A.CODE_NM AS codeNm
+				 , IFNULL(SUM(B.HITS),0) AS hits
+			  FROM tb_sys_code A
+			  LEFT OUTER JOIN
+				   ( SELECT DATE_FORMAT(STR_TO_DATE(CONCAT(YEAR,MONTH,DAY), '%Y%m%d'),'%m') AS MONTH
+					      , IFNULL(FN_GET_NULL(HITS),0) AS HITS
+					   FROM TB_LOG_KNOW_LOG
+					  WHERE CONCAT(YEAR,MONTH,DAY) BETWEEN replace(#{startDt},'.','') AND replace(#{endDt},'.','')					
+				   ) B
+			  ON (CASE WHEN LENGTH(A.CODE_CD) = 1 THEN LPAD(A.CODE_CD,2,'0') ELSE A.CODE_CD END)  = B.MONTH
+		     WHERE A.CODE_CTGR_CD = 'STAUS_MONTH'
+		     GROUP BY A.CODE_NM, A.CODE_ODR, B.MONTH
+			 ORDER BY A.CODE_ODR
+		]]>
+	</select>
+	
+	<select id="sysListWeek" parameterType="logSysConnLogVO" resultType="logSysConnLogVO">
+		/*
+			 SQL ID : sysListWeek
+			 설  명 : 주별 지식 학습 로그 목록
+	 	*/
+	 	<![CDATA[
+			SELECT A.CODE_NM AS codeNm
+		         , IFNULL(SUM(B.HITS),0) AS hits
+		      FROM tb_sys_code A
+		      LEFT OUTER JOIN
+		           ( SELECT DAYOFWEEK(CONCAT(YEAR,'-',MONTH,'-',DAY)) AS WEEK
+		                  , IFNULL(FN_GET_NULL(HITS),0) AS HITS
+				       FROM TB_LOG_KNOW_LOG
+		              WHERE CONCAT(YEAR,MONTH,DAY) BETWEEN replace(#{startDt},'.','') AND replace(#{endDt},'.','')		           
+		           ) B
+		       ON A.CODE_CD = B.WEEK
+		     WHERE A.CODE_CTGR_CD = 'STATUS-WEEK'
+		     GROUP BY A.CODE_NM, A.CODE_ODR, B.WEEK
+		     ORDER BY A.CODE_ODR
+		]]>
+	</select>
+	
+	<select id="sysListDay" parameterType="logSysConnLogVO" resultType="logSysConnLogVO">
+		/*
+			 SQL ID : sysListDay
+			 설  명 : 일별 지식 학습 로그 목록
+	 	*/
+	 	<![CDATA[
+			SELECT A.CODE_NM AS codeNm
+			     , IFNULL(SUM(B.HITS),0) AS hits
+			  FROM tb_sys_code A
+			  LEFT OUTER JOIN
+			  	TB_LOG_KNOW_LOG B
+			  ON A.CODE_CD = B.DAY
+			 WHERE A.CODE_CTGR_CD = 'STATUS_DAY'
+			   AND CONCAT(YEAR,MONTH,DAY) BETWEEN replace(#{startDt},'.','') AND replace(#{endDt},'.','')
+			 GROUP BY A.CODE_NM, A.CODE_ODR, B.DAY
+			 ORDER BY A.CODE_ODR	 
+		]]>
+	</select>
+	
+	<select id="sysListHour" parameterType="logSysConnLogVO" resultType="logSysConnLogVO">
+		/*
+			 SQL ID : sysListHour
+			 설  명 : 시간별 지식 학습 로그 목록
+	 	*/
+	 	<![CDATA[
+			SELECT A.CODE_NM AS codeNm
+			    , IFNULL(SUM(B.HITS),0) AS hits
+			  FROM tb_sys_code A
+			  LEFT OUTER JOIN
+			  	TB_LOG_KNOW_LOG B
+			  ON A.CODE_CD = B.TM
+			 WHERE A.CODE_CTGR_CD = 'STATUS-HOUR'
+			   AND CONCAT(YEAR,MONTH,DAY) BETWEEN replace(#{startDt},'.','') AND replace(#{endDt},'.','')
+			 GROUP BY A.CODE_NM, A.CODE_ODR, B.TM
+			 ORDER BY A.CODE_ODR	 
+		]]>
+	</select>
+	
+	<select id="selectAutoDate" parameterType="logSysConnLogVO" resultType="logSysConnLogVO">
+		/*
+			 SQL ID : selectAutoDate
+			 설  명 : 날짜 가져오기
+	 	*/
+	 	<![CDATA[
+			SELECT CASE WHEN #{dateType} = 'Day' THEN #{endDt}
+			            WHEN #{dateType} = 'Week' THEN DATE_ADD(STR_TO_DATE(replace(#{endDt},'.',''),'%Y%m%d'), INTERVAL - 7 day)
+			            WHEN #{dateType} = 'Month' THEN DATE_ADD(STR_TO_DATE(replace(#{endDt},'.',''),'%Y%m%d'), INTERVAL -30 day)
+			            WHEN #{dateType} = 'Year' THEN DATE_ADD(STR_TO_DATE(replace(#{endDt},'.',''),'%Y%m%d'), INTERVAL -365 day)
+			       END as startDt
+			     , #{endDt} as endDt
+			  FROM DUAL 
+		]]>
+	</select>
+	
+	<select id="listHourByDay" parameterType="logSysConnLogVO" resultType="logSysConnLogVO">
+		/*
+			 SQL ID : listHourByDay
+			 설  명 : 시간별 접속 현황
+	 	*/
+	 	<![CDATA[
+			SELECT A.CODE_NM AS codeNm
+			     , IFNULL(SUM(B.CONN_CNT),0) AS connCnt
+			  FROM tb_sys_code A
+			  LEFT OUTER JOIN
+			  	tb_log_sys_conn_log B
+			  ON 
+			  	(
+			   	   A.CODE_CD = B.TM
+			   AND B.ORG_CD = #{orgCd}
+			  	)
+			 WHERE A.CODE_CTGR_CD = 'STATUS-HOUR'
+			   AND CONCAT(YEAR,MONTH,DAY) = #{startDt}
+			 GROUP BY A.CODE_NM, A.CODE_ODR, B.TM
+			 ORDER BY A.CODE_ODR
+		]]>
+	</select>
+	
+	<select id="listDayByWeek" parameterType="logSysConnLogVO" resultType="logSysConnLogVO">
+		/*
+			 SQL ID : listDayByWeek
+			 설  명 : 요일별 접속 현황
+	 	*/
+	 	<![CDATA[
+			SELECT A.CODE_CD AS codeNm
+			    , IFNULL(SUM(B.CONN_CNT),0) AS connCnt 
+			  FROM tb_sys_code A
+			  LEFT OUTER JOIN
+			       ( SELECT DATE_FORMAT(STR_TO_DATE(CONCAT(YEAR,MONTH,DAY),'%Y%m%d'),'%d') AS WEEK
+			              , IFNULL(FN_GET_NULL(CONN_CNT),0) AS CONN_CNT
+					   FROM tb_log_sys_conn_log
+			          WHERE CONCAT(YEAR,MONTH,DAY) BETWEEN replace(#{startDt},'.','') AND replace(#{endDt},'.','')
+					    AND IFNULL(FN_GET_NULL(ORG_CD),'1') = IFNULL(FN_GET_NULL(#{orgCd}),IFNULL(FN_GET_NULL(ORG_CD),'1'))					
+			       ) B
+			  ON A.CODE_CD = B.WEEK
+			 WHERE A.CODE_CTGR_CD = 'STATUS-WEEK'
+			 GROUP BY A.CODE_CD, A.CODE_ODR, B.WEEK
+			 ORDER BY A.CODE_ODR
+		]]>
+	</select>
+	
+	<select id="listDayByMonth" parameterType="logSysConnLogVO" resultType="logSysConnLogVO">
+		/*
+			 SQL ID : listDayByMonth
+			 설  명 : 월별 접속 현황
+	 	*/
+	 	<![CDATA[
+			SELECT A.CODE_NM AS codeNm
+			     , IFNULL(SUM(B.CONN_CNT),0) AS connCnt
+			  FROM tb_sys_code A
+			  LEFT OUTER JOIN
+			  	tb_log_sys_conn_log B
+			  ON 
+			  	(
+			   		A.CODE_CD = B.DAY 
+			    AND B.ORG_CD  = #{orgCd}			  	
+			  	)
+			 WHERE A.CODE_CTGR_CD = 'STATUS_DAY'
+			   AND CONCAT(YEAR,MONTH) = #{startDt}
+			 GROUP BY A.CODE_NM, A.CODE_ODR, B.DAY
+			 ORDER BY A.CODE_ODR	 	
+		]]>
+	</select>	
+	
+	<insert id="insert" parameterType="logSysConnLogVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 시스템 접속 로그의 정보 등록
+	 	*/
+		INSERT INTO tb_log_sys_conn_log
+					(
+		                  ORG_CD
+		                , YEAR
+		                , MONTH
+		                , DAY
+		                , TM
+		                , CONN_CNT
+		            ) VALUES (
+		                  #{orgCd}
+			            , DATE_FORMAT(NOW(),'%Y')
+			            , DATE_FORMAT(NOW(),'%m')
+			            , DATE_FORMAT(NOW(),'%d')
+			            , DATE_FORMAT(NOW(),'%H')		                
+		                , 1
+		           )
+		     ON DUPLICATE KEY
+		    	   UPDATE CONN_CNT = CONN_CNT + 1
+	</insert>
+
+</mapper>

@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.board.qna.service.impl.BrdQnaQstnMapper">	
+	<select id="selectKey" resultType="integer">
+		/*
+			 SQL ID : selectKey
+			 설  명 : qna 게시물의 키 생성
+	 	*/
+	 	SELECT nextval(SQ_BRD_QNA_QSTN) FROM DUAL
+	</select>	
+	<sql id="selectQuery">
+		<![CDATA[
+			SELECT A.QNA_SN AS QNA_SN
+			    , A.ORG_CD
+			    , A.USER_NO
+			    , (SELECT FN_GET_USER_NAME(A.USER_NO) FROM DUAL) AS USER_NM
+			    , A.STS_CD
+			    , A.QNA_CTGR_CD
+				, (SELECT CODE_NM FROM tb_sys_code WHERE CODE_CD = A.QNA_CTGR_CD 
+					AND CODE_CTGR_CD = 'CATEGORY_CD') AS QNA_CTGR_NM
+			    , A.QNA_TITLE
+			    , A.QNA_CTS
+			    , A.QNA_TAG
+			    , A.OPEN_YN
+			    , A.EDITOR_YN
+			    , A.LEC_YN
+			    , A.CRS_CRE_CD
+			    , A.UNIT_CD
+			    , A.REG_NM
+			    , A.REG_NO
+			    , A.REG_DTTM
+			    , A.MOD_NO
+			    , A.MOD_DTTM
+			 FROM tb_brd_qna_qstn A
+			WHERE ORG_CD = #{orgCd}	
+		]]>
+	</sql>	
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		<if test = "viewMode != 'admin' and viewMode != '' ">
+			AND USER_NO = #{userNo}
+		</if>
+		<if test = "qnaCtgrCd != null and qnaCtgrCd != ''">
+			AND A.QNA_CTGR_CD = #{qnaCtgrCd}
+		</if>			
+		<if test = "stsCd != null and stsCd != ''">
+			AND A.STS_CD = #{stsCd}
+		</if>
+		<if test = "lecYn != null and lecYn != ''">
+			AND A.LEC_YN = #{lecYn}
+		</if>
+		<if test = "crsCreCd != null and crsCreCd != ''">
+			AND A.CRS_CRE_CD = #{crsCreCd}
+		</if>		
+		<if test = "searchValue != null and searchValue != ''">
+			<if test = "searchKey != null and searchKey == 'regNm'">
+			<!-- AND REG_NM LIKE CONCAT('%', IFNULL(#{searchValue}, ''), '%') -->
+			AND FN_GET_USER_NAME(REG_NO) LIKE CONCAT('%', IFNULL(#{searchValue}, ''), '%')
+			</if>
+			<if test = "searchKey != null and searchKey == 'qnaTitle'">
+			   AND QNA_TITLE LIKE CONCAT('%', IFNULL(#{searchValue}, ''), '%')
+			</if>
+			<if test = "searchKey != null and searchKey == 'qnaCts'">
+			   AND QNA_CTS LIKE CONCAT('%', IFNULL(#{searchValue}, ''), '%')
+			</if>
+		</if>		
+	</sql>	
+	<select id="count" parameterType="brdQnaQstnVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 게시판 게시물의 전체 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>	
+	<select id="list" parameterType="brdQnaQstnVO" resultType="brdQnaQstnVO">
+		/*
+			 SQL ID : list
+			 설  명 : 상담게시물
+	 	*/
+	 	<include refid="listQuery"/>
+	</select>	
+	<select id="listPageing" parameterType="brdQnaQstnVO" resultType="brdQnaQstnVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 :  상담게시물 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+	 	ORDER BY REG_DTTM DESC
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>	
+	<select id="select" parameterType="brdQnaQstnVO" resultType="brdQnaQstnVO">
+		/*
+			 SQL ID : select
+			 설  명 : 개별 상담의 단일항목 정보를 가져온다.
+	 	*/
+	 	<include refid="selectQuery"/>
+	 	AND QNA_SN = #{qnaSn}
+	</select>
+	
+	<select id="lecSelect" parameterType="brdQnaQstnVO" resultType="brdQnaQstnVO">
+		/*
+			 SQL ID : lecSelect
+			 설  명 : 개별 강의 상담의 단일항목 정보를 가져온다.
+	 	*/
+	 	<include refid="lecSelectQuery"/>
+	 	AND QNA_SN = #{qnaSn}
+	</select>
+	
+	
+	<insert id="insert" parameterType="brdQnaQstnVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 개별 상담의 단일항목 답변을 등록하고 결과를 반환한다.
+	 	*/
+		  INSERT INTO tb_brd_qna_qstn (  
+		         QNA_SN  
+		       , ORG_CD  
+		       , USER_NO  
+		       , STS_CD  
+		       , QNA_CTGR_CD
+		       , QNA_TITLE  
+		       , QNA_CTS  
+		       , QNA_TAG  
+		       , OPEN_YN  
+		       , EDITOR_YN
+		       , LEC_YN
+		       , CRS_CRE_CD
+		       , UNIT_CD  
+		       , REG_NM  
+		       , REG_NO  
+		       , REG_DTTM  
+		       , MOD_NO  
+		       , MOD_DTTM  
+		  ) VALUES (  
+		         #{qnaSn}  
+		       , #{orgCd}  
+		       , #{userNo}  
+		       , 'WAIT'  
+		       , #{qnaCtgrCd}  
+		       , #{qnaTitle}  
+		       , #{qnaCts}  
+		       , #{qnaTag}  
+		       , #{openYn}  
+		       , #{editorYn}
+		       , #{lecYn}
+		       , #{crsCreCd}
+		       , #{unitCd} 
+		       , #{regNm}  
+		       , #{regNo}  
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 
+		       , #{modNo}  
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		  )  	 	
+
+	</insert>
+	<update id="update" parameterType="brdQnaQstnVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 개별 상담의 단일항목 정보를 수정하고 결과를 반환한다.
+	 	*/
+		  UPDATE tb_brd_qna_qstn  
+		     SET QNA_CTGR_CD = #{qnaCtgrCd}  
+		       , QNA_TITLE = #{qnaTitle}  
+		       , QNA_CTS = #{qnaCts}  
+		       , QNA_TAG = #{qnaTag}  
+		       , OPEN_YN = #{openYn}  
+		       , EDITOR_YN = #{editorYn}
+		       , UNIT_CD = #{unitCd}  
+		       , MOD_NO = #{modNo}  
+		       , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 
+		   WHERE QNA_SN = #{qnaSn}
+
+
+	</update>
+	<delete id="delete" parameterType="brdQnaQstnVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 개별 상담의 단일항목 정보를 삭제하고 결과를 반환한다.
+	 	*/
+		 DELETE FROM tb_brd_qna_qstn
+         WHERE QNA_SN = #{qnaSn} 
+	</delete>
+	
+	<sql id="selectManageQuery">
+		<![CDATA[
+			SELECT A.QNA_SN
+			    , A.ORG_CD
+			    , A.USER_NO
+			    , (SELECT FN_GET_USER_NAME(A.USER_NO) FROM DUAL) AS USER_NM
+			    , A.QNA_CTGR_CD
+			    , (SELECT QNA_CTGR_NM FROM tb_brd_qna_ctgr WHERE QNA_CTGR_CD = A.QNA_CTGR_CD) AS  QNA_CTGR_NM
+			    , A.STS_CD
+			    , A.QNA_TITLE
+			    , A.QNA_CTS
+			    , A.QNA_TAG
+			    , A.OPEN_YN
+			    , A.EDITOR_YN
+			   	, A.LEC_YN
+			   	, A.CRS_CRE_CD
+			   	, A.UNIT_CD
+			    , A.REG_NM
+			    , A.REG_NO
+			    , A.REG_DTTM
+			    , A.MOD_NO
+			    , A.MOD_DTTM
+			    , B.MOD_NO
+			    , B.MOD_DTTM
+			    , B.QNA_CTS
+			    , B.REG_NO
+			    , B.REG_DTTM
+			 FROM tb_brd_qna_qstn A
+			 LEFT OUTER JOIN tb_brd_qna_ansr B ON A.QNA_SN = B.QNA_SN
+			WHERE A.ORG_CD = #{orgCd}	
+		]]>
+	</sql>	
+	
+	<sql id="listWhereManageQuery">
+		<if test = "viewMode != 'admin' and viewMode != '' ">
+			AND A.USER_NO = #{userNo}
+		</if>
+		<if test = "stsCd != null and stsCd != ''">
+			AND A.STS_CD = #{stsCd}
+		</if>
+		<if test = "lecYn != null and lecYn != ''">
+			AND A.LEC_YN = #{lecYn}
+		</if>
+		<if test = "crsCreCd != null and crsCreCd != ''">
+			AND A.CRS_CRE_CD = #{crsCreCd}
+		</if>		
+		<if test = "qnaCtgrCdList != null"> 
+		AND A.QNA_CTGR_CD IN 
+			(
+			<foreach collection="qnaCtgrCdList" item="item" index="index" open="" close="" separator=",">
+				#{item}
+			</foreach>
+			)
+		</if>
+		<if test = "qnaCtgrCdList == null"> 
+			AND A.QNA_CTGR_CD is null
+		</if>
+		<if test = "qnaCtgrCd != null and qnaCtgrCd != ''">
+			AND A.QNA_CTGR_CD = #{qnaCtgrCd}
+		</if>
+		<if test = "searchValue != null and searchValue != ''">
+			AND FN_GET_USER_ID(A.REG_NO) LIKE CONCAT('%',NVL((#{searchValue}),0),'%')
+		</if>
+	</sql>
+	
+	<sql id="orderbyQuery">
+		<if test = 'sortKey != null and sortKey != ""'>
+			<if test = 'sortKey == "QNA_SN_ASC"'>
+			 ORDER BY QNA_SN ASC
+			</if>
+			<if test = 'sortKey == "QNA_SN_DESC"'>
+			 ORDER BY QNA_SN DESC
+			</if>
+			<if test = 'sortKey == "REG_NM_ASC"'>
+			 ORDER BY REG_NM ASC
+			</if>
+			<if test = 'sortKey == "REG_NM_DESC"'>
+			 ORDER BY REG_NM DESC
+			</if>
+			<if test = 'sortKey == "STS_NM_ASC"'>
+			 ORDER BY STS_NM ASC
+			</if>
+			<if test = 'sortKey == "STS_NM_DESC"'>
+			 ORDER BY STS_NM DESC
+			</if>
+		</if>
+		<if test = 'sortKey == null or sortKey == ""'>
+		   ORDER BY QNA_SN DESC
+		</if>
+	</sql>	
+	
+	<sql id="listManageQuery">
+		<include refid="selectManageQuery"/>
+		<include refid="listWhereManageQuery"/>
+	</sql>	
+	
+	<sql id="selectCountQuery">
+		SELECT  COUNT(CASE WHEN A.STS_CD = 'WAIT' THEN 1 END) AS WAIT_CNT,
+				COUNT(CASE WHEN A.STS_CD = 'COMP' THEN 1 END) AS COMP_CNT,
+				COUNT(*) AS ALL_CNT
+		FROM tb_brd_qna_qstn A
+			 LEFT OUTER JOIN tb_brd_qna_ansr B ON A.QNA_SN = B.QNA_SN
+			 LEFT JOIN tb_std_std C on A.USER_NO = C.USER_NO 
+			WHERE A.ORG_CD = #{orgCd}	
+	</sql>
+	
+	<select id="manageCount" parameterType="brdQnaQstnVO" resultType="Integer">
+		/*
+			 SQL ID : manageCount
+			 설  명 : 게시판 게시물의 전체 카운트(기존)
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listManageQuery"/>
+	 	) T
+	</select>	
+	
+	<select id="manageStsCount" parameterType="brdQnaQstnVO" resultType="brdQnaQstnVO">
+		/*
+			 SQL ID : manageStsCount
+			 설  명 : 질의응답 게시물의 상태 별 카운트 - SELECT, WHERE 절 구분 include
+	 	*/
+	 	<include refid="selectCountQuery"/>
+	 	<include refid="listWhereManageQuery"/>
+	</select>
+	
+	<select id="listManage" parameterType="brdQnaQstnVO" resultType="brdQnaQstnVO">
+		/*
+			 SQL ID : listManage
+			 설  명 : 상담게시물
+	 	*/
+	 	<include refid="listManageQuery"/>
+	 	<include refid="orderbyQuery"/>
+	</select>	
+	<select id="listManagePageing" parameterType="brdQnaQstnVO" resultType="brdQnaQstnVO">
+		/*
+			 SQL ID : listManagePageing
+			 설  명 :  상담게시물 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listManageQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+	 	
+	 	<include refid="orderbyQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	 	
+	 	
+	</select>	
+	
+	<update id="updateQnaSts" parameterType="brdQnaQstnVO" >
+		/*
+			 SQL ID : updateQnaSts
+			 설  명 : 상담 게시물 상태코드 변경
+	 	*/
+		  UPDATE tb_brd_qna_qstn  
+		     SET STS_CD = #{stsCd}    
+		   WHERE QNA_SN = #{qnaSn}  
+	</update>	
+	
+	<select id="parCntsListByCreCd" parameterType="brdQnaQstnVO" resultType="brdQnaQstnVO">
+		SELECT
+			 A.UNIT_CD
+			,A.UNIT_NM
+		FROM tb_crs_sbj_cnts A, tb_crs_cre_crs_onln_sbj B
+		WHERE
+			 B.CRS_CRE_CD = #{crsCreCd}
+			AND A.SBJ_CD = B.SBJ_CD
+			AND A.UNIT_LVL = 1;
+	</select>
+	
+	<sql id="lecSelectQuery">
+			SELECT A.QNA_SN AS QNA_SN
+			    , A.ORG_CD
+			    , A.USER_NO
+			    , (SELECT FN_GET_USER_NAME(A.USER_NO) FROM DUAL) AS USER_NM
+			    , A.STS_CD
+			    , A.QNA_CTGR_CD
+				, (SELECT CODE_NM FROM tb_sys_code WHERE CODE_CD = A.QNA_CTGR_CD 
+					AND CODE_CTGR_CD = 'CATEGORY_CD') AS QNA_CTGR_NM
+			    , A.QNA_TITLE
+			    , A.QNA_CTS
+			    , A.QNA_TAG
+			    , A.OPEN_YN
+			    , A.EDITOR_YN
+			    , A.LEC_YN
+			    , A.CRS_CRE_CD
+			    , A.UNIT_CD
+			    , NVL(B.PAR_UNIT_CD, B.UNIT_CD) as parUnitCd
+			    , B.UNIT_NM
+			    , NVL((SELECT UNIT_NM from tb_crs_sbj_cnts WHERE UNIT_CD = B.PAR_UNIT_CD), B.UNIT_NM) as parUnitNm
+			    , A.REG_NM
+			    , A.REG_NO
+			    , A.REG_DTTM
+			    , A.MOD_NO
+			    , A.MOD_DTTM
+			 FROM tb_brd_qna_qstn A, tb_crs_sbj_cnts B 
+			WHERE A.ORG_CD = #{orgCd}
+				AND A.UNIT_CD = B.UNIT_CD
+	</sql>
+	
+	<sql id="lecListQuery">
+		<include refid="lecSelectQuery" />
+		
+		<if test = "viewMode != 'admin' and viewMode != '' ">
+			AND USER_NO = #{userNo}
+		</if>
+		<if test = "qnaCtgrCd != null and qnaCtgrCd != ''">
+			AND A.QNA_CTGR_CD = #{qnaCtgrCd}
+		</if>			
+		<if test = "stsCd != null and stsCd != ''">
+			AND A.STS_CD = #{stsCd}
+		</if>
+		<if test = "lecYn != null and lecYn != ''">
+			AND A.LEC_YN = #{lecYn}
+		</if>
+		<if test = "crsCreCd != null and crsCreCd != ''">
+			AND A.CRS_CRE_CD = #{crsCreCd}	
+		</if>		
+		<if test = "unitCd != null and unitCd != ''">
+			AND A.UNIT_CD = #{unitCd}	
+		</if>
+		<if test = "searchValue != null and searchValue != ''">
+			<if test = "searchKey != null and searchKey == 'regNm'">
+			AND REG_NM LIKE CONCAT('%', NVL(#{searchValue}, ''), '%')
+			<!-- AND FN_GET_USER_NAME(REG_NO) LIKE CONCAT('%', NVL(#{searchValue}, ''), '%') -->
+			</if>
+			<if test = "searchKey != null and searchKey == 'qnaTitle'">
+			   AND QNA_TITLE LIKE CONCAT('%', NVL(#{searchValue}, ''), '%')
+			</if>
+			<if test = "searchKey != null and searchKey == 'qnaCts'">
+			   AND QNA_CTS LIKE CONCAT('%', NVL(#{searchValue}, ''), '%')
+			</if>
+			<if test = "searchKey != null and searchKey == 'ALL'">
+			    AND ( QNA_TITLE LIKE CONCAT('%', IFNULL(#{searchValue}, ''), '%')
+					OR REG_NM LIKE CONCAT('%', IFNULL(#{searchValue}, ''), '%'))		
+			</if>
+		</if>		
+	</sql>
+	
+	<select id="lecList" parameterType="brdQnaQstnVO" resultType="brdQnaQstnVO">
+		/*
+			 SQL ID : list
+			 설  명 : 상담게시물
+	 	*/
+	 	<include refid="lecListQuery"/>
+	</select>
+	
+	<select id="lecListPageing" parameterType="brdQnaQstnVO" resultType="brdQnaQstnVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 :  상담게시물 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+		<include refid="lecListQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+	 	ORDER BY REG_DTTM DESC
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+</mapper>

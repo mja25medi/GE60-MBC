@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>스마트인재개발원 LMS</title>
+    <link rel="shortcut icon" href="data/img/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="css/hrd_common.css" />
+    <link rel="stylesheet" type="text/css" href="data/css/semantic.css" />
+    <style type="text/css">
+        #wrap {
+            width: 1200px;
+            margin: 40px auto;
+        }
+        h1 {
+            font-size: 32px;
+            color: #333;
+            font-weight: 700;
+            text-align: center;
+        }
+        h2 {
+            padding: 10px 0;
+            font-size: 24px;
+            color: #333;
+            font-weight: 700;
+        }
+        h3 {
+            padding: 10px 0;
+            font-size: 18px;
+            color: #333;
+            font-weight: 700;
+        }
+        dl.group-box {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 7px;
+            background: #fff;
+        }
+        dl.group-box dt {
+            padding-bottom: 10px;
+            font-size: 24px;
+            color: #333;
+            font-weight: 500;
+        }
+        dl.group-box dd ul {
+            margin-top: 10px;
+        }
+        dl.group-box dd ul ol {
+            width: calc(25% - 12px);
+            display: inline-block;
+            margin: 2px 8px 35px 0;
+            vertical-align: top;
+        }
+        dl.group-box dd ul ol ul li {
+            padding: 2px 0;
+            font-size: 15px;
+            font-weight: 400;;
+        }
+        dl.group-box dd ul ol ul li ul li{
+            width: 80%;
+            margin: 0 auto;
+        }
+        dl.group-box dd ul ol ul li ul {margin-top: 2px;}
+        dl.group-box dd ul ol ul li span.ui.button {
+            width: 16px;
+            height: 16px;
+            padding: 0;
+            line-height: 16px;
+            vertical-align: middle;
+            border-radius: .2rem;
+        }
+        .btn {
+            vertical-align: top;
+        }
+        section {
+            margin-top: 20px;
+            clear: both;
+            overflow: hidden;
+        }
+        section a {
+            margin: 3px 0 !important;
+        }
+        section ul {
+            float: left;
+            width: 200px;
+        }
+        section ul li span {
+            vertical-align: inherit !important;
+        }
+        .ui.basic.button {
+            width: 100%;
+            text-align: center;
+            cursor: pointer;
+            display: inline-block;
+            min-height: 1em;
+            border-radius: .5rem;
+            padding: 1rem 1rem;
+            margin: 0em 0.25em 0em 0em;
+            background: #ffffff;
+            color: rgba(0, 0, 0, 0.7);
+            box-shadow: 0px 0px 0px 1px rgba(34, 36, 38, 0.15) inset;
+        }
+        .ui.basic.button.blue {
+            box-shadow: 0px 0px 0px 1px #0090D0 inset;
+            color:#0090D0;
+
+        }
+        .ui.fluid.buttons, .ui.fluid.button {
+            width: 100%;
+        }
+        .ui.basic.black.button{
+            background-color: hsla(0, 0%, 85%, 0.40);
+            font-weight: 600;
+            box-shadow: 0px 0px 0px 1px #ccc inset !important;
+            color: #1B1C1D;
+        }
+        .ui.divider:not(.vertical):not(.horizontal) {
+            border-top: 1px solid rgba(34, 36, 38, 0.15);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .ui.divider{    
+            margin: 1rem 0rem;
+            line-height: 1;
+            height: 0em;
+            text-transform: uppercase;
+            color: rgba(0, 0, 0, 0.85);
+        }
+        .ui.teal.buttons .button, .ui.teal.button {
+            font-size: 1.1rem;
+            text-align: center;
+            display: inline-block;
+            background-color: #00B5AD;
+            color: #FFFFFF;
+            text-shadow: none;
+            background-image: none;
+        }
+        .ui.purple.buttons .button, .ui.purple.button {
+            font-size: 1.1rem;
+            text-align: center;
+            display: inline-block;
+            background-color: #a333c8;
+            color: #FFFFFF;
+            text-shadow: none;
+            background-image: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap">
+        <h1>스마트인재개발원 학습관리시스템(MX-LMS) Mockup</h1>
+        <dl class="group-box">
+            <dt>화면 설계서</dt>
+            <dd>
+                <a href="smhrd_LMS_stu_storyboard_v0.8.pptx" target="_blank" class="ui basic button" style="width: calc(20% - 8px)">화면설계서: 학습자</a>
+                <a href="smhrd_LMS_teacher_storyboard_v0.3.pptx" target="_blank" class="ui basic button" style="width: calc(20% - 8px)">화면설계서: 강사</a>
+                <a href="smhrd_menu_v0.5.xlsx" target="_blank" class="ui basic button" style="width: calc(20% - 8px)">메뉴구조도</a>                
+                <a href="https://www.figma.com/file/b5QNzo1jGd5InWgaGNk7oC/icon-set?type=design&node-id=1-4338&mode=design&t=YV2rBQPn1qUTuB9H-0" target="_blank" class="ui basic button" style="width: calc(20% - 8px)">Fig Icon Set</a>
+                <a href="https://xpressengine.github.io/XEIcon/library-2.3.3.html" target="_blank" class="ui basic button" style="width: calc(20% - 8px)">XEIcon</a>
+            </dd>
+        </dl>
+        <dl class="group-box">
+            <dt>메인</dt>
+            <dd>
+                <ul>
+                    <ol><a href="./html_hrd/hrd_main.jsp" class="ui basic fluid button" style="background-color: #0090d0; color:#fff;">main</a>
+                       
+                    </ol>
+                    <ol><a href="./html_hrd/error.jsp" class="ui basic black fluid button">에러</a></ol>
+                    <ol><a href="./html_hrd/hrd_sub_ui_basic.jsp" class="ui basic black fluid button">sub UI 기본요소</a>
+                        <ul>
+                            <li><a href="./html_hrd/hrd_sub.jsp" class="ui basic button">sub 레이아웃</a></li>
+                        </ul>
+                    </ol>
+                    <ol><a href="#0" class="ui basic black fluid button">과정검색</a>
+                        <ul>
+                            <li><a href="./html_hrd/search_course_list.jsp" class="ui basic blue button">과정검색 결과</a></li>
+                            <li><a href="./html_hrd/search_course_list_no.jsp" class="ui basic blue button">과정검색 결과 > 없음</a></li>
+                        </ul>
+                    </ol>
+                </ul>
+                 <div class="ui divider"></div>
+            </dd>
+            <dt>학습자 > 회원</dt>
+            <dd>
+                <ul>
+                    <ol><a href="./html_hrd/join_step0.jsp" class="ui basic black fluid button">회원</a>
+                        <ul>
+                            <li><a href="./html_hrd/join_step0.jsp" class="ui basic blue button">회원가입 하기</a></li>
+                            <li><a href="./html_hrd/join_step1.jsp" class="ui basic blue button">회원가입 > 약관동의</a></li>
+                            <li><a href="./html_hrd/join_step2.jsp" class="ui basic blue button">회원가입 > 정보입력</a></li>
+                            <li><a href="./html_hrd/join_step3.jsp" class="ui basic blue button">회원가입 > 가입완료</a></li>
+                        </ul>
+                    </ol>
+                    <ol><a href="./html_hrd/login.jsp" class="ui basic black fluid button">로그인</a>
+                        <ul>
+                            <li><a href="./html_hrd/login.jsp" class="ui basic blue button">로그인</a></li>
+                            <li><a href="./html_hrd/login_lecturer.jsp" class="ui basic blue button">로그인 > 강사</a></li>
+                            <li><a href="./html_hrd/popup_id_pw.jsp" class="ui basic blue button">(팝업) ID/비밀번호 찾기</a></li>
+                        </ul>
+                    </ol>
+                    <ol><a href="#0" class="ui basic black fluid button">정책</a>
+                        <ul>
+                            <li><a href="#0" class="ui basic button">이용약관</a></li>
+                            <li><a href="#0" class="ui basic button">개인정보처리방침</a></li>
+                        </ul>
+                    </ol>
+                    
+                </ul>
+            </dd>
+            <dt>학습자 > 서브</dt>
+            <dd>
+                <ul>
+                    <ol><a href="#0" class="ui basic black fluid button">KDP센터 소개</a>
+                        <ul>
+                            <li><a href="./html_hrd/kdp_01.jsp" class="ui basic blue button">KDP 사업소개</a></li>
+                            <li><a href="./html_hrd/kdp_02.jsp" class="ui basic blue button">KDP 센터소개</a></li>
+                            <li><a href="./html_hrd/kdp_03.jsp" class="ui basic blue button">인사말</a></li>
+                            <li><a href="./html_hrd/kdp_04.jsp" class="ui basic blue button">찾아오시는 길</a></li>
+                            <li><a href="#0" class="ui basic button">조직도</a></li>
+                        </ul>
+                    </ol>
+                    <ol><a href="#0" class="ui basic black fluid button">개발원 소개</a>
+                        <ul>
+                            <li><a href="./html_hrd/info_story.jsp" class="ui basic blue button">개발원 이야기</a></li>
+                            <li><a href="./html_hrd/info_organization.jsp" class="ui basic blue button">조직현황/강사진</a></li>
+                            <li><a href="./html_hrd/info_magazine.jsp" class="ui basic blue button">세미콜론 매거진</a></li>
+                            <li><a href="./html_hrd/info_recruit.jsp" class="ui basic blue button">인재채용</a></li>
+                            <li><a href="./html_hrd/info_news.jsp" class="ui basic blue button">뉴스룸</a></li>
+                            <li><a href="./html_hrd/info_map.jsp" class="ui basic blue button">오시는길</a></li>
+                        </ul>
+                    </ol>
+                    <ol><a href="#0" class="ui basic black fluid button">교육안내</a>
+                        <ul>
+                            <li><a href="#0" class="ui basic button">훈련과정</a>
+                                <ul class="mb10">
+                                    <li><a href="./html_hrd/training_01.jsp" class="ui basic blue button">지원제도안내</a></li>
+                                    <li><a href="./html_hrd/training_02.jsp" class="ui basic blue button">K-디지털 트레이닝 과정</a></li>
+                                    <li><a href="./html_hrd/training_03.jsp" class="ui basic blue button">K-디지털 기초역량 훈련과정</a></li>
+                                    <li><a href="#0" class="ui basic button">사업주 직업능력개발훈련</a></li>
+                                </ul>
+                            </li> 
+                            <li><a href="#0" class="ui basic button">고용보험 환급제도</a></li>   
+                            <li><a href="./html_hrd/training_return.jsp"" class="ui basic blue button">훈련비 환급방법</a></li>                      
+                            <li><a href="./html_hrd/training_process.jsp" class="ui basic blue button">훈련 진행절차</a></li>
+                            <li><a href="./html_hrd/training_note.jsp" class="ui basic blue button">훈련진행 유의사항</a></li>
+                            <li><a href="./html_hrd/training_standard.jsp" class="ui basic blue button">모사답안 처리기준</a></li>
+                        </ul>
+                    </ol>
+                    <ol><a href="#0" class="ui basic black fluid button">수강신청</a>
+                        <ul>
+                            <li><a href="#0" class="ui basic button">원격훈련과정</a></li>
+                            <li><a href="./html_hrd/course_list.jsp" class="ui basic blue button">훈련과정 > 리스트</a></li>
+                            <li><a href="./html_hrd/course_view.jsp" class="ui basic blue button">훈련과정 > 상세</a></li>
+                            <li><a href="./html_hrd/popup_nonmember_qna.jsp" class="ui basic blue button">(팝업) 비회원 상담신청</a></li>
+                            <li><a href="./html_hrd/course_agree_pay.jsp" class="ui basic blue button">수강신청 > 확인/동의</a></li>
+                            <li><a href="#0" class="ui basic button">집체훈련과정</a></li>
+                            <li><a href="#0" class="ui basic button">혼합훈련과정</a></li>
+                        </ul>                        
+                    </ol>
+                    <ol><a href="#0" class="ui basic black fluid button">시설·장비 공유</a>
+                        <ul>
+                            <li><a href="#0" class="ui basic button">시설·장비 이용방법</a></li>
+                            <li><a href="./html_hrd/fac_list.jsp" class="ui basic blue button">대관·대여 신청</a></li>
+                            <li><a href="./html_hrd/fac_reservation_calendar.jsp" class="ui basic blue button">예약현황</a></li>
+                            <li class="mb5"><span class="ui teal mini button mr5">M</span>시설예약 팝업</li>
+                            <li class="mb10"><span class="ui teal mini button mr5">M</span>시설예약상세 팝업</li>
+                            <li><a href="./html_hrd/fac_reservation_list.jsp" class="ui basic blue button">예약조회</a></li>
+                        </ul>                        
+                    </ol>
+                    <ol><a href="#0" class="ui basic black fluid button">나의 강의실</a>
+                        <ul>
+                            <li><a href="./html_hrd/my_course.jsp" class="ui basic blue button">나의 학습</a></li>
+                            <li><a href="./html_hrd/my_grade_check.jsp" class="ui basic blue button">종료과정 성적조회</a></li>
+                            <li><a href="./html_hrd/my_survey_list.jsp" class="ui basic blue button">설문</a></li>
+                            <li class="mb10"><span class="ui teal mini button mr5">M</span>설문정보</li>
+                            <li><a href="./html_hrd/my_survey_submit.jsp" class="ui basic blue button">설문 > 설문하기</a></li>
+                            <li><a href="./html_hrd/my_qna_list.jsp" class="ui basic blue button">과정별 학습 문의</a></li>
+                        </ul>                        
+                    </ol>
+                    <ol><a href="#0" class="ui basic black fluid button">마이 페이지</a>
+                        <ul>
+                            <li><a href="./html_hrd/mypage_cart.jsp" class="ui basic blue button">장바구니</a></li>
+                            <li><a href="./html_hrd/mypage_pay.jsp" class="ui basic blue button">결제내역</a></li>
+                            <li class="mb10"><span class="ui teal mini button mr5">M</span>환불안내</li>
+                            <li><a href="./html_hrd/mypage_qna_list.jsp" class="ui basic blue button">문의내역</a></li>
+                            <li><a href="./html_hrd/mypage_qna_write.jsp" class="ui basic blue button">문의내역 > 등록</a></li>
+                            <li><a href="./html_hrd/mypage_message.jsp" class="ui basic blue button">받은쪽지</a></li>
+                            <li><a href="./html_hrd/mypage_message_view.jsp" class="ui basic blue button">받은쪽지 > 보기</a></li>
+                            <li><a href="./html_hrd/mypage_myinfo.jsp" class="ui basic blue button">개인정보 수정</a></li>
+                            <li><a href="./html_hrd/mypage_myavatar.jsp" class="ui basic blue button">아바타 편집</a></li>
+                            <li class="mb10"><span class="ui teal mini button mr5">M</span>아바타 편집하기</li>
+                        </ul>                        
+                    </ol>
+                    <ol><a href="./html_hrd/board_list.jsp" class="ui basic black fluid button">지원센터</a>
+                        <ul>
+                            <li><a href="./html_hrd/board_list.jsp" class="ui basic blue button">공지사항 > 리스트</a></li>
+                            <li><a href="./html_hrd/board_view.jsp" class="ui basic blue button">공지사항 > 보기</a></li>
+                            <li><a href="./html_hrd/board_write.jsp" class="ui basic blue button">공지사항 > 쓰기</a></li>
+                            <li><a href="#0" class="ui basic button">학습자료실</a></li>
+                            <li><a href="./html_hrd/qna_list.jsp" class="ui basic blue button">1:1문의하기</a></li>
+                            <li><a href="./html_hrd/faq.jsp" class="ui basic blue button">FAQ</a></li>                         
+                        </ul>                        
+                    </ol>                   
+                </ul>
+                        
+            </dd>
+        </dl>
+        <dl class="group-box">            
+            <dt>학습자 > 강의실</dt>
+            <dd>
+                <ul>
+                    <ol><a href="#0" class="ui basic black fluid button">mOTP 인증 화면</a></ol> 
+                    <ol><a href="./html_class/class_home.jsp" class="ui basic black fluid button">강의실 홈</a>
+                        <ul>
+                            <li><a href="./html_class/class_home.jsp" class="ui basic blue button">강의실 홈</a></li>
+                            <li><a href="./html_class/print_certificate.jsp" class="ui basic blue button">수료증</a></li>
+                        </ul>
+                    </ol>                
+                    <ol><a href="./html_class/class_lacture_plan.jsp" class="ui basic black fluid button">강의계획서</a>
+                        <ul>
+                            <li><a href="./html_class/class_lacture_plan.jsp" class="ui basic blue button">강의계획서</a></li>
+                        </ul>
+                    </ol>
+                    <ol><a href="#0" class="ui basic black fluid button">강의보기</a>
+                        <ul>
+                            <li><a href="#0" class="ui basic button">과목별리스트</a></li>
+                            <li><a href="./html_class/class_lecture_list.jsp" class="ui basic blue button">과목별리스트 > 과목별 학습목차</a></li>
+                            <li class="mb5"><span class="ui teal mini button mr5">M</span>외출/조퇴 팝업</li>
+                            <li class="mb5"><span class="ui teal mini button mr5">M</span>모바일 출석 체크</li>
+                            <li class="mb5"><span class="ui teal mini button mr5">M</span>과제제출결과 팝업</li>
+                            <li class="mb5"><span class="ui purple mini button mr5">W</span>학습하기</li>
+                            <li class="mb5"><span class="ui purple mini button mr5">W</span>코딩학습창(vod)</li>
+                            <li class="mb10"><span class="ui purple mini button mr5">W</span>코딩학습창(내용보기)</li>
+                        </ul>
+                    </ol>
+                    <ol><a href="#0" class="ui basic black fluid button">시험</a>
+                        <ul>
+                            <li><a href="./html_class/class_test_list.jsp" class="ui basic blue button">시험응시 리스트</a></li>
+                            <li class="mb5"><span class="ui teal mini button mr5">M</span>응시하기 팝업</li>
+                            <li class="mb5"><span class="ui teal mini button mr5">M</span>시험응시 팝업</li>
+                            <li class="mb10"><span class="ui teal mini button mr5">M</span>시험결과정보 팝업</li>
+                            <li><a href="./html_class/class_test_problem.jsp" class="ui basic blue button">이의제기 > 리스트</a></li>
+                            <li><a href="./html_class/class_test_problem_write.jsp" class="ui basic blue button">이의제기 > 등록</a></li>
+                            <li><a href="./html_class/class_grade_check.jsp" class="ui basic blue button">성적조회</a></li>
+                        </ul>
+                    </ol>
+                    <ol><a href="./html_class/class_task_list.jsp" class="ui basic black fluid button">과제</a>
+                        <ul>
+                            <li><a href="./html_class/class_task_list.jsp" class="ui basic blue button">과제 > 리스트</a></li>
+                            <li class="mb10"><span class="ui teal mini button mr5">M</span>과제정보 팝업</li>
+                            <li><a href="./html_class/class_task_submit.jsp" class="ui basic blue button">과제 > 제출 > 작성</a></li>
+                        </ul>
+                    </ol>
+                    <ol><a href="./html_class/class_lacture_eval.jsp" class="ui basic black fluid button">강의 평가</a>
+                        <ul>
+                            <li><a href="./html_class/class_lacture_eval.jsp" class="ui basic blue button">강의 평가 설문 > 리스트</a></li>
+                            <li><a href="./html_class/class_eval_submit.jsp" class="ui basic blue button">강의 평가 설문 > 설문하기</a></li>
+                        </ul>
+                    </ol>
+                    <ol><a href="#0" class="ui basic black fluid button">커뮤니티</a>
+                        <ul>
+                            <li><a href="#0" class="ui basic button">공지사항 > 리스트</a></li>
+                            <li><a href="#0" class="ui basic button">자료실 > 리스트</a></li>
+                            <li><a href="#0" class="ui basic button">학습문의 > 리스트</a></li>
+                            <li><a href="#0" class="ui basic button">학습문의 > 등록</a></li>
+                        </ul>
+                    </ol>
+                    <ol><a href="./html_class/iframe_learn_vod.jsp" class="ui basic black fluid button">학습창</a>
+                        <ul>
+                            <li><a href="./html_class/iframe_learn_vod.jsp" class="ui basic blue button">학습창 Full</a></li>
+                        </ul>
+                    </ol>
+                    <ol><a href="./html_class/iframe_learn_coding3.jsp" class="ui basic black fluid button">코딩 학습창(변경)</a>
+                        <ul>
+                            <li><a href="./html_class/iframe_learn_coding3.jsp" class="ui basic blue button">코딩 학습창(변경)</a></li>
+                            <li class="mb10"><span class="ui teal mini button mr5">M</span>채점 결과</li>
+                        </ul>
+                    </ol>
+                    <ol><a href="#0" class="ui basic black fluid button">학습창 > 메타버스 강의</a></ol>
+                </ul>
+                
+            </dd>
+        </dl>
+        <dl class="group-box">            
+            <dt>강사 > 강의실</dt>
+            <dd>
+                <ul>
+                    <ol><a href="./html_class/prof_home.jsp" class="ui basic black fluid button">강의실 홈</a>
+                        <ul>
+                            <li><a href="./html_class/prof_home.jsp" class="ui basic blue button">강의실 홈</a></li>
+                            <li class="mb5"><span class="ui teal mini button mr5">M</span>페어코딩 요청확인</li>
+                            <li><a href="./html_class/iframe_learn_coding4.jsp" class="ui basic blue button">코딩 학습창(공유)</a></li>
+                        </ul>
+                    </ol>
+                    <ol><a href="./html_class/prof_lecture_manage.jsp" class="ui basic black fluid button">강의관리</a>
+                        <ul>
+                            <li><a href="./html_class/prof_lecture_manageTab1.jsp" class="ui basic blue button">강의관리 > tab1</a></li>
+                            <li class="mb10"><span class="ui teal mini button mr5">M</span>목차 설정 관리</li>
+                            <li><a href="./html_class/prof_lecture_manageTab2.jsp" class="ui basic blue button">강의관리 > tab2</a></li>
+                            <li><a href="./html_class/prof_lecture_info.jsp" class="ui basic blue button">과정정보</a></li>
+                        </ul>
+                    </ol>
+                    <ol><a href="./html_class/prof_test_grade.jsp" class="ui basic black fluid button">시험관리</a>
+                        <ul>
+                            <li><a href="./html_class/prof_test_grade.jsp" class="ui basic blue button">시험채점</a></li>
+                            <li class="mb10"><span class="ui teal mini button mr5">M</span>시험정보</li>
+                            <li><a href="./html_class/prof_test_grade_reg.jsp" class="ui basic blue button">시험등록</a></li>
+                            <li><a href="./html_class/prof_test_grade_scoreTab1.jsp" class="ui basic blue button">채점하기(문제관리)</a></li>
+                            <li class="mb5"><span class="ui teal mini button mr5">M</span>시험문제 보기</li>
+                            <li class="mb5"><span class="ui teal mini button mr5">M</span>시험문제은행</li>
+                            <li class="mb5"><span class="ui teal mini button mr5">M</span>서술형문제추가</li>
+                            <li class="mb5"><span class="ui teal mini button mr5">M</span>선택형문제추가</li>
+                            <li class="mb5"><span class="ui teal mini button mr5">M</span>진위형문제추가</li>
+                            <li class="mb10"><span class="ui teal mini button mr5">M</span>단답형문제추가</li>
+                           
+                            <li><a href="./html_class/prof_test_grade_scoreTab2.jsp" class="ui basic blue button">채점하기(평가관리)</a></li>
+                            <li class="mb5"><span class="ui teal mini button mr5">M</span>단답, 서술형 평가</li>
+                            <li class="mb5"><span class="ui teal mini button mr5">M</span>평가</li>
+                            <li class="mb5"><span class="ui teal mini button mr5">M</span>SMS</li>
+                            <li class="mb10"><span class="ui teal mini button mr5">M</span>Email</li>
+                            <li><a href="./html_class/prof_test_problem.jsp" class="ui basic blue button">이의제기</a></li>
+                            <li><a href="./html_class/prof_test_problem_view.jsp" class="ui basic blue button">이의제기 글보기</a></li>
+                        </ul>
+                    </ol>
+                    <ol><a href="./html_class/prof_task_list.jsp" class="ui basic black fluid button">과제관리</a>
+                        <ul>
+                            <li><a href="./html_class/prof_task_list.jsp" class="ui basic blue button">과제관리</a></li>
+                            <li><a href="./html_class/prof_task_reg.jsp" class="ui basic blue button">과제등록</a></li>
+                            <li><a href="./html_class/prof_task_infoTab1.jsp" class="ui basic blue button">과정정보(문제관리)</a></li>
+                            <li class="mb5"><span class="ui teal mini button mr5">M</span>과제문제관리</li>
+                            <li class="mb10"><span class="ui teal mini button mr5">M</span>AI 과제문제관리</li>
+                            <li><a href="./html_class/prof_task_infoTab2.jsp" class="ui basic blue button">과정정보(평가관리)</a></li>
+                            <li class="mb10"><span class="ui teal mini button mr5">M</span>과제평가 팝업</li>
+                        </ul>
+                    </ol>
+                    <ol><a href="./html_class/prof_eval_list.jsp" class="ui basic black fluid button">강의평가관리</a>
+                        <ul>
+                            <li><a href="./html_class/prof_eval_list.jsp" class="ui basic blue button">강의평가관리</a></li>
+                            <li><a href="./html_class/prof_eval_result.jsp" class="ui basic blue button">결과보기</a></li>
+                            <li class="mb10"><span class="ui teal mini button mr5">M</span>서술형결과보기</li>
+                        </ul>
+                    </ol>
+                    <ol><a href="./html_class/board_list.jsp" class="ui basic black fluid button">커뮤니티</a>
+                        <ul>
+                            <li><a href="./html_class/board_list.jsp" class="ui basic blue button">리스트</a></li>
+                            <li><a href="./html_class/board_write.jsp" class="ui basic blue button">글쓰기</a></li>
+                            <li><a href="./html_class/board_view.jsp" class="ui basic blue button">글보기</a></li>
+                            <li><a href="./html_class/inquiry_list.jsp" class="ui basic blue button">학습문의 > 리스트</a></li>
+                            <li><a href="./html_class/inquiry_write.jsp" class="ui basic blue button">학습문의 > 글쓰기</a></li>
+                            <li><a href="./html_class/inquiry_view.jsp" class="ui basic blue button">학습문의 > 글보기</a></li>
+                        </ul>
+                    </ol>
+                    <ol><a href="./html_class/prof_user_list.jsp" class="ui basic black fluid button">수강자관리</a>
+                        <ul>
+                            <li><a href="./html_class/prof_user_list.jsp" class="ui basic blue button">수강자관리</a></li>
+                            <li class="mb5"><span class="ui teal mini button mr5">M</span>성적조회</li>
+                            <li class="mb5"><span class="ui teal mini button mr5">M</span>SMS</li>
+                            <li class="mb5"><span class="ui teal mini button mr5">M</span>쪽지</li>
+                            <li class="mb10"><span class="ui teal mini button mr5">M</span>메일</li>
+                        </ul>
+                    </ol>
+                    <ol><a href="./html_class/prof_notgrade_list.jsp" class="ui basic black fluid button">미채점현황</a>
+                        <ul>
+                            <li><a href="./html_class/prof_notgrade_list.jsp" class="ui basic blue button">미채점현황</a></li>
+                        </ul>
+                    </ol>
+                </ul>
+                
+            </dd>
+        </dl>
+       
+    </div>
+</body>
+
+</html>

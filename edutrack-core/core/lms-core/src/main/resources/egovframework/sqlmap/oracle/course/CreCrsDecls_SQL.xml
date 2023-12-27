@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.decls.service.impl.CreCrsDeclsMapper">	
+
+	<sql id="selectColumnQuery">
+		  		 CRS_CRE_CD 										
+		       , DECLS_NO 											
+		       , ( SELECT COUNT(*) 								
+		             FROM TB_STD_STD C, TB_USR_LOGIN D				
+		            WHERE C.USER_NO = D.USER_NO					
+		              AND D.USER_STS = 'U' 						
+		              AND CRS_CRE_CD = A.CRS_CRE_CD   				
+		              AND DECLS_NO = A.DECLS_NO	   				
+		              AND ENRL_STS in ('S','C','F') ) AS CNFM_CNT	
+		       , ( SELECT COUNT(*) 								
+		             FROM TB_STD_STD C, TB_USR_LOGIN D				
+		            WHERE C.USER_NO = D.USER_NO					
+		              AND D.USER_STS = 'U'							
+		              AND CRS_CRE_CD = A.CRS_CRE_CD				
+		              AND DECLS_NO = A.DECLS_NO	   				
+		              AND ENRL_STS in ('C') ) AS CPLT_CNT			
+		       , ( SELECT COUNT(*) 								
+		             FROM TB_STD_STD C, TB_USR_LOGIN D				
+		            WHERE C.USER_NO = D.USER_NO					
+		              AND D.USER_STS = 'U'							
+		              AND CRS_CRE_CD = A.CRS_CRE_CD				
+		              AND DECLS_NO = A.DECLS_NO	   				
+		              AND ENRL_STS in ('E') ) AS ENRL_CNT			
+		       , ( SELECT COUNT(*) 								
+		             FROM TB_STD_STD C								
+		            WHERE CRS_CRE_CD = A.CRS_CRE_CD				
+		              AND DECLS_NO = A.DECLS_NO ) AS STU_CNT		
+		       , REG_NO 											
+		       , REG_DTTM 											
+		       , MOD_NO 											
+		       , MOD_DTTM 											
+	</sql>
+	
+	<sql id="selectQuery">
+		  SELECT 
+		  <include refid="selectColumnQuery" />											
+		  FROM TB_CRS_CRE_CRS_DECLS A							
+		  WHERE CRS_CRE_CD = #{crsCreCd}	
+	</sql>
+	
+	<select id="count" parameterType="creCrsDeclsVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		  FROM TB_CRS_CRE_CRS_DECLS A							
+		  WHERE CRS_CRE_CD = #{crsCreCd}	
+	</select>
+		
+	<select id="list" parameterType="creCrsDeclsVO" resultType="creCrsDeclsVO">
+	    <include refid="selectQuery" />
+	    ORDER BY DECLS_NO	
+	</select>
+
+   <select id="listPageing" parameterType="creCrsDeclsVO" resultType="creCrsDeclsVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectQuery" />
+     		ORDER BY DECLS_NO	
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+
+
+	<select id="select" parameterType="creCrsDeclsVO" resultType="creCrsDeclsVO">
+	    <include refid="selectQuery" />
+	     AND DECLS_NO = #{declsNo}	
+	</select>
+
+    <insert id="insert" parameterType="createOnlineSubjectVO">
+		  INSERT INTO TB_CRS_CRE_CRS_DECLS (										
+		         CRS_CRE_CD 											
+		       , DECLS_NO 												
+		       , REG_NO 												
+		       , REG_DTTM 												
+		       , MOD_NO 												
+		       , MOD_DTTM 												
+		 ) VALUES (													
+		         #{crsCreCd} 											
+		       , NVL(( SELECT MAX(NVL(DECLS_NO,0)) + 1					
+		                 FROM TB_CRS_CRE_CRS_DECLS 					
+		                WHERE CRS_CRE_CD = #{crsCreCd}),1)				
+		       , #{regNo} 												
+		       , NVL(#{regDttm}, TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'))	
+		       , #{modNo} 												
+		       , NVL(#{modDttm}, TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'))	
+		 ) 	
+    </insert>
+
+
+	<delete id="delete" parameterType="creCrsDeclsVO">
+		 DELETE FROM TB_CRS_CRE_CRS_DECLS		
+		  WHERE CRS_CRE_CD = #{crsCreCd}			
+		    AND DECLS_NO = #{declsNo}	 
+    </delete>
+
+	<delete id="deleteAll" parameterType="creCrsDeclsVO">
+		 DELETE FROM TB_CRS_CRE_CRS_DECLS		
+		  WHERE CRS_CRE_CD = #{crsCreCd}			
+    </delete>
+
+	<select id="getCount" parameterType="creCrsDeclsVO" resultType="int">
+		SELECT COUNT(*) 					
+		  FROM TB_CRS_CRE_CRS_DECLS		
+		 WHERE CRS_CRE_CD = #{crsCreCd}		
+	</select>
+
+   <update id="declsUpdate" parameterType="creCrsDeclsVO">
+		 UPDATE TB_STD_STD				
+		  	SET DECLS_NO = '1'					
+		 WHERE CRS_CRE_CD = #{crsCreCd}			
+		    AND DECLS_NO = #{declsNo}	
+    </update>
+
+</mapper>	

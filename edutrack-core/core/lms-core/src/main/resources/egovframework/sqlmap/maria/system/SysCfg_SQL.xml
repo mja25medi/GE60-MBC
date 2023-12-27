@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.system.config.service.impl.SysCfgMapper">	
+
+	
+	<sql id="selectQuery">
+	    SELECT CFG_CD as cfgCd
+		     , CFG_CTGR_CD as cfgCtgrCd
+		     , CFG_NM as cfgNm
+		     , CFG_VAL as cfgVal
+		     , CFG_DESC as cfgDesc
+		     , USE_YN as useYn
+		     , REG_NO as regNo
+		     , (SELECT FN_GET_USER_NAME(REG_NO) FROM DUAL) as regNm
+		     , REG_DTTM as regDttm
+		     , MOD_NO as modNo
+		     , (SELECT FN_GET_USER_NAME(MOD_NO) FROM DUAL) as modNm
+		     , MOD_DTTM as modDttm
+		  FROM tb_sys_cfg
+         WHERE '1' = '1'
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		   AND CFG_CTGR_CD = #{cfgCtgrCd}
+	</sql>		
+
+	<select id="list" parameterType="sysCfgVO" resultType="sysCfgVO">
+		/*
+			 SQL ID : list
+			 설  명 : 설정 정보의 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	 	 ORDER BY CFG_NM	
+	</select>
+	
+	<select id="listConfig" parameterType="sysCfgCtgrVO" resultType="sysCfgVO">
+		/*
+			 SQL ID : listConfig
+			 설  명 : 설정 분류의 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	</select>
+
+	<select id="listPageing" parameterType="sysCfgVO" resultType="sysCfgVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 설정 정보의 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+	 	ORDER BY CFGNM
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="sysCfgVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 설정 정보의 전체체 카운트 수
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>	
+	
+	<select id="select" parameterType="sysCfgVO" resultType="sysCfgVO">
+		/*
+			 SQL ID : select
+			 설  명 : 설정 정보의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+	 	   AND CFG_CTGR_CD = #{cfgCtgrCd}
+           AND CFG_CD = #{cfgCd}
+	</select>	
+	
+	<insert id="insert" parameterType="sysCfgVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 설정 정보의 정보 등록
+	 	*/
+		INSERT INTO tb_sys_cfg (
+		       CFG_CD
+		     , CFG_CTGR_CD
+		     , CFG_NM
+		     , CFG_VAL
+		     , CFG_DESC
+		     , USE_YN
+		     , REG_NO
+		     , REG_DTTM
+		     , MOD_NO
+		     , MOD_DTTM
+		) VALUES (
+		       #{cfgCd}
+		     , #{cfgCtgrCd}
+		     , #{cfgNm}
+		     , #{cfgVal}
+		     , #{cfgDesc}
+		     , #{useYn}
+		     , #{regNo}
+		     , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		     , #{modNo}
+		     , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		)	 	
+	</insert>
+	
+	<update id="update" parameterType="sysCfgVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 설정 정보의 정보 수정
+	 	*/
+		UPDATE tb_sys_cfg
+		   SET CFG_NM = #{cfgNm}
+		     , CFG_VAL = #{cfgVal}
+		     , CFG_DESC = #{cfgDesc}
+		     , USE_YN = #{useYn}
+		     , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		     , MOD_NO = #{modNo}
+		 WHERE CFG_CTGR_CD = #{cfgCtgrCd}
+		   AND CFG_CD = #{cfgCd}
+	</update>	
+
+	<delete id="delete" parameterType="sysCfgVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 설정 정보의 정보 삭제
+	 	*/	
+		DELETE FROM tb_sys_cfg
+		 WHERE CFG_CTGR_CD = #{cfgCtgrCd}
+		   AND CFG_CD = #{cfgCd}
+	</delete>
+
+	<delete id="deleteAll" parameterType="sysCfgVO" >
+		/*
+			 SQL ID : deleteAll
+			 설  명 : 분류 하위의 전체 코드 정보를 삭제
+	 	*/	
+		DELETE FROM tb_sys_cfg
+		 WHERE CFG_CTGR_CD = #{cfgCtgrCd}
+	</delete>
+
+</mapper>

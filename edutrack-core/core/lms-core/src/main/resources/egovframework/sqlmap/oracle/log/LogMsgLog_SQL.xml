@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.log.message.service.impl.LogMsgLogMapper">	
+
+	
+	<sql id="selectQuery">
+		SELECT A.MSG_SN as msgSn
+		     , A.MSG_DIV_CD as msgDivCd
+		     , A.SEND_MENU_CD as sendMenuCd
+		     , FN_GET_MENU_NAME(A.SEND_MENU_CD) as sendMenuCdNm
+		     , A.TITLE as title
+		     , A.CTS as cts
+		     , A.SEND_NM as sendNm
+		     , A.SEND_ADDR as sendAddr
+		     , A.RSRV_SEND_DTTM as rsrvSendDttm
+		     , A.SEND_STS as sendSts
+		     , A.REG_NO as regNo
+		     , ( SELECT ORG_CD FROM TB_USR_USER_INFO WHERE USER_NO = A.REG_NO ) as orgCd
+		     , DECODE((SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL),'UnKnown','Auto Send',(SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL)) as regNm
+		     , A.REG_DTTM as regDttm
+		     , A.MSG_GRP_SN as msgGrpSn
+		     , ( SELECT COUNT(*)
+		           FROM TB_LOG_MSG_TRANS_LOG SA
+		          WHERE SA.MSG_SN = A.MSG_SN ) as transCount
+		     , ( SELECT COUNT(*)
+		           FROM TB_LOG_MSG_TRANS_LOG SA
+		          WHERE SA.MSG_SN = A.MSG_SN
+		            AND TRANS_STS ='S' )  as transSuccessCount
+		     , ( SELECT COUNT(*)
+		           FROM TB_LOG_MSG_TRANS_LOG SA
+		          WHERE SA.MSG_SN = A.MSG_SN
+		            AND TRANS_STS ='D' ) as transDenialCount
+		     , ( SELECT COUNT(*)
+		           FROM TB_LOG_MSG_TRANS_LOG SA
+		          WHERE SA.MSG_SN = A.MSG_SN
+		            AND TRANS_STS ='R' ) as transStandbyCount
+		     , ( SELECT COUNT(*)
+		           FROM TB_LOG_MSG_TRANS_LOG SA
+		          WHERE SA.MSG_SN = A.MSG_SN
+		            AND TRANS_STS ='F' ) as transFailCount
+		  FROM TB_LOG_MSG_LOG A
+		 WHERE '1' = '1'
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		<if test = "msgSn > 0">
+		   AND A.MSG_SN = #{msgSn}
+		</if>
+		<if test = "msgDivCd != null and msgDivCd != ''">
+		   AND A.MSG_DIV_CD = #{msgDivCd}
+		</if>
+		<if test = "searchKey != null and searchKey == 'regNo'">
+		   AND A.REG_NO = #{regNo}
+		</if>
+		<if test = "searchKey != null and searchKey == 'TRANS_SEARCH'">
+		   AND EXISTS ( SELECT *
+		           		FROM TB_LOG_MSG_TRANS_LOG SA
+		          		WHERE SA.MSG_SN = A.MSG_SN
+		            		AND SA.TRANS_STS IN ('R') )		</if>
+
+		   AND SUBSTR(REG_DTTM,0,8) BETWEEN NVL(REPLACE(#{startDttm},'.',''), '19900101') 
+		                                AND NVL(REPLACE(#{endDttm},'.',''),'99991231')
+		 ORDER BY A.MSG_SN DESC
+	</sql>		
+
+	<select id="list" parameterType="logMsgLogVO" resultType="logMsgLogVO">
+		/*
+			 SQL ID : list
+			 설  명 : 메시지의 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	</select>
+	
+	<select id="listPageing" parameterType="logMsgLogVO" resultType="logMsgLogVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 메시지의 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="logMsgLogVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 메시지의 전체 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>
+	
+	<select id="select" parameterType="logMsgLogVO" resultType="logMsgLogVO">
+		/*
+			 SQL ID : select
+			 설  명 : 메시지의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+           AND MSG_SN = #{msgSn}	 	
+	</select>
+	
+	<select id="selectKey" resultType="Integer">
+		/*
+			 SQL ID : selectKey
+			 설  명 : 메시지의 키 생성
+	 	*/
+	 	SELECT SQ_LOG_MSG_LOG.nextVal FROM DUAL 
+	</select>	
+	
+	<insert id="insert" parameterType="logMsgLogVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 메시지의 정보 등록
+	 	*/
+		INSERT INTO TB_LOG_MSG_LOG (
+		       MSG_SN
+		     , MSG_DIV_CD
+		     , SEND_MENU_CD
+		     , TITLE
+		     , CTS
+		     , SEND_NM
+		     , SEND_ADDR
+		     , RSRV_SEND_DTTM
+		     , SEND_STS
+		     , REG_NO
+		     , REG_DTTM
+		     , MSG_GRP_SN
+		) VALUES (
+		       #{msgSn}
+		     , #{msgDivCd}
+		     , #{sendMenuCd}
+		     , #{title}
+		     , #{cts}
+		     , NVL(#{sendNm}, (SELECT FN_GET_CONFIG_VALUE('MESSAGE',#{msgDivCd}||'_NAME') FROM DUAL))
+		     , NVL(#{sendAddr}, (SELECT FN_GET_CONFIG_VALUE('MESSAGE',#{msgDivCd}||'_ADDR') FROM DUAL))
+		     , #{rsrvSendDttm}
+		     , #{sendSts}
+		     , #{regNo}
+		     , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		     , #{msgGrpSn}
+		)
+	</insert>
+	
+	<insert id="reinsert" parameterType="logMsgLogVO" >
+		/*
+			 SQL ID : reinsert
+			 설  명 : 메시지의 정보 등록 (재전송)
+	 	*/
+		INSERT INTO TB_LOG_MSG_LOG (
+		       MSG_SN
+		     , MSG_DIV_CD
+		     , SEND_MENU_CD
+		     , TITLE
+		     , CTS
+		     , SEND_NM
+		     , SEND_ADDR
+		     , RSRV_SEND_DTTM
+		     , SEND_STS
+		     , PERV_MSG_SN
+		     , REG_NO
+		     , REG_DTTM )
+		SELECT #{msgSn}
+		     , A.MSG_DIV_CD
+		     , #{sendMenuCd}
+		     , A.TITLE
+		     , A.CTS
+		     , A.SEND_NM
+		     , A.SEND_ADDR
+		     , '00000000000000'
+		     , ''
+		     , A.MSG_SN
+		     , #{regNo}
+		     , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		  FROM TB_LOG_MSG_LOG A
+		 WHERE A.MSG_SN = #{prevMsgSn}		
+	</insert>	
+	
+	<update id="update" parameterType="logMsgLogVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 메시지의 정보 수정
+	 	*/
+		UPDATE TB_LOG_MSG_LOG
+		   SET MSG_DIV_CD = #{msgDivCd}
+		     , SEND_MENU_CD = #{sendMenuCd}
+		     , TITLE = #{title}
+		     , CTS = #{cts}
+		     , SEND_NM = #{sendNm}
+		     , SEND_ADDR = #{sendAddr}
+		     , RSRV_SEND_DTTM  = #{rsrvSendDttm}
+		     , SEND_STS = #{sendSts}
+		     , MOD_NO = #{modNo}
+		     , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		 WHERE MSG_SN = #{msgSn}
+	</update>	
+
+	<delete id="delete" parameterType="logMsgLogVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 메시지의 정보 삭제
+	 	*/
+		DELETE FROM TB_LOG_MSG_LOG
+		 WHERE MSG_SN = #{msgSn}
+	</delete>
+	
+	<sql id="listSendMsgQuery">
+		SELECT A.MSG_SNn as msgSn
+		     , A.TITLE as title
+		     , A.SEND_NM as sendNm
+		     , A.SEND_ADDR as sendAddr
+		     , A.REG_DTTM as regDttm
+		     , ( SELECT COUNT(*)
+		           FROM TB_LOG_MSG_TRANS_LOG
+		          WHERE MSG_SN = A.MSG_SN ) as transCount
+		     , ( SELECT COUNT(*)
+		           FROM TB_LOG_MSG_TRANS_LOG
+		          WHERE MSG_SN = A.MSG_SN
+		            AND TRANS_STS = 'C' ) as transSuccessCount
+		  FROM TB_LOG_MSG_LOG A
+		 WHERE A.SEND_ADDR = #{regNo}
+		 ORDER BY A.REG_DTTM DESC		
+	</sql>
+	
+	<select id="listSendMsgPageing" parameterType="logMsgLogVO" resultType="logMsgLogVO">
+		/*
+			 SQL ID : listSendMsgPageing
+			 설  명 : 보낸쪽지함 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listSendMsgQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="countSendMsg" parameterType="logMsgLogVO" resultType="Integer">
+		/*
+			 SQL ID : countSendMsg
+			 설  명 : 보낸쪽지함 건수
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listSendMsgQuery"/>
+	 	) T
+	</select>
+	
+	<sql id="listRecvMsgQuery">
+		SELECT A.MSG_SN as msgSn
+		     , A.TITLE as title
+		     , A.SEND_NM as sendNm
+		     , A.SEND_ADDR as sendAddr
+		     , A.REG_DTTM as regDttm
+		     , B.MSG_TRANS_SN as msgTransSn
+		     , B.TRANS_STS as transSts
+		     , B.TRANS_DTTM as transDttm
+		  FROM TB_LOG_MSG_LOG A, TB_LOG_MSG_TRANS_LOG B
+		 WHERE A.MSG_SN = B.MSG_SN
+		   AND B.RECV_ADDR = #{regNo}
+		   AND B.TRANS_STS != 'F'
+		 ORDER BY A.REG_DTTM DESC	
+	</sql>
+	
+	<select id="listRecvMsgPageing" parameterType="logMsgLogVO" resultType="logMsgLogVO">
+		/*
+			 SQL ID : listRecvMsgPageing
+			 설  명 : 받은쪽지함 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listRecvMsgQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="countRecvMsg" parameterType="logMsgLogVO" resultType="Integer">
+		/*
+			 SQL ID : countRecvMsg
+			 설  명 : 받은쪽지함 건수
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listRecvMsgQuery"/>
+	 	) T
+	</select>
+	
+	<select id="countMsg" parameterType="logMsgLogVO" resultType="Integer">
+		/*
+			 SQL ID : countMsg
+			 설  명 : 쪽지 건수
+	 	*/
+		SELECT COUNT(*)
+		  FROM TB_LOG_MSG_TRANS_LOG A,	TB_LOG_MSG_LOG B
+		 WHERE A.MSG_SN = B.MSG_SN
+		   AND B.MSG_DIV_CD = 'MSG'
+		   AND A.TRANS_STS = 'R'
+		   AND A.RECV_ADDR = #{regNo}
+	</select>	
+	
+	<select id="selectKeyGrpSn" resultType="Integer">
+		/*
+			 SQL ID : selectKeyGrpSn
+			 설  명 : 메시지의 그룹 키 생성
+	 	*/
+	 	SELECT SQ_LOG_MSG_LOG_GRP.nextVal FROM DUAL 
+	</select>	
+	 
+</mapper>

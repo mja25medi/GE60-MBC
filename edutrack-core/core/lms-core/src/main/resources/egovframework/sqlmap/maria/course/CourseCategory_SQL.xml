@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.category.service.impl.CourseCategoryMapper">	
+
+	<select id="selectCategoryCd" resultType="string">
+		 SELECT CONCAT('CC',LPAD(nextval(SQ_CRS_CRS_CTGR),8,'0')) AS CRS_CTGR_CD
+	</select>
+	<select id="listCategory" parameterType="courseCategoryVO" resultType="courseCategoryVO">
+		<![CDATA[
+		WITH RECURSIVE CTE AS (
+		    SELECT
+		     CRS_CTGR_CD , CONCAT(CRS_CTGR_ODR,CRS_CTGR_PATH) AS path
+		    FROM tb_crs_crs_ctgr
+			WHERE ORG_CD = #{orgCd}
+			AND PAR_CRS_CTGR_CD IS NULL
+		    UNION ALL
+		    SELECT
+		       A.CRS_CTGR_CD, CONCAT(CTE.path,'/',CRS_CTGR_ODR,'/',A.CRS_CTGR_CD) as path
+		    FROM tb_crs_crs_ctgr A
+		    inner join CTE on A.PAR_CRS_CTGR_CD = CTE.CRS_CTGR_CD
+			WHERE ORG_CD = #{orgCd}
+		)		
+		SELECT  A.ORG_CD																		
+	        ,  A.CRS_CTGR_CD																	
+	      	 ,  A.CRS_CTGR_NM 																	
+	        ,  A.PAR_CRS_CTGR_CD																
+	        ,  A.CRS_CTGR_LVL 																	
+	        ,  A.CRS_CTGR_ODR																	
+	        ,  A.CRS_CTGR_PATH 																
+	        ,  A.CRS_CTGR_PATH_NM																
+	        ,  A.CRS_CTGR_IMG																	
+	        ,  A.CRS_CTGR_DESC 																
+	        ,  A.USE_YN 																		
+	        ,  A.REG_NO 																		
+	        ,  A.REG_DTTM 																		
+	        ,  A.MOD_NO 																		
+	        ,  A.MOD_DTTM 																		
+		     ,  (SELECT FN_GET_USER_NAME(A.MOD_NO) ) MOD_NM							
+		     ,  (SELECT FN_GET_USER_NAME(A.REG_NO) ) REG_NM							
+	        ,  IFNULL(( SELECT CRS_CTGR_NM														
+	                   FROM tb_crs_crs_ctgr													
+	                  WHERE ORG_CD = A.ORG_CD 													
+	                    AND CRS_CTGR_CD = A.PAR_CRS_CTGR_CD),'ROOT') AS PAR_CRS_CTGR_NM	
+	        ,  CASE WHEN (A.CRS_CTGR_LVL -1) < 0 THEN 0 										
+	           ELSE (A.CRS_CTGR_LVL -1) END PAR_CRS_CTGR_LVL 									
+	        ,  ( SELECT COUNT(*) 																
+	               FROM tb_crs_crs_ctgr												
+	              WHERE ORG_CD = A.ORG_CD					
+	                AND PAR_CRS_CTGR_CD = A.CRS_CTGR_CD ) AS SUB_CNT	
+	        FROM  tb_crs_crs_ctgr A, CTE B																
+	      	WHERE A.CRS_CTGR_CD = B.CRS_CTGR_CD
+		]]>	    
+
+		<choose>
+			<when test="useYn != null and useYn != '' and useYn == 'ALL'">
+			</when>
+			<otherwise>
+				AND A.USE_YN = IFNULL(FN_GET_NULL(#{useYn}), A.USE_YN)		
+			</otherwise>
+		</choose>
+			
+		ORDER BY PATH
+		
+	</select>
+	
+	<select id="listCategoryVer5" parameterType="courseCategoryVO" resultType="courseCategoryVO">
+		<![CDATA[
+		select
+			a.ORG_CD ,
+			a.CRS_CTGR_CD ,
+			a.CRS_CTGR_NM ,
+			a.PAR_CRS_CTGR_CD ,
+			a.CRS_CTGR_LVL ,
+			a.CRS_CTGR_ODR ,
+			a.CRS_CTGR_PATH ,
+			a.CRS_CTGR_PATH_NM ,
+			a.CRS_CTGR_IMG ,
+			a.CRS_CTGR_DESC ,
+			a.USE_YN ,
+			a.REG_NO ,
+			a.REG_DTTM ,
+			a.MOD_NO ,
+			a.MOD_DTTM ,
+			(select FN_GET_USER_NAME(a.MOD_NO) ) MOD_NM ,
+			(select FN_GET_USER_NAME(a.REG_NO) ) REG_NM ,
+			NVL((select CRS_CTGR_NM from tb_crs_crs_ctgr where ORG_CD = a.ORG_CD and CRS_CTGR_CD = a.PAR_CRS_CTGR_CD), 'ROOT') as PAR_CRS_CTGR_NM ,
+			case when (a.CRS_CTGR_LVL -1) < 0 then 0 else (a.CRS_CTGR_LVL -1) end PAR_CRS_CTGR_LVL ,
+			(select COUNT(*) from tb_crs_crs_ctgr A where ORG_CD = A.ORG_CD and PAR_CRS_CTGR_CD = a.CRS_CTGR_CD ) as SUB_CNT ,
+			CONCAT_WS('>', d.CRS_CTGR_CD, c.CRS_CTGR_CD, b.CRS_CTGR_CD, a.CRS_CTGR_CD) path
+		from
+			tb_crs_crs_ctgr a
+		left outer join tb_crs_crs_ctgr b on
+			a.PAR_CRS_CTGR_CD = b.CRS_CTGR_CD
+		left outer join tb_crs_crs_ctgr c on
+			b.PAR_CRS_CTGR_CD = c.CRS_CTGR_CD
+		left outer join tb_crs_crs_ctgr d on
+			c.PAR_CRS_CTGR_CD = d.CRS_CTGR_CD
+		WHERE a.USE_YN = IFNULL(FN_GET_NULL(#{useYn}), a.USE_YN)				
+		and a.ORG_CD = #{orgCd}	
+		order by path
+		]]>	    
+	</select>
+	
+	<select id="listCategorySort" parameterType="courseCategoryVO" resultType="courseCategoryVO">
+		<![CDATA[
+			WITH RECURSIVE CTE AS (
+			    SELECT
+			     CRS_CTGR_CD
+			    FROM tb_crs_crs_ctgr
+				WHERE ORG_CD = #{orgCd}	
+				AND PAR_CRS_CTGR_CD IS NULL
+			    UNION ALL
+			    SELECT
+			       A.CRS_CTGR_CD
+			    FROM tb_crs_crs_ctgr A
+			    INNER JOIN CTE ON A.PAR_CRS_CTGR_CD = CTE.CRS_CTGR_CD
+				WHERE ORG_CD = #{orgCd}	
+			)
+			SELECT SB.* FROM (
+				SELECT
+					 A.CRS_CTGR_CD																			
+			        		 ,	A.CRS_CTGR_NM							
+			                ,  A.ORG_CD																				
+			        		 ,	A.PAR_CRS_CTGR_CD																		
+			        		 ,	A.CRS_CTGR_LVL 																			
+			        		 ,	A.CRS_CTGR_ODR																			
+			        		 ,	A.CRS_CTGR_PATH 																		
+			        		 ,	A.CRS_CTGR_PATH_NM																		
+			        		 ,	A.CRS_CTGR_IMG																			
+			        		 ,	A.CRS_CTGR_DESC 																		
+			        		 ,	A.USE_YN 																				
+			        		 ,	A.REG_NO 																				
+			       		 	 ,	A.REG_DTTM 																				
+			        		 ,	A.MOD_NO 																				
+			        		 ,	A.MOD_DTTM 																				
+				  	 		 ,	(SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) MOD_NM									
+					 		 ,	(SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) REG_NM 
+					 		  ,	IFNULL(( SELECT CRS_CTGR_NM																
+			                			FROM tb_crs_crs_ctgr															
+			               		   WHERE ORG_CD = A.ORG_CD															
+			                            AND CRS_CTGR_CD = A.PAR_CRS_CTGR_CD),'ROOT') AS PAR_CRS_CTGR_NM			
+			        		 ,	CASE WHEN (A.CRS_CTGR_LVL -1) < 0 THEN 0 ELSE (A.CRS_CTGR_LVL -1) END PAR_CRS_CTGR_LVL 	
+			        		 ,	( SELECT COUNT(*) 																		
+			            			FROM tb_crs_crs_ctgr																
+			           	 	   WHERE ORG_CD = A.ORG_CD																
+			                        AND PAR_CRS_CTGR_CD = A.CRS_CTGR_CD ) AS SUB_CNT									
+				FROM tb_crs_crs_ctgr A, CTE B
+				]]>	   
+				WHERE A.CRS_CTGR_CD = B.CRS_CTGR_CD
+				AND A.CRS_CTGR_LVL = '1'
+			) SB
+			WHERE SB.SUB_CNT > 0 	
+	</select>
+
+	<select id="listCategorySub" parameterType="courseCategoryVO" resultType="courseCategoryVO">
+		<![CDATA[
+		SELECT  A.ORG_CD																				
+	        ,  A.CRS_CTGR_CD 																			
+	        ,  A.CRS_CTGR_NM 																			
+	        ,  A.PAR_CRS_CTGR_CD																		
+	        ,  A.CRS_CTGR_LVL 																			
+	        ,  A.CRS_CTGR_ODR																			
+	        ,  A.CRS_CTGR_PATH 																		
+	        ,  A.CRS_CTGR_PATH_NM																		
+	        ,  A.CRS_CTGR_IMG																			
+	        ,  A.CRS_CTGR_DESC 																		
+	        ,  A.USE_YN 																				
+	        ,  A.REG_NO 																				
+	        ,  A.REG_DTTM 																				
+	        ,  A.MOD_NO 																				
+	        ,  A.MOD_DTTM 																				
+	        ,  IFNULL(( SELECT CRS_CTGR_NM															
+	                   FROM tb_crs_crs_ctgr															
+	                  WHERE ORG_CD = A.ORG_CD															
+	                    AND CRS_CTGR_CD = A.PAR_CRS_CTGR_CD),'ROOT') AS PAR_CRS_CTGR_NM			
+	        ,  CASE WHEN (A.CRS_CTGR_LVL -1) < 0 THEN 0 ELSE (A.CRS_CTGR_LVL -1) END PAR_CRS_CTGR_LVL 	
+	        ,  ( SELECT COUNT(*) 																		
+	               FROM tb_crs_crs_ctgr																
+	              WHERE ORG_CD = A.ORG_CD																
+	                AND PAR_CRS_CTGR_CD = A.CRS_CTGR_CD ) AS SUB_CNT									
+	     FROM  tb_crs_crs_ctgr A																		
+	     WHERE  ORG_CD = #{orgCd}																				
+	      		AND  IFNULL(FN_GET_NULL(PAR_CRS_CTGR_CD),'1') = IFNULL(FN_GET_NULL(#{parCrsCtgrCd}),'1')										
+	     ORDER  BY A.CRS_CTGR_ODR	
+		]]>	    
+	</select>
+	<select id="selectCategory" parameterType="string" resultType="courseCategoryVO">
+		<![CDATA[
+		SELECT  A.ORG_CD																				
+	        ,  A.CRS_CTGR_CD 																			
+	        ,  A.CRS_CTGR_NM 																			
+	        ,  A.PAR_CRS_CTGR_CD																		
+	        ,  A.CRS_CTGR_LVL 																			
+	        ,  A.CRS_CTGR_ODR																			
+	        ,  A.CRS_CTGR_PATH 																		
+	        ,  A.CRS_CTGR_PATH_NM																		
+	        ,  A.CRS_CTGR_IMG																			
+	        ,  A.CRS_CTGR_DESC 																		
+	        ,  A.USE_YN 																				
+	        ,  A.REG_NO 																				
+	        ,  A.REG_DTTM 																				
+	        ,  A.MOD_NO 																				
+	        ,  A.MOD_DTTM 																				
+			 ,  (SELECT FN_GET_USER_NAME(A.MOD_NO) ) MOD_NM									
+			 ,  (SELECT FN_GET_USER_NAME(A.REG_NO) ) REG_NM									
+	        ,  IFNULL(( SELECT CRS_CTGR_NM															
+	                   FROM tb_crs_crs_ctgr															
+	                  WHERE ORG_CD = A.ORG_CD															
+	                    AND CRS_CTGR_CD = A.PAR_CRS_CTGR_CD),'ROOT') AS PAR_CRS_CTGR_NM			
+	        ,  CASE WHEN (A.CRS_CTGR_LVL -1) < 0 THEN 0 ELSE (A.CRS_CTGR_LVL -1) END PAR_CRS_CTGR_LVL 	
+	        ,  ( SELECT COUNT(*) 																		
+	               FROM tb_crs_crs_ctgr																
+	              WHERE ORG_CD = A.ORG_CD																
+	                AND PAR_CRS_CTGR_CD = A.CRS_CTGR_CD ) AS SUB_CNT									
+	 		 ,  ( SELECT COUNT(*)																		
+	 			    FROM tb_crs_crs 																	
+	 			   WHERE ORG_CD = A.ORG_CD																
+	                AND CRS_CTGR_CD = A.CRS_CTGR_CD ) AS CRS_CNT										
+	     FROM  tb_crs_crs_ctgr A																		
+	     WHERE  CRS_CTGR_CD = #{value}	
+		]]>	    
+	</select>
+
+   <insert id="insertCategory" parameterType="courseCategoryVO">
+		INSERT  INTO tb_crs_crs_ctgr (								
+	           ORG_CD 												
+	        ,  CRS_CTGR_CD 										
+	        ,  CRS_CTGR_NM 										
+	        ,  PAR_CRS_CTGR_CD 									
+	        ,  CRS_CTGR_LVL 										
+	        ,  CRS_CTGR_ODR 										
+	        ,  CRS_CTGR_PATH 										
+	        ,  CRS_CTGR_PATH_NM 									
+	        ,  CRS_CTGR_IMG										
+	        ,  CRS_CTGR_DESC 										
+	        ,  USE_YN 												
+	        ,  REG_NO 												
+	        ,  REG_DTTM )											
+		SELECT  #{orgCd}	 											
+	        ,  #{crsCtgrCd} 	 										
+	        ,  #{crsCtgrNm} 	 										
+	        ,	#{parCrsCtgrCd} 									
+	        ,	#{crsCtgrLvl} 	 									
+	        ,	IFNULL(FN_GET_NULL(MAX(CRS_CTGR_ODR)),0)+1 		 					
+	        ,	#{crsCtgrPath} 										
+	        ,	#{crsCtgrPathNm}										
+	        ,	#{crsCtgrImg}											
+	        ,	#{crsCtgrDesc}  										
+	        ,	#{useYn} 												
+	        ,	#{regNo} 	 											
+	        , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')			
+	     FROM  tb_crs_crs_ctgr										
+	    WHERE  ORG_CD = #{orgCd}										
+	      AND  IFNULL(FN_GET_NULL(PAR_CRS_CTGR_CD),'1') = IFNULL(FN_GET_NULL(#{parCrsCtgrCd}),'1')
+    </insert>
+
+
+   <update id="updateCategory" parameterType="courseCategoryVO">
+		UPDATE  tb_crs_crs_ctgr 												
+	      SET  CRS_CTGR_NM 		= #{crsCtgrNm}								
+	        ,  PAR_CRS_CTGR_CD 	= #{parCrsCtgrCd}								
+	        ,  CRS_CTGR_LVL 		= #{crsCtgrLvl}								
+	        ,  CRS_CTGR_ODR 		= #{crsCtgrOdr}								
+	        ,  CRS_CTGR_PATH 		= CONCAT(IFNULL(( SELECT CRS_CTGR_PATH				
+	                                		  FROM tb_crs_crs_ctgr AS SUBQUERY				
+	                               		 WHERE CRS_CTGR_CD = #{parCrsCtgrCd}	
+	                        			   ),''),'/',#{crsCtgrCd})	        
+	        ,  CRS_CTGR_PATH_NM 	= CONCAT(IFNULL(( SELECT CRS_CTGR_PATH_NM				
+	                                   	  FROM tb_crs_crs_ctgr AS SUBQUERY				
+	                                  		 WHERE CRS_CTGR_CD = #{parCrsCtgrCd}	
+	                           		   ),''), '/', #{crsCtgrNm})	        
+	        ,  CRS_CTGR_IMG 		= #{crsCtgrImg}								
+	        ,  CRS_CTGR_DESC 		= #{crsCtgrDesc}								
+	        ,  USE_YN 				= #{useYn}									
+	        ,  MOD_NO 				= #{modNo}									
+	        ,  MOD_DTTM 			= DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+	    WHERE  CRS_CTGR_CD 		= #{crsCtgrCd}		
+    </update>
+
+   <delete id="deleteCategory" parameterType="string">
+		DELETE  FROM tb_crs_crs_ctgr			
+	 	WHERE  CRS_CTGR_CD = #{value}	
+    </delete>
+
+	<update id="updateCategoryBatch" parameterType="list" >
+		 <foreach collection="list" item="item" index="index" separator=";">
+		  UPDATE  tb_crs_crs_ctgr 	
+		  SET
+			       CRS_CTGR_NM 		= #{item.crsCtgrNm}								
+		        ,  PAR_CRS_CTGR_CD 	= #{item.parCrsCtgrCd}								
+		        ,  CRS_CTGR_LVL 		= #{item.crsCtgrLvl}								
+		        ,  CRS_CTGR_ODR 		= #{item.crsCtgrOdr}								
+		        ,  CRS_CTGR_PATH 		= CONCAT(IFNULL(( SELECT CRS_CTGR_PATH				
+		                                		  FROM tb_crs_crs_ctgr AS SUBQUERY				
+		                               		 WHERE CRS_CTGR_CD = #{item.parCrsCtgrCd}	
+		                        			   ),''), '/', #{item.crsCtgrCd})		        
+		        ,  CRS_CTGR_PATH_NM 	= CONCAT(IFNULL(( SELECT CRS_CTGR_PATH_NM				
+		                                   	  FROM tb_crs_crs_ctgr AS SUBQUERY				
+		                                  		 WHERE CRS_CTGR_CD = #{item.parCrsCtgrCd}	
+		                           		   ),''), '/', #{item.crsCtgrNm})		        
+		        ,  CRS_CTGR_IMG 		= #{item.crsCtgrImg}								
+		        ,  CRS_CTGR_DESC 		= #{item.crsCtgrDesc}								
+		        ,  USE_YN 				= #{item.useYn}									
+		        ,  MOD_NO 				= #{item.modNo}									
+		        ,  MOD_DTTM 			= DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 		
+   
+	       WHERE  CRS_CTGR_CD 		= #{item.crsCtgrCd}		
+	       </foreach>  
+	</update>
+
+
+</mapper>		

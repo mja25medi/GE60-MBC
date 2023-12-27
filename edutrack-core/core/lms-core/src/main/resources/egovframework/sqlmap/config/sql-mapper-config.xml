@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+		<setting name="cacheEnabled" value="false" />
+        <setting name="jdbcTypeForNull" value="NULL" />
+        <setting name="autoMappingBehavior" value="PARTIAL" /> 
+        
+        <setting name="cacheEnabled" value="false" />
+        <setting name="jdbcTypeForNull" value="NULL" />
+        <setting name="autoMappingBehavior" value="PARTIAL" />        
+        <setting name="mapUnderscoreToCamelCase" value="true" /> 
+        
+		<!-- <setting name="autoMappingBehavior" value="FULL"/> -->
+	</settings> 
+    <typeAliases>
+	    <typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+		<typeAlias  alias="resultMap"      type="egovframework.edutrack.comm.util.web.ResultMap"/>
+
+		<typeAlias  alias="assignmentQbankCategoryVO"       type="egovframework.edutrack.modules.course.assignmentbank.service.AssignmentQbankCategoryVO"/>
+		<typeAlias  alias="assignmentQbankQuestionFileVO"       type="egovframework.edutrack.modules.course.assignmentbank.service.AssignmentQbankQuestionFileVO"/>
+		<typeAlias  alias="assignmentQbankQuestionVO"       type="egovframework.edutrack.modules.course.assignmentbank.service.AssignmentQbankQuestionVO"/>
+		<typeAlias  alias="assignmentSendVO"       type="egovframework.edutrack.modules.lecture.assignment.service.AssignmentSendVO"/>
+		<typeAlias  alias="assignmentStatusVO"       type="egovframework.edutrack.modules.lecture.assignment.service.AssignmentStatusVO"/>
+		<typeAlias  alias="assignmentSubVO"       type="egovframework.edutrack.modules.lecture.assignment.service.AssignmentSubVO"/>
+		<typeAlias  alias="assignmentSubConstVO"       type="egovframework.edutrack.modules.lecture.assignment.service.AssignmentSubConstVO"/>
+		<typeAlias  alias="assignmentVO"       type="egovframework.edutrack.modules.lecture.assignment.service.AssignmentVO"/>
+		<typeAlias  alias="brdBbsAtclVO"       type="egovframework.edutrack.modules.board.bbs.service.BrdBbsAtclVO"/>
+		<typeAlias  alias="brdBbsCmntVO"       type="egovframework.edutrack.modules.board.bbs.service.BrdBbsCmntVO"/>
+		<typeAlias  alias="brdBbsHeadVO"       type="egovframework.edutrack.modules.board.bbs.service.BrdBbsHeadVO"/>
+		<typeAlias  alias="brdBbsInfoVO"       type="egovframework.edutrack.modules.board.bbs.service.BrdBbsInfoVO"/>
+		<typeAlias  alias="brdFaqAtclVO"       type="egovframework.edutrack.modules.board.faq.service.BrdFaqAtclVO"/>
+		<typeAlias  alias="brdFaqCtgrVO"       type="egovframework.edutrack.modules.board.faq.service.BrdFaqCtgrVO"/>
+		<typeAlias  alias="brdPopupNoticeVO"       type="egovframework.edutrack.modules.board.popup.service.BrdPopupNoticeVO"/>
+		<typeAlias  alias="bkgImgVO"       type="egovframework.edutrack.modules.etc.bkgimg.service.BkgImgVO"/>
+		<typeAlias  alias="bookmarkVO"       type="egovframework.edutrack.modules.lecture.bookmark.service.BookmarkVO"/>
+		<typeAlias  alias="calendarVO"       type="egovframework.edutrack.modules.teacher.sche.service.CalendarVO"/>
+		<typeAlias  alias="certPrintVO"       type="egovframework.edutrack.modules.student.certprint.service.CertPrintVO"/>
+		<typeAlias  alias="clibCntsCtgrVO"       type="egovframework.edutrack.modules.library.cnts.ctgr.service.ClibCntsCtgrVO"/>
+		<typeAlias  alias="clibMediaCntsVO"       type="egovframework.edutrack.modules.library.cnts.media.service.ClibMediaCntsVO"/>
+		<typeAlias  alias="clibOlcCntsVO"       type="egovframework.edutrack.modules.library.cnts.olc.service.ClibOlcCntsVO"/>
+		<typeAlias  alias="clibOlcPageVO"       type="egovframework.edutrack.modules.library.cnts.olc.service.ClibOlcPageVO"/>
+		<typeAlias  alias="clibCntsShareReqVO"       type="egovframework.edutrack.modules.library.cnts.share.req.service.ClibCntsShareReqVO"/>
+		<typeAlias  alias="clibShareCntsCtgrVO"       type="egovframework.edutrack.modules.library.share.ctgr.service.ClibShareCntsCtgrVO"/>
+		<typeAlias  alias="clibShareMediaCntsVO"       type="egovframework.edutrack.modules.library.share.media.service.ClibShareMediaCntsVO"/>
+		<typeAlias  alias="clibShareOlcCntsVO"       type="egovframework.edutrack.modules.library.share.olc.service.ClibShareOlcCntsVO"/>
+		<typeAlias  alias="clibShareOlcPageVO"       type="egovframework.edutrack.modules.library.share.olc.service.ClibShareOlcPageVO"/>
+		<typeAlias  alias="contentsVO"       type="egovframework.edutrack.modules.course.contents.service.ContentsVO"/>
+		<typeAlias  alias="contentsFileVO"       type="egovframework.edutrack.modules.course.contents.service.ContentsFileVO"/>
+		<typeAlias  alias="courseVO"       type="egovframework.edutrack.modules.course.course.service.CourseVO"/>
+		<typeAlias  alias="courseCategoryVO"       type="egovframework.edutrack.modules.course.category.service.CourseCategoryVO"/>
+		<typeAlias  alias="createCourseVO"       type="egovframework.edutrack.modules.course.createcourse.service.CreateCourseVO"/>	
+		<typeAlias  alias="createCourseSubjectVO"       type="egovframework.edutrack.modules.course.createcoursesubject.service.CreateCourseSubjectVO"/>
+		<typeAlias  alias="createOfflineSubjectVO"       type="egovframework.edutrack.modules.course.createcoursesubject.service.CreateOfflineSubjectVO"/>
+		<typeAlias  alias="createOnlineSubjectVO"       type="egovframework.edutrack.modules.course.createcoursesubject.service.CreateOnlineSubjectVO"/>
+		<typeAlias  alias="creCrsReshVO"       type="egovframework.edutrack.modules.course.creCrsResh.service.CreCrsReshVO"/>
+		<typeAlias  alias="creCrsDeclsVO"       type="egovframework.edutrack.modules.course.decls.service.CreCrsDeclsVO"/>
+		<typeAlias  alias="crsPlanVO"       type="egovframework.edutrack.modules.course.courseplan.service.CrsPlanVO"/>
+		<typeAlias  alias="crsOflnSbjVO"       type="egovframework.edutrack.modules.course.coursesubject.service.CrsOflnSbjVO"/>
+		<typeAlias  alias="crsOnlnSbjVO"       type="egovframework.edutrack.modules.course.coursesubject.service.CrsOnlnSbjVO"/>
+		<typeAlias  alias="crsReshAnsrVO"       type="egovframework.edutrack.modules.course.creCrsResh.service.CrsReshAnsrVO"/>
+		<typeAlias  alias="crsReshResultVO"       type="egovframework.edutrack.modules.course.creCrsResh.service.CrsReshResultVO"/>
+		<typeAlias  alias="crsBbsAtclVO"       type="egovframework.edutrack.modules.course.crsbbs.atcl.service.CrsBbsAtclVO"/>
+		<typeAlias  alias="crsBbsCmntVO"       type="egovframework.edutrack.modules.course.crsbbs.cmnt.service.CrsBbsCmntVO"/>
+		<typeAlias  alias="crsBbsInfoVO"       type="egovframework.edutrack.modules.course.crsbbs.info.service.CrsBbsInfoVO"/>
+		<typeAlias  alias="crsTchVO"       type="egovframework.edutrack.modules.course.crstch.service.CrsTchVO"/>
+ 		<typeAlias  alias="eaiNkoreducompsendVO"       type="egovframework.edutrack.modules.student.sync.service.EaiNkoreducompsendVO"/>
+		<typeAlias  alias="eduResultStatusVO"       type="egovframework.edutrack.modules.student.result.service.EduResultStatusVO"/>
+		<typeAlias  alias="eduResultVO"       type="egovframework.edutrack.modules.student.result.service.EduResultVO"/>
+		<typeAlias  alias="etcBnnrVO"       type="egovframework.edutrack.modules.etc.banner.service.EtcBnnrVO"/>
+		<typeAlias  alias="etcEventVO"       type="egovframework.edutrack.modules.etc.event.service.EtcEventVO"/>
+		<typeAlias  alias="hrdApiSyncVO"       type="egovframework.edutrack.modules.etc.hrdapi.service.HrdApiSyncVO"/>
+		<typeAlias  alias="hrdOtpVO"       type="egovframework.edutrack.modules.etc.hrdapi.service.HrdOtpVO"/>
+		<typeAlias  alias="hrdApiOnlnSbjVO"       type="egovframework.edutrack.modules.etc.hrdapi.service.HrdApiOnlnSbjVO"/>
+		<typeAlias  alias="hrdApiUserInfoVO"       type="egovframework.edutrack.modules.etc.hrdapi.service.HrdApiUserInfoVO"/>
+		<typeAlias  alias="hrdApiUserLoginVO"       type="egovframework.edutrack.modules.etc.hrdapi.service.HrdApiUserLoginVO"/>
+		<typeAlias  alias="HrdApiStdVO"       type="egovframework.edutrack.modules.etc.hrdapi.service.HrdApiStdVO"/>
+		<typeAlias  alias="hrdApiCreVO"       type="egovframework.edutrack.modules.etc.hrdapi.service.HrdApiCreVO"/>
+		<typeAlias  alias="etcRelatedSiteCtgrVO"       type="egovframework.edutrack.modules.etc.relatedsite.service.EtcRelatedSiteCtgrVO"/>
+		<typeAlias  alias="etcRelatedSiteVO"       type="egovframework.edutrack.modules.etc.relatedsite.service.EtcRelatedSiteVO"/>
+		<typeAlias  alias="examQbankCtgrVO"       type="egovframework.edutrack.modules.course.exambank.service.ExamQbankCtgrVO"/>
+		<typeAlias  alias="examQbankQstnVO"       type="egovframework.edutrack.modules.course.exambank.service.ExamQbankQstnVO"/>
+		<typeAlias  alias="examQuestionVO"       type="egovframework.edutrack.modules.lecture.exam.service.ExamQuestionVO"/>
+		<typeAlias  alias="examQuestionFileVO"       type="egovframework.edutrack.modules.lecture.exam.service.ExamQuestionFileVO"/>
+		<typeAlias  alias="examStareVO"       type="egovframework.edutrack.modules.lecture.exam.service.ExamStareVO"/>
+		<typeAlias  alias="examStatusVO"       type="egovframework.edutrack.modules.lecture.exam.service.ExamStatusVO"/>
+		<typeAlias  alias="examVO"       type="egovframework.edutrack.modules.lecture.exam.service.ExamVO"/>
+		<typeAlias  alias="forumAtclVO"       type="egovframework.edutrack.modules.lecture.forum.service.ForumAtclVO"/>
+		<typeAlias  alias="forumCmntVO"       type="egovframework.edutrack.modules.lecture.forum.service.ForumCmntVO"/>
+		<typeAlias  alias="forumJoinUserVO"       type="egovframework.edutrack.modules.lecture.forum.service.ForumJoinUserVO"/>
+		<typeAlias  alias="forumStatusVO"       type="egovframework.edutrack.modules.lecture.forum.service.ForumStatusVO"/>
+		<typeAlias  alias="forumVO"       type="egovframework.edutrack.modules.lecture.forum.service.ForumVO"/>
+		<typeAlias  alias="kollusResultVO"       type="egovframework.edutrack.modules.kollus.service.KollusResultVO"/>
+		<typeAlias  alias="lecBbsAtclVO"       type="egovframework.edutrack.modules.lecture.bbs.service.LecBbsAtclVO"/>
+		<typeAlias  alias="lecBbsCmntVO"       type="egovframework.edutrack.modules.lecture.bbs.service.LecBbsCmntVO"/>
+		<typeAlias  alias="lecBbsVO"       type="egovframework.edutrack.modules.lecture.bbs.service.LecBbsVO"/>
+		<typeAlias  alias="logAdminConnLogVO"       type="egovframework.edutrack.modules.log.adminconn.service.LogAdminConnLogVO"/>
+		<typeAlias  alias="logApiSyncVO"       type="egovframework.edutrack.modules.log.apisync.service.LogApiSyncVO"/>
+		<typeAlias  alias="logClassConnVO"       type="egovframework.edutrack.modules.log.classconn.service.LogClassConnVO"/>
+		<typeAlias  alias="logEduCourseStatusVO"       type="egovframework.edutrack.modules.log.educourse.service.LogEduCourseStatusVO"/>
+		<typeAlias  alias="logEduTeamStatusVO"       type="egovframework.edutrack.modules.log.educourse.service.LogEduTeamStatusVO"/>
+		<typeAlias  alias="logEduOrgStatusVO"       type="egovframework.edutrack.modules.log.educourse.service.LogEduOrgStatusVO"/>
+		<typeAlias  alias="logExceptionVO"       type="egovframework.edutrack.modules.log.exception.service.LogExceptionVO"/>
+		<typeAlias  alias="logMsgLogVO"       type="egovframework.edutrack.modules.log.message.service.LogMsgLogVO"/>
+		<typeAlias  alias="logMsgTransLogVO"       type="egovframework.edutrack.modules.log.message.service.LogMsgTransLogVO"/>
+		<typeAlias  alias="logMsgMngVO"       type="egovframework.edutrack.modules.log.message.service.LogMsgMngVO"/>
+		<typeAlias  alias="logOrgAdminConnLogVO"       type="egovframework.edutrack.modules.log.orgadminconn.service.LogOrgAdminConnLogVO"/>
+		<typeAlias  alias="logOrgStatusVO"       type="egovframework.edutrack.modules.log.orgstatus.service.LogOrgStatusVO"/>
+		<typeAlias  alias="logPrivateInfoInqLogVO"       type="egovframework.edutrack.modules.log.privateinfo.service.LogPrivateInfoInqLogVO"/>
+		<typeAlias  alias="logPrnLogVO"       type="egovframework.edutrack.modules.log.prnlog.service.LogPrnLogVO"/>
+		<typeAlias  alias="logSysConnLogVO"       type="egovframework.edutrack.modules.log.sysconn.service.LogSysConnLogVO"/>
+		<typeAlias  alias="logSysLoginLogVO"       type="egovframework.edutrack.modules.log.login.service.LogSysLoginLogVO"/>
+		<typeAlias  alias="logSysUserLogVO"       type="egovframework.edutrack.modules.log.sysuser.service.LogSysUserLogVO"/>
+		<typeAlias  alias="logUserConnLogVO"       type="egovframework.edutrack.modules.log.userconn.service.LogUserConnLogVO"/>
+		<typeAlias  alias="logUserCertLogVO"       type="egovframework.edutrack.modules.log.usercert.service.LogUserCertLogVO"/>
+		<typeAlias  alias="LogUserCnslLogVO"		type="egovframework.edutrack.modules.log.usercnsl.service.LogUserCnslLogVO"/>
+		<typeAlias  alias="logUserLoginTryLogVO"       type="egovframework.edutrack.modules.log.logintry.service.LogUserLoginTryLogVO"/>
+		<typeAlias  alias="logUseSizeLogVO"       type="egovframework.edutrack.modules.log.usesize.service.LogUseSizeLogVO"/>
+		<typeAlias  alias="logUserUpdateLogVO"       type="egovframework.edutrack.modules.log.userupdate.service.LogUserUpdateLogVO"/>
+		<typeAlias  alias="logWwwMenuConnLogVO"       type="egovframework.edutrack.modules.log.menuconn.service.LogWwwMenuConnLogVO"/>
+		<typeAlias  alias="logTchActStatusVO"       type="egovframework.edutrack.modules.log.tchactstatus.service.LogTchActStatusVO"/>
+		<typeAlias  alias="logTchActStatusDetailVO"       type="egovframework.edutrack.modules.log.tchactstatus.service.LogTchActStatusDetailVO"/>
+		<typeAlias  alias="mainLectureVO"       type="egovframework.edutrack.modules.lecture.main.service.MainLectureVO"/>
+		<typeAlias  alias="myLecBbsAtclVO"       type="egovframework.edutrack.modules.lecture.mybbs.service.MyLecBbsAtclVO"/>
+		<typeAlias  alias="oflnSbjTchVO"       type="egovframework.edutrack.modules.course.oflnsbjtch.service.OflnSbjTchVO"/>
+		<typeAlias  alias="oflnSbjTchTmVO"       type="egovframework.edutrack.modules.course.oflnsbjtchtm.service.OflnSbjTchTmVO"/>
+		<typeAlias  alias="offlineSubjectVO"       type="egovframework.edutrack.modules.course.subject.service.OfflineSubjectVO"/>
+		<typeAlias  alias="onlineSubjectVO"       type="egovframework.edutrack.modules.course.subject.service.OnlineSubjectVO"/>
+		<typeAlias  alias="lecRoomVO"       type="egovframework.edutrack.modules.course.subject.service.LecRoomVO"/>
+		<typeAlias  alias="orgPageVO"       type="egovframework.edutrack.modules.org.page.service.OrgPageVO"/>
+		<typeAlias  alias="orgUserInfoCfgVO"       type="egovframework.edutrack.modules.org.config.service.OrgUserInfoCfgVO"/>
+		<typeAlias  alias="orgAuthGrpMenuVO"       type="egovframework.edutrack.modules.org.menu.service.OrgAuthGrpMenuVO"/>
+		<typeAlias  alias="orgCodeCtgrVO"       type="egovframework.edutrack.modules.org.code.service.OrgCodeCtgrVO"/>
+		<typeAlias  alias="orgCodeVO" type="egovframework.edutrack.modules.org.code.service.OrgCodeVO"/>
+		<typeAlias  alias="orgCodeLangVO"  type="egovframework.edutrack.modules.org.code.service.OrgCodeLangVO"/>
+		<typeAlias  alias="orgConnIpVO"       type="egovframework.edutrack.modules.org.connip.service.OrgConnIpVO"/>
+		<typeAlias  alias="orgCreAplcInfoVO"       type="egovframework.edutrack.modules.org.creaplc.service.OrgCreAplcInfoVO"/>
+		<typeAlias  alias="ortCrsCertVO"       type="egovframework.edutrack.modules.org.crscert.service.OrgCrsCertVO"/>
+		<typeAlias  alias="orgDomainVO"       type="egovframework.edutrack.modules.org.domain.service.OrgDomainVO"/>
+		<typeAlias  alias="orgEmailTplVO"       type="egovframework.edutrack.modules.org.emailtpl.service.OrgEmailTplVO"/>
+		<typeAlias  alias="orgEquVO"       type="egovframework.edutrack.modules.org.equ.service.OrgEquVO"/>
+		<typeAlias  alias="orgEquItemVO"       type="egovframework.edutrack.modules.org.equ.service.OrgEquItemVO"/>		
+		<typeAlias  alias="orgEquRentVO"       type="egovframework.edutrack.modules.org.equ.service.OrgEquRentVO"/>
+		<typeAlias  alias="orgEquRentDetailVO"       type="egovframework.edutrack.modules.org.equ.service.OrgEquRentDetailVO"/>		
+		<typeAlias  alias="orgFacInfoVO"       type="egovframework.edutrack.modules.org.fac.service.OrgFacInfoVO"/>
+		<typeAlias  alias="orgFacCtgrVO"       type="egovframework.edutrack.modules.org.fac.service.OrgFacCtgrVO"/>		
+		<typeAlias  alias="orgFacResVO"       type="egovframework.edutrack.modules.org.fac.service.OrgFacResVO"/>
+		<typeAlias  alias="orgImgInfoVO"       type="egovframework.edutrack.modules.org.image.service.OrgImgInfoVO"/>
+		<typeAlias  alias="orgIdeInfoVO"       type="egovframework.edutrack.modules.org.ide.service.OrgIdeInfoVO"/>
+		<typeAlias  alias="orgMenuVO"       type="egovframework.edutrack.modules.org.menu.service.OrgMenuVO"/>
+		<typeAlias  alias="orgMenuLangVO"       type="egovframework.edutrack.modules.org.menu.service.OrgMenuLangVO"/>
+		<typeAlias  alias="orgOrgInfoVO"       type="egovframework.edutrack.modules.org.info.service.OrgOrgInfoVO"/>
+		<typeAlias  alias="orgNotiRecvVO"       type="egovframework.edutrack.modules.org.noti.service.OrgNotiRecvVO"/>
+		<typeAlias  alias="orgReshVO"       type="egovframework.edutrack.modules.org.resh.service.OrgReshVO"/>
+		<typeAlias  alias="orgReshItemVO"       type="egovframework.edutrack.modules.org.resh.service.OrgReshItemVO"/>
+		<typeAlias  alias="orgReshAnsrVO"       type="egovframework.edutrack.modules.org.resh.service.OrgReshAnsrVO"/>
+		<typeAlias  alias="olcCartrgVO"       type="egovframework.edutrack.modules.olc.olccart.service.OlcCartrgVO"/>
+		<typeAlias  alias="olcCntsVO"       type="egovframework.edutrack.modules.olc.olccnts.service.OlcCntsVO"/>
+		<typeAlias  alias="olcCtgrVO"       type="egovframework.edutrack.modules.olc.olcctgr.service.OlcCtgrVO"/>
+		<typeAlias  alias="olcShareCtgrVO"       type="egovframework.edutrack.modules.olc.sharectgr.service.OlcShareCtgrVO"/>
+		<typeAlias  alias="olcShareRelVO"       type="egovframework.edutrack.modules.olc.sharerel.service.OlcShareRelVO"/>
+		<typeAlias  alias="openCrsVO"       type="egovframework.edutrack.modules.opencourse.course.service.OpenCrsVO"/>
+		<typeAlias  alias="openCrsCtgrVO"       type="egovframework.edutrack.modules.opencourse.ctgr.service.OpenCrsCtgrVO"/>
+		<typeAlias  alias="openCrsSbjVO"       type="egovframework.edutrack.modules.opencourse.subject.service.OpenCrsSbjVO"/>
+		<typeAlias  alias="participateVO"       type="egovframework.edutrack.modules.lecture.participate.service.ParticipateVO"/>
+		<typeAlias  alias="prjAssignmentSendVO"       type="egovframework.edutrack.modules.lecture.project.assignment.service.PrjAssignmentSendVO"/>
+		<typeAlias  alias="prjAssignmentVO"       type="egovframework.edutrack.modules.lecture.project.assignment.service.PrjAssignmentVO"/>
+		<typeAlias  alias="prjBbsAtclVO"       type="egovframework.edutrack.modules.lecture.project.board.atcl.service.PrjBbsAtclVO"/>
+		<typeAlias  alias="prjBbsCmntVO"       type="egovframework.edutrack.modules.lecture.project.board.cmnt.service.PrjBbsCmntVO"/>
+		<typeAlias  alias="prjBbsVO"       type="egovframework.edutrack.modules.lecture.project.board.info.service.PrjBbsVO"/>
+		<typeAlias  alias="projectVO"       type="egovframework.edutrack.modules.lecture.project.info.service.ProjectVO"/>
+		<typeAlias  alias="prjMemberVO"       type="egovframework.edutrack.modules.lecture.project.member.service.PrjMemberVO"/>
+		<typeAlias  alias="prjTeamVO"       type="egovframework.edutrack.modules.lecture.project.member.service.PrjTeamVO"/>
+		<typeAlias  alias="projectResultVO"       type="egovframework.edutrack.modules.lecture.project.result.service.ProjectResultVO"/>
+		<typeAlias  alias="researchCourseVO"       type="egovframework.edutrack.modules.course.createcourse.service.ResearchCourseVO"/>
+		<typeAlias  alias="researchBankItemVO"       type="egovframework.edutrack.modules.course.research.service.ResearchBankItemVO"/>
+		<typeAlias  alias="researchBankVO"       type="egovframework.edutrack.modules.course.research.service.ResearchBankVO"/>
+		<typeAlias  alias="stdScoreVO"       type="egovframework.edutrack.modules.lecture.score.service.StdScoreVO"/>
+		<typeAlias  alias="siteStatVO"         type="egovframework.edutrack.modules.log.sitestat.service.SiteStatVO"/>
+		<typeAlias  alias="sysAuthGrpVO"       type="egovframework.edutrack.modules.system.menu.service.SysAuthGrpVO"/>
+		<typeAlias  alias="sysAuthGrpLangVO"       type="egovframework.edutrack.modules.system.menu.service.SysAuthGrpLangVO"/>
+		<typeAlias  alias="sysCfgCtgrVO"       type="egovframework.edutrack.modules.system.config.service.SysCfgCtgrVO"/>
+		<typeAlias  alias="sysCfgVO" type="egovframework.edutrack.modules.system.config.service.SysCfgVO"/>
+		<typeAlias  alias="sysCodeCtgrVO"       type="egovframework.edutrack.modules.system.code.service.SysCodeCtgrVO"/>
+		<typeAlias  alias="sysCodeVO" type="egovframework.edutrack.modules.system.code.service.SysCodeVO"/>
+		<typeAlias  alias="sysCodeLangVO"  type="egovframework.edutrack.modules.system.code.service.SysCodeLangVO"/>
+		<typeAlias  alias="sysFileVO"       type="egovframework.edutrack.modules.system.file.service.SysFileVO"/>
+		<typeAlias  alias="sysFileRepoVO"       type="egovframework.edutrack.modules.system.file.service.SysFileRepoVO"/>
+		<typeAlias  alias="sysFileRepoLangVO"       type="egovframework.edutrack.modules.system.file.service.SysFileRepoLangVO"/>
+		<typeAlias  alias="sysMenuVO"       	type="egovframework.edutrack.modules.system.menu.service.SysMenuVO"/>
+		<typeAlias  alias="sysAuthGrpMenuVO"    type="egovframework.edutrack.modules.system.menu.service.SysAuthGrpMenuVO"/>
+		<typeAlias  alias="sysMenuLangVO"  type="egovframework.edutrack.modules.system.menu.service.SysMenuLangVO"/>
+		<typeAlias  alias="sysTplVO"       type="egovframework.edutrack.modules.system.tpl.service.SysTplVO"/>
+		<typeAlias  alias="studentExcelVO"       type="egovframework.edutrack.modules.student.student.service.StudentExcelVO"/>
+		<typeAlias  alias="studentResultVO"       type="egovframework.edutrack.modules.student.student.service.StudentResultVO"/>
+		<typeAlias  alias="studentVO"       type="egovframework.edutrack.modules.student.student.service.StudentVO"/>
+		<typeAlias  alias="subjectEduResultVO"       type="egovframework.edutrack.modules.student.subjectresult.service.SubjectEduResultVO"/>
+		<typeAlias  alias="subjectCategoryVO"       type="egovframework.edutrack.modules.course.subject.service.SubjectCategoryVO"/>
+		<typeAlias  alias="stdEduRsltWorkLogVO"       type="egovframework.edutrack.modules.student.worklog.service.StdEduRsltWorkLogVO"/>
+		<typeAlias  alias="scheduleDetailVO"       type="egovframework.edutrack.modules.teacher.sche.service.ScheduleDetailVO"/>
+		<typeAlias  alias="scheduleProfVO"       type="egovframework.edutrack.modules.teacher.sche.service.ScheduleProfVO"/>
+		<typeAlias  alias="scheduleVO"       type="egovframework.edutrack.modules.teacher.sche.service.ScheduleVO"/>
+		<typeAlias  alias="teacherVO"       type="egovframework.edutrack.modules.course.createcourseteacher.service.TeacherVO"/>
+		<typeAlias  alias="timetableVO"       type="egovframework.edutrack.modules.course.createcoursetimetable.service.TimetableVO"/>
+		<typeAlias  alias="tchAplcVO"       type="egovframework.edutrack.modules.teacher.aplc.service.TchAplcVO"/>
+		<typeAlias  alias="tchFieldVO"       type="egovframework.edutrack.modules.teacher.field.service.TchFieldVO"/>
+		<typeAlias  alias="tchHstyVO"       type="egovframework.edutrack.modules.teacher.hsty.service.TchHstyVO"/>
+		<typeAlias  alias="tchInfoVO"       type="egovframework.edutrack.modules.teacher.info.service.TchInfoVO"/>
+		<typeAlias  alias="tchItemVO"       type="egovframework.edutrack.modules.teacher.item.service.TchItemVO"/>
+		<typeAlias  alias="tchRecdVO"       type="egovframework.edutrack.modules.teacher.recd.service.TchRecdVO"/>
+		<typeAlias  alias="tchSchsVO"       type="egovframework.edutrack.modules.teacher.schs.service.TchSchsVO"/>
+		<typeAlias  alias="tchThesisVO"       type="egovframework.edutrack.modules.teacher.thesis.service.TchThesisVO"/>
+		<typeAlias  alias="tchTmtabVO"       type="egovframework.edutrack.modules.teacher.tmtab.service.TchTmtabVO"/>
+		<typeAlias  alias="tchWritingsVO"       type="egovframework.edutrack.modules.teacher.writings.service.TchWritingsVO"/>
+		<typeAlias  alias="usrDeptInfoVO"       type="egovframework.edutrack.modules.user.dept.service.UsrDeptInfoVO"/>
+		<typeAlias  alias="usrLoginVO"       type="egovframework.edutrack.modules.user.info.service.UsrLoginVO"/>
+		<typeAlias  alias="userLoginLogVO"       type="egovframework.edutrack.modules.user.loginlog.service.UserLoginLogVO"/>
+		<typeAlias  alias="usrUserAuthGrpVO"       type="egovframework.edutrack.modules.user.info.service.UsrUserAuthGrpVO"/>
+		<typeAlias  alias="usrUserInfoChgHstyVO"       type="egovframework.edutrack.modules.user.info.service.UsrUserInfoChgHstyVO"/>
+		<typeAlias  alias="usrUserInfoVO"       type="egovframework.edutrack.modules.user.info.service.UsrUserInfoVO"/>
+		<typeAlias  alias="userCourseVO"       type="egovframework.edutrack.modules.course.createcourse.service.UserCourseVO"/>
+		<typeAlias  alias="brdQnaQstnVO"       type="egovframework.edutrack.modules.board.qna.service.BrdQnaQstnVO"/>
+		<typeAlias  alias="brdQnaAnsrVO"       type="egovframework.edutrack.modules.board.qna.service.BrdQnaAnsrVO"/>
+		<typeAlias  alias="courseCretermVO"       type="egovframework.edutrack.modules.course.creterm.service.CourseCretermVO"/>
+		<typeAlias  alias="lecObjtVO"       type="egovframework.edutrack.modules.lecture.objt.service.LecObjtVO"/>
+		<typeAlias  alias="lecObjtCmntVO"       type="egovframework.edutrack.modules.lecture.objt.service.LecObjtCmntVO"/>
+		<typeAlias  alias="paymentVO"       type="egovframework.edutrack.modules.student.payment.service.PaymentVO"/>
+		<typeAlias  alias="hrdApiScoreVO"       type="egovframework.edutrack.modules.etc.hrdapi.service.HrdApiScoreVO"/>
+		<typeAlias  alias="nonMemQnaVO"			type="egovframework.edutrack.modules.board.qna.service.NonMemQnaVO" />
+		<typeAlias  alias="attendanceVO"			type="egovframework.edutrack.modules.course.attendance.service.AttendanceVO" />
+    </typeAliases>
+    
+    
+</configuration>

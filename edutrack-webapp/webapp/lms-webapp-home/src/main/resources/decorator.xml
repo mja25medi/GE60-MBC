@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<decorator>
+	<auth name="home">
+		<tpl type="main">
+			<mapping action="/home/main/indexMain" />	
+		</tpl>
+		<tpl type="dflt">
+		</tpl>
+	</auth>
+	<auth name="mng">
+		<tpl type="dflt">
+			<mapping action="/mng/main/loginMain" />	
+		</tpl>
+		<tpl type="pop">
+			<mapping action="/mng/course/category/addFormCategory" />	
+			<mapping action="/mng/course/category/addFormCategorySub" />	
+			<mapping action="/mng/course/category/sortFormCategory" />	
+			<mapping action="/mng/course/category/editFormCategory" />	
+			<mapping action="/mng/library/cnts/media/kollus_upload" />	
+			
+		</tpl>
+		<tpl type="ifm">
+			<mapping action="/mng/course/teacher/*" />	
+			<mapping action="/mng/course/courseSubject/*" />	
+			<mapping action="/mng/course/createCourse/teacher/*" />	
+			<mapping action="/mng/course/createCourse/subject/*" />	
+			<mapping action="/mng/course/createCourse/decls/*" />	
+			<mapping action="/mng/lecture/exam/*" />	
+			<mapping action="/mng/lecture/assignment/*" />	
+			<mapping action="/mng/lecture/forum/*" />	
+			<mapping action="/mng/course/creCrs/resh/*" />	
+			<mapping action="/mng/std/eduResult/*" />	
+			<mapping action="/mng/course/std/*" />	
+			<mapping action="/mng/course/category/sortFormCategory" />	
+			<mapping action="/mng/course/category/editFormCategory" />	
+			
+		</tpl>
+	</auth>
+</decorator>
+

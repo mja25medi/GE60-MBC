@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.exambank.service.impl.ExamQbankCtgrMapper">	
+ 
+ 	<select id="list" parameterType="examQbankCtgrVO" resultType="examQbankCtgrVO">
+	 	SELECT  CTGR_CD										
+			 ,	CTGR_NM	
+			 ,  ORG_CD									
+			 ,	REG_NO										
+			 ,	REG_DTTM									
+			 ,	MOD_NO										
+			 ,	MOD_DTTM									
+			 ,	( SELECT COUNT(*)             				
+			    	FROM tb_crs_exam_qstn 			
+				   WHERE CTGR_CD = A.CTGR_CD) AS SUB_CNT	
+	     FROM tb_crs_exam_ctgr A
+	     WHERE CTGR_LVL = 1		
+	     <if test="orgCd != null and orgCd !=''">
+	   	  AND ORG_CD = #{orgCd}
+   		</if>	
+	    ORDER BY CTGR_NM
+	</select>
+
+ 	<select id="subList" parameterType="examQbankCtgrVO" resultType="examQbankCtgrVO">
+	 	SELECT  CTGR_CD										
+			 ,	CTGR_NM
+			 ,	CTGR_DESC
+			 ,	CRS_NM
+			 ,	USE_YN
+			 ,  ORG_CD										
+			 ,	REG_NO										
+			 ,	REG_DTTM									
+			 ,	MOD_NO										
+			 ,	MOD_DTTM									
+			 ,	( SELECT COUNT(*)             				
+			    	FROM tb_crs_exam_qstn 			
+				   WHERE CTGR_CD = A.CTGR_CD) AS SUB_CNT	
+	     FROM tb_crs_exam_ctgr A
+	     WHERE CTGR_LVL = 2
+	     AND PAR_CTGR_CD = 	#{parCtgrCd}
+   		<if test="useYn != null and useYn !=''">
+	   	  AND USE_YN = #{useYn}
+   		</if>
+   		<if test="orgCd != null and orgCd !=''">
+	   	  AND ORG_CD = #{orgCd}
+   		</if>
+	    ORDER BY CTGR_NM
+	</select>
+	
+	<select id="select" parameterType="crsOflnSbjVO" resultType="examQbankCtgrVO">
+	 	SELECT  CTGR_CD	
+	 		 ,	PAR_CTGR_CD									
+	 		 ,	(
+	 		 		SELECT CTGR_NM
+	 		 		FROM tb_crs_exam_ctgr 			
+				   WHERE CTGR_CD = A.PAR_CTGR_CD
+	 		 	) AS PAR_CTGR_NM									
+			 ,	CTGR_NM		
+			 ,	CTGR_DESC
+			 ,	CRS_NM
+			 ,	USE_YN	
+			 ,  ORG_CD			 								
+			 ,	REG_NO										
+			 ,	REG_DTTM									
+			 ,	MOD_NO										
+			 ,	MOD_DTTM
+			 ,	CTGR_LVL									
+			 ,	( SELECT COUNT(*)             				
+				    FROM tb_crs_exam_qstn 			
+				   WHERE CTGR_CD = A.CTGR_CD) AS SUB_CNT	
+	  	  FROM tb_crs_exam_ctgr A						
+	  	 WHERE CTGR_CD 	= #{ctgrCd}
+	</select>
+	
+   <insert id="insert" parameterType="examQbankCtgrVO">
+		 	INSERT 	INTO tb_crs_exam_ctgr (			
+				 	CTGR_CD	
+				 ,  CTGR_LVL		
+				 ,  PAR_CTGR_CD						
+				 ,	CTGR_NM
+				 ,	CTGR_DESC
+				 ,	USE_YN
+				 ,	CRS_NM	
+				 ,  ORG_CD								
+				 ,	REG_NO									
+				 ,	REG_DTTM								
+			) VALUES ( 										
+				 	#{ctgrCd}									
+				 ,  #{ctgrLvl}
+				 ,  #{parCtgrCd}
+				 ,	#{ctgrNm}	
+				 ,	#{ctgrDesc}	
+				 ,	#{useYn}	
+				 ,	#{crsNm}	
+				 ,  #{orgCd}
+				 ,	#{regNo}									
+				 ,	DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	) 
+    </insert>	
+
+	<select id="selectCd" resultType="examQbankCtgrVO">
+	 	SELECT CONCAT('EC', LPAD(nextval(SQ_CRS_EXAM_QBANK_CTGR),8,'0')) AS CTGR_CD
+	</select>
+   <update id="update" parameterType="examQbankCtgrVO">
+			UPDATE  tb_crs_exam_ctgr 									
+			   SET	
+			   		CTGR_NM 	= #{ctgrNm}	
+			   		<if test="parCtgrCd != null">
+				   	 ,	CTGR_DESC	= #{ctgrDesc}
+				   	 ,	USE_YN		= #{useYn}
+				   	 ,	CRS_NM		= #{crsNm}	
+			   		</if>
+				 ,	MOD_NO		= #{modNo}									
+				 ,	MOD_DTTM 	= DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+		  	 WHERE 	CTGR_CD 	= #{ctgrCd} 
+    </update>
+    <update id="updateSubNames" parameterType="examQbankCtgrVO">
+ 		UPDATE tb_crs_exam_ctgr SET 
+ 			CTGR_NM = #{ctgrNm} 
+ 			WHERE PAR_CTGR_CD = #{ctgrCd}
+    </update>
+	<delete id="delete" parameterType="examQbankCtgrVO">
+		 	DELETE  FROM tb_crs_exam_ctgr		
+		  	 WHERE  CTGR_CD = #{ctgrCd}			
+    </delete>
+    
+    <select id="selectUpperQbankCtgr" resultType="String" parameterType="String">
+	 	SELECT CTGR_CD 
+	 		FROM tb_crs_exam_ctgr 
+	 		WHERE PAR_CTGR_CD = #{ctgrCd}
+	</select>
+
+
+
+</mapper>	

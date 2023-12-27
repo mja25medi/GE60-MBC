@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.exambank.service.impl.ExamQbankCtgrMapper">	
+ 
+ 	<select id="list" parameterType="string" resultType="examQbankCtgrVO">
+	 	SELECT  SBJ_CD										
+			 ,	CTGR_CD										
+			 ,	CTGR_NM										
+			 ,	REG_NO										
+			 ,	REG_DTTM									
+			 ,	MOD_NO										
+			 ,	MOD_DTTM									
+			 ,	( SELECT COUNT(*)             				
+			    	FROM TB_CRS_EXAM_QBANK_QSTN 			
+				   WHERE CTGR_CD = A.CTGR_CD) AS SUB_CNT	
+	     FROM tb_crs_exam_qbank_ctgr A						
+	    WHERE SBJ_CD = #{value}								
+	    ORDER BY CTGR_NM
+	</select>
+
+	<select id="select" parameterType="crsOflnSbjVO" resultType="examQbankCtgrVO">
+	 	SELECT  SBJ_CD										
+			 ,	CTGR_CD										
+			 ,	CTGR_NM										
+			 ,	REG_NO										
+			 ,	REG_DTTM									
+			 ,	MOD_NO										
+			 ,	MOD_DTTM									
+			 ,	( SELECT COUNT(*)             				
+				    FROM TB_CRS_EXAM_QBANK_QSTN 			
+				   WHERE CTGR_CD = A.CTGR_CD) AS SUB_CNT	
+	  	  FROM tb_crs_exam_qbank_ctgr A						
+	  	 WHERE SBJ_CD 	= #{sbjCd}							
+	      AND CTGR_CD 	= #{ctgrCd}
+	</select>
+	
+   <insert id="insert" parameterType="examQbankCtgrVO">
+		 	INSERT 	INTO tb_crs_exam_qbank_ctgr (			
+				    SBJ_CD									
+				 ,	CTGR_CD									
+				 ,	CTGR_NM									
+				 ,	REG_NO									
+				 ,	REG_DTTM								
+			) VALUES ( 										
+				  	#{sbjCd}									
+				 ,	#{ctgrCd}									
+				 ,	#{ctgrNm}									
+				 ,	#{regNo}									
+				 ,	TO_CHAR(SYSDATE,'yyyymmddhh24miss')	)
+    </insert>
+
+	<select id="selectCd" resultType="examQbankCtgrVO">
+	 	SELECT 'EC'||LPAD(SQ_CRS_EXAM_QBANK_CTGR.nextVal,8,'0') AS CTGR_CD FROM DUAL 
+	</select>
+   <update id="update" parameterType="examQbankCtgrVO">
+			UPDATE  tb_crs_exam_qbank_ctgr 									
+			   SET	CTGR_NM 	= #{ctgrNm}									
+				 ,	MOD_NO		= #{modNo}									
+				 ,	MOD_DTTM 	= TO_CHAR(SYSDATE,'yyyymmddhh24miss')		
+		  	 WHERE 	SBJ_CD 		= #{sbjCd}									
+			   AND 	CTGR_CD 	= #{ctgrCd} 
+    </update>
+	<delete id="delete" parameterType="examQbankCtgrVO">
+		 	DELETE  FROM tb_crs_exam_qbank_ctgr		
+		  	 WHERE  SBJ_CD 	= #{sbjCd}				
+		      AND  CTGR_CD = #{ctgrCd}			
+    </delete>
+
+
+
+</mapper>	

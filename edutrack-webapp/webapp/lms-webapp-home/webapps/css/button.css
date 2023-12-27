@@ -1,0 +1,57 @@
+@CHARSET "UTF-8";
+
+/*Credits: Dynamic Drive CSS Library */
+	/*URL: http://www.dynamicdrive.com/style/ */
+a.squarebutton {
+	background: transparent url('../img/framework/button/btn-left.gif') no-repeat top left;
+	display: block; float: left; /* // 줄바뀜 현상 제거 (제거할 경우 파폭에서 줄바뀜) */
+	font-weight : normal;
+	font-size : 12px;	/* Change 12px as desired */
+	line-height: 16px; /* This value + 3px + 4px (top and bottom padding of SPAN) must equal height of button background (default is 23px) */
+	height: 23px; /* Height of button background height */
+	padding-left: 9px; /* Width of left menu image */
+	text-decoration: none;
+	margin: 0px 4px 0px 4px;
+}
+
+a:link.squarebutton,a:visited.squarebutton,a:active.squarebutton {
+	color: #494949; /*button text color*/
+}
+
+a.squarebutton span {
+	display: block;
+	background: transparent url('../img/framework/button/btn-right.gif') no-repeat top right;
+	padding: 3px 9px 4px 0; /*Set 9px below to match value of 'padding-left' value above*/
+}
+
+a.squarebutton span img {
+	height: 16px;
+	vertical-align: middle;
+	margin: 0px 5px 0px 0px;
+}
+
+a.squarebutton:hover { /* Hover state CSS */
+	background-position: bottom left;
+}
+
+a.squarebutton:hover span { /* Hover state CSS */
+	background-position: bottom right;
+	color: black;
+}
+
+.buttonwrapper {
+	/* Container you can use to surround a CSS button to clear float */
+	overflow: hidden; /*See: http://www.quirksmode.org/css/clearing.html */
+	width: 100%;
+	padding: 6px;
+	text-align: right;
+}
+
+a.square-red {background: transparent url('../img/framework/button/square-red-left.gif') no-repeat top left;}
+a.square-red span {background: transparent url('../img/framework/button/square-red-right.gif') no-repeat top right;}
+a.square-gray {background: transparent url('../img/framework/button/btn-gray-left.gif') no-repeat top left;}
+a.square-gray span {background: transparent url('../img/framework/button/btn-gray-right.gif') no-repeat top right;}
+a.square-orange {background: transparent url('../img/framework/button/square-orange-left.gif') no-repeat top left;}
+a.square-orange span {background: transparent url('../img/framework/button/square-orange-right.gif') no-repeat top right;}
+a.square-green {background: transparent url('../img/framework/button/square-green-left.gif') no-repeat top left;}
+a.square-green span {background: transparent url('../img/framework/button/square-green-right.gif') no-repeat top right;}

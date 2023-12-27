@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.crsbbs.cmnt.service.impl.CrsBbsCmntMapper">	
+	<select id="selectKey" resultType="Integer">
+	    SELECT SQ_CRS_CRS_BBS_CMNT.nextVal AS CMNT_SN FROM DUAL
+	</select>
+
+	<sql id="selectColumnQuery">
+		  		 CRS_CD 								
+		       , BBS_CD 								
+		       , ATCL_SN 								
+		       , CMNT_SN 								
+		       , CMNT_CTS 								
+		       , EMOTICON_NO 							
+		       , REG_NM  								
+		       , REG_NO  								
+		       , ( SELECT FN_GET_USER_ID(A.REG_NO) FROM DUAL) AS REG_ID 
+		       , REG_DTTM    							
+		       , MOD_NO  								
+		       , MOD_DTTM    							
+	</sql>
+		
+	<sql id="selectQuery">
+		  SELECT 
+		  <include refid="selectColumnQuery" />  							
+		  FROM TB_CRS_CRS_BBS_CMNT A   
+	</sql>
+
+	<select id="count" parameterType="crsBbsCmntVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		 FROM TB_CRS_CRS_BBS_CMNT A   
+		 WHERE  A.ATCL_SN = #{atclSn}
+	</select>
+		
+ 	<select id="list" parameterType="crsBbsCmntVO" resultType="crsBbsCmntVO">
+	    <include refid="selectQuery" />
+		WHERE  A.ATCL_SN = #{atclSn}
+		ORDER  BY A.CMNT_SN DESC
+	</select>
+     <select id="listPageing" parameterType="crsBbsCmntVO" resultType="crsBbsCmntVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectQuery" />
+		WHERE  A.ATCL_SN = #{atclSn}
+		ORDER  BY A.CMNT_SN DESC
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>  
+
+	<select id="select" parameterType="crsBbsCmntVO" resultType="crsBbsCmntVO">
+	    <include refid="selectQuery" />
+	     WHERE  A.CMNT_SN = #{cmntSn}
+	</select>
+
+
+    <insert id="insert" parameterType="crsBbsCmntVO">
+		   INSERT INTO TB_CRS_CRS_BBS_CMNT (   			
+		          CRS_CD 								
+		        , BBS_CD 								
+		        , ATCL_SN 								
+		        , CMNT_SN 								
+		        , CMNT_CTS 							
+		        , EMOTICON_NO 							
+		        , REG_NM  								
+		        , REG_NO  								
+		        , REG_DTTM    							
+		        , MOD_NO  								
+		        , MOD_DTTM								
+		   ) VALUES (  								
+		          #{crsCd} 								
+		        , #{bbsCd} 								
+		        , #{atclSn} 								
+		        , #{cmntSn} 								
+		        , #{cmntCts}    							
+		        , #{emoticonNo}							
+		        , ( SELECT FN_GET_USER_NAME(#{regNo}) FROM DUAL) 
+		        , #{regNo}  								
+		        , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 	
+		        , #{modNo}  								
+		        , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 	
+		   )   		
+    </insert>
+
+   <update id="update" parameterType="crsBbsCmntVO">
+		   UPDATE TB_CRS_CRS_BBS_CMNT									
+			   SET CMNT_CTS			= #{cmntCts}						
+				 , EMOTICON_NO	= #{emoticonNo}							
+				 , MOD_NO		= #{modNo}								
+				 , MOD_DTTM	= TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')	
+			 WHERE CRS_CD		= #{crsCd}								
+			   AND BBS_CD		= #{bbsCd}								
+			   AND ATCL_SN		= #{atclSn}								
+			   AND CMNT_SN		= #{cmntSn}
+    </update>
+
+	<delete id="delete" parameterType="crsBbsCmntVO">
+		   DELETE FROM TB_CRS_CRS_BBS_CMNT								
+			 WHERE CRS_CD		= #{crsCd}								
+			   AND BBS_CD		= #{bbsCd}								
+			   AND ATCL_SN		= #{atclSn}								
+			   AND CMNT_SN		= #{cmntSn}	 
+    </delete>
+	<delete id="deleteAll" parameterType="crsBbsCmntVO">
+		   DELETE FROM TB_CRS_CRS_BBS_CMNT								
+			 WHERE CRS_CD		= #{crsCd}								
+			   AND BBS_CD		= #{bbsCd}								
+			   AND ATCL_SN		= #{atclSn}								
+    </delete>
+
+
+</mapper>	

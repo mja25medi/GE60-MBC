@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.library.cnts.ctgr.service.impl.ClibCntsCtgrMapper">	
+
+	<sql id="selectQuery">
+		  SELECT CTGR_CD  
+		       , PAR_CTGR_CD  
+		       , ORG_CD  
+		       , USER_NO  
+		       , CTGR_NM  
+		       , CTGR_LVL  
+		       , CTGR_ODR  
+		       , CTGR_PATH  
+		       , CTGR_PATH_NM  
+		       , CTGR_DESC  
+		       , USE_YN  
+			   , (SELECT FN_GET_USER_NAME(A.REG_NO)) REG_NM 
+		       , REG_DTTM  
+		       , MOD_NO  
+			   , (SELECT FN_GET_USER_NAME(A.MOD_NO)) MOD_NM 
+		       , NVL(( SELECT CTGR_NM
+		                 FROM tb_clib_cnts_ctgr 
+		                WHERE CTGR_CD = A.PAR_CTGR_CD 
+		                  AND ORG_CD = A.ORG_CD 
+		                  AND USER_NO = A.USER_NO ),'ROOT') AS PAR_CTGR_NM 
+		       , ( SELECT COUNT(*)  
+		             FROM tb_clib_cnts_ctgr  
+		            WHERE PAR_CTGR_CD = A.CTGR_CD  
+		              AND ORG_CD = A.ORG_CD  
+		              AND USER_NO = A.USER_NO ) AS SUB_CNT  
+		       , ( SELECT COUNT(*)  
+		             FROM tb_clib_olc_cnts  
+		            WHERE CTGR_CD = A.CTGR_CD  
+		              AND ORG_CD = A.ORG_CD  
+		              AND USER_NO = A.USER_NO ) +  
+		         ( SELECT COUNT(*)  
+		             FROM tb_clib_media_cnts  
+		            WHERE CTGR_CD = A.CTGR_CD  
+		              AND ORG_CD = A.ORG_CD  
+		              AND USER_NO = A.USER_NO ) AS CNTS_CNT  
+		       , ( SELECT COUNT(*)  
+		             FROM tb_clib_olc_cnts  
+		            WHERE CTGR_CD = A.CTGR_CD  
+		              AND ORG_CD = A.ORG_CD  
+		              AND USER_NO = A.USER_NO ) AS OLC_CNT  
+		       , ( SELECT COUNT(*)  
+		             FROM tb_clib_media_cnts  
+		            WHERE CTGR_CD = A.CTGR_CD  
+		              AND ORG_CD = A.ORG_CD  
+		              AND USER_NO = A.USER_NO ) AS MEDIA_CNT  
+		    FROM tb_clib_cnts_ctgr A 
+		   WHERE ORG_CD = #{orgCd} 
+		   <if test = "userNo != null and userNo != ''">
+		     AND USER_NO = #{userNo}
+		   </if>
+	</sql>
+
+ 	<select id="list" parameterType="clibCntsCtgrVO" resultType="clibCntsCtgrVO">
+	    <include refid="selectQuery" />
+		ORDER BY CTGR_ODR
+	</select>
+
+ 	<select id="listSub" parameterType="clibCntsCtgrVO" resultType="clibCntsCtgrVO">
+	    <include refid="selectQuery" />
+	    AND NVL((PAR_CTGR_CD),'1') = NVL((#{parCtgrCd}),'1')
+		ORDER BY CTGR_ODR
+	</select>
+
+
+	<select id="select" parameterType="clibCntsCtgrVO" resultType="clibCntsCtgrVO">
+	    <include refid="selectQuery" />
+	     AND CTGR_CD = #{ctgrCd}
+	</select>
+
+    <insert id="insert" parameterType="clibCntsCtgrVO">
+		  INSERT INTO tb_clib_cnts_ctgr ( 
+		         CTGR_CD  
+		       , PAR_CTGR_CD  
+		       , ORG_CD  
+		       , USER_NO  
+		       , CTGR_NM  
+		       , CTGR_LVL  
+		       , CTGR_ODR  
+		       , CTGR_PATH  
+		       , CTGR_PATH_NM  
+		       , CTGR_DESC  
+		       , USE_YN  
+		       , REG_NO  
+		       , REG_DTTM  
+		       , MOD_NO  
+		       , MOD_DTTM  
+		 ) VALUES ( 
+		         #{ctgrCd}  
+		       , FN_GET_NULL(#{parCtgrCd})  
+		       , #{orgCd}  
+		       , #{userNo}  
+		       , #{ctgrNm}  
+		       , #{ctgrLvl}  
+		       , ( SELECT NVL((MAX(CTGR_ODR)),0) + 1
+		             FROM tb_clib_cnts_ctgr AS SUBQUERY 
+		            WHERE ORG_CD = #{orgCd} 
+		              AND USER_NO = #{userNo} 
+		              AND NVL((PAR_CTGR_CD),'1') = NVL((#{parCtgrCd}),'1') ) 
+		       , #{ctgrPath}  
+		       , #{ctgrPathNm}  
+		       , #{ctgrDesc}  
+		       , #{useYn}  
+		       , #{regNo}  
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		       , #{modNo}  
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		 ) 
+    </insert>
+	<select id="selectCtgrCd" resultType="clibCntsCtgrVO">
+	    SELECT CONCAT('LCT', LPAD(nextval('SQ_CLIB_CNTS_CTGR'),17,'0')) AS CTGR_CD
+	</select>
+
+   <update id="update" parameterType="clibCntsCtgrVO">
+	  UPDATE tb_clib_cnts_ctgr SET 
+	         PAR_CTGR_CD = FN_GET_NULL(#{parCtgrCd})  
+	       , CTGR_NM = #{ctgrNm}  
+	       , CTGR_LVL = #{ctgrLvl}  
+	       , CTGR_ODR = #{ctgrOdr}  
+	       , CTGR_PATH = #{ctgrPath}  
+	       , CTGR_PATH_NM = #{ctgrPathNm}  
+	       , CTGR_DESC = #{ctgrDesc}  
+	       , USE_YN = #{useYn}  
+	       , MOD_NO = #{modNo}  
+	       , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+	   WHERE CTGR_CD = #{ctgrCd}  
+	     AND ORG_CD = #{orgCd}  
+	     AND USER_NO = #{userNo}   
+    </update>
+
+	<update id="updateBatch" parameterType="list" >
+		<foreach collection="list" item="item" index="index" separator=";">
+		  UPDATE tb_clib_cnts_ctgr
+		  SET
+			     PAR_CTGR_CD = #{item.parCtgrCd}  
+		       , CTGR_NM = #{item.ctgrNm}  
+		       , CTGR_LVL = #{item.ctgrLvl}  
+		       , CTGR_ODR = #{item.ctgrOdr}  
+		       , CTGR_PATH = #{item.ctgrPath}  
+		       , CTGR_PATH_NM = #{item.ctgrPathNm}  
+		       , CTGR_DESC = #{item.ctgrDesc}  
+		       , USE_YN = #{item.useYn}  
+		       , MOD_NO = #{item.modNo}  
+		       , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		   WHERE CTGR_CD = #{item.ctgrCd}  
+		     AND ORG_CD = #{item.orgCd}  
+		     AND USER_NO = #{item.userNo}    
+		</foreach>	     
+	</update>
+
+	<delete id="delete" parameterType="clibCntsCtgrVO">
+		  DELETE FROM tb_clib_cnts_ctgr 
+		   WHERE ORG_CD = #{orgCd} 
+		     AND USER_NO = #{userNo} 
+		     AND CTGR_CD = #{ctgrCd}  			
+    </delete>
+	<delete id="deleteSub" parameterType="clibCntsCtgrVO">
+		  DELETE FROM tb_clib_cnts_ctgr 
+		   WHERE ORG_CD = #{orgCd} 
+		     AND USER_NO = #{userNo} 
+		     AND PAR_CTGR_CD = FN_GET_NULL(#{parCtgrCd}) 			
+    </delete>
+
+
+</mapper>	

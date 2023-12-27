@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.subject.service.impl.SubjectOnlineMapper">	
+
+	<select id="selectKey" resultType="String">
+		SELECT CONCAT('NSC',LPAD(nextval('SQ_CRS_ONLN_SBJ'),7,'0')) AS SBJ_CD
+	</select>
+	<sql id="selectColumnQuery">
+			 	   A.ORG_CD															
+		        ,  A.SBJ_CD															
+		        ,  A.SBJ_NM															
+		        ,  A.WIN_WIDTH															
+		        ,  A.WIN_HEIGHT														
+		        ,  A.WIN_MENU_USE_YN													
+		        ,  A.WIN_SKIN_CD														
+		        ,  A.SBJ_DESC															
+		        ,  A.SBJ_CTGR_CD														
+		        ,  B.SBJ_CTGR_NM 														
+		        ,  A.USE_YN															
+		        ,  A.MAIN_YN															
+		        ,  ( SELECT COUNT(*) 													
+		               FROM tb_crs_sbj_cnts											
+		              WHERE SBJ_CD = A.SBJ_CD											
+		           ) AS CONTENTS_CNT													
+		        ,  A.REG_NO															
+		        ,  A.REG_DTTM															
+		        ,  A.MOD_NO															
+		        ,  A.MOD_DTTM			
+		        ,  A.REFUND_YN
+				,  A.EDU_PRICE
+				,  A.REFUND_PRICE
+				,  A.SIMSA_CODE
+				,  A.TRACSE_ID
+				,  A.EDU_GRADE
+				,  A.EDU_NOP
+				,  A.EDU_PRPS
+				,  A.EDU_TARGET
+				,  A.EDU_TM
+				,  A.EDU_DAYCNT
+				,  A.EVAL_DESC
+				,  A.TCH_DESC
+				,  A.DAY_STUDY_LIMIT
+				,  A.PRGR_RATIO
+				,  A.ATTD_RATIO
+				,  A.EXAM_RATIO
+				,  A.ASMT_RATIO
+				,  A.ETC_RATIO															
+				,  A.THUMB_FILE_SN															
+			    ,  (SELECT FN_GET_USER_NAME(A.MOD_NO)) AS MOD_NM				
+		        ,  (SELECT FN_GET_USER_NAME(A.REG_NO)) AS REG_NM				
+		        , (SELECT COUNT(SBJ_CD) FROM tb_crs_crs_onln_sbj C WHERE C.SBJ_CD = A.SBJ_CD) AS CRS_SUB_CNT				
+		        , (SELECT COUNT(SBJ_CD) FROM tb_crs_cre_crs_onln_sbj D WHERE D.SBJ_CD = A.SBJ_CD) AS CRE_CRS_SUB_CNT				
+		        , (SELECT COUNT(SBJ_CD) FROM tb_cro_open_crs_sbj E WHERE E.SBJ_CD = A.SBJ_CD) AS OPEN_CRS_SUB_CNT				
+	</sql>
+	<sql id="selectQuery">
+		 	SELECT 
+		 	<include refid="selectColumnQuery" />														
+		     FROM  tb_crs_onln_sbj A, tb_crs_sbj_ctgr B								
+		    WHERE  A.SBJ_CTGR_CD = B.SBJ_CTGR_CD
+	</sql>
+
+	<select id="count" parameterType="onlineSubjectVO" resultType="Integer">
+		SELECT
+			COUNT(*)
+		FROM  tb_crs_onln_sbj A, tb_crs_sbj_ctgr B								
+		WHERE  A.SBJ_CTGR_CD = B.SBJ_CTGR_CD
+	    	AND  A.USE_YN = 'Y'
+		<if test = "sbjCtgrCd != null and sbjCtgrCd != ''">
+			AND 
+			<foreach collection="sbjCtgrArr" item="item" separator="OR" open="(" close=")"  index="index">
+				B.SBJ_CTGR_PATH like CONCAT('%',#{item},'%')
+			</foreach>
+		</if>
+		<if test = "orgCd != null and orgCd != ''">                          			
+	    	AND A.ORG_CD = #{orgCd}	
+	    </if>	
+		<if test = "sbjNm != null and sbjNm != ''">                          			
+	    	 AND CONCAT(A.SBJ_NM,A.SBJ_CD) like CONCAT('%',#{sbjNm},'%')	
+	    </if>
+	</select>
+		
+ 	<select id="list" parameterType="onlineSubjectVO" resultType="onlineSubjectVO">
+	    <include refid="selectQuery" />
+	    	AND  A.USE_YN = 'Y'
+		<if test = "sbjCtgrCd != null and sbjCtgrCd != ''">
+			AND 
+			<foreach collection="sbjCtgrArr" item="item" separator="OR" open="(" close=")"  index="index">
+				B.SBJ_CTGR_PATH like CONCAT('%', #{item}, '%')
+			</foreach>
+		</if>
+		<if test = "orgCd != null and orgCd != ''">                          			
+	    	AND A.ORG_CD = #{orgCd}	
+	    </if>	
+		<if test = "sbjNm != null and sbjNm != ''">                          			
+	    	 AND CONCAT(A.SBJ_NM, A.SBJ_CD) like CONCAT('%', #{sbjNm}, '%')
+	    </if>
+		<if test = "mainYn != null and mainYn != ''">                          			
+	    	 AND MAIN_YN = #{mainYn}
+	    </if>
+	    <if test="searchMode != null and searchMode != ''">
+			<if test="searchMode == 'STDPAY'">
+				AND A.SBJ_CD IN (	SELECT SBJ_CD
+									FROM tb_crs_cre_crs
+									WHERE 1=1
+										AND FN_GET_NULL(SBJ_CD) IS NOT NULL
+										AND FN_GET_NULL(DEPT_CD) IS NOT NULL 
+										AND FN_GET_NULL(CRS_CD) IS NOT NULL
+										<if test="deptCd != null and deptCd != ''">
+										AND DEPT_CD = #{deptCd}
+										</if>
+										<if test="crsCd != null and crsCd != ''">
+										AND CRS_CD = #{crsCd}
+										</if>
+								  )
+			</if>
+		</if>
+		ORDER  BY A.SBJ_NM 	
+	</select>
+
+    <select id="listPageing" parameterType="onlineSubjectVO" resultType="onlineSubjectVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectQuery" />
+		<if test = "sbjCtgrCd != null and sbjCtgrCd != ''">
+			AND 
+			<foreach collection="sbjCtgrArr" item="item" separator="OR" open="(" close=")"  index="index">
+				B.SBJ_CTGR_PATH like CONCAT('%', #{item}, '%')
+			</foreach>
+		</if>
+		<if test = "orgCd != null and orgCd != ''">                          			
+	    	AND A.ORG_CD = #{orgCd}	
+	    </if>	
+		<if test = "sbjNm != null and sbjNm != ''">                          			
+	    	 AND CONCAT(A.SBJ_NM, A.SBJ_CD) like CONCAT('%', #{sbjNm}, '%')
+	    </if>
+		<if test = "useYn != null and useYn != ''">                          			
+	    	 AND A.USE_YN = #{useYn}
+	    </if>
+	    <if test = "refundYn != null and refundYn != ''">
+	    	<if test = 'refundYn == "Y"'>
+	    	AND A.REFUND_YN = 'Y'
+	    	</if>
+	    	<if test = 'refundYn == "N"'>
+	    	AND (A.REFUND_YN = 'N' OR A.REFUND_YN IS NULL) 
+	    	</if>
+	    </if>
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+	    <choose>
+			<when test = "sortKey != null and sortKey == 'SBJ_CD_ASC'">
+				 ORDER BY SBJ_CD ASC
+			</when>
+			<when test = "sortKey != null and sortKey == 'SBJ_CD_DESC'">
+			 	ORDER BY SBJ_CD	DESC	
+			</when>
+			<when test = "sortKey != null and sortKey == 'SBJ_CTGR_CD_ASC'">
+			 	ORDER BY SBJ_CTGR_CD ASC
+			</when>
+			<when test = "sortKey != null and sortKey == 'SBJ_CTGR_CD_DESC'">
+			 	 ORDER BY SBJ_CTGR_CD DESC	
+			</when>
+			<when test = "sortKey != null and sortKey == 'SBJ_NM_ASC'">
+			 	ORDER BY SBJ_NM ASC
+			</when>
+			<when test = "sortKey != null and sortKey == 'SBJ_NM_DESC'">
+				ORDER BY SBJ_NM DESC
+			</when>
+			<otherwise>
+			   ORDER  BY SBJ_NM 
+			</otherwise>
+		</choose> 	
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+
+	<select id="select" parameterType="onlineSubjectVO" resultType="onlineSubjectVO">
+	    <include refid="selectQuery" />
+	     AND A.SBJ_CD = #{sbjCd}		
+	</select>
+
+ 	<select id="listSearch" parameterType="onlineSubjectVO" resultType="onlineSubjectVO">
+	    <include refid="selectQuery" />
+			AND  A.USE_YN = 'Y'	
+		<if test = "orgCd != null and orgCd != ''">                          			
+	    	AND A.ORG_CD = #{orgCd}	
+	    </if>	
+		<if test = "sbjNm != null and sbjNm != ''">                          			
+	    	 AND CONCAT(A.SBJ_NM, A.SBJ_CD) like CONCAT('%', #{sbjNm}, '%')	
+	    </if>
+			AND  A.SBJ_CTGR_CD =  #{sbjCtgrCd}  						
+
+			AND  A.SBJ_CD NOT IN 									
+		   			( SELECT SBJ_CD										
+		   			  FROM tb_crs_cre_crs_onln_sbj					
+		   			  WHERE CRS_CRE_CD = #{crsCreCd} )					
+		 ORDER   BY SBJ_NM 										
+	</select>
+
+ 	<select id="listSearchOpen" parameterType="onlineSubjectVO" resultType="onlineSubjectVO">
+	    <include refid="selectQuery" />
+			AND  A.USE_YN = 'Y'													
+		   	AND  A.SBJ_NM LIKE CONCAT('%', NVL(#{sbjNm},''), '%')						
+		   	AND  A.SBJ_CD NOT IN 												
+		   		( SELECT SBJ_CD												
+		   		  FROM tb_cro_open_crs_sbj									
+		   		  WHERE CRS_CD = #{crsCd} )										
+		ORDER  BY A.SBJ_NM									
+	</select>
+
+   <insert id="insert" parameterType="onlineSubjectVO">
+
+	 	INSERT  INTO tb_crs_onln_sbj (				
+	       	ORG_CD								
+	        ,  SBJ_CD								
+	        ,  SBJ_NM								
+	        ,  WIN_WIDTH							
+	        ,  WIN_HEIGHT							
+	        ,  WIN_MENU_USE_YN						
+	        ,  WIN_SKIN_CD							
+	        ,  SBJ_DESC							
+	        ,  SBJ_CTGR_CD							
+	        ,  USE_YN		
+	        ,  MAIN_YN		
+	        ,  REFUND_YN
+			,  EDU_PRICE
+			,  REFUND_PRICE
+			,  SIMSA_CODE
+			,  TRACSE_ID
+			,  EDU_GRADE
+			,  EDU_NOP
+			,  EDU_PRPS
+			,  EDU_TARGET
+			,  EDU_TM
+			,  EDU_DAYCNT
+			,  EVAL_DESC
+			,  TCH_DESC
+			,  DAY_STUDY_LIMIT
+			,  PRGR_RATIO
+			,  ATTD_RATIO
+			,  EXAM_RATIO
+			,  ASMT_RATIO
+			,  ETC_RATIO						
+			,  THUMB_FILE_SN						
+	        ,  REG_NO								
+	        ,  REG_DTTM 							
+		) VALUES (									
+	       	#{orgCd}								
+			,  #{sbjCd}
+	        ,  #{sbjNm}								
+	        ,  #{winWidth}							
+	        ,  #{winHeight}							
+	        ,  #{winMenuUseYn}						
+	        ,  #{winSkinCd}							
+	        ,  #{sbjDesc}							
+	        ,  #{sbjCtgrCd}							
+	        ,  #{useYn}					
+	        ,  #{mainYn}					
+	        ,  #{refundYn}		
+	        ,  #{eduPrice}		
+			,  #{refundPrice}		
+			,  #{simsaCode}		
+			,  #{tracseId}		
+			,  #{eduGrade}		
+			,  #{eduNop}		
+			,  #{eduPrps}		
+			,  #{eduTarget}		
+			,  #{eduTm}		
+			,  #{eduDaycnt}		
+			,  #{evalDesc}		
+			,  #{tchDesc}		
+			,  #{dayStudyLimit}		
+			,  #{prgrRatio}		
+			,  #{attdRatio}		
+			,  #{examRatio}		
+			,  #{asmtRatio}		
+			,  #{etcRatio}		
+			,  #{thumbFileSn}		
+	        ,  #{regNo}								
+	        ,  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+		) 											
+							
+   </insert>
+
+   <update id="update" parameterType="onlineSubjectVO">
+	 	UPDATE  tb_crs_onln_sbj 											
+	      SET  SBJ_NM 				= #{sbjNm}								
+	        ,  WIN_WIDTH 			= #{winWidth}								
+	        ,  WIN_HEIGHT 			= #{winHeight}							
+	        ,  WIN_MENU_USE_YN 	= #{winMenuUseYn}							
+	        ,  WIN_SKIN_CD 		= #{winSkinCd}							
+	        ,  SBJ_DESC 			= #{sbjDesc}								
+	        ,  SBJ_CTGR_CD 		= #{sbjCtgrCd}							
+	        ,  USE_YN				= #{useYn}								
+	        ,  MAIN_YN				= #{mainYn}								
+	        ,  REFUND_YN        	= #{refundYn}			
+			,  EDU_PRICE        	= #{eduPrice}			
+			,  REFUND_PRICE     	= #{refundPrice}			
+			,  SIMSA_CODE       	= #{simsaCode}			
+			,  TRACSE_ID        	= #{tracseId}			
+			,  EDU_GRADE        	= #{eduGrade}			
+			,  EDU_NOP          	= #{eduNop}			
+			,  EDU_PRPS         	= #{eduPrps}			
+			,  EDU_TARGET       	= #{eduTarget}			
+			,  EDU_TM           	= #{eduTm}			
+			,  EDU_DAYCNT       	= #{eduDaycnt}			
+			,  EVAL_DESC        	= #{evalDesc}			
+			,  TCH_DESC         	= #{tchDesc}			
+			,  DAY_STUDY_LIMIT  	= #{dayStudyLimit}			
+			,  PRGR_RATIO       	= #{prgrRatio}			
+			,  ATTD_RATIO       	= #{attdRatio}			
+			,  EXAM_RATIO       	= #{examRatio}			
+			,  ASMT_RATIO       	= #{asmtRatio}			
+			,  ETC_RATIO			= #{etcRatio}			
+			,  THUMB_FILE_SN		= #{thumbFileSn}			
+	        ,  MOD_NO				= #{modNo}								
+	        ,  MOD_DTTM 			= DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+	    WHERE  SBJ_CD 				= #{sbjCd}
+    </update>
+
+
+	<delete id="delete" parameterType="onlineSubjectVO">
+		 DELETE  FROM tb_crs_onln_sbj
+		 WHERE  SBJ_CD = #{sbjCd}		
+    </delete>
+
+</mapper>	

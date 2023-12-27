@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.log.privateinfo.service.impl.LogPrivateInfoInqLogMapper">	
+
+
+	<sql id="selectColumnQuery">
+			  ORG_CD AS orgCd
+			, INQ_DTTM AS inqDttm
+			, MENU_CD AS menuCd
+			, DIV_CD as divCd
+			, USER_NO as userNo
+			, USER_NM as userNm
+			, INQ_CTS as inqCts
+		FROM TB_LOG_PRIVATE_INFO_INQ_LOG
+		WHERE ORG_CD = #{orgCd}
+	</sql>
+
+	<sql id="selectQuery">
+		SELECT 
+		<include refid="selectColumnQuery" />
+		FROM TB_LOG_PRIVATE_INFO_INQ_LOG
+		WHERE ORG_CD = #{orgCd}
+	</sql>
+		
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		<if test = "userNo != null and userNo != ''">
+		   AND USER_NO = #{userNo}
+		</if>
+		<if test = "userNm != null and userNm != ''">
+		   AND USER_NM LIKE '%'||#{userNm}||'%'
+		</if>
+		<if test = "searchFrom != null and searchFrom != ''">
+		   AND INQ_DTTM <![CDATA[>]]>= #{searchFrom}||'000001'
+		</if>
+		<if test = "searchTo != null and searchTo != ''">
+		   AND INQ_DTTM <![CDATA[<]]>= #{searchTo}||'235959'
+		</if>
+		ORDER BY INQ_DTTM DESC
+	</sql>		
+<!--  
+	<select id="count" parameterType="logPrivateInfoInqLogVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM TB_LOG_PRIVATE_INFO_INQ_LOG
+		WHERE ORG_CD = #{orgCd}		
+		<if test = "userNo != null and userNo != ''">
+		   AND USER_NO = #{userNo}
+		</if>
+		<if test = "userNm != null and userNm != ''">
+		   AND USER_NM LIKE '%'||#{userNm}||'%'
+		</if>
+		<if test = "searchFrom != null and searchFrom != ''">
+		   AND INQ_DTTM <![CDATA[>]]>= #{searchFrom}||'000001'
+		</if>
+		<if test = "searchTo != null and searchTo != ''">
+		   AND INQ_DTTM <![CDATA[<]]>= #{searchTo}||'235959'
+		</if> 	
+	</select>
+ -->	
+	<select id="list" parameterType="logPrivateInfoInqLogVO" resultType="logPrivateInfoInqLogVO">
+		/*
+			 SQL ID : list
+			 설  명 : 게시판 게시물의 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	</select>
+	
+	<select id="listPageing" parameterType="logPrivateInfoInqLogVO" resultType="logPrivateInfoInqLogVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 게시판 게시물의 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="logPrivateInfoInqLogVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 게시판 게시물의 전체 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>
+	
+	<select id="select" parameterType="logPrivateInfoInqLogVO" resultType="logPrivateInfoInqLogVO">
+		/*
+			 SQL ID : select
+			 설  명 : 게시판 게시물의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+	 	AND INQ_DTTM = #{inqDttm}
+	</select>	
+	
+	<insert id="insert" parameterType="logPrivateInfoInqLogVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 게시판 게시물의 정보 등록
+	 	*/
+		INSERT INTO TB_LOG_PRIVATE_INFO_INQ_LOG(
+		       ORG_CD
+		     , INQ_DTTM
+		     , MENU_CD
+		     , DIV_CD
+		     , USER_NO
+		     , USER_NM
+		     , INQ_CTS
+		) VALUES (
+		       #{orgCd}
+		     , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		     , #{menuCd}
+		     , #{divCd}
+		     , #{userNo}
+		     , #{userNm}
+		     , #{inqCts}
+		)	 	
+		
+	</insert>
+
+</mapper>

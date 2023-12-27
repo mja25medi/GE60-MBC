@@ -1,0 +1,74 @@
+@charset "utf-8";
+
+body {}
+.mainvisual{position:relative; height:auto; overflow:hidden; z-index:1;}
+.mainvisual .cycle-slideshow{height:260px; text-align:center;}
+.mainvisual .cycle-slideshow .slide{width:100%; height:260px; text-align:center;}
+.mainvisual .cycle-slideshow .slide span{position:absolute; top:-9999px}
+.mainvisual .cycle-prev{background: url(/tpl/001/img/home/mainvisual_l.png) no-repeat left -45px;width:30px;height:45px;display:inline-block;position: absolute;top:-2px;right:68px;}
+.mainvisual .cycle-next{background: url(/tpl/001/img/home/mainvisual_r.png) no-repeat left -45px;width:30px;height:45px;display:inline-block;position: absolute;top:-2px;right:20px;}
+.mainvisual .cycle-prev:hover{background: url(/tpl/001/img/home/mainvisual_l.png) no-repeat left top;}
+.mainvisual .cycle-next:hover{background: url(/tpl/001/img/home/mainvisual_r.png) no-repeat left top;}
+
+.pagerWrap {position:absolute; right:60px; bottom:4%; z-index:200;}
+#adv-custom-pager {display: inline-block;}
+#adv-custom-pager a{display:inline-block;width: 18px;height: 18px;margin-left:2px;background: url(/tpl/001/img/home/bg_pagerOff.png) 0 0 no-repeat;}
+#adv-custom-pager a.cycle-pager-active{width: 50px;background: url(/tpl/001/img/home/bg_pagerOn.png) 0 0 no-repeat;}
+.pagerWrap button {display:inline-block;width: 18px;height: 18px;vertical-align: top;border: none; font-size: 0;line-height: 0;text-indent: -999px;}
+.pagerWrap .btnStop {background:url(/tpl/001/img/home/btn_stop.png) 0 0 no-repeat;}
+.pagerWrap .btnPlay {background:url(/tpl/001/img/home/btn_play.png) 0 0 no-repeat;}
+
+.panel-heading {padding:15px 15px 5px 15px;}
+.panel-default > .panel-heading {border:none; background:none;}
+.panel-heading .more_btn {float:right; vertical-align:text-bottom}
+.panel-title {font-size:16px; font-weight:700; color:#000;}
+
+.panel-body {padding-top:0;}
+.panel-body ul.board {padding-top:10px; background:url(/tpl/001/img/home/board_title_bg.gif) top left repeat-x;}
+.panel-body ul.board li {position:relative; line-height:30px; vertical-align:top; overflow:hidden;}
+.panel-body ul.board li span {float:left; width:70%;}
+.panel-body ul.board li span.date {float:right; width:30%; text-align:right; color:#ccc;}
+.panel-body ul.board li span a {display:block; padding-left:12px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; background:url(/tpl/001/img/home/bullet_squre_gray.gif) 0 50% no-repeat;}
+.panel-body ul.board li .icon-new-color {position:absolute; top:20%; left:70%;}
+
+.calendar {background:#ebf0f4;}
+.calendar .panel-heading {padding:5px 15px; text-align:center;}
+.calendar .panel-title {}
+.calendar .panel-body {padding-bottom:5px;}
+.calendar span.monthPre {position:absolute; top:42px; left:40px; z-index:1;}
+.calendar span.monthNext {position:absolute; top:42px; right:40px; z-index:1;}
+.calendar strong {display:block; text-align:center; font-size:21px; color:#e60043; font-weight:700;}
+.calendar table {width:100%; margin-top:8px;}
+.calendar table thead th {width:25px; height:7px; line-height:0; text-indent:-9999px; background:url(/tpl/001/img/home/calendar_week.png) no-repeat;}
+.calendar table thead th.sun {background-position:center 0;}
+.calendar table thead th.mon {background-position:center -7px;}
+.calendar table thead th.tue {background-position:center -14px;}
+.calendar table thead th.wed {background-position:center -21px;}
+.calendar table thead th.thd {background-position:center -28px;}
+.calendar table thead th.fri {background-position:center -35px;}
+.calendar table thead th.sat {background-position:center -42px;}
+.calendar table tbody .sun a {color:#ff1400;}
+.calendar table thead .sat {color:#1268b3;}
+.calendar table tbody .sat a {color:#0081ff;}
+.calendar table tbody td {width:25px; height:25px; color:#000; font-size:13px;}
+.calendar table td a {display:block; padding:5px 0; text-align:center; color:#000;}
+.calendar table td a:hover {background:url(/tpl/001/img/home/calendar_day_on.png) no-repeat center 50%;}
+.calendar table td a.oncls {color:#fff; background:url(/tpl/001/img/home/calendar_day_cls.png) no-repeat center 50%;}
+.calendar table td a.ontoday {color:#fff; background:url(/tpl/001/img/home/calendar_today.png) no-repeat center 50%;}
+
+.player {background:#000; overflow:hidden;}
+.player .player-title {position:absolute; top:15px; left:30px; font-size:18px; font-weight:700; color:#fff; z-index:9;}
+.player .player-txt {position:absolute; width:50%; top:18px; left:110px; color:#ccc; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; z-index:9;}
+.player .more_btn {position:absolute; top:15px; right:30px; z-index:9;}
+.player .video {position:absolute; bottom:0; z-index:1;}
+
+.footInf{margin:0 auto; margin-top:40px; border-top:1px solid #ccc; background:#fff; clear:both;}
+.footInf #banner{position:relative; width:1080px; margin:0 auto; padding:10px 0;}
+.footInf #banner .bx-wrapper {margin:0 !important;}
+.footInf #banner ul {overflow:hidden;}
+.footInf #banner ul li{float: left;}
+.footInf #banner ul li img {display:block; width:180px; height:43px;}
+.footInf #banner .bx-controls {position:absolute; top:24px; right:0; overflow:hidden;}
+.footInf #banner .bx-controls a {display:inline-block; float:left; width:30px; height:30px; font-size:0; line-height:0; text-indent:-999px;}
+.footInf #banner .bx-controls a.bx-prev {background: #fff url(/tpl/001/img/home/footInf_l.gif) 0 0 no-repeat;}
+.footInf #banner .bx-controls a.bx-next {background: #fff url(/tpl/001/img/home/footInf_r.gif) 0 0 no-repeat;}

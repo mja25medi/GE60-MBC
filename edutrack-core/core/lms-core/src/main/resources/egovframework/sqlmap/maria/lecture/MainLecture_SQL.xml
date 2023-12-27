@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.lecture.main.service.impl.MainLectureMapper">
+
+	<select id="select" parameterType="mainLectureVO" resultType="mainLectureVO">
+		<!-- 강의실 정보 조회  -->
+		SELECT ( SELECT CRS_YEAR
+				FROM tb_crs_crs TCC
+				WHERE CRS_CD = ( SELECT CRS_CD
+								 FROM tb_crs_cre_crs TCCC
+								 WHERE CRS_CRE_CD = #{crsCreCd})) AS CRS_YEAR 
+			  ,	( SELECT CRS_TERM
+				FROM tb_crs_crs TCC
+				WHERE CRS_CD = ( SELECT CRS_CD
+								 FROM tb_crs_cre_crs TCCC
+								 WHERE CRS_CRE_CD = #{crsCreCd})) AS CRS_TERM 
+			  ,	( SELECT CRS_CRE_NM
+				FROM tb_crs_cre_crs TCCC
+				WHERE CRS_CRE_CD = #{crsCreCd}) AS CRS_CRE_NM 
+			  ,	( SELECT ENRL_START_DTTM
+				FROM tb_crs_crs TCC
+				WHERE CRS_CD = ( SELECT CRS_CD
+								 FROM tb_crs_cre_crs TCCC
+								 WHERE CRS_CRE_CD = #{crsCreCd})) AS ENRL_START_DTTM 
+			  ,	( SELECT ENRL_END_DTTM
+				FROM tb_crs_crs TCC
+				WHERE CRS_CD = ( SELECT CRS_CD
+								 FROM tb_crs_cre_crs TCCC
+								 WHERE CRS_CRE_CD = #{crsCreCd})) AS ENRL_END_DTTM
+			  ,	( SELECT CODE_NM
+				FROM tb_sys_code TSC
+				WHERE CODE_CD = ( SELECT ENRL_STS
+								 FROM tb_std_std TSS
+								 WHERE STD_NO = #{stdNo})
+								 AND CODE_CTGR_CD = 'ENRL_STS') AS ENRL_STS
+			  ,	( SELECT COUNT(*)  
+		            FROM tb_lec_exam  
+		           WHERE CRS_CRE_CD = #{crsCreCd}  
+		           	 AND SEMI_EXAM_YN = 'N'
+		             AND REG_YN = 'Y' ) AS EXAM_CNT  
+			  ,	( SELECT COUNT(*)  
+		            FROM tb_lec_exam  
+		           WHERE CRS_CRE_CD = #{crsCreCd}  
+		           	 AND SEMI_EXAM_YN = 'Y'
+		             AND REG_YN = 'Y' ) AS SEMI_EXAM_CNT  
+		      , ( SELECT COUNT(*)  
+		            FROM tb_lec_asmt  
+		           WHERE CRS_CRE_CD = #{crsCreCd}  
+		             AND REG_YN = 'Y' ) AS ASMT_CNT  
+		      , ( SELECT COUNT(*)  
+		            FROM tb_crs_cre_crs_resh  
+		           WHERE CRS_CRE_CD = #{crsCreCd}  
+		             AND REG_YN = 'Y' ) AS RESH_CNT
+		             
+		 <choose>
+		 	<when test="classUserType == 'TCH'">
+				, ( SELECT COUNT(*)  
+					FROM tb_std_std
+					WHERE CRS_CRE_CD = #{crsCreCd}
+						AND ENRL_STS IN ('S', 'C', 'F') ) AS STD_CNT
+				, ( SELECT COUNT(*)  
+					FROM tb_lec_asmt_send  
+					WHERE CRS_CRE_CD = #{crsCreCd}) AS ASMT_SEND_CNT  
+				, ( SELECT COUNT(*)  
+					FROM tb_lec_asmt_send  
+					WHERE CRS_CRE_CD = #{crsCreCd} AND RATE_YN = 'Y') AS ASMT_RATE_CNT  
+				, ( SELECT COUNT(*)  
+					FROM tb_lec_exam_stare  
+					WHERE CRS_CRE_CD = #{crsCreCd}
+					AND EXAM_SN IN (SELECT EXAM_SN FROM tb_lec_exam TLE WHERE CRS_CRE_CD = #{crsCreCd} AND REG_YN = 'Y' AND SEMI_EXAM_YN = 'N')) AS EXAM_ANSR_CNT  
+				, ( SELECT COUNT(*)  
+					FROM tb_lec_exam_stare  
+					WHERE CRS_CRE_CD = #{crsCreCd}
+					AND EXAM_SN IN (SELECT EXAM_SN FROM tb_lec_exam TLE WHERE CRS_CRE_CD = #{crsCreCd} AND REG_YN = 'Y' AND SEMI_EXAM_YN = 'N') AND RATE_YN = 'Y') AS EXAM_RATE_CNT  
+				, ( SELECT COUNT(*)  
+					FROM tb_lec_exam_stare  
+					WHERE CRS_CRE_CD = #{crsCreCd}
+					AND EXAM_SN IN (SELECT EXAM_SN FROM tb_lec_exam TLE WHERE CRS_CRE_CD = #{crsCreCd} AND REG_YN = 'Y' AND SEMI_EXAM_YN = 'Y')) AS SEMI_EXAM_ANSR_CNT  
+				, ( SELECT COUNT(*)  
+					FROM tb_lec_exam_stare  
+					WHERE CRS_CRE_CD = #{crsCreCd}
+					AND EXAM_SN IN (SELECT EXAM_SN FROM tb_lec_exam TLE WHERE CRS_CRE_CD = #{crsCreCd} AND REG_YN = 'Y' AND SEMI_EXAM_YN = 'Y') AND RATE_YN = 'Y') AS SEMI_EXAM_RATE_CNT  
+				, ( SELECT COUNT(DISTINCT STD_NO) 
+					FROM tb_crs_resh_ansr
+					WHERE CRS_CRE_CD = #{crsCreCd}) AS RESH_JOIN_CNT
+				,  (SELECT COUNT(1)
+                      FROM tb_brd_qna_qstn
+                      WHERE QNA_CTGR_CD = 'LEC'
+                      AND CRS_CRE_CD = #{crsCreCd} ) as BBS_CNT
+                ,  (SELECT COUNT(1)
+                      FROM tb_brd_qna_qstn
+                      WHERE QNA_CTGR_CD = 'LEC'
+                      AND STS_CD = 'COMP'
+                      AND CRS_CRE_CD = #{crsCreCd} ) as BBS_RATE_CNT
+                 ,  IFNULL(FN_GET_NULL((SELECT COUNT(C.FILE_SN)
+                    from tb_lec_bbs_atcl B, tb_sys_file C
+                    where B.CRS_CRE_CD = #{crsCreCd}
+                    and B.ATCL_SN = C.FILE_BIND_DATA_SN
+                    and B.BBS_CD = 'PDS'
+                    and C.REPO_CD ='LEC_BBS_ATCL')),0)AS PDS_CNT
+		 	</when>
+		 	<otherwise>
+		 		, ( SELECT COUNT(*)  
+			            FROM tb_lec_asmt_send  
+			           WHERE CRS_CRE_CD = #{crsCreCd}  
+			             AND STD_NO = #{stdNo} ) AS ASMT_SEND_CNT  
+			      , ( SELECT COUNT(*)  
+			            FROM tb_lec_exam_stare  
+			           WHERE CRS_CRE_CD = #{crsCreCd}  
+			           	 AND EXAM_SN IN (SELECT EXAM_SN FROM tb_lec_exam WHERE CRS_CRE_CD = #{crsCreCd} AND REG_YN = 'Y' AND SEMI_EXAM_YN = 'N')
+			             AND STD_NO = #{stdNo} ) AS EXAM_ANSR_CNT  
+			      , ( SELECT COUNT(*)  
+			            FROM tb_lec_exam_stare  
+			           WHERE CRS_CRE_CD = #{crsCreCd}  
+			             AND EXAM_SN IN (SELECT EXAM_SN FROM tb_lec_exam WHERE CRS_CRE_CD = #{crsCreCd} AND REG_YN = 'Y' AND SEMI_EXAM_YN = 'Y')
+			             AND STD_NO = #{stdNo} ) AS SEMI_EXAM_ANSR_CNT  
+			      , ( SELECT COUNT(*)  
+			            FROM tb_lec_resh_ansr  
+			           WHERE CRS_CRE_CD = #{crsCreCd}  
+			             AND STD_NO = #{stdNo} ) AS RESH_JOIN_CNT  
+			      , FN_GET_SCORE_ASMT(#{crsCreCd}, #{stdNo}) AS ASMT_SCORE  
+			      , FN_GET_SCORE_EXAM(#{crsCreCd}, #{stdNo}, 'N') AS EXAM_SCORE  
+			      , FN_GET_SCORE_EXAM(#{crsCreCd}, #{stdNo}, 'Y') AS SEMI_EXAM_SCORE  
+			      , FN_GET_CRS_STD_PRGR(#{crsCreCd}, #{stdNo}) AS PRGR_RATIO  
+			      ,  (SELECT COUNT(1)
+                      FROM tb_brd_qna_qstn
+                      WHERE QNA_CTGR_CD = 'LEC'
+                      AND CRS_CRE_CD = #{crsCreCd}
+                      AND USER_NO = (select USER_NO from tb_std_std where STD_NO = #{stdNo})) as BBS_CNT
+                  ,  (SELECT COUNT(1)
+                      FROM tb_brd_qna_qstn
+                      WHERE QNA_CTGR_CD = 'LEC'
+                      AND STS_CD = 'COMP'
+                      AND CRS_CRE_CD = #{crsCreCd}
+                      AND USER_NO = (select USER_NO from tb_std_std where STD_NO = #{stdNo}) ) as BBS_RATE_CNT
+		 	</otherwise>
+		 </choose>              
+	</select>
+	
+	<select id="selectCourseSchedule" parameterType="mainLectureVO" resultType="mainLectureVO">
+		<!-- 강의 일정 조회 (과정) -->
+		SELECT 
+			CONCAT(FN_GET_DATE_FORMAT((select ENRL_START_DTTM from tb_crs_crs tcc where CRS_CD = (select CRS_CD from tb_crs_cre_crs tccc where CRS_CRE_CD = #{crsCreCd})),'%Y-%m-%d'),' ~ ', FN_GET_DATE_FORMAT((select ENRL_END_DTTM from tb_crs_crs tcc where CRS_CD = (select CRS_CD from tb_crs_cre_crs tccc where CRS_CRE_CD = #{crsCreCd})),'%Y-%m-%d')) as enrlDuration
+<!-- 		  , CONCAT(FN_GET_DATE_FORMAT((select exam_start_dttm from tb_lec_exam tle where CRS_CRE_CD = #{crsCreCd} and REG_YN = 'Y' and SEMI_EXAM_YN = 'N'),'%Y-%m-%d'),' ~ ', FN_GET_DATE_FORMAT((select exam_end_dttm from tb_lec_exam tle where CRS_CRE_CD = #{crsCreCd} and REG_YN = 'Y' and SEMI_EXAM_YN = 'N'),'%Y-%m-%d')) as examDuration
+		  , CONCAT(FN_GET_DATE_FORMAT((select exam_start_dttm from tb_lec_exam tle where CRS_CRE_CD = #{crsCreCd} and REG_YN = 'Y' and SEMI_EXAM_YN = 'Y'),'%Y-%m-%d'),' ~ ', FN_GET_DATE_FORMAT((select exam_end_dttm from tb_lec_exam tle where CRS_CRE_CD = #{crsCreCd} and REG_YN = 'Y' and SEMI_EXAM_YN = 'Y'),'%Y-%m-%d')) as semiExamDuration
+		  , CONCAT(FN_GET_DATE_FORMAT((select asmt_start_dttm from tb_lec_asmt tla where CRS_CRE_CD = #{crsCreCd} and REG_YN = 'Y'),'%Y-%m-%d'),' ~ ', FN_GET_DATE_FORMAT((select asmt_end_dttm from tb_lec_asmt tla where CRS_CRE_CD = #{crsCreCd} and REG_YN = 'Y'),'%Y-%m-%d')) as asmtDuration -->
+		  , FN_GET_DATE_FORMAT((select TERM_END_DTTM from tb_crs_crs tcc where CRS_CD = (select CRS_CD from tb_crs_cre_crs tccc where CRS_CRE_CD = #{crsCreCd})),'%Y-%m-%d') as termEndDttm
+		  , FN_GET_CRS_STD_PRGR(#{crsCreCd},#{stdNo}) as prgrRatio
+		  , DATEDIFF(FN_GET_DATE_FORMAT((select ENRL_END_DTTM from tb_crs_crs tcc where CRS_CD = (select CRS_CD from tb_crs_cre_crs tccc where CRS_CRE_CD = #{crsCreCd})),'%Y-%m-%d'),FN_GET_DATE_FORMAT((select ENRL_START_DTTM from tb_crs_crs tcc where CRS_CD = (select CRS_CD from tb_crs_cre_crs tccc where CRS_CRE_CD = #{crsCreCd})),'%Y-%m-%d')) as termDayCnt
+		  , DATEDIFF(DATE_FORMAT(NOW(), '%Y-%m-%d'),FN_GET_DATE_FORMAT((select ENRL_START_DTTM from tb_crs_crs tcc where CRS_CD = (select CRS_CD from tb_crs_cre_crs tccc where CRS_CRE_CD = #{crsCreCd})),'%Y-%m-%d')) as nowDayCnt 
+	</select>
+	
+	<select id="selectCreateCourseSchedule" parameterType="mainLectureVO" resultType="mainLectureVO">
+		<!-- 강의 일정 조회 (회차) -->
+		SELECT
+		CONCAT(FN_GET_DATE_FORMAT((select ENRL_START_DTTM from tb_crs_cre_crs tcc where CRS_CRE_CD = #{crsCreCd}),'%Y-%m-%d'),' ~ ', 
+			FN_GET_DATE_FORMAT((select ENRL_END_DTTM from tb_crs_cre_crs tcc where  CRS_CRE_CD = #{crsCreCd}),'%Y-%m-%d')) as enrlDuration 
+ 		  , FN_GET_DATE_FORMAT((select ENRL_END_DTTM from tb_crs_cre_crs tcc where  CRS_CRE_CD = #{crsCreCd}),'%Y-%m-%d') as termEndDttm 
+		  ,FN_GET_CRS_STD_PRGR(#{crsCreCd},#{stdNo}) as prgrRatio 
+		  , DATEDIFF(FN_GET_DATE_FORMAT(
+			 (select ENRL_END_DTTM
+			 from tb_crs_cre_crs tccc
+			 where CRS_CRE_CD = #{crsCreCd}),'%Y-%m-%d'),FN_GET_DATE_FORMAT(
+			 (select ENRL_START_DTTM
+			 from tb_crs_cre_crs tccc
+			 where CRS_CRE_CD = #{crsCreCd}),'%Y-%m-%d')) as termDayCnt
+		 , DATEDIFF(DATE_FORMAT(NOW(), '%Y-%m-%d'),FN_GET_DATE_FORMAT(
+		 (select ENRL_START_DTTM
+		 from tb_crs_cre_crs tccc
+		 where CRS_CRE_CD = #{crsCreCd}),'%Y-%m-%d')) as nowDayCnt 
+	</select>
+	
+	<select id="listUnScoreStatus" parameterType="mainLectureVO" resultType="egovMap">
+		/*
+		 	SQL ID : MainLectureMapper.listUnScoreStatus
+		 	설  명 : 미채점 현황 리스트 과정,시험,과제 성적 리스트별 정보를 가져온다
+	 	*/
+		select 
+		   	 A.CRS_CRE_CD  
+		   	 , A.CRS_CD 
+		     , A.CRE_YEAR 
+		     , A.CRE_TERM 
+		     , A.CRS_CRE_NM
+		     , E.DECLS_NO
+		     , F.ENRL_APLC_START_DTTM
+		     , F.ENRL_APLC_END_DTTM
+		     , F.ENRL_START_DTTM
+		     , F.ENRL_END_DTTM
+		     , IFNULL(FN_GET_NULL(A.NOP_LIMIT_YN),'N') AS NOP_LIMIT_YN
+		     , A.ENRL_NOP 
+		     , IFNULL(FN_GET_NULL(A.EDU_PRICE),0) AS EDU_PRICE
+		     , A.SCORE_HANDL_CD 
+		     , A.CPLT_SCORE 
+		     , IFNULL(FN_GET_NULL(A.PRGR_RATIO),0) AS PRGR_RATIO 
+		     , IFNULL(FN_GET_NULL(A.ATTD_RATIO),0) AS ATTD_RATIO 
+		     , IFNULL(FN_GET_NULL(A.EXAM_RATIO),0) AS EXAM_RATIO 
+		     , IFNULL(FN_GET_NULL(A.FORUM_RATIO),0) AS FORUM_RATIO 
+		     , IFNULL(FN_GET_NULL(A.ASMT_RATIO),0) AS ASMT_RATIO 
+		     , IFNULL(FN_GET_NULL(A.PRJT_RATIO),0) AS PRJT_RATIO 
+		     , IFNULL(FN_GET_NULL(A.JOIN_RATIO),0) AS JOIN_RATIO 
+		     , IFNULL(FN_GET_NULL(A.ETC_RATIO),0) AS ETC_RATIO	
+		     , A.DAY_STUDY_LIMIT 
+		     , A.REG_NO 
+		 	 , (SELECT FN_GET_USER_NAME(A.REG_NO) ) AS REG_NM 
+		 	 , A.REG_DTTM 
+		     , A.MOD_NO 
+			 , (SELECT FN_GET_USER_NAME(A.MOD_NO) ) AS MOD_NM 
+		     , A.MOD_DTTM 
+		     ,  IFNULL(FN_GET_NULL((SELECT COUNT(B.STD_NO)
+		        FROM tb_std_std B
+		        WHERE B.CRS_CRE_CD = A.CRS_CRE_CD
+		        AND B.DECLS_NO = E.DECLS_NO
+		        AND B.ENRL_STS IN('S','C','F'))),0)AS STD_CNT
+		     , (SELECT GROUP_CONCAT(B.EXAM_SN SEPARATOR '|') 
+		        FROM tb_lec_exam B 
+		        WHERE B.CRS_CRE_CD = A.CRS_CRE_CD 
+		        AND B.REG_YN = 'Y'
+		        AND B.SEMI_EXAM_YN = 'N' )AS EXAM_SN
+		     , (SELECT GROUP_CONCAT(B.EXAM_SN SEPARATOR '|') 
+		        FROM tb_lec_exam B
+		        WHERE B.CRS_CRE_CD = A.CRS_CRE_CD 
+		        AND B.REG_YN = 'Y'
+		        AND B.SEMI_EXAM_YN = 'Y') AS SEMI_EXAM_SN
+		     , (SELECT GROUP_CONCAT(B.ASMT_SN SEPARATOR '|') 
+		        FROM  tb_lec_asmt B																			
+		        WHERE B.CRS_CRE_CD = A.CRS_CRE_CD 
+		        AND B.REG_YN = 'Y'  )AS ASMT_SN
+		     , (SELECT GROUP_CONCAT(B.FORUM_SN SEPARATOR '|')
+		        FROM  tb_lec_forum B																				
+		        WHERE B.CRS_CRE_CD = A.CRS_CRE_CD 
+		        AND B.FORUM_REG_YN = 'Y')AS FORUM_SN
+		     ,  (SELECT COUNT(1)
+		     	 FROM tb_brd_qna_qstn
+		     	 WHERE QNA_CTGR_CD = 'LEC'
+		     	 	AND CRS_CRE_CD = A.CRS_CRE_CD) as BBS_CNT
+			,  (SELECT COUNT(1)
+		     	 FROM tb_brd_qna_qstn
+		     	 WHERE QNA_CTGR_CD = 'LEC'
+		     	 	AND CRS_CRE_CD = A.CRS_CRE_CD
+		     	 	AND STS_CD = 'COMP') as BBS_RATE_CNT
+		     ,  IFNULL(FN_GET_NULL((SELECT COUNT(C.FILE_SN)
+		        from tb_lec_bbs_atcl B, tb_sys_file C
+		        where B.CRS_CRE_CD = A.CRS_CRE_CD 
+		        and B.ATCL_SN = C.FILE_BIND_DATA_SN 
+		        and B.BBS_CD = 'PDS'
+		        and C.REPO_CD ='LEC_BBS_ATCL')),0)AS PDS_CNT
+		     , F.CRS_NM
+		     , F.SCORE_OPEN_START_DTTM 
+		     , F.SCORE_OPEN_END_DTTM 
+    	  FROM tb_crs_cre_crs A
+		  INNER JOIN tb_crs_crs F
+		  ON A.CRS_CD = F.CRS_CD 
+		  INNER JOIN tb_crs_cre_crs_decls E
+		  ON A.CRS_CRE_CD = E.CRS_CRE_CD
+		  INNER JOIN tb_crs_cre_crs_tch D
+		  ON A.CRS_CRE_CD = D.CRS_CRE_CD 
+		  AND D.USER_NO = #{userNo}
+		  ORDER BY F.ENRL_END_DTTM DESC
+	</select>
+
+</mapper>

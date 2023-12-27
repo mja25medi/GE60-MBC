@@ -1,0 +1,91 @@
+@charset 'utf-8';
+
+.em {font-weight:bold !important}
+.blue {color:1268b3;}
+
+/* 스타일시트 헤더부분 */
+#header {position:relative; height:160px; overflow:hidden;}
+#header h1 {float:left; padding:5px 0;}
+#header .util-n-search {position:absolute; right:0; top:0; width:286px; background:url(/img/home/basic/bg/util_bg.gif) no-repeat;}
+#header .util-n-search ul:after {content:""; display:block; clear:both;}
+#header .util-n-search ul {width:243px; height:40px; margin:0 auto;}
+#header .util-n-search ul li {float:left; text-align:center;}
+#header .util-n-search ul li.home {padding-left:7px;}
+#header .util-n-search ul li.topbar-devider {width:13px; height:20px; padding-top:10px; background:url(/img/home/basic/bg/top-line.gif) no-repeat 0px 15px;}
+#header .util-n-search ul li.sitemap a {padding-right:0;}
+#header .util-n-search ul li a {display:inline-block; padding:15px 10px 0 0; font:11px Dotum, "돋움"; color:#fff;}
+#header .util-n-search ul li a.login {padding-left:15px; background:url(/img/home/basic/icon/ico-login.png) no-repeat left 13px; color:#a2efff;}
+#header .util-n-search ul li a.join {padding-left:20px; background:url(/img/home/basic/icon/ico-join.png) no-repeat left 13px; color:#a2efff;}
+#header .util-n-search ul li a.logout {padding-left:14px; background:url(/img/home/basic/icon/ico-logout.png) no-repeat left 14px; color:#a2efff;}
+#header .util-n-search ul li a.info {padding-left:14px; background:url(/img/home/basic/icon/ico-info.png) no-repeat left 15px; color:#a2efff;}
+#header .util-n-search fieldset {position: absolute; top: 49px; right: 0; z-index: 1;}
+#header .util-n-search fieldset label {font-size:0;line-height:0;width:0;height:0;position:absolute;left:-99999px;visibility:hidden;}
+#header .util-n-search fieldset input.text {width: 276px; height: 28px; line-height: 28px; padding-left:10px; padding-right:0px; vertical-align: middle; border: none; background: url(/img/home/basic/bg/search_bg.gif) no-repeat;
+											font-size:12px;}
+#header .util-n-search fieldset a {position: absolute;top: 6px;right: 15px;}
+
+/* GNB */
+#gnb ul.gnbMenu {padding:0 60px; overflow:hidden;}
+#gnb ul.gnbMenu li {float:left; width:360px; height:35px; *height:34px; line-height:35px; text-align:center;}
+
+#gnb ul.gnbMenu li a {display:block; color:#c2d2ed; font-size:14px;}
+#gnb ul.gnbMenu li a:hover {color:#fff;}
+#gnb ul.gnbMenu li.on a {color:#fff;}
+#gnb ul.gnbMenu li ul.subMenu {display:none; position:absolute; top:34px; width:100%; border-bottom:1px solid #d1dddf; background:#f0f4f5; z-index:1;}
+
+#gnb ul.gnbMenu li.sub01 ul.subMenu {left:0; padding-left:60px;}
+#gnb ul.gnbMenu li.sub02 ul.subMenu {left:0; padding-left:420px;}
+#gnb ul.gnbMenu li.sub03 ul.subMenu {left:0; padding-left:370px;}
+#gnb ul.gnbMenu li.sub04 ul.subMenu {left:0; padding-left:220px;}
+#gnb ul.gnbMenu li.sub05 ul.subMenu {left:0; padding-left:700px;}
+#gnb ul.gnbMenu li.sub06 ul.subMenu {left:0; padding-left:140px;}
+#gnb ul.gnbMenu li.sub07 ul.subMenu {}
+#gnb ul.gnbMenu li ul.subMenu li {width:auto; margin-left:30px;}
+#gnb ul.gnbMenu li ul.subMenu li a {color:#1268b3;font-size:13px;}
+#gnb ul.gnbMenu li.on ul.subMenu li a:hover {color:#FF6600;}
+#gnb ul.gnbMenu li ul.subMenu li.selected a {color:#FF6600;}
+
+/* FOOTER */
+#footer {position:relative; width:100%; height:40px; padding-top:15px; border-top:1px solid #b8b8b8;text-align:center}
+
+/* 서브 로그인 */
+.sub_login {position:relative; width:176px; height:81px; padding:15px; background:#f0f0f0; border:3px solid #d1d1d1; border-radius:5px !important;}
+.sub_login .input-area {}
+.sub_login .input-area li #log_id {padding-left:28px; width:115px; height:28px; margin-bottom:0; border:none; background:url(/img/home/basic/bg/s_login_id.png) no-repeat left top;}
+.sub_login .input-area li #log_pwd {padding-left:28px; width:115px; height:28px; border:none; background:url(/img/home/basic/bg/s_login_pw.png) no-repeat left top;}
+.sub_login .input-area input.enterLogin{width:165px; height:28px; background:;}
+.sub_login .btn_login {position:absolute; right:15px; top:15px;}
+
+.sub_login .log_support {margin-top:10px;}
+.sub_login .log_support:after {content:""; display:block; clear:both;}
+.sub_login .log_support a {font-size:11px;}
+.sub_login .log_support .join {float:left;}
+.sub_login .log_support .devider {display:block; float:left; width:25px; height:10px; padding-top:1px; background:url(/img/home/basic/bg/top-line.gif) no-repeat center top;}
+.sub_login .log_support .idpw {float:right;}
+.sub_login .log_support .btn_join span, .main_login .log_support .btn_idpw span {font-size:12px; color:#fff;}
+.sub_login .log_support a:hover {text-decoration:underline; color:#1268b3;}
+
+
+/* 서브 로그아웃 */
+.sub_logout {position:relative; width:176px; height:81px; padding:15px; background:#f0f0f0; border:3px solid #d1d1d1; border-radius:5px !important;}
+.sub_logout h3 {margin-bottom:7px; font-weight:bold; font-size:14px; color:#555;}
+
+.sub_logout .mem_info:after{content:""; display:block; clear:both;}
+.sub_logout .mem_info {width:160px; height:17px; padding:5px 7px; background:#f5f5f5; border:1px solid #d1d1d1; border-radius:5px !important;}
+.sub_logout .mem_info a {}
+.sub_logout .mem_info a:hover {}
+.sub_logout .mem_info .name_user {display:inline-block; float:left; width:65px; padding:2px 0 3px 15px; background:url(/img/home/basic/icon/name_user.gif) no-repeat left top; font-size:11px;
+			color:#1268b3; text-overflow: ellipsis;white-space: nowrap;overflow: hidden;}
+.sub_logout .mem_info .message {display:inline-block; float:right; text-align:right; width:65px; padding:2px 0 3px 15px; background:url(/img/home/basic/icon/message.gif) no-repeat 10px 3px; font-size:11px;
+			color:#1268b3; text-overflow: ellipsis;white-space: nowrap;overflow: hidden;}
+.sub_logout .mem_info .message .em {display:inline-block; padding:0; cursor:pointer; font-weight:bold !important; color:#1268b3;}
+.sub_logout .mem_info .message a.em:hover {text-decoration:underline;}
+.sub_logout .mem_info a:hover {text-decoration:none;}
+.sub_logout .private:after {content:""; display:block; clear:both}
+.sub_logout .private {margin-top:10px; }
+.sub_logout .private a {}
+.sub_logout .private .last {float:right}
+.sub_logout .private a:hover {text-decoration:none;}
+
+
+

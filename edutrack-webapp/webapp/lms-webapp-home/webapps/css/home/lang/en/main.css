@@ -1,0 +1,203 @@
+@charset 'utf-8';
+@import url("base.css");
+@import url("common.css");
+@import url("button.css");
+
+.mcont {overflow:hidden;}
+
+/* 메인 롤링 이미지 */
+#slider {position:relative; float:left; width:1200px; height:380px;}
+#slider div.main-roll {width:1200px; margin:0 auto;}
+#slider div.main-roll ul.roll-list {position:absolute; top:0; left:0; width:100%; height:380px;}
+#slider div.main-roll ul.roll-list li {width:100%; height:380px; text-indent:-5000px;}
+#slider div.main-roll ul.roll-list li.section01 {background:url("/img/home/main/main_visual01.jpg") no-repeat center 0;}
+#slider div.main-roll ul.roll-list li.section02 {background:url("/img/home/main/main_visual02.jpg") no-repeat center 0;}
+#slider div.main-roll ul.roll-list li.section03 {background:url("/img/home/main/main_visual03.jpg") no-repeat center 0;}
+#slider div.main-roll ul.roll-list li.section04 {background:url("/img/home/main/main_visual04.jpg") no-repeat center 0;}
+#slider div.main-roll div.roll-coment {position:absolute; top:30px; left:450px; z-index:9;}
+#slider div.main-roll div.roll-coment ul {position:relative;}
+#slider div.main-roll div.roll-coment ul li {margin:10px 0 0 10px;}
+#slider div.main-roll div.roll-coment ul li p {margin-top:10px;}
+#slider div.main-roll ul.main-rollnum {position:absolute; bottom:20px; right:30px; z-index:10;}
+#slider div.main-roll ul.main-rollnum .circle {float:left; width:100px;}
+#slider div.main-roll ul.main-rollnum .circle a {float:left; width:18px; height:18px; margin-right:5px; text-indent:-5000px; background:url("/img/home/basic/button/btn_off.png") no-repeat 0 0; *display:inline; zoom:1;}
+#slider div.main-roll ul.main-rollnum .circle a.activeSlide,
+#slider div.main-roll ul.main-rollnum .circle a:hover {background:url("/img/home/basic/button/btn_on.png") no-repeat 0 0;}
+#slider div.main-roll ul.main-rollnum .stop {float:left; width:13px; height:17px; margin-left:4px; text-indent:-5000px; background:url("/img/home/basic/button/btn_stop_off.png") no-repeat 0 1px; *display:inline; zoom:1;}
+#slider div.main-roll ul.main-rollnum .stop:hover {background:url("/img/home/basic/button/btn_stop_.png") no-repeat 0 1px;}
+#slider div.main-roll ul.main-rollnum .play {float:left; width:13px; height:17px; margin-left:4px; text-indent:-5000px; background:url("/img/home/basic/button/btn_play_on.png") no-repeat 0 1px; *display:inline; zoom:1;}
+#slider div.main-roll ul.main-rollnum .play:hover {background:url("/img/home/basic/button/btn_play_on.png") no-repeat 0 1px;}
+
+.scont {overflow:hidden; margin:30px 0;}
+.scont .calendar {
+	position:relative;
+	float:left;
+	width:270px;
+	padding:10px 15px;
+	border:5px solid #d1dddf;
+	border-radius:8px;
+	background:#f0f4f5;
+}
+.scont .calendar {text-align:center;}
+.scont .calendar h2 {margin-bottom:10px; padding:5px 0; text-align:center; border-radius:16px; border:1px solid #bbaaa7; background:#cfc1bf;}
+.scont .calendar span.monthPre {position:absolute; top:50px; left:20px; z-index:1;}
+.scont .calendar span.monthNext {position:absolute; top:50px; right:20px; z-index:1;}
+.scont .calendar strong {
+	font-size:16px;
+	color:#2d50c8;
+}
+.scont .calendar table {margin-top:15px;}
+.scont .calendar table thead th {width:25px; height:7px; line-height:0; text-indent:-9999px; background:url(/img/home/main/calendar_week.png) no-repeat;}
+.scont .calendar table tbody td {width:25px; height:25px; color:#000; font-size:13px;}
+.scont .calendar table thead th.sun {background-position:center 0;}
+.scont .calendar table thead th.mon {background-position:center -7px;}
+.scont .calendar table thead th.tue {background-position:center -14px;}
+.scont .calendar table thead th.wed {background-position:center -21px;}
+.scont .calendar table thead th.thd {background-position:center -28px;}
+.scont .calendar table thead th.fri {background-position:center -35px;}
+.scont .calendar table thead th.sat {background-position:center -42px;}
+.scont .calendar table tbody .sun a {color:#ff1400;}
+.scont .calendar table thead .sat {color:#1268b3;}
+.scont .calendar table tbody .sat a {color:#0081ff;}
+.scont .calendar table td a {display:block; *margin-left:5px; *width:25px; *height:25px; *padding:2px !important; *line-height:24px; padding:5px 0;}
+.scont .calendar table td a:hover {background:url(/img/home/main/calendar_day_on.png) no-repeat center 50%;}
+.scont .calendar table td a.oncls {background:url(/img/home/main/calendar_day_cls.png) no-repeat center 50%;}
+
+
+
+.tabmenu {float:left;width:860px; float:right;}
+.tabmenu .main_tab {overflow:hidden;height:26px;background:url('/img/home/basic/bg/bg_tabbot.gif') repeat-x 0 100%;}
+.tabmenu .main_tab li {
+	float:left;
+	height:26px;
+	margin-right:1px;
+	padding:0 0 0 3px;
+	background:url('/img/home/basic/bg/bg_taboff01.gif') no-repeat 0 0;
+}
+.tabmenu .main_tab li a {
+	display:inline-block;
+	height:21px;
+	padding:5px 13px 0 10px;
+	background:url('/img/home/basic/bg/bg_taboff02.gif') no-repeat 100% 0;
+}
+.tabmenu .main_tab li.on {
+	background:url('/img/home/basic/bg/bg_tabon01.gif') no-repeat 0 0;
+}
+.tabmenu .main_tab li.on a {
+	display:inline-block;
+	height:21px;
+	padding:5px 13px 0 10px;
+	background:url('/img/home/basic/bg/bg_tabon02.gif') no-repeat 100% 0;
+}
+.tabmenu .main_more {overflow:hidden;height:26px;float:right;margin-top:-20px;}
+.tabmenu .main_more li {
+	height:26px;
+}
+.tabmenu .main_more li.on {
+	display:block;
+}
+.main_tab li a {color:#fff;font-weight:bold;}
+.main_tab li.on a {color:#1268b3;}
+
+.tab01 {float:left;overflow:hidden;height:120px; width:420px;}
+.tab02 {float:right;overflow:hidden;height:120px; width:420px;}
+
+.tab_list {margin:8px 0 0 9px;}
+.tab_list li {
+	overflow:hidden;
+	padding-left:11px;
+	background:url('/img/home/basic/bl/bl_tab.gif') no-repeat 0 50%;
+	line-height:22px;
+	*line-height:18px;
+}
+.tab_list li a {display:block;width:240px;float:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tab_list li span {float:right;}
+
+
+
+/* 메인 로그인 */
+.main_login {position:relative; width:238px; height:92px; padding:20px 25px; background:#f0f0f0; border:3px solid #d1d1d1; border-radius:5px !important;}
+.main_login .input-area {}
+.main_login .input-area li #log_id {padding-left:35px; width:165px; height:28px; margin-bottom:3px; border:none; background:url(/img/home/basic/bg/login_id.png) no-repeat left top;}
+.main_login .input-area li #log_pwd {padding-left:35px; width:165px; height:28px; border:none; background:url(/img/home/basic/bg/login_pw.png) no-repeat left top;}
+.main_login .input-area input.enterLogin{width:165px; height:28px; background:;}
+.main_login .btn_login {position:absolute; right:25px; top:20px;}
+
+.main_login .log_support {margin-top:6px;}
+.main_login .log_support:after {content:""; display:block; clear:both;}
+.main_login .log_support .btn_join {float:left; display:inline-block; width:85px; height:28px; text-align:center; line-height:28px; background:url(/img/home/basic/bg/btn_join.png) no-repeat left top;}
+.main_login .log_support .btn_idpw {float:right; display:inline-block; width:149px; height:28px; text-align:center; line-height:28px; background:url(/img/home/basic/bg/btn_idpw.png) no-repeat left top;}
+.main_login .log_support .btn_join span, .main_login .log_support .btn_idpw span {font-size:12px; color:#fff;}
+.main_login .log_support a:hover {text-decoration:none;}
+
+
+/* 메인 로그아웃 */
+.main_logout {position:relative; width:238px; height:92px; padding:20px 25px; background:#f0f0f0; border:3px solid #d1d1d1; border-radius:5px !important;}
+.main_logout h3 {margin-bottom:10px; font-weight:bold; font-size:14px; color:#555;}
+
+.main_logout .mem_info:after {content:""; display:block; clear:both;}
+.main_logout .mem_info {width:218px; height:20px; padding:5px 10px; background:#f5f5f5; border:1px solid #d1d1d1; border-radius:5px !important;}
+.main_logout .mem_info a {}
+.main_logout .mem_info a:hover {}
+
+.main_logout .mem_info .name_user {float:left; padding:2px 15px 3px 20px; background:url(/img/home/basic/icon/name_user.gif) no-repeat left top; font-weight:bold; font-size:12px; color:#1268b3;}
+.main_logout .mem_info .message {float:right; padding:2px 15px 3px 20px; background:url(/img/home/basic/icon/message.gif) no-repeat left 3px; font-weight:bold; font-size:12px; color:#1268b3;}
+
+.main_logout .mem_info .message .em {display:inline-block; cursor:pointer; font-weight:bold !important; color:#1268b3;}
+.main_logout .mem_info .message a.em:hover {text-decoration:underline;}
+.main_logout .mem_info a:hover {text-decoration:none;}
+.main_logout .private:after {content:""; display:block; clear:both}
+.main_logout .private {margin-top:12px; }
+.main_logout .private a {}
+.main_logout .private .last {float:right}
+.main_logout .private a:hover {text-decoration:none;}
+
+
+
+/* 160321_메인 로그인 박스 추가 */
+.login-form {margin:200px auto 0  auto; max-width:446px; color:#808080;}
+.login-form .panel {border:3px solid #e4e4e4; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px;}
+.login-form .panel a {color:#00aeef;}
+.login-form .panel .panel-body {padding:18px 40px 30px 40px;}
+.login-form .panel .panel-footer {line-height:2.2em; padding:20px 40px 20px 40px; background:#f6f6f6; color:#606060;}
+form[role=login] {color:#808080;}
+form[role=login] h1 {text-align:center; padding-bottom:20px;}
+form[role=login] h1 img {width:50%; height:auto;}
+form[role=login] section {margin:15px 0;}
+form[role=login] input,
+form[role=login] button {font-size:15px; margin:5px 0; vertical-align:middle;}
+form[role=login] label {margin:0; font-weight:normal; line-height:34px;}
+form[role=login] input {color:#0b2344; 	background:#f6f6f6 !important; border:1px solid #d8d8d8; margin:0;}
+form[role=login] input::-webkit-input-placeholder {color:#8899a6;}
+form[role=login] input:-moz-placeholder {color:#8899a6;}
+form[role=login] input::-moz-placeholder {color:#8899a6;}
+form[role=login] input:-ms-input-placeholder {color:#8899a6;}
+/* 160321_컨텐츠 리스트 박스 추가 */
+.modal-body:after {display:block; height:0; content:''; clear:both;}
+.contentList {float:left; width:260px; margin-right:-260px;}
+.contentList .head p {padding-bottom:10px; font-size:14px; font-weight:700; color:#333; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.contentList .body {margin-top:20px; max-height:320px; overflow-y:scroll;}
+.contentList .body > .btn-group {width:100%; margin:5px 0;}
+.contentList .body > .btn-group > .ct_txt {width:172px; text-align:left; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.contentList .body > .btn-group > .input-group-addon {float:left; width:34px; display:inline-block; padding:5px 10px; font-size:12px; line-height:1.5; cursor:pointer;}
+.contentList .body > .btn-group > .btn-group > .dropdown-menu {min-width:34px;}
+.contentList .body > .btn-group > .btn-group > .dropdown-menu a {display:block; text-align:center;}
+.ui-state-highlight {height:30px; border:1px dashed #ccc; border-radius:3px; background:#f1f1f1;}
+.contentView {margin-left:280px;}
+/* 160321_컨텐츠 리스트 박스(사용자화면) 추가 */
+.userView {background:url(../img/bg.jpg) no-repeat; background-size:cover;}
+.userView .modal-header,
+.userView .modal-footer {background:rgba(0,0,0,.4);}
+.userView .modal-header h3 {display:inline-block;}
+.userView .modal-header h3 img {width:120px; height:auto;}
+.userView .modal-header h4 {margin-left:20px; display:inline-block; color:#fff; vertical-align:middle;}
+.userView .modal-header .close span {color:#fff; vertical-align:middle;}
+.userView .modal-body {background:rgba(255,255,255,.6);}
+.userView .ct_txt {width:96% !important;}
+.userView .contentList .body {margin-top:0; max-height:400px;}
+.userView .modal-footer ul.pg-mini {margin:0;}
+.userView .modal-footer ul.pg-mini li {display:inline-block; padding:0 10px; font-size:14px; text-align:center; color:#fff;}
+.userView .modal-footer ul.pg-mini li:first-child,
+.userView .modal-footer ul.pg-mini li:last-child {width:28px; padding:0; border:1px solid #666; background:#000;}
+.userView .modal-footer ul.pg-mini li a {display:block; padding:3px;}
+.userView .modal-footer ul.pg-mini li a:hover {background:#333;}

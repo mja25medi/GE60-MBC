@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.lecture.bbs.service.impl.LecBbsMapper">
+
+	<select id="select" parameterType="lecBbsVO" resultType="lecBbsVO">
+		<!-- 게시판의 종류를 가져온다  -->
+		SELECT  CRS_CRE_CD													
+		    	 ,  BBS_CD														
+		    	 ,  BBS_NM														
+		    	 ,  BBS_DESC													
+		    	 ,  ANSR_USE_YN													
+		    	 ,  CMNT_USE_YN													
+		    	 ,  REG_NO														
+		    	 ,  REG_DTTM													
+		    	 ,  MOD_NO														
+		    	 ,  MOD_DTTM													
+			     ,  (SELECT FN_GET_USER_NAME(MOD_NO) FROM DUAL) AS MOD_NM		
+			     ,  (SELECT FN_GET_USER_NAME(REG_NO) FROM DUAL) AS REG_NM		
+		     FROM  TB_LEC_BBS													
+		    WHERE  CRS_CRE_CD   = #{crsCreCd}									
+		      AND  BBS_CD       = #{bbsCd}
+	</select>
+	
+	<insert id="insert" parameterType="lecBbsVO">
+		<!-- 게시판 정보를 등록한다.  -->
+		INSERT  INTO TB_LEC_BBS (					
+		   	    CRS_CRE_CD							
+		    	 ,  BBS_CD								
+		    	 ,  BBS_NM								
+		    	 ,  BBS_DESC							
+		    	 ,  ANSR_USE_YN							
+		    	 ,  CMNT_USE_YN							
+		    	 ,  REG_NO								
+		    	 ,  REG_DTTM							
+		    	 ,  MOD_NO								
+		    	 ,  MOD_DTTM							
+			) VALUES (									
+		      	 	#{crsCreCd}							
+		      	 ,  #{bbsCd}								
+		      	 ,  #{bbsNm}								
+		        ,  #{bbsDesc}							
+		      	 ,  #{ansrUseYn}							
+		      	 ,  #{cmntUseYn}							
+		      	 ,  #{regNo}								
+		      	 ,  TO_CHAR(SYSDATE,'yyyymmddhh24miss')	
+		      	 ,  #{modNo}								
+		      	 ,  TO_CHAR(SYSDATE,'yyyymmddhh24miss')	
+		 	)
+	</insert>
+	
+	<delete id="delete" parameterType="lecBbsVO">
+		<!-- 개설 과정 게시판 정보를 삭제한다.  -->
+		DELETE  FROM TB_LEC_BBS          		
+		  	 WHERE  CRS_CRE_CD 	= #{crsCreCd}         
+		      AND  BBS_CD 		= #{bbsCd}
+	</delete>
+	
+	<delete id="deleteAll" parameterType="lecBbsVO">
+		<!-- 개설 과정의 모든 게시판 정보를 삭제한다.  -->
+		DELETE  FROM TB_LEC_BBS          		
+		  	 WHERE  CRS_CRE_CD 	= #{crsCreCd} 
+	</delete>
+	
+</mapper>

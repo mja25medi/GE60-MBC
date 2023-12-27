@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.board.bbs.service.impl.BrdBbsInfoMapper">	
+
+	
+	<sql id="selectQuery">
+		<![CDATA[
+		SELECT A.ORG_CD as orgCd
+    	     , B.ORG_NM as orgNm
+    	     , A.BBS_CD as bbsCd
+		     , A.BBS_NM as bbsNm
+		     , A.BBS_DESC as bbsDesc
+		     , A.BBS_TYPE_CD as bbsTypeCd
+		     , A.DETL_VIEW_CD as detlViewCd
+		     , A.MAIN_IMG_FILE_SN as mainImgFileSn
+		     , A.CMNT_USE_YN as cmntUseYn
+	         , A.ANSR_USE_YN as ansrUseYn
+		     , A.WRITE_USE_YN as writeUseYn
+		     , A.ATCH_USE_YN as atchUseYn
+		     , A.EDITOR_USE_YN as editorUseYn
+		     , A.MOBILE_USE_YN as mobileUseYn
+		     , A.DFLT_YN as dfltYn
+		     , A.USE_YN as useYn
+		     , A.LIST_VIEW_CNT as listViewCnt
+		     , A.MENU_CD as menuCd
+		     , A.REG_NO as regNo
+		     , A.LOCK_USE_YN as lockUseYn
+		     , (SELECT FN_GET_USER_NAME(A.REG_NO)
+		          FROM DUAL) AS regNm
+		     , A.REG_DTTM as regDttm
+		     , A.MOD_NO as modNo
+		     , (SELECT FN_GET_USER_NAME(A.MOD_NO)
+		          FROM DUAL) AS modNm
+		     , A.MOD_DTTM as modDttm
+		     , ( SELECT COUNT(*)
+		           FROM tb_brd_bbs_atcl
+		          WHERE ORG_CD = A.ORG_CD
+		            AND BBS_CD = A.BBS_CD ) AS atclCnt
+		     , CASE WHEN ( SELECT COUNT(*)
+		                     FROM tb_brd_bbs_atcl
+		                    WHERE ORG_CD = A.ORG_CD
+		                      AND BBS_CD = A.BBS_CD
+		                      AND ( DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') - 
+		                            DATE_FORMAT(REG_DTTM, '%Y%m%d%H%i%s')) <= 1) > 0 THEN 'Y'                      
+		       ELSE 'N' END AS isNewAtcl
+		  FROM tb_brd_bbs_info A, tb_org_org_info B
+		 WHERE A.ORG_CD = B.ORG_CD	
+		]]>
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		<if test = "orgCd != null and orgCd != ''">
+		    AND A.ORG_CD = #{orgCd}
+		</if>
+		<if test = "searchValue != null and searchValue != ''">
+			<if test = "searchKey != null and searchKey == 'regNm'">
+			   AND B.ORG_NM LIKE CONCAT('%',IFNULL(#{searchValue}, ''),'%')
+			</if>
+			<if test = "searchKey != null and searchKey == 'bbsNm'">
+			   AND B.BBS_NM LIKE CONCAT('%',IFNULL(#{searchValue}, ''),'%')
+			</if>
+		</if>
+		<if test = "useYn != null and useYn != ''">
+		   AND A.USE_YN = #{useYn}
+		</if>
+	</sql>		
+
+	<select id="list" parameterType="brdBbsInfoVO" resultType="brdBbsInfoVO">
+		/*
+			 SQL ID : list
+			 설  명 : 게시판 정보의 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	 	ORDER  BY A.ORG_CD, A.BBS_CD
+	</select>
+	
+	<select id="listPageing" parameterType="brdBbsInfoVO" resultType="brdBbsInfoVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 게시판 정보의 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+	 	ORDER  BY ORGCD, BBSCD
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="brdBbsInfoVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 게시판 정보의 전체 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>	
+	
+	<select id="select" parameterType="brdBbsInfoVO" resultType="brdBbsInfoVO">
+		/*
+			 SQL ID : select
+			 설  명 : 게시판 정보의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+	 	   AND A.ORG_CD = #{orgCd}	 	
+           AND A.BBS_CD = #{bbsCd}	 	
+	</select>
+	
+	<select id="selectKey"  resultType="String">
+		/*
+			 SQL ID : select
+			 설  명 : 게시판 정보의 키 생성
+	 	*/
+		SELECT CONCAT('BR',LPAD(nextval(SQ_BRD_BBS_INFO),8,'0'))
+	</select>	
+	
+	<insert id="insert" parameterType="brdBbsInfoVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 게시판 정보의 정보 등록
+	 	*/
+		INSERT INTO tb_brd_bbs_info (
+               ORG_CD
+             , BBS_CD
+		     , BBS_NM
+		     , BBS_DESC
+		     , BBS_TYPE_CD
+		     , DETL_VIEW_CD
+		     , MAIN_IMG_FILE_SN
+		     , CMNT_USE_YN
+		     , ANSR_USE_YN
+		     , WRITE_USE_YN
+		     , ATCH_USE_YN
+		     , EDITOR_USE_YN
+		     , MOBILE_USE_YN
+		     , DFLT_YN
+		     , USE_YN
+		     , LIST_VIEW_CNT
+		     , MENU_CD
+		     , LOCK_USE_YN
+		     , REG_NO
+		     , REG_DTTM
+		     , MOD_NO
+		     , MOD_DTTM
+        ) VALUES (
+               #{orgCd}
+		     , #{bbsCd}
+		     , #{bbsNm}
+		     , #{bbsDesc}
+		     , #{bbsTypeCd}
+		     , #{detlViewCd}
+		     , #{mainImgFileSn}
+		     , #{cmntUseYn}
+		     , #{ansrUseYn}
+		     , #{writeUseYn}
+		     , #{atchUseYn}
+		     , #{editorUseYn}
+		     , #{mobileUseYn}
+		     , 'N'
+		     , #{useYn}
+		     , #{listViewCnt}
+		     , #{menuCd}
+		     , #{lockUseYn}
+		     , #{regNo}
+		     , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		     , #{modNo}
+		     , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+        )
+	</insert>
+	
+	<update id="update" parameterType="brdBbsInfoVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 게시판 정보의 정보 수정
+	 	*/
+        UPDATE tb_brd_bbs_info
+           SET BBS_NM = #{bbsNm}
+             , BBS_DESC = #{bbsDesc}
+             , BBS_TYPE_CD = #{bbsTypeCd}
+             , DETL_VIEW_CD = #{detlViewCd}
+             , CMNT_USE_YN = #{cmntUseYn}
+             , MAIN_IMG_FILE_SN = #{mainImgFileSn}
+             , WRITE_USE_YN = #{writeUseYn}
+             , ANSR_USE_YN = #{ansrUseYn}
+             , ATCH_USE_YN = #{atchUseYn}
+             , EDITOR_USE_YN = #{editorUseYn}
+             , MOBILE_USE_YN = #{mobileUseYn}
+             , USE_YN = #{useYn}
+             , LIST_VIEW_CNT = #{listViewCnt}
+		     , LOCK_USE_YN = #{lockUseYn}
+             , MOD_NO = #{modNo}
+             , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+         WHERE ORG_CD = #{orgCd}
+           AND BBS_CD = #{bbsCd}	 	
+	</update>	
+
+	<delete id="delete" parameterType="brdBbsInfoVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 게시판 정보의 정보 삭제
+	 	*/
+		DELETE FROM tb_brd_bbs_info
+         WHERE ORG_CD = #{orgCd}
+           AND BBS_CD = #{bbsCd}
+	</delete>
+	
+	<sql id="listQueryForMenu">
+		<include refid="selectQuery"/>
+           AND (A.MENU_CD is NULL OR A.MENU_CD = '')
+		<if test = "orgCd != null and orgCd != ''">
+		    AND A.ORG_CD = #{orgCd}
+		</if>
+		<if test = "searchValue != null and bbssearchValueCd != ''">
+			<if test = "searchKey != null and searchKey == 'regNm'">
+			   AND B.ORG_NM LIKE CONCAT('%', IFNULL(#{searchValue}, ''), '%')
+			</if>
+			<if test = "searchKey != null and searchKey == 'bbsNm'">
+			   AND B.BBS_NM LIKE CONCAT('%', IFNULL(#{searchValue}, ''), '%')
+			</if>
+		</if>
+		<if test = "useYn != null and useYn != ''">
+		   AND A.USE_YN = #{useYn}
+		</if>           
+         ORDER  BY A.ORG_CD, A.BBS_CD	
+	</sql>
+	
+	<select id="listPageingForMenu" parameterType="brdBbsInfoVO" resultType="brdBbsInfoVO">
+		/*
+			 SQL ID : listPageingForMenu
+			 설  명 : 게시판 정보의 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQueryForMenu"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		ORDER  BY ORGCD, BBSCD
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="countForMenu" parameterType="brdBbsInfoVO" resultType="Integer">
+		/*
+			 SQL ID : countForMenu
+			 설  명 : 게시판 정보의 전체 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQueryForMenu"/>
+	 	) T
+	</select>	
+	
+	<update id="updateMenuCd" parameterType="brdBbsInfoVO" >
+		/*
+			 SQL ID : updateMenuCd
+			 설  명 : 게시판 정보에 메뉴 코드 연결
+	 	*/
+        UPDATE tb_brd_bbs_info
+           SET MENU_CD = #{menuCd}
+             , MOD_NO = #{modNo}
+             , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+         WHERE ORG_CD = #{orgCd}
+           AND BBS_CD = #{bbsCd}	 	
+	</update>
+	
+	<update id="updateMenuCdToNull" parameterType="brdBbsInfoVO" >
+		/*
+			 SQL ID : updateMenuCdToNull
+			 설  명 : 게시판 정보에 메뉴 코드 연결 헤제
+	 	*/
+        UPDATE tb_brd_bbs_info
+           SET MENU_CD = ''
+             , MOD_NO = #{modNo}
+             , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+         WHERE ORG_CD = #{orgCd}
+           AND MENU_CD = #{menuCd}	 	
+	</update>		
+	 
+	<update id="updateAllMenuCdToNull" parameterType="brdBbsInfoVO" >
+		/*
+			 SQL ID : updateAllMenuCdToNull
+			 설  명 : Default가 아닌 게시판 정보에 메뉴 코드 연결 헤제 
+	 	*/
+        UPDATE tb_brd_bbs_info
+           SET MENU_CD = ''
+             , MOD_NO = #{modNo}
+             , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+         WHERE ORG_CD = #{orgCd}
+           AND DFLT_YN = 'N'	 	
+	</update>
+</mapper>

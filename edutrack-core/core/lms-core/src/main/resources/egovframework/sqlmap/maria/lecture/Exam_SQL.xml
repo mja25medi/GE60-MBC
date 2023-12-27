@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.lecture.exam.service.impl.ExamMapper">
+	
+	<sql id="selectQuery">
+	<![CDATA[
+		SELECT A.CRS_CRE_CD  
+		      , A.EXAM_SN  
+		      , A.EXAM_TITLE  
+		      , A.EXAM_CTS  
+		      , A.SEMI_EXAM_YN
+		      , A.EXAM_TYPE_CD  
+		      , A.EXAM_STARE_TYPE_CD  
+		      , A.EXAM_START_DTTM  
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_START_DTTM,'%H')) AS EXAM_START_HOUR  
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_START_DTTM,'%i')) AS EXAM_START_MIN  
+		      , A.EXAM_END_DTTM  
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_END_DTTM,'%H')) AS EXAM_END_HOUR  
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_END_DTTM,'%i')) AS EXAM_END_MIN  
+		      , A.RSLT_CFRM_DTTM  
+		      , (SELECT FN_GET_DATE_FORMAT(A.RSLT_CFRM_DTTM,'%H')) AS RSLT_CFRM_HOUR  
+		      , (SELECT FN_GET_DATE_FORMAT(A.RSLT_CFRM_DTTM,'%i')) AS RSLT_CFRM_MIN  
+		      , A.EXAM_STARE_TM  
+		      , A.EXAM_VIEW_TYPE_CD  
+		      , A.STARE_TM_USE_YN  
+		      , IFNULL(FN_GET_NULL(A.STARE_CRIT_PRGR_RATIO),0) AS STARE_CRIT_PRGR_RATIO
+		      , A.STARE_LEC_COUNT
+		      , A.STARE_LIMIT_CNT
+		      , (SELECT COUNT(*) 
+		      		FROM tb_lec_bookmark LEC, tb_crs_cre_crs_onln_sbj CRE
+		      		WHERE CRE.SBJ_CD = LEC.SBJ_CD
+		      		AND CRE.CRS_CRE_CD = A.CRS_CRE_CD
+		      		AND CRE.SBJ_CD =A.SBJ_CD
+		      		AND LEC.STD_NO = #{stdNo}
+		      		AND LEC.PRGR_RATIO > 90
+		      	) AS PRGR_LEC_COUNT
+	      	  , (SELECT SBJ_NM
+	      			FROM tb_lec_bookmark LEC, tb_crs_onln_sbj SBJ  
+	      			WHERE SBJ.SBJ_CD =A.SBJ_CD     			      	
+	      			AND LEC.STD_NO = #{stdNo}
+	      			GROUP BY SBJ_NM
+	      		) AS SBJ_NM
+		      , A.SEL_CNT
+		      , A.SEL_PNT
+		      , A.SHORT_CNT
+		      , A.SHORT_PNT
+		      , A.DES_CNT
+		      , A.DES_PNT
+		      , A.REG_YN  
+		      , A.REG_NO  
+		      , A.REG_DTTM  
+		      , A.MOD_NO  
+			  , (SELECT FN_GET_USER_NAME(A.MOD_NO)) AS MOD_NM  
+			  , (SELECT FN_GET_USER_NAME(A.REG_NO)) AS REG_NM  
+		      , A.MOD_DTTM  
+		      , IFNULL(( SELECT STARE_CNT  
+		          		FROM tb_lec_exam_stare  
+		          	   WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+		               	 AND STD_NO = #{stdNo}  
+		               	 AND EXAM_SN = A.EXAM_SN ),0) AS STARE_CNT  
+		      , ( SELECT END_DTTM  
+		          		FROM tb_lec_exam_stare  
+		          	   WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+		               	 AND STD_NO = #{stdNo}  
+		               	 AND EXAM_SN = A.EXAM_SN ) AS END_DTTM 
+		      , IFNULL(( SELECT RATE_YN 
+				        FROM tb_lec_exam_stare  
+		               WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+		                 AND STD_NO = #{stdNo}  
+		                 AND EXAM_SN = A.EXAM_SN ),'N') AS RATE_YN  
+		      , CASE WHEN DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		                  BETWEEN A.EXAM_START_DTTM AND A.EXAM_END_DTTM  
+                     THEN 'Y' ELSE 'N' END AS CONN_YN	
+		      , CASE WHEN A.RSLT_CFRM_DTTM < DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		             THEN 'Y' ELSE 'N' END AS RSLT_YN  
+		      , (SELECT FN_GET_CRS_STD_PRGR(#{crsCreCd},#{stdNo})) AS STD_RATIO  
+		      , IFNULL(( (SELECT SUM(STR.TOT_GET_SCORE) FROM tb_lec_exam_stare STR WHERE STR.EXAM_SN = A.EXAM_SN AND STR.RATE_YN = 'Y') /
+		            	(SELECT COUNT(A.STD_NO) FROM tb_std_std A, tb_usr_user_info B, tb_usr_login C    
+		      				WHERE  B.USER_NO = C.USER_NO   
+		      				AND A.USER_NO = B.USER_NO   
+		      				AND A.CRS_CRE_CD = #{crsCreCd}   
+		      				AND C.USER_STS = 'U'   
+		      				AND A.ENRL_STS IN ('S','C') )  
+		      		),0) AS AVG_SCORE  
+		       ,  IFNULL((SELECT SUM(STR.TOT_GET_SCORE) FROM tb_lec_exam_stare STR  
+		      				WHERE STR.EXAM_SN = A.EXAM_SN AND STR.STD_NO = #{stdNo} AND STR.RATE_YN = 'Y'  
+		      		),0)  AS MY_SCORE  
+		   FROM tb_lec_exam A 
+		  WHERE A.CRS_CRE_CD = #{crsCreCd}
+		  ]]>
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery" />
+	</sql>
+	
+	<select id="list" parameterType="examVO" resultType="examVO">
+		<!-- 시험의 목록을 반환한다.
+	 * 등록여부에 따라 시험 목록 반환
+	 * @param vo.regYn (등록여부)  -->
+		<include refid="listQuery" />
+		<if test = 'sbjCd != null and sbjCd != ""'>
+			    AND A.SBJ_CD = IFNULL(FN_GET_NULL(#{sbjCd}),A.SBJ_CD)  
+		</if>
+		
+		<!-- 진행단계평가 구분제거 -->
+		<!-- <if test = 'semiExamYn != null and semiExamYn != ""and semiExamYn == "Y"'>
+			    AND A.SEMI_EXAM_YN ='Y'
+		</if>
+		<if test = 'semiExamYn != null and semiExamYn != ""and semiExamYn == "N"'>
+			    AND A.SEMI_EXAM_YN ='N'
+		</if> -->
+		    AND IFNULL(FN_GET_NULL(A.REG_YN),'N') = IFNULL(FN_GET_NULL(#{regYn}), IFNULL(FN_GET_NULL(A.REG_YN),'N')) 		    
+		    ORDER BY A.EXAM_STARE_TYPE_CD ASC, A.EXAM_END_DTTM DESC, STARE_CRIT_PRGR_RATIO ASC 
+	</select>
+	
+	<select id="selectExam" parameterType="examVO" resultType="examVO">
+		<!-- 시험 정보 단일항목 반환.  -->
+		<![CDATA[
+		SELECT A.CRS_CRE_CD  
+		      , A.EXAM_SN  
+		      , A.EXAM_TITLE  
+		      , A.EXAM_CTS  
+		      , A.SEMI_EXAM_YN  
+		      , A.SBJ_CD 
+		      , A.EXAM_TYPE_CD  
+		      , A.EXAM_STARE_TYPE_CD  
+		      , A.EXAM_START_DTTM  
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_START_DTTM,'%H')) AS EXAM_START_HOUR  
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_START_DTTM,'%i')) AS EXAM_START_MIN  
+		      , A.EXAM_END_DTTM  
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_END_DTTM,'%H')) AS EXAM_END_HOUR  
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_END_DTTM,'%i')) AS EXAM_END_MIN  
+		      , A.RSLT_CFRM_DTTM  
+		      , (SELECT FN_GET_DATE_FORMAT(A.RSLT_CFRM_DTTM,'%H')) AS RSLT_CFRM_HOUR  
+		      , (SELECT FN_GET_DATE_FORMAT(A.RSLT_CFRM_DTTM,'%i')) AS RSLT_CFRM_MIN  
+		      , A.EXAM_STARE_TM  
+		      , A.EXAM_VIEW_TYPE_CD  
+		      , A.STARE_TM_USE_YN  
+		      , IFNULL(FN_GET_NULL(A.STARE_CRIT_PRGR_RATIO),0) AS STARE_CRIT_PRGR_RATIO 
+		      , A.STARE_LEC_COUNT
+		      , A.STARE_LIMIT_CNT  
+		      , A.REG_YN  
+		      , A.REG_NO  
+		      , A.REG_DTTM  
+		      , A.MOD_NO  
+			  , (SELECT FN_GET_USER_NAME(A.MOD_NO)) AS MOD_NM  
+			  , (SELECT FN_GET_USER_NAME(A.REG_NO)) AS REG_NM  
+		      , A.MOD_DTTM  
+		      , A.EXAM_SET_CNT
+		      , A.SEL_CNT
+		      , A.SEL_PNT
+		      , A.SHORT_CNT
+		      , A.SHORT_PNT
+		      , A.DES_CNT
+		      , A.DES_PNT
+		      , IFNULL(( SELECT COUNT(STARE_CNT)  
+		          		FROM tb_lec_exam_stare  
+		          	   WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+		               	 AND EXAM_SN = A.EXAM_SN ),0) AS STARE_CNT  
+		      , IFNULL(( SELECT RATE_YN  
+				        FROM tb_lec_exam_stare  
+		               WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+		                 AND STD_NO = #{stdNo}  
+		                 AND EXAM_SN = A.EXAM_SN ),'N') AS RATE_YN  
+		      , CASE WHEN DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')   
+		                  BETWEEN A.EXAM_START_DTTM AND A.EXAM_END_DTTM  
+                     THEN 'Y' ELSE 'N' END AS CONN_YN	
+		      , CASE WHEN A.RSLT_CFRM_DTTM < DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 
+		             THEN 'Y' ELSE 'N' END AS RSLT_YN  
+		      , (SELECT FN_GET_CRS_STD_PRGR(#{stdNo},#{crsCreCd})) AS STD_RATIO  
+		   FROM tb_lec_exam A 
+		  WHERE A.CRS_CRE_CD = #{crsCreCd}  
+		    AND A.EXAM_SN = #{examSn}
+		    ]]>
+	</select>
+	
+	<select id="listExamStd" parameterType="examVO" resultType="examVO">
+		<!-- 학습자의 목록을 반환한다.
+	 * 시험응시 정보 포함(응시횟수, 취득점수) -->
+	 <![CDATA[
+	 	SELECT A.CRS_CRE_CD  
+		      , A.EXAM_SN  
+		      , A.EXAM_TITLE  
+		      , A.EXAM_CTS  
+		      , A.SEM_EXAM_YN
+		      , A.RSLT_CFRM_DTTM  
+		      , A.SEMI_EXAM_YN 
+		      , IFNULL(FN_GET_NULL(B.STARE_CNT),0) AS STARE_CNT   
+		      , CASE   
+		      		WHEN A.EXAM_STARE_TYPE_CD = 'S' THEN IFNULL(FN_GET_NULL(B.TOT_GET_SCORE),0)   
+		      		WHEN A.RSLT_CFRM_DTTM <= DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') THEN IFNULL(FN_GET_NULL(B.TOT_GET_SCORE),0) 		      		
+		      		ELSE 0   
+		      END AS TOT_GET_SCORE   
+		      , IFNULL(FN_GET_NULL(B.RATE_YN),'N') AS RATE_YN 
+		      , B.REG_DTTM
+		      , C.ENRL_STS 
+		   FROM tb_lec_exam A
+		   LEFT OUTER JOIN
+			  tb_lec_exam_stare B  
+		   ON 
+		   	(
+		    	A.CRS_CRE_CD = B.CRS_CRE_CD   
+		    AND A.EXAM_SN = B.EXAM_SN
+		    AND B.STD_NO = #{stdNo}  		   	
+		   	)
+		   	LEFT OUTER JOIN
+			  tb_std_std C  
+		   ON 
+		   	(
+		    	A.CRS_CRE_CD = C.CRS_CRE_CD   
+		    AND C.STD_NO = #{stdNo}    	
+		   	)
+		  WHERE A.CRS_CRE_CD = #{crsCreCd}  
+		    AND A.REG_YN = 'Y'  
+		    ORDER BY A.EXAM_STARE_TYPE_CD ASC, A.EXAM_END_DTTM DESC, STARE_CRIT_PRGR_RATIO ASC
+		    ]]>
+	</select>
+	
+	<insert id="insertExam" parameterType="examVO">
+		<!-- 시험의 정보를 등록하고 결과를 반환한다.  -->
+		INSERT INTO tb_lec_exam  (	 
+		        CRS_CRE_CD  
+		      , EXAM_SN  
+		      , SBJ_CD  
+		      , EXAM_TITLE  
+		      , EXAM_CTS  
+		      , SEMI_EXAM_YN
+		      , EXAM_TYPE_CD  
+		      , EXAM_STARE_TYPE_CD  
+		      , EXAM_START_DTTM  
+		      , EXAM_END_DTTM  
+		      , RSLT_CFRM_DTTM  
+		      , EXAM_STARE_TM  
+		      , EXAM_VIEW_TYPE_CD  
+		      , STARE_TM_USE_YN  
+		      , STARE_CRIT_PRGR_RATIO  
+		      , STARE_LEC_COUNT
+		      , STARE_LIMIT_CNT  
+		      , EXAM_SET_CNT
+		      , SEL_CNT
+		      , SEL_PNT
+		      , SHORT_CNT
+		      , SHORT_PNT
+		      , DES_CNT
+		      , DES_PNT
+		      , REG_YN  
+		      , REG_NO  
+		      , REG_DTTM  
+		      , MOD_NO  
+		      , MOD_DTTM  
+		 ) VALUES (  
+		        #{crsCreCd}  
+		      , #{examSn}  
+		      , #{sbjCd}  
+		      , #{examTitle}  
+		      , #{examCts}  
+		      , #{semiExamYn}
+		      , #{examTypeCd}  
+		      , #{examStareTypeCd}  
+		      , #{examStartDttm}  
+		      , #{examEndDttm}  
+		      , #{rsltCfrmDttm}
+		      , #{examStareTm}  
+		      , #{examViewTypeCd}  
+		      , #{stareTmUseYn}  
+		      , #{stareCritPrgrRatio} 
+		      , #{stareLecCount} 
+		      , #{stareLimitCnt}  
+		      , #{examSetCnt}
+		      , #{selCnt  }
+		      , #{selPnt  }
+		      , #{shortCnt}
+		      , #{shortPnt}
+		      , #{desCnt  }
+		      , #{desPnt  }
+		      , #{regYn}  
+		      , #{regNo}  
+		      , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		      , #{modNo}  
+		      , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		 )
+	</insert>
+	
+	<update id="updateExam" parameterType="examVO">
+		<!-- 시험의 정보를 수정하고 결과를 반환한다. -->
+		UPDATE tb_lec_exam	  
+		    SET SBJ_CD = #{sbjCd}  
+		      , EXAM_TITLE = #{examTitle}  
+		      , EXAM_CTS = #{examCts}  
+		      , SEMI_EXAM_YN = #{semiExamYn}  
+		      , EXAM_TYPE_CD = #{examTypeCd}  
+		      , EXAM_STARE_TYPE_CD = #{examStareTypeCd}  
+		      , EXAM_START_DTTM = #{examStartDttm}  
+		      , EXAM_END_DTTM = #{examEndDttm}  
+		      , RSLT_CFRM_DTTM = #{rsltCfrmDttm}  
+		      , EXAM_STARE_TM = #{examStareTm}  
+		      , EXAM_VIEW_TYPE_CD = #{examViewTypeCd}  
+		      , STARE_TM_USE_YN = #{stareTmUseYn}  
+		      , STARE_CRIT_PRGR_RATIO = #{stareCritPrgrRatio}  
+		      , STARE_LEC_COUNT = #{stareLecCount}
+		      , STARE_LIMIT_CNT = #{stareLimitCnt}  
+		      , EXAM_SET_CNT = #{examSetCnt} 
+		      , SEL_CNT    = #{selCnt  }  
+			  , SEL_PNT    = #{selPnt  }  
+			  , SHORT_CNT  = #{shortCnt}  
+			  , SHORT_PNT  = #{shortPnt}  
+			  , DES_CNT    = #{desCnt  }  
+			  , DES_PNT    = #{desPnt  }  
+		      , REG_YN = #{regYn}  
+		      , MOD_NO = #{modNo}  
+		      , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 
+		    WHERE  CRS_CRE_CD = #{crsCreCd}  
+		      AND  EXAM_SN = #{examSn} 
+	</update>
+	
+	<delete id="deleteExam" parameterType="examVO">
+		<!-- 시험 정보를 삭제하고 결과를 반환한다.  -->
+		DELETE FROM tb_lec_exam  
+		  WHERE CRS_CRE_CD = #{crsCreCd}  
+		    AND EXAM_SN = #{examSn}
+	</delete>
+	
+	<select id="selectExamSn" parameterType="examVO" resultType="examVO">
+	<!-- 시험 고유 번호를 검색하여 반환한다. -->
+		SELECT nextval(SQ_LEC_EXAM) AS EXAM_SN
+	</select>
+	
+	<select id="selectExamStatus" parameterType="examVO" resultType="egovMap">
+		/*
+		 	SQL ID : ExamMapper.selectExamStatus
+		 	설  명 : 시험 관련 정보 현황
+	 	*/
+		SELECT A.CRS_CRE_CD  
+		      , A.EXAM_SN  
+		      , A.EXAM_TITLE  
+		      , A.EXAM_CTS  
+		      , A.SEMI_EXAM_YN  
+		      , A.EXAM_TYPE_CD  
+		      , A.EXAM_STARE_TYPE_CD  
+		      , A.EXAM_START_DTTM  
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_START_DTTM,'%H')) AS EXAM_START_HOUR  
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_START_DTTM,'%i')) AS EXAM_START_MIN  
+		      , A.EXAM_END_DTTM  
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_END_DTTM,'%H')) AS EXAM_END_HOUR  
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_END_DTTM,'%i')) AS EXAM_END_MIN  
+		      , A.RSLT_CFRM_DTTM  
+		      , (SELECT FN_GET_DATE_FORMAT(A.RSLT_CFRM_DTTM,'%H')) AS RSLT_CFRM_HOUR  
+		      , (SELECT FN_GET_DATE_FORMAT(A.RSLT_CFRM_DTTM,'%i')) AS RSLT_CFRM_MIN  
+		      , A.EXAM_STARE_TM  
+		      , A.EXAM_VIEW_TYPE_CD  
+		      , A.STARE_TM_USE_YN  
+		      , IFNULL(FN_GET_NULL(A.STARE_CRIT_PRGR_RATIO),0) AS STARE_CRIT_PRGR_RATIO 
+		      , A.STARE_LEC_COUNT
+		      , A.STARE_LIMIT_CNT  
+		      , A.REG_YN  
+		      , A.REG_NO  
+		      , A.REG_DTTM  
+		      , A.MOD_NO  
+		      , A.EXAM_SET_CNT
+			  , (SELECT FN_GET_USER_NAME(A.MOD_NO)) AS MOD_NM  
+			  , (SELECT FN_GET_USER_NAME(A.REG_NO)) AS REG_NM  
+		      , A.MOD_DTTM  
+		      , IFNULL(( SELECT COUNT(STARE_CNT)  
+		          		FROM tb_lec_exam_stare  
+		          	   WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+		               	 AND EXAM_SN = A.EXAM_SN ),0) AS STARE_CNT  
+		      , IFNULL(( SELECT COUNT(STARE_CNT)    
+				        FROM tb_lec_exam_stare  
+		               WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+		                 AND RATE_YN = 'Y'  
+		                 AND EXAM_SN = A.EXAM_SN ),0) AS RATE_CNT  
+		   FROM tb_lec_exam A 
+		  WHERE A.CRS_CRE_CD = #{crsCreCd}  
+		    AND A.EXAM_SN = #{examSn}
+	    <if test = 'semiExamYn != null and semiExamYn != "" and semiExamYn == "Y"'>
+		    AND A.SEMI_EXAM_YN ='Y'
+		</if>
+		<if test = 'semiExamYn != null and semiExamYn != "" and semiExamYn == "N"'>
+		    AND A.SEMI_EXAM_YN ='N'
+		</if>
+		    
+	</select>
+	
+	<select id="selectExamEvalType" parameterType="String" resultType="egovMap">
+		SELECT A.EXAM_SN, row_number() OVER(ORDER BY EXAM_SN) AS EVAL_TYPE_NUM
+		FROM tb_lec_exam A
+		WHERE A.CRS_CRE_CD = #{crsCreCd}		
+	</select>
+	
+	<select id="listByStdNo" parameterType="examVO" resultType="examVO">
+		SELECT A.*, B.*
+	   FROM tb_lec_exam B 
+	   	LEFT OUTER JOIN tb_lec_exam_stare A
+	   	ON A.EXAM_SN = B.EXAM_SN
+	   		AND A.STD_NO = #{stdNo}
+	  WHERE B.CRS_CRE_CD  = #{crsCreCd}
+	    AND B.REG_YN = 'Y'
+	    AND B.SEMI_EXAM_YN = #{semiExamYn}
+	  ORDER BY B.EXAM_START_DTTM DESC
+	</select>
+</mapper>

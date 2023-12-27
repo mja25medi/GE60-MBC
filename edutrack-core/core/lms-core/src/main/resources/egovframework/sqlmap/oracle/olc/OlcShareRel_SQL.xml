@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.olc.sharerel.service.impl.OlcShareRelMapper">
+
+	<sql id="selectColumnQuery">
+				 A.CTGR_CD 
+		       , B.CTGR_NM 
+		       , A.CARTRG_CD 
+		       , C.CARTRG_NM 
+		       , A.ORG_CD 
+		       , C.USER_NO 
+			   , (SELECT FN_GET_USER_NAME(C.USER_NO) FROM DUAL) USER_NM 
+			   , (SELECT COUNT(*) 
+			        FROM TB_OLC_LESN_CNTS 
+			       WHERE ORG_CD = C.ORG_CD 
+			         AND USER_NO = C.USER_NO 
+			         AND CARTRG_CD = C.CARTRG_CD) AS CNTS_CNT 
+		       , A.REG_NO 
+			   , (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) REG_NM 
+		       , A.REG_DTTM 
+		       , A.MOD_NO 
+			   , (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) MOD_NM 
+		       , A.MOD_DTTM 
+	</sql>
+		
+	<sql id="selectQuery">
+		  SELECT 
+		  <include refid="selectColumnQuery" />
+		    FROM TB_OLC_SHARE_CTGR_RELATION A, TB_OLC_SHARE_CTGR B 
+		       , TB_OLC_LESN_CARTRG C 
+		   WHERE A.ORG_CD = #{orgCd}
+		     AND A.ORG_CD = B.ORG_CD 
+		     AND A.CTGR_CD = B.CTGR_CD 
+		     AND A.ORG_CD = C.ORG_CD 
+		     AND A.CARTRG_CD = C.CARTRG_CD
+	</sql>
+	
+	<select id="count" parameterType="olcShareRelVO" resultType="Integer">
+		SELECT 
+	 		COUNT(*)	
+		FROM TB_OLC_SHARE_CTGR_RELATION A, TB_OLC_SHARE_CTGR B 
+	       , TB_OLC_LESN_CARTRG C 
+		WHERE A.ORG_CD = #{orgCd}
+	    	AND A.ORG_CD = B.ORG_CD 
+	    	AND A.CTGR_CD = B.CTGR_CD 
+	    	AND A.ORG_CD = C.ORG_CD 
+	    	AND A.CARTRG_CD = C.CARTRG_CD
+			AND A.CARTRG_CD = #{cartrgCd} 
+		<if test = "searchValue != null and searchValue != ''">
+			 AND A.CARTRG_CD like '%'||#{searchValue}||'%' 
+		</if>
+		<if test = "ctgrDivCd != null and ctgrDivCd != ''">
+			  AND B.CTGR_DIV_CD = #{ctgrDivCd}
+		</if> 
+	</select>
+	
+	<select id="listByCartrg" parameterType="olcShareRelVO" resultType="olcShareRelVO">
+		<!-- OLC 공유 분류 관계 정보를 목록으로 가져온다.
+			 * 카트리지 기준
+			 * @param OlcShareCtgrVO.orgCd
+			 * @param OlcShareCtgrVO.userNo
+			 * @param OlcShareCtgrVO.parCtgrCd (최상위 분류를 조회시는 입력이 없어야 한다.)  -->
+		<include refid="selectQuery" />
+		AND A.CARTRG_CD = #{cartrgCd} 
+		<if test = "searchValue != null and searchValue != ''">
+			 AND A.CARTRG_CD like '%'||#{searchValue}||'%' 
+		</if>
+		<if test = "ctgrDivCd != null and ctgrDivCd != ''">
+			  AND B.CTGR_DIV_CD = #{ctgrDivCd}
+		</if>
+		
+	    ORDER BY A.CARTRG_CD
+	</select>
+	
+	<select id="listPageingByCartrg"  parameterType="olcShareRelVO" resultType="olcShareRelVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+			<include refid="selectQuery"/>
+			
+			 AND A.CARTRG_CD = #{cartrgCd} 
+			 <if test = "searchValue != null and searchValue != ''">
+				     AND A.CARTRG_CD like '%'||#{searchValue}||'%'
+			 </if> 
+		   ORDER BY A.CARTRG_CD 
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="listByCtgr" parameterType="olcShareRelVO" resultType="olcShareRelVO">
+		<!-- OLC 공유 분류 관계 정보를 목록으로 가져온다.
+	 * 분류 기준
+	 * @param OlcShareCtgrVO.orgCd
+	 * @param OlcShareCtgrVO.userNo
+	 * @param OlcShareCtgrVO.parCtgrCd (최상위 분류를 조회시는 입력이 없어야 한다.)  -->
+		<include refid="selectQuery" />
+		AND A.CTGR_CD = #{ctgrCd} 
+		<if test = "searchValue != null and searchValue != ''">
+			     AND A.CARTRG_CD like '%'||#{searchValue}||'%' 
+		</if>
+		<if test = "useYn != null and useYn != ''">
+			     AND C.USE_YN = #{useYn} 
+		</if>
+		   ORDER BY A.CTGR_CD
+	</select>
+
+	<select id="listPageingByCtgrCount" parameterType="olcShareRelVO" resultType="Integer">
+		SELECT 
+	 		COUNT(*)	
+		FROM TB_OLC_SHARE_CTGR_RELATION A, TB_OLC_SHARE_CTGR B 
+	       , TB_OLC_LESN_CARTRG C 
+		WHERE A.ORG_CD = #{orgCd}
+	    	AND A.ORG_CD = B.ORG_CD 
+	    	AND A.CTGR_CD = B.CTGR_CD 
+	    	AND A.ORG_CD = C.ORG_CD 
+	    	AND A.CARTRG_CD = C.CARTRG_CD
+			AND A.CTGR_CD = #{ctgrCd} 
+			<if test = "searchValue != null and searchValue != ''">
+				     AND A.CARTRG_CD like '%'||#{searchValue}||'%' 
+			</if>
+	
+			<!-- 공유이거나 승인완료인 것만 공유에 보여준다.  -->
+			<if test = "ctgrDivCd != null and ctgrDivCd != ''">
+				<choose>
+					<when test = "ctgrDivCd == 'C'"><!--  콘텐츠 공유 -->
+						 AND C.OPEN_YN = 'Y'
+					</when>
+					<when test = "ctgrDivCd == 'K'"><!-- 지식 공유  -->
+						 AND C.KNOW_OPEN_YN = 'Y'
+					</when>
+				</choose>
+			</if> 
+	</select>
+		
+	<select id="listPageingByCtgr" parameterType="olcShareRelVO" resultType="olcShareRelVO">
+		<!-- OLC 공유 분류 관계 정보를 페이징 목록으로 가져온다.
+	 * 분류 기준
+	 * @param OlcShareCtgrVO.orgCd
+	 * @param OlcShareCtgrVO.userNo
+	 * @param OlcShareCtgrVO.parCtgrCd (최상위 분류를 조회시는 입력이 없어야 한다.)  -->
+		<include refid="selectQuery" />
+		AND A.CTGR_CD = #{ctgrCd} 
+		<if test = "searchValue != null and searchValue != ''">
+			     AND A.CARTRG_CD like '%'||#{searchValue}||'%' 
+		</if>
+
+		<!-- 공유이거나 승인완료인 것만 공유에 보여준다.  -->
+		<if test = "ctgrDivCd != null and ctgrDivCd != ''">
+			<choose>
+				<when test = "ctgrDivCd == 'C'"><!--  콘텐츠 공유 -->
+					 AND C.OPEN_YN = 'Y'
+				</when>
+				<when test = "ctgrDivCd == 'K'"><!-- 지식 공유  -->
+					 AND C.KNOW_OPEN_YN = 'Y'
+				</when>
+			</choose>
+		</if> 
+		   ORDER BY A.CTGR_CD
+	</select>
+	
+	<select id="select" parameterType="olcShareRelVO" resultType="olcShareRelVO">
+		<!-- 공유 분류 관계 정보를 조회한다.  -->
+		<include refid="selectQuery" />
+		AND A.CTGR_CD = #{ctgrCd} 
+		AND A.CARTRG_CD = #{cartrgCd} 
+	</select>
+	
+	<insert id="insert" parameterType="OlcShareRelVO">
+		<!-- 공유 분류 관계 정보를 등록하고 결과를 반환한다.  -->
+		INSERT INTO TB_OLC_SHARE_CTGR_RELATION ( 
+		         CTGR_CD 
+		       , CARTRG_CD 
+		       , ORG_CD 
+		       , REG_NO 
+		       , REG_DTTM 
+		       , MOD_NO 
+		       , MOD_DTTM 
+		 ) VALUES ( 
+		         #{ctgrCd} 
+		       , #{cartrgCd} 
+		       , #{orgCd} 
+		       , #{regNo} 
+		       , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 
+		       , #{modNo}
+		       , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 
+		 )
+	</insert>
+	
+	<delete id="delete" parameterType="olcShareRelVO">
+		<!-- 공유 분류 관계 정보를 삭제하고 결과를 반환한다.  -->
+		DELETE FROM TB_OLC_SHARE_CTGR_RELATION 
+		   WHERE ORG_CD = #{orgCd} 
+		     AND CTGR_CD = #{ctgrCd} 
+		     AND CARTRG_CD = #{cartrgCd}
+	</delete>
+	
+	<delete id="deleteCtgr" parameterType="olcShareRelVO">
+		<!-- 공유 분류 관계 정보를 삭제하고 결과를 반환한다.
+	 * 분류 삭제시 연결된 카트리지 정보  -->
+		DELETE FROM TB_OLC_SHARE_CTGR_RELATION 
+		   WHERE ORG_CD = #{orgCd}
+		     AND CTGR_CD = #{ctgrCd}
+	</delete>
+	
+	<delete id="deleteCartrg" parameterType="olcShareRelVO">
+		<!-- 공유 분류 관계 정보를 삭제하고 결과를 반환한다.
+	 * 분류 삭제시 연결된 카트리지 정보  -->
+		DELETE FROM TB_OLC_SHARE_CTGR_RELATION 
+		   WHERE ORG_CD = #{orgCd}
+		     AND CARTRG_CD = #{cartrgCd}
+	</delete>
+	
+	<delete id="deleteCartrgCheck" parameterType="olcShareRelVO">
+		<!-- 공유 분류 관계 정보를 삭제하고 결과를 반환한다.
+	 * OLC수정시 공유 체크할 경우  -->
+		DELETE FROM TB_OLC_SHARE_CTGR_RELATION 
+		  WHERE CARTRG_CD = #{cartrgCd} 
+		  AND CTGR_CD IN ( 
+		   SELECT A.CTGR_CD FROM TB_OLC_SHARE_CTGR_RELATION A, TB_OLC_SHARE_CTGR B, TB_OLC_LESN_CARTRG C 
+		     WHERE A.ORG_CD = #{orgCd}  
+		       AND A.ORG_CD = B.ORG_CD  
+		       AND A.CTGR_CD = B.CTGR_CD  
+		       AND A.ORG_CD = C.ORG_CD  
+		       AND A.CARTRG_CD = C.CARTRG_CD  
+		       AND A.CARTRG_CD = #{cartrgCd}  
+		       AND B.CTGR_DIV_CD = #{ctgrDivCd} )
+	</delete>
+	
+	<sql id="selectKnowQuery">
+		SELECT A.CTGR_CD 
+		       , B.CTGR_NM 
+		       , A.CARTRG_CD 
+		       , C.CARTRG_NM 
+		       , A.ORG_CD 
+		       , C.USER_NO 
+			     , (SELECT FN_GET_USER_NAME(C.USER_NO) FROM DUAL) USER_NM 
+			     , (SELECT COUNT(*) 
+			        FROM TB_OLC_LESN_CNTS 
+			       WHERE ORG_CD = C.ORG_CD 
+			         AND USER_NO = C.USER_NO 
+			         AND CARTRG_CD = C.CARTRG_CD) AS CNTS_CNT 
+		        , A.REG_NO 
+			     , (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) REG_NM 
+		       , A.REG_DTTM 
+		       , A.MOD_NO 
+			     , (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) MOD_NM 
+		        , A.MOD_DTTM 
+		        , ( SELECT F.FILE_SN FROM TB_SYS_FILE F WHERE F.REPO_CD = 'OLC_LESN_CARTRG' AND F.FILE_TYPE = 'thumb' AND F.FILE_BIND_DATA_SN = A.CARTRG_CD) AS FILE_SN 
+		        , NVL(C.HITS,0) AS HITS 
+		    FROM TB_OLC_SHARE_CTGR_RELATION A, TB_OLC_SHARE_CTGR B 
+		       , TB_OLC_LESN_CARTRG C 
+		   WHERE A.ORG_CD = #{orgCd}
+		     AND A.ORG_CD = B.ORG_CD 
+		     AND A.CTGR_CD = B.CTGR_CD 
+		     AND A.ORG_CD = C.ORG_CD 
+		     AND A.CARTRG_CD = C.CARTRG_CD
+	</sql>
+	
+	<select id="listByCtgrKnow" parameterType="olcShareRelVO" resultType="olcShareRelVO">
+		<include refid="selectKnowQuery"/>
+		<if test = "searchValue != null and searchValue != ''">
+			 AND A.CARTRG_CD like '%'||#{searchValue}||'%' 
+		</if>
+		<if test = "ctgrCd != null and ctgrCd != ''">
+			  AND AND A.CTGR_CD = #{ctgrCd}
+		</if>
+		     AND C.KNOW_OPEN_YN = 'Y' 
+		     AND B.CTGR_DIV_CD = 'K'  
+		   ORDER BY A.CTGR_CD 
+	</select>
+	
+	<select id="listPageingByCtgrKnow"  parameterType="olcShareRelVO" resultType="olcShareRelVO">
+		<!--   -->
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+			<include refid="selectKnowQuery" />
+	
+			<if test = "searchValue != null and searchValue != ''">
+				<choose>
+					<when test = "searchKey == 'title'">
+						 AND C.CARTRG_NM LIKE '%'||NVL(#{searchValue}, '')||'%'
+					</when>
+					<when test = "searchKey == 'regNm'">
+						AND FN_GET_USER_NAME(A.REG_NO) LIKE '%'||NVL(#{searchValue}, '')||'%'
+					</when>
+					<when test = "searchKey == 'regDttm'">
+						 AND FN_GET_DATE_FORMAT(A.REG_DTTM , 'YYYY.MM.DD') LIKE '%'||NVL(#{searchValue}, '')||'%'
+					</when>
+					<when test = "searchKey == 'tagNm'">
+						AND C.CARTRG_TAG LIKE '%'||NVL(#{searchValue}, '')||'%'
+					</when>
+					<when test = "searchKey == 'all'">
+						 AND ( C.CARTRG_NM LIKE '%'||NVL(#{searchValue}, '')||'%'	
+						      OR FN_GET_USER_NAME(A.REG_NO) LIKE '%'||NVL(#{searchValue}, '')||'%'	
+						      OR FN_GET_DATE_FORMAT(A.REG_DTTM , 'YYYY.MM.DD') LIKE '%'||NVL(#{searchValue}, '')||'%' )
+					</when>
+					<otherwise>
+						AND C.CARTRG_NM LIKE '%'||NVL(#{searchValue}, '')||'%'
+					</otherwise>
+				</choose>
+			</if>
+			
+			<if test = "ctgrCd != null and ctgrCd != ''">
+				 AND A.CTGR_CD = #{ctgrCd}
+			</if>
+			     AND C.KNOW_OPEN_YN = 'Y' 
+			     AND B.CTGR_DIV_CD = 'K'  
+			 
+			<if test = "sortKey != null and sortKey != ''">
+				<choose>
+					<when test = "sortKey == 'CARTRG_NM_ASC'">
+						 ORDER BY C.CARTRG_NM ASC 
+					</when>
+					<when test = "sortKey == 'CARTRG_NM_DESC'">
+						 ORDER BY C.CARTRG_NM_DESC DESC 
+					</when>
+					<when test = "sortKey == 'REGDATE_ASC'">
+						 ORDER BY A.REG_DTTM ASC
+					</when>
+					<when test = "sortKey == 'REGDATE_DESC'">
+						  ORDER BY A.REG_DTTM DESC  
+					</when>
+					<when test = "sortKey == 'HITS_ASC'">
+						 ORDER BY NVL(C.HITS,0) ASC  
+					</when>
+					<when test = "sortKey == 'HITS_DESC'">
+						  ORDER BY NVL(C.HITS,0) DESC  
+					</when>
+					<otherwise>
+						ORDER BY A.REG_DTTM DESC, A.CTGR_CD
+					</otherwise>
+				</choose>
+			</if>
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+			
+	</select>
+	
+</mapper>

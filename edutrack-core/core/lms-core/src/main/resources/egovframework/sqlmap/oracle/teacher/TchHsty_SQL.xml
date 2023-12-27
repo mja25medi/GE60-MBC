@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.teacher.hsty.service.impl.TchHstyMapper">
+	<select id="selectKey" resultType="Integer">
+		SELECT SQ_TB_TCH_ACTN_HSTY_SN.nextVal FROM DUAL
+	</select>
+	
+	<select id="listHsty" parameterType="tchHstyVO" resultType="tchHstyVO">
+		 SELECT                                                 
+		    	HSTY.ACTN_HSTY_SN, HSTY.USER_NO,                 
+		    	TO_CHAR(TO_DATE(SUBSTR(HSTY.ACTN_DT,0,6),'YYYYMM'),'yyyy.mm')||'-'||TO_CHAR(TO_DATE(SUBSTR(HSTY.ACTN_DT,8,6),'YYYYMM'),'yyyy.mm') AS ACTN_DT,     
+		    	TO_CHAR(TO_DATE(SUBSTR(HSTY.ACTN_DT,0,6),'YYYYMM'),'yyyy.mm') AS ACTN_FROM_DT,  	  
+		    	TO_CHAR(TO_DATE(SUBSTR(HSTY.ACTN_DT,8,6),'YYYYMM'),'yyyy.mm') AS ACTN_TO_DT,  	      
+		    	HSTY.ACTN_HSTY_CTS                               
+		 FROM TB_TCH_ACTN_HSTY HSTY                             
+		 WHERE HSTY.USER_NO = #{userNo}                           
+		 ORDER BY HSTY.ACTN_HSTY_SN                            
+	</select>
+
+	
+	<select id="selectHsty" parameterType="tchHstyVO" resultType="tchHstyVO">
+		 SELECT                                                 
+		    	HSTY.ACTN_HSTY_SN, HSTY.USER_NO,   
+		    	TO_CHAR(TO_DATE(SUBSTR(HSTY.ACTN_DT,0,6),'YYYYMM'),'yyyy.mm')||'-'||TO_CHAR(TO_DATE(SUBSTR(HSTY.ACTN_DT,8,6),'YYYYMM'),'yyyy.mm') AS ACTN_DT,     
+		    	TO_CHAR(TO_DATE(SUBSTR(HSTY.ACTN_DT,0,6),'YYYYMM'),'yyyy.mm') AS ACTN_FROM_DT,  	  
+		    	TO_CHAR(TO_DATE(SUBSTR(HSTY.ACTN_DT,8,6),'YYYYMM'),'yyyy.mm') AS ACTN_TO_DT,  	      
+		    	HSTY.ACTN_HSTY_CTS                               
+		 FROM TB_TCH_ACTN_HSTY HSTY                             
+		 WHERE HSTY.USER_NO      = #{userNo}                      
+		   AND HSTY.ACTN_HSTY_SN = #{hstySn}                     
+	</select>
+	
+	<insert id="insertHsty" parameterType="tchHstyVO">
+		 INSERT INTO TB_TCH_ACTN_HSTY (                        
+		      ACTN_HSTY_SN, USER_NO,                           
+		      ACTN_HSTY_CTS, ACTN_DT,           		        
+		      REG_NO,REG_DTTM, MOD_NO, MOD_DTTM)         		
+		 VALUES (                                        		
+		      #{actnHstySn},                                      
+		      #{userNo},#{actnHstyCts},replace(#{actnFromDt}||'-'||#{actnToDt},'.',''), 
+		      #{regNo},TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'),     	
+		      #{modNo},TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'))     	
+	</insert>
+	
+	<update id="updateHsty" parameterType="tchHstyVO">
+		 UPDATE TB_TCH_ACTN_HSTY                       				
+		 SET    ACTN_HSTY_CTS 	  = #{actnHstyCts},   					
+		        ACTN_DT          = replace(#{actnFromDt}||'-'||#{actnToDt},'.',''),   	    
+		        MOD_NO           = #{modNo},                  			
+		        MOD_DTTM         = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 
+		 WHERE  USER_NO          = #{userNo}                  			
+		   AND  ACTN_HSTY_SN     = #{actnHstySn}                  		
+	</update>
+	
+	
+	<delete id="deleteHsty" parameterType="tchHstyVO">
+		   DELETE FROM TB_TCH_ACTN_HSTY   			    
+		 	WHERE  USER_NO    = #{userNo}             
+		   AND  ACTN_HSTY_SN  = #{hstySn}             
+	</delete>
+	
+</mapper>

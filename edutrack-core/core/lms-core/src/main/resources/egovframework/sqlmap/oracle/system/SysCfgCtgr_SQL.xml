@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.system.config.service.impl.SysCfgCtgrMapper">	
+
+	
+	<sql id="selectQuery">
+		SELECT CFG_CTGR_CD as cfgCtgrCd
+		     , CTGR_NM as ctgrNm
+		     , CTGR_DESC as ctgrDesc
+		     , USE_YN as useYn
+		     , REG_NO as regNo
+		     , (SELECT FN_GET_USER_NAME(REG_NO) FROM DUAL) as regNm
+		     , REG_DTTM as regDttm
+		     , MOD_NO as modNo
+		     , (SELECT FN_GET_USER_NAME(MOD_NO) FROM DUAL) as modNm
+		     , MOD_DTTM as modDttm
+		  FROM TB_SYS_CFG_CTGR
+		 WHERE '1' = '1'
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		<if test = "useYn != null and useYn != ''">
+		   AND USE_YN = #{useYn}
+		</if>
+		 
+	</sql>		
+
+	<select id="list" parameterType="sysCfgCtgrVO" resultType="sysCfgCtgrVO">
+		/*
+			 SQL ID : list
+			 설  명 : 설정 분류의 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	 	AND  CFG_CTGR_CD = #{cfgCtgrCd}
+	 	ORDER BY CTGR_NM
+	</select>
+	
+	<select id="listPageing" parameterType="sysCfgCtgrVO" resultType="sysCfgCtgrVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 설정 분류의 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>	 	
+	</select>
+	
+	<select id="count" parameterType="sysCfgCtgrVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 설정 분류의 전체 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>	
+	
+	<select id="select" parameterType="sysCfgCtgrVO" resultType="sysCfgCtgrVO">
+		/*
+			 SQL ID : select
+			 설  명 : 설정 분류의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+           AND CFG_CTGR_CD = #{cfgCtgrCd}	 	
+	</select>	
+	
+	<insert id="insert" parameterType="sysCfgCtgrVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 설정 분류의 정보 등록
+	 	*/
+		INSERT INTO TB_SYS_CFG_CTGR (
+		       CFG_CTGR_CD
+		     , CTGR_NM
+		     , CTGR_DESC
+		     , USE_YN
+		     , REG_NO
+		     , REG_DTTM
+		     , MOD_NO
+		     , MOD_DTTM
+		) VALUES (
+		       #{cfgCtgrCd}
+		     , #{ctgrNm}
+		     , #{ctgrDesc}
+		     , #{useYn}
+			 , #{regNo}
+			 , TO_CHAR(SYSDATE,'yyyymmddhh24miss')
+			 , #{modNo}
+			 , TO_CHAR(SYSDATE,'yyyymmddhh24miss')
+		)
+	</insert>
+	
+	<update id="update" parameterType="sysCfgCtgrVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 설정 분류의 정보 수정
+	 	*/
+		UPDATE TB_SYS_CFG_CTGR
+		   SET CTGR_NM 	= #{ctgrNm}
+		     , CTGR_DESC = #{ctgrDesc}
+		     , USE_YN = #{useYn}
+		     , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		     , MOD_NO = #{modNo}
+		 WHERE CFG_CTGR_CD = #{cfgCtgrCd}
+	</update>	
+
+	<delete id="delete" parameterType="sysCfgCtgrVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 설정 분류의 정보 삭제
+	 	*/
+		DELETE FROM TB_SYS_CFG_CTGR
+		 WHERE CFG_CTGR_CD = #{cfgCtgrCd}
+	</delete>
+	 
+</mapper>

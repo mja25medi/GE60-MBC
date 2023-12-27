@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.org.config.service.impl.OrgUserInfoCfgMapper">	
+
+	
+	<sql id="selectQuery">
+		SELECT A.FIELD_NM as fieldNm
+             , A.ORG_CD as orgCd
+		     , A.USE_YN as useYn
+		     , A.REQUIRED_YN as requiredYn
+		     , A.VIEW_YN as viewYn
+		     , A.DFLT_YN as dfltYn
+		     , A.VIEW_ODR as viewOdr
+		     , A.REG_NO as regNo
+		     , A.REG_DTTM as regDttm
+		     , A.MOD_NO as modNo
+		     , A.MOD_DTTM as modDttm
+          FROM TB_ORG_USER_INFO_CFG A
+         WHERE A.ORG_CD = #{orgCd}
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		<if test = "useYn != null and useYn != ''">
+			AND USE_YN = #{useYn}
+		</if>
+		 ORDER BY A.VIEW_ODR
+	</sql>
+	
+	<select id="list" parameterType="orgUserInfoCfgVO" resultType="orgUserInfoCfgVO">
+		/*
+			 SQL ID : list
+			 설  명 : 설정 정보 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	</select>	
+		
+	<select id="select" parameterType="orgUserInfoCfgVO" resultType="orgUserInfoCfgVO">
+		/*
+			 SQL ID : select
+			 설  명 : 설정 정보 조회
+	 	*/
+		<include refid="selectQuery"/>
+           AND A.FIELD_NM = #{fieldNm}
+	</select>
+	
+	<insert id="insert" parameterType="orgUserInfoCfgVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 설정 정보 등록
+	 	*/
+		INSERT INTO TB_ORG_USER_INFO_CFG (
+		       FIELD_NM
+		     , ORG_CD
+		     , USE_YN
+		     , REQUIRED_YN
+		     , VIEW_YN
+		     , DFLT_YN
+		     , VIEW_ODR
+		     , REG_NO
+		     , REG_DTTM
+		     , MOD_NO
+		     , MOD_DTTM
+		) VALUES (
+		       #{fieldNm}
+		     , #{orgCd}
+		     , #{useYn}
+		     , #{requiredYn}
+		     , #{viewYn}
+		     , #{dfltYn}
+		     , #{viewOdr}
+		     , #{regNo}
+		     , TO_CHAR(SYSDATE,'yyyymmddhh24miss')
+		     , #{modNo}
+		     , TO_CHAR(SYSDATE,'yyyymmddhh24miss')
+		)
+	</insert>
+	
+	<update id="update" parameterType="orgUserInfoCfgVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 설정 정보 수정
+	 	*/
+		UPDATE TB_ORG_USER_INFO_CFG
+		   SET REQUIRED_YN = #{requiredYn}
+		     , VIEW_YN = #{viewYn}
+		     , DFLT_YN = #{dfltYn}
+		     , VIEW_ODR = #{viewOdr}
+		     , USE_YN = #{useYn}
+		     , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		     , MOD_NO = #{modNo}
+		 WHERE ORG_CD = #{orgCd}
+		   AND FIELD_NM = #{fieldNm}
+	</update>
+
+	<delete id="delete" parameterType="orgUserInfoCfgVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 설정 정보 삭제
+	 	*/
+	 	DELETE FROM TB_ORG_USER_INFO_CFG
+		 WHERE ORG_CD = #{orgCd}
+		   AND FIELD_NM = #{fieldNm}
+	</delete>
+	
+	<delete id="deleteAll" parameterType="orgUserInfoCfgVO" >
+		/*
+			 SQL ID : deleteAll
+			 설  명 : 설정 정보 전체 삭제
+	 	*/
+	 	DELETE FROM TB_ORG_USER_INFO_CFG
+		 WHERE ORG_CD = #{orgCd}
+	</delete>	
+
+</mapper>

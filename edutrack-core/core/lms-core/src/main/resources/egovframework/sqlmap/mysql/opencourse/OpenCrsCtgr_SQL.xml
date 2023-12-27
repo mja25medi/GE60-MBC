@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.opencourse.ctgr.service.impl.OpenCrsCtgrMapper">	
+	<select id="selectKey" resultType="String">
+		SELECT CONCAT('OCT',LPAD(nextval('SQ_CRO_OPEN_CRS_CTGR'),7,'0')) AS crsCd
+	</select>
+
+	<sql id="selectQuery">
+		SELECT ORG_CD  
+              , CTGR_CD  
+              , CTGR_NM  
+		      , CTGR_ODR  
+		      , CTGR_DESC  
+		      , USE_YN  
+		      , REG_NO  
+		      , (SELECT FN_GET_USER_NAME(REG_NO)) AS REG_NM  
+		      , REG_DTTM  
+		      , MOD_NO  
+		      , (SELECT FN_GET_USER_NAME(MOD_NO)) AS MOD_NM  
+		      , MOD_DTTM  
+		      , ( SELECT COUNT(*)  
+		            FROM tb_cro_open_crs  
+		           WHERE CTGR_CD = A.CTGR_CD ) AS SUB_CNT  
+		   FROM tb_cro_open_crs_ctgr A  
+		  WHERE ORG_CD = #{orgCd}  
+	</sql>
+	
+	
+	<select id="list" parameterType="openCrsCtgrVO" resultType="OpenCrsCtgrVO">
+		<!-- 공개강좌 분류 목록  -->
+		<include refid="selectQuery" />
+		ORDER BY CTGR_ODR 
+	</select>
+	
+	<select id="select" parameterType="openCrsCtgrVO" resultType="OpenCrsCtgrVO">
+		<!-- 공개강좌 분류 정보  -->
+		<include refid="selectQuery" />
+		AND CTGR_CD = #{ctgrCd}  
+	</select>
+	
+	<insert id="insert" parameterType="openCrsCtgrVO">
+	 	<!-- 공개강좌 분류 정보 등록  -->
+	
+		INSERT INTO tb_cro_open_crs_ctgr (  
+		        ORG_CD  
+		      , CTGR_CD  
+		      , CTGR_NM  
+		      , CTGR_ODR  
+		      , CTGR_DESC  
+		      , USE_YN  
+		      , REG_NO  
+		      , REG_DTTM  
+		      , MOD_NO  
+		      , MOD_DTTM  
+		 ) VALUES (  
+		        #{orgCd}  
+		      , #{ctgrCd}  
+		      , #{ctgrNm}  
+		      , ( SELECT NVL((MAX(CTGR_ODR)),0)+1
+		            FROM tb_cro_open_crs_ctgr AS SUBQUERY 
+		           WHERE ORG_CD = #{orgCd} )  
+		      , #{ctgrDesc}  
+		      , #{useYn}  
+		      , #{regNo}  
+		      , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		      , #{modNo}  
+		      , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		 )  
+	</insert>
+	<update id="update" parameterType="openCrsCtgrVO"> 
+		UPDATE tb_cro_open_crs_ctgr  
+		    SET CTGR_NM = #{ctgrNm}  
+		      , CTGR_ODR = #{ctgrOdr}  
+		      , CTGR_DESC = #{ctgrDesc}  
+		      , USE_YN = #{useYn}  
+		      , MOD_NO = #{modNo}  
+		      , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		  WHERE ORG_CD = #{orgCd}  
+		    AND CTGR_CD = #{ctgrCd}  
+	</update>
+	
+	<update id="updateBatch" parameterType="list">
+		<!-- 공개강좌 분류 정보 일괄 수정  -->
+		<!-- param  List<OpenCrsCtgrDTO> itemArray  -->
+		<foreach collection="list" item="item" index="index" open="DECLARE BEGIN" close="; END;" separator=";">
+		UPDATE tb_cro_open_crs_ctgr  
+		SET
+		     CTGR_NM = #{item.ctgrNm}  
+		      , CTGR_ODR = #{item.ctgrOdr}  
+		      , CTGR_DESC = #{item.ctgrDesc}  
+		      , USE_YN = #{item.useYn}  
+		      , MOD_NO = #{item.modNo}  
+		      , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		  WHERE ORG_CD = #{item.orgCd}  
+		    AND CTGR_CD = #{item.ctgrCd}
+		</foreach>
+		
+	</update>
+	
+	<delete id="delete" parameterType="openCrsCtgrVO">
+		DELETE FROM tb_cro_open_crs_ctgr  
+		  WHERE ORG_CD = #{orgCd}  
+		    AND CTGR_CD = #{ctgrCd}  
+	</delete>
+
+</mapper>

@@ -1,0 +1,222 @@
+@charset "UTF-8";
+@IMPORT url("button.css");
+@IMPORT url("nyroModal.css");
+@IMPORT url("comment.css");
+
+* {font-family: "나눔고딕", "Malgun Gothic", Dotum, verdana, arial, hevetica, sans-serif;}
+
+/******************************************************************/
+/* 관리자 테이블 레이아웃                                         */
+/*                                                                */
+/* : 리스트 테이블                                                */
+/* 2010.06.17 서도영                                              */
+/* 2010.06.23 김성국 : font-family 제거(body 상속) 및 td 기본 정렬을 center로 변경 */
+/******************************************************************/
+
+/* body 태그 안에 전체를 감싸는 wrapper div */
+#dvwrap_admin	{position:relative; width:100%; min-height:720px; margin:0 auto;}
+	
+div.centered {
+    margin: 0 auto;
+    display: table;
+}
+
+table.table_list {
+    border-collapse: collapse;
+    font-size: 9pt;
+}
+
+table.table_list th {
+    color: #6F6F6F;
+    height: 35px;
+    background-color: #f3f3f3;
+    font-weight: bold;
+    text-decoration: none;
+    text-align: center;
+    border-top-color: #2A5CA5;
+    border-top-style: solid;
+    border-top-width: 2px;
+    border-bottom-color: #DADADA;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+}
+
+table.table_list td.right {
+/* 오른쪽 정렬 */
+    text-align: right;
+    margin-right: 0.2em
+}
+
+table.table_list td {
+    color: #6F6F6F;
+    height: 32px;
+    text-decoration: none;
+    text-align: center;
+    border-bottom-color: #DADADA;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    word-break:break-all;
+}
+
+table.table_list td.left, th.left {
+/* 왼쪽 정렬 */
+    text-align: left;
+    margin-left: 0.2em
+}
+
+table.table_list td.right, th.right {
+/* 오른쪽 정렬 */
+    text-align: right;
+    margin-right: 0.2em
+}
+
+table.table_dtl {
+    border-collapse: collapse;
+    font-size: 9pt;
+    margin: 0 auto;
+    padding: 10px;
+    display: table;
+    border-bottom: #dadada 1px solid;
+}
+
+table.table_dtl th {
+    color: #6F6F6F;
+    height: 33px;
+    background-color: #f3f3f3;
+    font-weight: bold;
+    text-decoration: none;
+    border-bottom-color: #DADADA;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+}
+
+table.table_dtl td {
+    color: #6F6F6F;
+    background-color: #FFFFFF;
+    text-decoration: none;
+    border-bottom-color: #DADADA;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    padding-left: 5px;
+    word-break:break-all;
+}
+
+table.table_dtl th.noborder {
+	border : 0px;	
+}
+
+table.table_dtl td.noborder {
+	border : 0px;	
+}
+
+table.table_dtl th.top {
+    height: 35px;
+    background-color: #f3f3f3;
+    border-top-color: #2A5CA5;
+    border-top-style: solid;
+    border-top-width: 2px;
+}
+
+.table_dtl td.top {
+    height: 35px;
+    border-top-color: #2A5CA5;
+    border-top-style: solid;
+    border-top-width: 2px;
+}
+
+.table_dtl td.left, th.left {
+/* 왼쪽 정렬 */
+    text-align: left;
+    margin-left: 0.2em
+}
+
+table.table_dtl td.right, th.right {
+/* 오른쪽 정렬 */
+    text-align: right;
+    margin-right: 0.2em
+}
+
+table.table_none {
+	border:0px;
+}
+
+table.table_none td{
+    border:0px;
+    padding:0px;
+}
+
+.article_content {
+	height: 250px;
+	vertical-align: top;
+	padding: 10px;
+}
+
+.disable {
+	background-color:#f3f3f3;	
+}
+
+.enable {
+	background-color:#ffffff;	
+}
+
+/* js에서 생성하는 컨트롤들의 스타일 */
+
+/* ------- 경고, 오류에 대한 input컨트롤들의 스타일 css ----- */
+.onWarning {
+	border-color: #FFA500;
+	background-color: #FFA500;
+}
+
+.onError {
+	border-color: red;	
+}
+
+/* -------- selectbox.js 로 생성되는 테이블 셀랙트박스의 스타일 ----- */
+div.div_selectbox {
+	margin: 0px; padding: 0px;	
+}
+
+table.table_selectbox, table.table_selectbox_in {
+	padding:0; border-spacing:0px; border:0; border-collapse:collapse; /* cellspacing-0 */
+}
+
+table.table_selectbox td, th {
+	border: 0px;
+	padding: 0px;
+}
+
+table.table_selectbox_in td, th {
+	padding: 1px;
+	border: 0px;
+}
+
+table.table_selectbox_item td, th {
+	padding: 2px 0px 2px;	/* 셀렉트박스 아이템별 간격 */
+	border: 0px;
+}
+
+/* ----- dvwrap_admin 내부의 input, select ----- */
+.dvwrap_admin input {
+    height: 20px;
+    padding: 3px 0px 0px 3px;
+}
+
+.dvwrap_admin input.readonly {
+	background-color:#f3f3f3
+}
+
+.dvwrap_admin select {
+	font-size: 11px; 
+}
+
+
+/* ----- daumeditor 컨트롤 ----- */
+#contentTextArea {
+	display: none;
+	width: 0px; height: 0px;
+}
+
+.hiddenTextarea {
+	display: none; width: 0px; height: 0px;	
+}
+

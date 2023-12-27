@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- MANAGER, ADMIN 권한 그룹을 제외한 나머지 권한에 대한 탭별 권한을 설정한다. -->
+<!-- NAME 태그는 XML에서 식별하기 위해 사용되고 기능에 영향을 주지는 않는다. -->
+<auth>
+	<page>
+		<code>course_manage</code>
+		<name>회차관리상세 페이지 탭별 권한</name>
+		<tab>
+			<auth_group>
+				<code>TCHMGR</code>
+			</auth_group>
+			<code>subject</code>
+			<name>과목관리</name>
+		</tab>
+		<tab>
+			<auth_group>
+			</auth_group>
+			<code>teacher</code>
+			<name>담임/부담임관리</name>
+		</tab>
+		<tab>
+			<auth_group>
+				<code>TCHMGR</code>
+			</auth_group>
+			<code>student</code>
+			<name>수강생관리</name>
+		</tab>
+		<tab>
+			<auth_group>
+				<code>TCHMGR</code>
+			</auth_group>
+			<code>exam</code>
+			<name>시험관리</name>
+		</tab>
+		<tab>
+			<auth_group>
+				<code>TCHMGR</code>
+			</auth_group>
+			<code>resh</code>
+			<name>강의평가관리</name>
+		</tab>
+		<tab>
+			<auth_group>
+				<code>TCHMGR</code>
+			</auth_group>
+			<code>score</code>
+			<name>성적관리</name>
+		</tab>
+	</page>
+
+</auth>

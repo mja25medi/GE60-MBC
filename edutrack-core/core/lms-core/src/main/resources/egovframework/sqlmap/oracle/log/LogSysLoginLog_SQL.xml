@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.log.login.service.impl.LogSysLoginLogMapper">	
+	
+	<select id="listMonth" parameterType="logSysLoginLogVO" resultType="logSysLoginLogVO">
+		/*
+			 SQL ID : listMonth
+			 설  명 : 월별 로그인 로그 목록
+	 	*/
+	 	<![CDATA[
+			SELECT A.CODE_NM AS codeNm
+			     , NVL(SUM(B.LOGIN_CNT),0) AS loginCnt
+			  FROM TB_SYS_CODE A, TB_LOG_SYS_LOGIN_LOG B
+			 WHERE A.CODE_CTGR_CD 	= 'STAUS_MONTH'
+			   AND B.ORG_CD (+) = #{orgCd}
+		       AND YEAR(+)||MONTH(+)||DAY(+) BETWEEN replace(#{startDt},'.','') AND replace(#{endDt},'.','')
+			   AND DECODE(LENGTH(A.CODE_CD), 1 , LPAD(A.CODE_CD,2,'0'),A.CODE_CD) = B.MONTH (+)
+			 GROUP BY A.CODE_NM, A.CODE_ODR, B.MONTH
+			 ORDER BY A.CODE_ODR
+		]]>
+	</select>
+	
+	<select id="listWeek" parameterType="logSysLoginLogVO" resultType="logSysLoginLogVO">
+		/*
+			 SQL ID : listWeek
+			 설  명 : 주별 로그인 로그 목록
+	 	*/
+	 	<![CDATA[
+			SELECT A.CODE_NM AS codeNm
+			     , NVL(SUM(B.LOGIN_CNT),0) AS loginCnt
+			  FROM TB_SYS_CODE A , 
+			       (  SELECT TO_CHAR(TO_DATE(YEAR||MONTH||DAY,'YYYYMMDD'),'D') AS WEEK
+			               , NVL(LOGIN_CNT,0) AS LOGIN_CNT
+					    FROM TB_LOG_SYS_LOGIN_LOG
+			           WHERE YEAR||MONTH||DAY BETWEEN replace(#{startDt},'.','') AND replace(#{endDt},'.','')
+			             AND NVL(ORG_CD,'1') = NVL(#{orgCd},NVL(ORG_CD,'1'))
+			       ) B
+			 WHERE A.CODE_CTGR_CD = 'STATUS-WEEK'
+			   AND A.CODE_CD = B.WEEK (+)
+			 GROUP BY A.CODE_NM, A.CODE_ODR, B.WEEK
+			 ORDER BY A.CODE_ODR
+		]]>
+	</select>
+	
+	<select id="listDay" parameterType="logSysLoginLogVO" resultType="logSysLoginLogVO">
+		/*
+			 SQL ID : listDay
+			 설  명 : 일별 로그인 로그 목록
+	 	*/
+	 	<![CDATA[
+			SELECT A.CODE_NM AS codeNm
+			     , NVL(SUM(B.LOGIN_CNT),0) AS loginCnt
+			  FROM TB_SYS_CODE A, TB_LOG_SYS_LOGIN_LOG B
+			 WHERE A.CODE_CTGR_CD = 'STATUS_DAY'
+			   AND YEAR(+)||MONTH(+)||DAY(+) BETWEEN replace(#{startDt},'.','') AND replace(#{endDt},'.','')
+			   AND A.CODE_CD = B.DAY (+)
+			  AND B.ORG_CD (+) = #{orgCd}
+			 GROUP BY A.CODE_NM, A.CODE_ODR, B.DAY
+			 ORDER BY A.CODE_ODR	 
+		]]>
+	</select>
+	
+	<select id="listHour" parameterType="logSysLoginLogVO" resultType="logSysLoginLogVO">
+		/*
+			 SQL ID : listHour
+			 설  명 : 시간별 로그인 로그 목록
+	 	*/
+	 	<![CDATA[
+			SELECT A.CODE_NM AS codeNm
+			     , NVL(SUM(B.LOGIN_CNT),0) AS loginCnt
+			  FROM TB_SYS_CODE A, TB_LOG_SYS_LOGIN_LOG B
+			 WHERE A.CODE_CTGR_CD 	= 'STATUS-HOUR'
+			   AND YEAR(+)||MONTH(+)||DAY(+) BETWEEN replace(#{startDt},'.','') AND replace(#{endDt},'.','')
+			   AND A.CODE_CD = B.TM (+)
+			   AND B.ORG_CD (+) = #{orgCd}
+			 GROUP BY A.CODE_NM, A.CODE_ODR, B.TM
+			 ORDER BY A.CODE_ODR	 
+		]]>
+	</select>
+	
+	<select id="AllListMonth" parameterType="logSysLoginLogVO" resultType="logSysLoginLogVO">
+		/*
+			 SQL ID : AllListMonth
+			 설  명 : 월별 모든 로그인 로그 목록
+	 	*/
+	 	<![CDATA[
+			SELECT A.CODE_NM AS codeNm
+			     , NVL(SUM(B.LOGIN_CNT),0) AS loginCnt
+			  FROM TB_SYS_CODE A, TB_LOG_SYS_LOGIN_LOG B
+			 WHERE A.CODE_CTGR_CD 	= 'STAUS_MONTH'
+		       AND YEAR(+)||MONTH(+)||DAY(+) BETWEEN replace(#{startDt},'.','') AND replace(#{endDt},'.','')
+			   AND DECODE(LENGTH(A.CODE_CD), 1 , LPAD(A.CODE_CD,2,'0'),A.CODE_CD) = B.MONTH (+)
+			 GROUP BY A.CODE_NM, A.CODE_ODR, B.MONTH
+			 ORDER BY A.CODE_ODR
+		]]>
+	</select>
+	
+	<select id="AllListWeek" parameterType="logSysLoginLogVO" resultType="logSysLoginLogVO">
+		/*
+			 SQL ID : AllListWeek
+			 설  명 : 주별 모든 로그인 로그 목록
+	 	*/
+	 	<![CDATA[
+			 SELECT A.CODE_NM AS codeNm
+			     , NVL(SUM(B.LOGIN_CNT),0) AS loginCnt
+			  FROM TB_SYS_CODE A , 
+			       (  SELECT TO_CHAR(TO_DATE(YEAR||MONTH||DAY,'YYYYMMDD'),'D') AS WEEK
+			               , NVL(LOGIN_CNT,0) AS LOGIN_CNT
+					    FROM TB_LOG_SYS_LOGIN_LOG
+			           WHERE YEAR||MONTH||DAY BETWEEN replace(#{startDt},'.','') AND replace(#{endDt},'.','')
+			       ) B
+			 WHERE A.CODE_CTGR_CD = 'STATUS-WEEK'
+			   AND A.CODE_CD = B.WEEK (+)
+			 GROUP BY A.CODE_NM, A.CODE_ODR, B.WEEK
+			 ORDER BY A.CODE_ODR
+		]]>
+	</select>
+	
+	<select id="AllListDay" parameterType="logSysLoginLogVO" resultType="logSysLoginLogVO">
+		/*
+			 SQL ID : AllListDay
+			 설  명 : 일별 모든 로그인 로그 목록
+	 	*/
+	 	<![CDATA[
+			 SELECT A.CODE_NM AS codeNm
+			     , NVL(SUM(B.LOGIN_CNT),0) AS loginCnt
+			  FROM TB_SYS_CODE A, TB_LOG_SYS_LOGIN_LOG B
+			 WHERE A.CODE_CTGR_CD = 'STATUS_DAY'
+			   AND YEAR(+)||MONTH(+)||DAY(+) BETWEEN replace(#{startDt},'.','') AND replace(#{endDt},'.','')
+			   AND A.CODE_CD = B.DAY (+)
+			 GROUP BY A.CODE_NM, A.CODE_ODR, B.DAY
+			 ORDER BY A.CODE_ODR	 
+		]]>
+	</select>
+	
+	<select id="AllListHour" parameterType="logSysLoginLogVO" resultType="logSysLoginLogVO">
+		/*
+			 SQL ID : AllListHour
+			 설  명 : 시간별 모든 로그인 로그 목록
+	 	*/
+	 	<![CDATA[
+			SELECT A.CODE_NM AS codeNm
+			     , NVL(SUM(B.LOGIN_CNT),0) AS loginCnt
+			  FROM TB_SYS_CODE A, TB_LOG_SYS_LOGIN_LOG B
+			 WHERE A.CODE_CTGR_CD 	= 'STATUS-HOUR'
+			   AND YEAR(+)||MONTH(+)||DAY(+) BETWEEN replace(#{startDt},'.','') AND replace(#{endDt},'.','')
+			   AND A.CODE_CD = B.TM (+)
+			 GROUP BY A.CODE_NM, A.CODE_ODR, B.TM
+			 ORDER BY A.CODE_ODR	 
+		]]>
+	</select>
+	
+	
+	<select id="selectAutoDate" parameterType="logSysLoginLogVO" resultType="logSysLoginLogVO">
+		/*
+			 SQL ID : selectAutoDate
+			 설  명 : 날짜 가져오기
+	 	*/
+	 	<![CDATA[
+			SELECT CASE WHEN #{dateType} = 'Day' THEN #{endDt}
+			            WHEN #{dateType} = 'Week' THEN TO_CHAR(TO_DATE(replace(#{endDt},'.',''),'YYYYMMDD') - 7,'YYYY.MM.DD')
+			            WHEN #{dateType} = 'Month' THEN TO_CHAR(TO_DATE(replace(#{endDt},'.',''),'YYYYMMDD') - 30,'YYYY.MM.DD')
+			            WHEN #{dateType} = 'Year' THEN TO_CHAR(TO_DATE(replace(#{endDt},'.',''),'YYYYMMDD') - 365,'YYYY.MM.DD')
+			       END as startDt
+			     , #{endDt} as endDt
+			  FROM DUAL 
+		]]>
+	</select>
+	
+	<select id="listHourByDay" parameterType="logSysLoginLogVO" resultType="logSysLoginLogVO">
+		/*
+			 SQL ID : listHourByDay
+			 설  명 : 시간별 로그인 현황
+	 	*/
+	 	<![CDATA[
+			SELECT A.CODE_NM AS codeNm
+			     , NVL(SUM(B.LOGIN_CNT),0) AS loginCnt
+			  FROM TB_SYS_CODE A, TB_LOG_SYS_LOGIN_LOG B
+			 WHERE A.CODE_CTGR_CD = 'STATUS-HOUR'
+			   AND YEAR(+)||MONTH(+)||DAY(+) = #{startDt}
+			   AND A.CODE_CD = B.TM (+)
+			   AND B.ORG_CD (+) = #{orgCd}
+			 GROUP BY A.CODE_NM, A.CODE_ODR, B.TM
+			 ORDER BY A.CODE_ODR
+		]]>
+	</select>
+	
+	<select id="listDayByWeek" parameterType="logSysLoginLogVO" resultType="logSysLoginLogVO">
+		/*
+			 SQL ID : listDayByWeek
+			 설  명 : 요일별 로그인 현황
+	 	*/
+	 	<![CDATA[
+			SELECT A.CODE_CD AS codeNm
+			     , NVL(SUM(B.LOGIN_CNT),0) AS loginCnt
+			  FROM TB_SYS_CODE A ,
+			       ( SELECT TO_CHAR(TO_DATE(YEAR||MONTH||DAY,'YYYYMMDD'),'D') AS WEEK
+			              , NVL(LOGIN_CNT,0) AS LOGIN_CNT
+					   FROM TB_LOG_SYS_LOGIN_LOG
+			          WHERE YEAR||MONTH||DAY BETWEEN replace(#{startDt},'.','') AND replace(#{endDt},'.','')
+			            AND NVL(ORG_CD,'1') = NVL(#{orgCd},NVL(ORG_CD,'1'))
+			       ) B
+			 WHERE A.CODE_CTGR_CD = 'STATUS-WEEK'
+			   AND A.CODE_CD = B.WEEK (+)
+			 GROUP BY A.CODE_CD, A.CODE_ODR, B.WEEK
+			 ORDER BY A.CODE_ODR
+		]]>
+	</select>
+	
+	<select id="listDayByMonth" parameterType="logSysLoginLogVO" resultType="logSysLoginLogVO">
+		/*
+			 SQL ID : listDayByMonth
+			 설  명 : 월별 로그인 현황
+	 	*/
+	 	<![CDATA[
+			SELECT A.CODE_NM AS codeNm
+			     , NVL(SUM(B.LOGIN_CNT),0) AS loginCnt
+			  FROM TB_SYS_CODE A, TB_LOG_SYS_LOGIN_LOG B
+			 WHERE A.CODE_CTGR_CD = 'STATUS_DAY'
+			   AND YEAR(+)||MONTH(+) = #{startDt}
+			   AND A.CODE_CD = B.DAY (+)
+			   AND B.ORG_CD (+) = #{orgCd}
+			 GROUP BY A.CODE_NM, A.CODE_ODR, B.DAY
+			 ORDER BY A.CODE_ODR 	
+		]]>
+	</select>	
+	
+	<insert id="insert" parameterType="logSysLoginLogVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 시스템 로그인 로그의 정보 등록
+	 	*/
+		MERGE INTO TB_LOG_SYS_LOGIN_LOG A
+		      USING DUAL
+		         ON (    A.ORG_CD = #{orgCd}
+		             AND A.YEAR = TO_CHAR(SYSDATE,'YYYY')
+		             AND A.MONTH = TO_CHAR(SYSDATE,'MM')
+		             AND A.DAY = TO_CHAR(SYSDATE,'DD')
+		             AND A.TM = TO_CHAR(SYSDATE,'HH24') )
+		      WHEN NOT MATCHED THEN
+		           INSERT (
+		                  A.ORG_CD
+		                , A.YEAR
+		                , A.MONTH
+		                , A.DAY
+		                , A.TM
+		                , A.LOGIN_CNT
+		           ) VALUES (
+		                  #{orgCd}
+		                , TO_CHAR(SYSDATE,'YYYY')
+		                , TO_CHAR(SYSDATE,'MM')
+		                , TO_CHAR(SYSDATE,'DD')
+		                , TO_CHAR(SYSDATE,'HH24')
+		                , 1
+		           )
+		      WHEN MATCHED THEN
+		    	   UPDATE SET A.LOGIN_CNT = A.LOGIN_CNT + 1
+	</insert>
+
+</mapper>

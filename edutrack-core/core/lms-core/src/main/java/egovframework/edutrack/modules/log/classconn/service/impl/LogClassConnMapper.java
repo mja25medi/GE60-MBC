@@ -1,0 +1,30 @@
+package egovframework.edutrack.modules.log.classconn.service.impl;
+
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+
+import egovframework.edutrack.modules.log.classconn.service.LogClassConnVO;
+import egovframework.rte.psl.dataaccess.mapper.Mapper;
+
+
+@Mapper("logClassConnMapper")
+public interface LogClassConnMapper {
+
+
+	/**
+	 * 강의실 접속 로그를 등록한다.
+	 * @param VO
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public int merge(LogClassConnVO VO) throws Exception;
+
+	/**
+	 * 종료일을 기준으로 시작일을 검색한다.
+	 * 1일, 일주(7일), 한달(30일), 일년(365맇)
+	 * @param VO
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public LogClassConnVO selectAutoDate(LogClassConnVO VO)  throws Exception;
+}

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.teacher.field.service.impl.TchFieldMapper">
+	
+
+	<select id="listField" parameterType="tchFieldVO" resultType="tchFieldVO">
+			 SELECT                                             		
+		    	FIELD.USER_NO, FIELD.LEC_FIELD_CD,                  
+		    	fn_get_code_name('LEC_FIELD_CD',FIELD.LEC_FIELD_CD)  AS LEC_FIELD_CD_NM   
+		  FROM tb_tch_lec_field FIELD                              
+		 WHERE FIELD.USER_NO = #{userNo}                            	
+	</select>
+
+	<select id="selectField" parameterType="tchFieldVO" resultType="tchFieldVO">
+		 SELECT                                             		
+		    	FIELD.USER_NO, FIELD.LEC_FIELD_CD,                  
+		    	fn_get_code_name('LEC_FIELD_CD',FIELD.LEC_FIELD_CD)  AS LEC_FIELD_CD_NM   
+		 FROM tb_tch_lec_field FIELD                               
+		 WHERE FIELD.USER_NO 		= #{userNo}                       
+		   AND FIELD.LEC_FIELD_CD  = #{lecFieldCd}                   
+	</select>
+	
+	<insert id="insertField" parameterType="tchFieldVO">
+		 INSERT INTO tb_tch_lec_field (                       	
+		      USER_NO,LEC_FIELD_CD,                          	
+		      REG_NO,REG_DTTM, MOD_NO, MOD_DTTM)         		
+		 VALUES (                                        		
+		      #{userNo},#{lecFieldCd},                  			
+		      #{regNo},DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'),     	
+		      #{modNo},DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'))     	
+	</insert>
+	
+	<delete id="deleteField" parameterType="tchFieldVO">
+		   DELETE FROM tb_tch_lec_field   						
+		         WHERE USER_NO = #{userNo}                  		
+		           AND LEC_FIELD_CD = #{lecFieldCd}              
+	</delete>
+	
+</mapper>

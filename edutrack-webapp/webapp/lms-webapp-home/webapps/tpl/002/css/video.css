@@ -1,0 +1,126 @@
+@charset "utf-8";
+@import "webfonts.css";/**/
+@import "hrd_common.css";
+@import "layout.css";
+@import "sub_layout.css"; /**/
+@import "sub.css";
+
+
+
+
+
+/* 테스트용_임시작성 */
+.flowplayer { position: relative; width: 100%; background-color: #f5f5f5; background-size: cover; max-width: 100%; }
+.flowplayer .fp-player {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    top: 0;
+}
+
+figure{
+    position: relative;
+    display: block;
+    width: 100%;
+    padding-top: 56.25%;
+    margin: 2em 0;
+}
+
+.flowplayer iframe,
+.flowplayer video{ 
+    position: absolute;  
+    width: 100%; height: 100%; 
+    left:0; top:0;
+}
+/* //테스트용_임시작성 */
+
+
+
+
+
+#wrap { height: auto;  min-height: 100%;  }
+.flex{ flex-direction: row; }
+.flex-wrap{ flex-wrap: wrap }
+.buttons .btn{ flex-shrink: 0; }
+.container{
+    flex:1;
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    padding: 1em;
+    height: 100%;
+
+}
+.container .media-area{ 
+    position: relative;
+    flex:1;  
+    display: flex;
+    flex-direction: column;
+}
+
+.container .media-area .testbottom{  /* background-color: #f5f5f5; */
+    position: absolute;
+    width: 100%;
+    bottom: 0; left:0;
+}
+
+
+.container .media-area .flowplayer{
+    flex: 1;
+    max-width: 100%;
+    max-height: calc(100% - 6em);
+    background-color: #333;
+}
+.container .media-area .flowplayer .fp-ratio{ padding-top: unset !important }
+
+
+
+
+.container .form-area{ flex: 0 1;    }
+.container .form-area form{ 
+    display: flex;
+    flex-direction: column; 
+    min-width: 400px; 
+    height:100%; 
+    padding: 1em; 
+    border: 1px solid #f5f5f5;
+    margin-left: 1em;
+}
+.container .form-area .tstyle{ flex:1 }
+.container .form-area form .tstyle .dbody{
+    display: flex;
+    flex-direction : column;
+    height: 100%;
+}
+.container .form-area form .tstyle .dbody > * {display: flex;flex-direction: column;}
+.container .form-area form .tstyle .dbody > *:nth-of-type(3){flex:6 1;}
+.container .form-area form .tstyle .dbody > *:nth-of-type(4){flex:1;}
+.container .form-area form .tstyle .dbody .row{ flex:1;  align-items: baseline; }
+.row [for="contTextarea"] + [class*="col"]{ height: 100%;}
+.row [for="contTextarea"] + [class*="col"] > .form-row{ height: 100%;}
+
+
+/* 테스트용_임시작성 */
+.container .form-area form{ display: none;}
+.container .form-area form.on{ display: flex;}
+
+
+
+/* //테스트용_임시작성 */
+
+@media(max-width: 1024px){
+    .container{ flex-direction: column; }
+    .container .media-area .flowplayer { flex: 0; }
+    .container .media-area .flowplayer .fp-ratio{ padding-top: 56.25% !important }
+    .container .media-area .testbottom{  background-color: #f5f5f5;
+        position: unset;
+    }
+    .container .form-area form{ 
+        margin-left: 0; 
+        margin-top: 1em; 
+    }
+    .container .form-area form .tstyle .row .form-label{ padding-bottom: 4px }
+}
+
+
+

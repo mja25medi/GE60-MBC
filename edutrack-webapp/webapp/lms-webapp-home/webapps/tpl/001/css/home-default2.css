@@ -1,0 +1,75 @@
+@charset "utf-8";
+/* CSS Document */
+
+#key_access {position:fixed; top:0; width:100%; height:57px; text-align:center; overflow:hidden; z-index:-1;}
+#key_access ul {position:relative;}
+#key_access ul li {position:absolute; width:100%; height:57px; left:0; top:-9999px; background:#6d9bc0}
+#key_access ul li.select {top:0;}
+#key_access a {display:block; width:100%; height:57px; line-height:57px; color:#fff}
+#loading_page {position:fixed; top:0px; bottom:0px;width:100%; height:100%; background:#fff; z-index:10000;}
+#loading_page p {position:absolute; top:50%; left:50%; margin:-30px 0 0 -30px; font-size:48px; z-index:auto;}
+body {height: 100%;}
+#wrap {background: url(../img/main_bg.jpg) no-repeat; background-size: cover;}
+.overlay {position:absolute; bottom:0px; left: 0; width:100%; height:50%; display: flex; flex-direction: row; flex-wrap: nowrap; align-content: stretch; align-items: center; background: rgba(0, 0, 0, .4); overflow: hidden;}
+.overlay:before {position: absolute; top: 0; content: ''; width: 100%; height: 1px; background: #fff;}
+.overlay .text-box {position: absolute; top: -.3em; right: .5em; font-size: 3em; line-height: 1.2; text-align: right; color: #ccc;}
+.overlay .text-box strong {display: block; font-weight: 700;}
+.overlay .text-box strong span {color: #fff;}
+.flex-child {position: relative; display: flex; flex-direction: column; width: 420px; min-height: 100vh; padding: 2em; background: #fff; z-index: 1;}
+h1 {height: 60px; margin-bottom: 1em;}
+.flex-child-right {display: flex; justify-content: flex-end;}
+.logo {height: 100%;}
+.ui.button.login-btn {color: #fff; background: #526bbe;}
+
+main {flex: 1;}
+.main-box {margin-top: 2em;}
+.main-box .header {position:relative; padding-bottom:10px; border-bottom:1px solid rgba(0, 0, 0, .3);}
+.main-box .header:after {content:""; display:block; height:0; clear:both;}
+.main-box .header h2 {position:relative; width: calc(100% - 80px); font-size:1.25em; color:#333;}
+.main-box .header .more {position:absolute; bottom:10px; right:0; font-size: 1.25em; color:rgba(0, 0, 0, .7) !important; z-index:auto;}
+.board-items li {padding: 10px 0; border-bottom:1px solid rgba(0, 0, 0, .1);}
+.board-items li a {display:block;}
+.board-items li strong {display:block; font-size:1.063em; color:#333; font-weight:normal; padding-bottom:5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; word-wrap:normal}
+.board-items li strong span {margin-right: 5px; color:#7c5327;}
+.board-items li .date {font-family:'Century Gothic'; font-size:.875em; color:#999; display:block; text-align: right;}
+
+.flex-child .ui.grid ul.quick-banner {padding: 0;}
+ul.quick-banner {margin: 2em 0 4em 0; overflow: hidden;}
+ul.quick-banner li {float: left; display: table !important; width: 50%; min-height: 70px;}
+ul.quick-banner li a {display: table-cell; padding-left: 60px; font-size: 1em;; color:#333; font-weight:500; vertical-align: middle;}
+ul.quick-banner li a.icon01 {background:url(../img/quick_banner_img01.png) no-repeat; background-size:60px; background-position:0 50%;}
+ul.quick-banner li a.icon02 {background:url(../img/quick_banner_img02.png) no-repeat; background-size:60px; background-position:0 50%;}
+ul.quick-banner li a.icon03 {background:url(../img/quick_banner_img03.png) no-repeat; background-size:60px; background-position:0 50%;}
+ul.quick-banner li a.icon04 {background:url(../img/quick_banner_img04.png) no-repeat; background-size:60px; background-position:0 50%;}
+
+.view-img {display:inline-block; margin: 0 auto; position:relative; vertical-align: middle; border-radius: 100%; overflow: hidden;}
+.view-img img {position:absolute; top:-10%; left:0; width:100%;}
+
+footer {margin: -2em; padding: 1em; background: #444;}
+footer:after {display:block; clear:both; content:''}
+footer .inner-wrap {position:relative;}
+footer .inner-wrap:after {display:block; clear:both; content:''}
+footer .inner-wrap ul.copy {}
+footer .inner-wrap ul.copy li {padding:2px 0; font-size:.875em; color:#999;}
+footer .inner-wrap ul.copy li address {font-style:normal;}
+
+@media all and (max-width:1280px){
+    body {font-size: 13px;}
+    .flex-child {}
+    .main-visual {display: none !important;}
+    .banner-box .inner-banner,
+    .footInf {width: 86%;}
+}
+
+@media all and (max-width:768px){
+
+}
+
+@media all and (max-width:767px){
+    body {font-size: 12px;}
+    .flex-child {width: 100%;}
+}
+
+@media all and (max-width:480px){
+    h1 {text-align: center;}
+}

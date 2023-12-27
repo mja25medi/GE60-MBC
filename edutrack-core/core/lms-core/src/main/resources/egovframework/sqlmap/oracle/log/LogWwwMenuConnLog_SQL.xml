@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.log.menuconn.service.impl.LogWwwMenuConnLogMapper">	
+	
+	<insert id="insert" parameterType="logWwwMenuConnLogVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 관리자 접속 로그의 정보 등록
+	 	*/
+		MERGE INTO TB_LOG_WWW_MENU_CONN_LOG A
+		      USING DUAL
+		         ON (    A.ORG_CD = #{orgCd}
+		             AND A.MENU_CD = #{menuCd}
+		             AND A.YEAR = TO_CHAR(SYSDATE,'YYYY')
+		             AND A.MONTH = TO_CHAR(SYSDATE,'MM')
+		             AND A.DAY = TO_CHAR(SYSDATE,'DD')
+		             AND A.TM = TO_CHAR(SYSDATE,'HH24') )
+		      WHEN NOT MATCHED THEN
+		           INSERT (
+		                  A.ORG_CD
+		                , A.MENU_CD
+		                , A.YEAR
+		                , A.MONTH
+		                , A.DAY
+		                , A.TM
+		                , A.HITS
+		           ) VALUES (
+		                  #{orgCd}
+		                , #{menuCd}
+		                , TO_CHAR(SYSDATE,'YYYY')
+		                , TO_CHAR(SYSDATE,'MM')
+		                , TO_CHAR(SYSDATE,'DD')
+		                , TO_CHAR(SYSDATE,'HH24')
+		                , 1
+		           )
+		      WHEN MATCHED THEN
+		    	   UPDATE SET A.HITS = A.HITS + 1
+	</insert>
+	
+</mapper>

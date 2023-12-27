@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.lecture.forum.service.impl.ForumJoinUserMapper">
+
+	<sql id="selectQuery">
+		 SELECT *  FROM (  
+		 SELECT A.CRS_CRE_CD  
+		      , D.FORUM_SN  
+		      , B.USER_NM  
+		      , C.USER_ID  
+		      , A.STD_NO  
+		      , A.USER_NO  
+		      , A.DECLS_NO  
+		      , (SELECT COUNT(*)  
+		         	FROM TB_LEC_FORUM_ATCL  
+		          WHERE CRS_CRE_CD = #{crsCreCd}  
+		         	 AND FORUM_SN = #{forumSn}  
+		          	 AND REG_NO = A.USER_NO ) AS ATCL_CNT  
+		      , (SELECT COUNT(*)  
+		         	FROM TB_LEC_FORUM_CMNT  
+		          WHERE CRS_CRE_CD = #{crsCreCd}  
+		         	 AND FORUM_SN = #{forumSn}  
+		         	 AND REG_NO = A.USER_NO ) AS CMNT_CNT  
+		      , NVL(D.SCORE,0) AS SCORE  
+		   FROM TB_STD_STD A, TB_USR_USER_INFO B,  
+		        TB_USR_LOGIN C, TB_LEC_FORUM_JOIN_USER D  
+		  WHERE A.USER_NO = B.USER_NO  
+		    AND B.USER_NO = C.USER_NO  
+		    AND A.STD_NO = D.STD_NO(+)  
+		    AND A.ENRL_STS IN('S','C','F')  
+		    AND C.USER_STS = 'U'  
+		    AND A.CRS_CRE_CD = #{crsCreCd}  
+		    AND D.FORUM_SN(+) = #{forumSn}  
+		    AND A.DECLS_NO = DECODE(#{declsNo}, null, A.DECLS_NO, 0, A.DECLS_NO, #{declsNo})  
+		    AND B.USER_NM LIKE '%'||NVL(#{userNm},B.USER_NM)||'%'  
+		)  
+	</sql>
+	
+	<select id="count" parameterType="forumJoinUserVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM (  
+				 SELECT A.CRS_CRE_CD  
+				      , D.FORUM_SN  
+				      , B.USER_NM  
+				      , C.USER_ID  
+				      , A.STD_NO  
+				      , A.USER_NO  
+				      , A.DECLS_NO  
+				      , (SELECT COUNT(*)  
+				         	FROM TB_LEC_FORUM_ATCL  
+				          WHERE CRS_CRE_CD = #{crsCreCd}  
+				         	 AND FORUM_SN = #{forumSn}  
+				          	 AND REG_NO = A.USER_NO ) AS ATCL_CNT  
+				      , (SELECT COUNT(*)  
+				         	FROM TB_LEC_FORUM_CMNT  
+				          WHERE CRS_CRE_CD = #{crsCreCd}  
+				         	 AND FORUM_SN = #{forumSn}  
+				         	 AND REG_NO = A.USER_NO ) AS CMNT_CNT  
+				      , NVL(D.SCORE,0) AS SCORE  
+				   FROM TB_STD_STD A, TB_USR_USER_INFO B,  
+				        TB_USR_LOGIN C, TB_LEC_FORUM_JOIN_USER D  
+				  WHERE A.USER_NO = B.USER_NO  
+				    AND B.USER_NO = C.USER_NO  
+				    AND A.STD_NO = D.STD_NO(+)  
+				    AND A.ENRL_STS IN('S','C','F')  
+				    AND C.USER_STS = 'U'  
+				    AND A.CRS_CRE_CD = #{crsCreCd}  
+				    AND D.FORUM_SN(+) = #{forumSn}  
+				    AND A.DECLS_NO = DECODE(#{declsNo}, null, A.DECLS_NO, 0, A.DECLS_NO, #{declsNo})  
+				    AND B.USER_NM LIKE '%'||NVL(#{userNm},B.USER_NM)||'%'  
+				)  			
+	</select>
+		
+	<select id="list" parameterType="forumJoinUserVO" resultType="forumJoinUserVO">
+		<!--  학습자 목록 -->
+		<include refid="selectQuery" />
+	</select>
+	
+	<select id="listPageing"  parameterType="forumJoinUserVO" resultType="forumJoinUserVO">
+		<!-- 학습자 목록  -->
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+			<include refid="selectQuery" />
+			<choose>
+				<when test = "sortKey != null and sortKey = 'USER_NAME_ASC'">
+					 ORDER BY USER_NM ASC  
+				</when>
+				<when test = "sortKey != null and sortKey = 'USER_NAME_DESC'">
+				ORDER BY USER_NM DESC
+				</when>
+				<when test = "sortKey != null and sortKey = 'USER_ID_ASC'">
+				ORDER BY USER_ID ASC 
+				</when>
+				<when test = "sortKey != null and sortKey = 'USER_ID_DESC'">
+				 ORDER BY USER_ID DESC
+				</when>
+				<when test = "sortKey != null and sortKey = 'ATCL_CNT_ASC'">
+				ORDER BY ATCL_CNT ASC  
+				</when>
+				<when test = "sortKey != null and sortKey = 'ATCL_CNT_DESC'">
+				 ORDER BY ATCL_CNT DESC  
+				</when>
+				<when test = "sortKey != null and sortKey = 'CMNT_CNT_ASC'">
+				ORDER BY CMNT_CNT ASC 
+				</when>
+				<when test = "sortKey != null and sortKey = 'CMNT_CNT_DESC'">
+				ORDER BY CMNT_CNT DESC  
+				</when>
+				<when test = "sortKey != null and sortKey = 'SCORE_ASC'">
+				 ORDER BY SCORE ASC  
+				</when>
+				<when test = "sortKey != null and sortKey = 'SCORE_DESC'">
+				ORDER BY SCORE DESC 
+				</when>
+				<otherwise>
+					ORDER BY DECLS_NO, USER_NM  
+				</otherwise>
+			</choose>
+			
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	
+	<insert id="insert" parameterType="forumJoinUserVO">
+		<!-- 토론 개별 점수 저장  -->
+		INSERT  INTO TB_LEC_FORUM_JOIN_USER (			
+		           CRS_CRE_CD								
+		        ,  FORUM_SN								
+		        ,  STD_NO									
+		        ,  SCORE									
+		        ,  REG_NO									
+		        ,  REG_DTTM								
+		   ) VALUES (										
+					#{crsCreCd}								
+		        ,  #{forumSn}								
+		        ,  #{stdNo}									
+		        ,  #{score}									
+		        ,  #{regNo}									
+		        ,  TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')		
+			)
+	</insert>
+	
+	<update id="update" parameterType="forumJoinUserVO">
+		<!-- 토론 개별 점수 수정 -->
+		UPDATE	TB_LEC_FORUM_JOIN_USER								
+			   SET	SCORE  		= #{score}									
+			   	 ,	MOD_NO  	= #{modNo}
+			     ,	MOD_DTTM  	= TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')	
+			 WHERE	CRS_CRE_CD	= #{crsCreCd}								
+			   AND	FORUM_SN	= #{forumSn}								
+			   AND	STD_NO		= #{stdNo}
+	</update>
+	
+	<delete id="delete" parameterType="forumJoinUserVO">
+		<!-- 토론 점수 정보 삭제  -->
+		DELETE  FROM TB_LEC_FORUM_JOIN_USER     
+		    WHERE  CRS_CRE_CD	= #{crsCreCd}    		
+		      AND  FORUM_SN	= #{forumSn}
+	</delete>
+	
+</mapper>

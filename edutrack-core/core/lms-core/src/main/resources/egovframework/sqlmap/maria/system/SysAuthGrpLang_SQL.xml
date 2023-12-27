@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.system.menu.service.impl.SysAuthGrpLangMapper">	
+
+	
+	<sql id="selectQuery">
+		SELECT MENU_TYPE as menuType
+		     , AUTH_GRP_CD as authGrpCd
+		     , LANG_CD as langCd
+		     , AUTH_GRP_NM as authGrpNm
+		     , AUTH_GRP_DESC as authGrpDesc
+		  FROM tb_sys_auth_grp_lang
+		 WHERE MENU_TYPE = #{menuType}
+		   AND AUTH_GRP_CD = #{authGrpCd}
+	</sql>
+	
+	<select id="list" parameterType="sysAuthGrpLangVO" resultType="sysAuthGrpLangVO">
+		/*
+			 SQL ID : list
+			 설  명 : 시스템 권한 언어의 전체 목록
+	 	*/
+	 	<include refid="selectQuery"/>
+		 ORDER BY LANG_CD
+	</select>
+
+	<select id="select" parameterType="sysAuthGrpLangVO" resultType="sysAuthGrpLangVO">
+		/*
+			 SQL ID : select
+			 설  명 : 시스템 권한 언어의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+		   AND LANG_CD = #{langCd}	 	
+	</select>	
+	
+	<insert id="insert" parameterType="sysAuthGrpLangVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 시스템 권한 언어의 정보 등록
+	 	*/
+		INSERT INTO tb_sys_auth_grp_lang (
+		       MENU_TYPE
+		     , AUTH_GRP_CD
+		     , LANG_CD
+		     , AUTH_GRP_NM
+		     , AUTH_GRP_DESC
+		) VALUES (
+		       #{menuType}
+		     , #{authGrpCd}
+		     , #{langCd}
+		     , #{authGrpNm}
+		     , #{authGrpDesc}
+		)	 	
+	</insert>
+	
+	<update id="update" parameterType="sysAuthGrpLangVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 시스템 권한 언어의 정보 수정
+	 	*/
+		UPDATE tb_sys_auth_grp_lang
+		   SET AUTH_GRP_NM = #{authGrpNm}
+		     , AUTH_GRP_DESC = #{authGrpDesc}
+		 WHERE MENU_TYPE = #{menuType}
+		   AND AUTH_GRP_CD = #{authGrpCd}
+		   AND LANG_CD = #{langCd}	 	
+	</update>	
+
+	<delete id="delete" parameterType="sysAuthGrpLangVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 시스템 권한 언어의 정보 삭제
+	 	*/
+		DELETE FROM tb_sys_auth_grp_lang
+		 WHERE MENU_TYPE = #{menuType}
+		   AND AUTH_GRP_CD = #{authGrpCd}
+		   AND LANG_CD = #{langCd}
+	</delete>
+
+	<delete id="deleteAll" parameterType="sysAuthGrpLangVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 시스템 권한 언어의 전체 정보 삭제
+	 	*/
+		DELETE FROM tb_sys_auth_grp_lang
+		 WHERE MENU_TYPE = #{menuType}
+		   AND AUTH_GRP_CD = #{authGrpCd}
+	</delete>	 
+</mapper>

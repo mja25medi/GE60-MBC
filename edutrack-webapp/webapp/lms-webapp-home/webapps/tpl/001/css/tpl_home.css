@@ -1,0 +1,30 @@
+@charset "utf-8";
+
+.lnb {padding-left:0;}
+
+.lnb h2 {padding:60px 0; font-size:26px; font-weight:700; color:#3d4550; text-align:center; border-left:1px solid #ccc; border-right:1px solid #ccc; background:url(/tpl/001/img/home/lnb_title.gif) repeat;}
+.nav-stacked {border:1px solid #ccc;}
+.nav-stacked > li {border-bottom:1px solid #ccc;}
+.nav-stacked > li:last-child {border:0;}
+.nav-stacked > li + li {margin:0;}
+.nav-stacked > li a {display:block; padding-left:24px; line-height:24px; font-weight:100; background:url(/tpl/001/img/home/bullet_minus_gray.gif) 12px 50% no-repeat;}
+
+/* 160321 수정 START */
+.lnb h2 {padding:60px 0; font-size:26px; font-weight:700; color:#3d4550; text-align:center; border-left:1px solid #ccc; border-right:1px solid #ccc; border-bottom:1px solid #ccc; background:url(/tpl/001/img/home/lnb_title.gif) repeat;}
+.nav-stacked {display:block; border:1px solid #ccc; border-top:none;}
+#menu_btn {display:none;}
+/* 160321 수정 END */
+
+.nav-pills > li > a {border-radius:0;}
+.nav-pills>li.active>a, .nav-pills>li.active>a:hover, .nav-pills>li.active>a:focus {background:#ef7c1b url(/tpl/001/img/home/bullet_minus_white.gif) 12px 50% no-repeat;}
+
+.subCon {padding-right:0;}
+.sv_txt {position:absolute; top:60px; right:5%; width:307px; height:68px; text-align:left; text-indent:-9999px; background:url(/tpl/001/img/home/sv_txt.png) no-repeat; background-size:cover; z-index:100;}
+.sv {position:relative; width:100%; height:150px; background:url(/tpl/001/img/home/sv.jpg); background-size:cover;}
+
+.local_nav {padding:15px 0 15px 0; border-bottom:1px solid #333; overflow:hidden;}
+.local_nav h3 {float:left; font-size:24px; color:#333;}
+.local_nav p {float:right; padding:5px 0;}
+.local_nav p a {color:#337ab7; font-weight:700;}
+.local_nav p strong {color:#000;}
+

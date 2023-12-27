@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.log.apisync.service.impl.LogApiSyncMapper">	
+
+	<sql id="selectSnKey">
+	    SELECT nextval(SQ_LOG_API_SYNC)
+	</sql>
+	<sql id="selectQuery">
+		SELECT 
+		  A.API_SYNC_LOG_SN 
+		, A.CRS_CD
+		, A.SYNC_GUBUN_CD 
+		, A.SITE_URL
+		, A.SYNC_TIME
+		, A.SYNC_RESULT_MSG
+		, A.SYNC_SUCCESS_YN
+		, A.SYNC_SUCCESS_CNT 
+		, A.SYNC_FAIL_CNT
+		, A.SYNC_FAIL_PK
+		, A.SYNC_DATE
+		FROM tb_log_api_sync A
+	</sql>
+	<select id="selectApiSync" parameterType="logApiSyncVO" resultType="egovMap">
+		/*
+			 SQL ID : selectApiSync
+			 설  명 : api 전송 결과 조회
+	 	*/
+		<include refid="selectQuery"/>
+		WHERE 1=1
+		<if test = 'apiSyncLogSn != null and apiSyncLogSn != ""'>
+		   AND A.API_SYNC_LOG_SN = #{apiSyncLogSn}
+		</if>
+		<if test = 'siteUrl != null and siteUrl != ""'>
+		   AND A.SITE_URL = #{siteUrl}
+		</if>
+		<if test = 'syncGubunCd != null and syncGubunCd != ""'>
+		   AND A.SYNC_GUBUN_CD = #{syncGubunCd}
+		</if>
+		<if test = 'syncSuccessYn != null and syncSuccessYn != ""'>
+		   AND A.SYNC_SUCCESS_YN = #{syncSuccessYn}
+		</if>
+		<if test = 'crsCd != null and crsCd != ""'>
+		   AND A.CRS_CD = #{crsCd}
+		</if>
+		<if test = "searchKey != null and searchKey == 'Success'">
+			AND SYNC_SUCCESS_CNT > 0 AND SYNC_FAIL_CNT = 0
+		</if>
+		<if test = "searchKey != null and searchKey == 'Fail'">
+			AND SYNC_FAIL_CNT > 0
+		</if>
+		<if test = "searchFrom != null and searchFrom != '' and searchTo != null and searchTo != '' ">
+			AND DATE_FORMAT(A.SYNC_DATE , '%Y%m%d') BETWEEN DATE_FORMAT(#{searchFrom} , '%Y%m%d') AND DATE_FORMAT(#{searchTo} , '%Y%m%d')
+		</if>
+		ORDER BY A.SYNC_DATE DESC , A.SYNC_SUCCESS_YN DESC
+	</select>
+	
+	<select id="listApiSync" parameterType="logApiSyncVO" resultType="egovMap">
+		/*
+			 SQL ID : listApiSync
+			 설  명 : api 전송 결과 리스트 조회
+	 	*/
+		<include refid="selectQuery"/>
+		WHERE 1=1
+		<if test = 'apiSyncLogSn != null and apiSyncLogSn != ""'>
+		   AND A.API_SYNC_LOG_SN = #{apiSyncLogSn}
+		</if>
+		<if test = 'siteUrl != null and siteUrl != ""'>
+		   AND A.SITE_URL = #{siteUrl}
+		</if>
+		<if test = 'syncGubunCd != null and syncGubunCd != ""'>
+		   AND A.SYNC_GUBUN_CD = #{syncGubunCd}
+		</if>
+		<if test = 'syncSuccessYn != null and syncSuccessYn != ""'>
+		   AND A.SYNC_SUCCESS_YN = #{syncSuccessYn}
+		</if>
+		<if test = 'crsCd != null and crsCd != ""'>
+		   AND A.CRS_CD = #{crsCd}
+		</if>
+		<if test = "searchKey != null and searchKey == 'Success'">
+			AND SYNC_SUCCESS_CNT > 0 AND SYNC_FAIL_CNT = 0
+		</if>
+		<if test = "searchKey != null and searchKey == 'Fail'">
+			AND SYNC_FAIL_CNT > 0
+		</if>
+		<if test = "searchFrom != null and searchFrom != '' and searchTo != null and searchTo != '' ">
+			AND DATE_FORMAT(A.SYNC_DATE , '%Y%m%d') BETWEEN DATE_FORMAT(#{searchFrom} , '%Y%m%d') AND DATE_FORMAT(#{searchTo} , '%Y%m%d')
+		</if>
+		ORDER BY A.SYNC_DATE DESC , A.SYNC_SUCCESS_YN DESC
+	</select>
+	
+	<insert id="insertApiSync" parameterType="logApiSyncVO" >
+		/*
+			 SQL ID : insertApiSync
+			 설  명 : api 전송 결과 등록
+	 	*/
+	 	<selectKey resultType="Integer" keyProperty="apiSyncLogSn" order="BEFORE">
+	        <include refid="selectSnKey"/>    
+	    </selectKey> 
+		INSERT INTO tb_log_api_sync (
+		       API_SYNC_LOG_SN                            
+		     , CRS_CD
+		     , SYNC_GUBUN_CD                                
+		     , SITE_URL                                     
+		     , SYNC_TIME                                    
+		     , SYNC_RESULT_MSG                              
+		     , SYNC_SUCCESS_YN                              
+		     , SYNC_SUCCESS_CNT                             
+		     , SYNC_FAIL_CNT  
+		     , SYNC_FAIL_PK                              
+		     , SYNC_DATE                                    
+		) VALUES (
+		       #{apiSyncLogSn}    
+		     , #{crsCd}
+		     , #{syncGubunCd}    
+		     , #{siteUrl}        
+		     , #{syncTime}     
+		     , #{syncResultMsg}  
+		     , #{syncSuccessYn}   
+		     , #{syncSuccessCnt}  
+		     , #{syncFailCnt}  
+		     , #{syncFailPk}  
+		     , DATE_FORMAT( NOW(), '%Y%m%d%H%i%s')   
+		)	 	
+	</insert>
+	
+	
+	<update id="updateApiSync" parameterType="logApiSyncVO" >
+		/*
+			 SQL ID : updateApiSync
+			 설  명 : api 전송 결과 수정
+	 	*/
+		UPDATE tb_log_api_sync
+		   SET SYNC_GUBUN_CD    =   #{syncGubunCd}    
+		     , SYNC_TIME        =   #{syncTime}                     
+		     , SYNC_FAIL_PK     =   #{syncFailPk}                     
+		WHERE API_SYNC_LOG_SN = #{apiSyncLogSn}
+	</update>
+	
+	<delete id="deleteApiSync" parameterType="logApiSyncVO" >
+		/*
+			 SQL ID : deleteApiSync
+			 설  명 : api 전송 결과 삭제
+	 	*/
+		DELETE FROM tb_log_api_sync
+		WHERE API_SYNC_LOG_SN = #{apiSyncLogSn}
+	</delete>
+</mapper>

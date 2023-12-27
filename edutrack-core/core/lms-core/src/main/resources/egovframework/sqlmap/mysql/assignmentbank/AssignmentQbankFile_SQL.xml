@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.assignmentbank.service.impl.AssignmentQbankQuestionFileMapper">	
+
+    <insert id="insert"  parameterType="java.util.List" >
+	 		INSERT  INTO tb_crs_asmt_qbank_qstn_FILE(   
+		    		SBJ_CD                              
+		    	,	QSTN_SN							   	
+		    	,	CTGR_CD							   	
+		    	,	FILE_SN 							
+		    )
+		    VALUES
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+			(							       	
+		    		#{item.sbjCd}                              
+		   		,	#{item.qstnSn}                             
+		    	,	#{item.ctgrCd}                             
+		    	,	#{item.fileSn} 							
+		    )				  
+		</foreach>	     
+
+    </insert>
+ 	<select id="list" parameterType="assignmentQbankQuestionVO" resultType="assignmentQbankQuestionVO">
+			SELECT  A.SBJ_CD							
+		      	 ,  A.QSTN_SN							
+		      	 ,  A.CTGR_CD							
+		      	 ,  A.FILE_SN							
+		      	 ,  B.FILE_TYPE							
+		      	 ,  B.FILE_NM   						
+		      	 ,  B.FILE_SAVE_NM  					
+		      	 ,  B.FILE_PATH 						
+		      	 ,  B.FILE_EXT  						
+		      	 ,  B.FILE_SIZE 						
+		      	 ,  B.REPO_CD   						
+		      	 ,  B.REPO_PATH 						
+		      	 ,  B.MIME_TYPE 						
+		      	 ,  B.HITS  							
+		      	 ,  B.LAST_INQ_DTTM 					
+		      	 ,  B.REG_NO    						
+		      	 ,  B.REG_DTTM  						
+		     FROM  tb_crs_asmt_qbank_qstn_FILE A,		
+		           tb_sys_file B						
+		    WHERE  A.SBJ_CD  = #{sbjCd}					
+		      AND  A.QSTN_SN = #{qstnSn}					
+		      AND  A.CTGR_CD = #{ctgrCd}					
+		      AND  A.FILE_SN = B.FILE_SN
+	</select>
+
+	
+	<delete id="delete" parameterType="assignmentQbankQuestionVO">
+		 DELETE tb_crs_asmt_qbank_qstn_FILE WHERE QSTN_SN = #{qstnSn}	
+    </delete>
+
+
+
+</mapper>		

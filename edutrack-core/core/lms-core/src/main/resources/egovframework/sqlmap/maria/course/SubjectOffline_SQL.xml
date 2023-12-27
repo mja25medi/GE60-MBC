@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.subject.service.impl.SubjectOfflineMapper">	
+	<select id="selectKey" resultType="String">
+		SELECT CONCAT('FSC',LPAD(nextval(SQ_CRS_OFLN_SBJ),7,'0')) AS SBJ_CD
+	</select>
+	<sql id="selectColumnQuery">
+	 		   A.ORG_CD															
+	        ,  A.SBJ_CD															
+	        ,  A.SBJ_NM															
+	        ,  A.SBJ_CTGR_CD														
+	        ,  B. SBJ_CTGR_NM 														
+	        ,  A.SBJ_DESC															
+	        ,  A.USE_YN															
+	        ,  A.REG_NO															
+	        ,  A.REG_DTTM															
+	        ,  A.MOD_NO															
+	        ,  A.MOD_DTTM															
+	        ,  (SELECT FN_GET_USER_NAME(A.MOD_NO)) AS MOD_NM				
+	        ,  (SELECT FN_GET_USER_NAME(A.REG_NO)) AS REG_NM				
+	        , (SELECT COUNT(SBJ_CD) FROM tb_crs_crs_ofln_sbj C WHERE C.SBJ_CD = A.SBJ_CD) AS CRS_SUB_CNT				
+		    , (SELECT COUNT(SBJ_CD) FROM tb_crs_cre_crs_ofln_sbj D WHERE D.SBJ_CD = A.SBJ_CD) AS CRE_CRS_SUB_CNT				
+		    , (SELECT COUNT(SBJ_CD) FROM tb_cro_open_crs_sbj E WHERE E.SBJ_CD = A.SBJ_CD) AS OPEN_CRS_SUB_CNT				
+	</sql>
+	<sql id="selectQuery">
+	 	SELECT  
+	 	<include refid="selectColumnQuery" />														
+	    FROM  tb_crs_ofln_sbj A, tb_crs_sbj_ctgr B								
+	    WHERE  A.SBJ_CTGR_CD = B.SBJ_CTGR_CD
+	</sql>
+	
+	<select id="count" parameterType="offlineSubjectVO" resultType="Integer">
+		  SELECT 
+		 	COUNT(*)	
+		  FROM  tb_crs_ofln_sbj A, tb_crs_sbj_ctgr B								
+	      WHERE  A.SBJ_CTGR_CD = B.SBJ_CTGR_CD
+		<if test = "sbjCtgrCd != null and sbjCtgrCd != ''">
+			AND 
+			<foreach collection="sbjCtgrArr" item="item" separator="OR" open="(" close=")"  index="index">
+				B.SBJ_CTGR_PATH like CONCAT('%',#{item},'%')
+			</foreach>
+		</if>
+		<if test = "orgCd != null and orgCd != ''">                          			
+	    	AND A.ORG_CD = #{orgCd}	
+	    </if>	
+		<if test = "sbjNm != null and sbjNm != ''">                          			
+	    	 AND CONCAT(A.SBJ_NM,A.SBJ_CD) like CONCAT('%',#{sbjNm},'%')	
+	    </if>	      
+	</select>
+	
+ 	<select id="list" parameterType="offlineSubjectVO" resultType="offlineSubjectVO">
+	    <include refid="selectQuery" />
+		<if test = "sbjCtgrCd != null and sbjCtgrCd != ''">
+			AND 
+			<foreach collection="sbjCtgrArr" item="item" separator="OR" open="(" close=")"  index="index">
+				B.SBJ_CTGR_PATH like CONCAT('%', #{item}, '%')
+			</foreach>
+		</if>
+		<if test = "orgCd != null and orgCd != ''">                          			
+	    	AND A.ORG_CD = #{orgCd}	
+	    </if>	
+		<if test = "sbjNm != null and sbjNm != ''">                          			
+	    	 AND CONCAT(A.SBJ_NM, A.SBJ_CD) like CONCAT('%', #{sbjNm}, '%')	
+	    </if>
+	    ORDER  BY A.SBJ_NM 	
+	</select>
+     <select id="listPageing" parameterType="offlineSubjectVO" resultType="offlineSubjectVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectQuery" />
+		<if test = "sbjCtgrCd != null and sbjCtgrCd != ''">
+			AND 
+			<foreach collection="sbjCtgrArr" item="item" separator="OR" open="(" close=")"  index="index">
+				B.SBJ_CTGR_PATH like CONCAT('%', #{item}, '%')
+			</foreach>
+		</if>
+		<if test = "orgCd != null and orgCd != ''">                          			
+	    	AND A.ORG_CD = #{orgCd}	
+	    </if>	
+		<if test = "sbjNm != null and sbjNm != ''">                          			
+	    	 AND CONCAT(A.SBJ_NM,A.SBJ_CD) like CONCAT('%', #{sbjNm}, '%')
+	    </if>
+		<if test = "useYn != null and useYn != ''">                          			
+	    	 AND A.USE_YN = #{useYn}
+	    </if>
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+	    <choose>
+			<when test = "sortKey != null and sortKey == 'SBJ_CD_ASC'">
+				 ORDER BY SBJ_CD ASC
+			</when>
+			<when test = "sortKey != null and sortKey == 'SBJ_CD_DESC'">
+			 	ORDER BY SBJ_CD	DESC	
+			</when>
+			<when test = "sortKey != null and sortKey == 'SBJ_CTGR_CD_ASC'">
+			 	ORDER BY SBJ_CTGR_CD ASC
+			</when>
+			<when test = "sortKey != null and sortKey == 'SBJ_CTGR_CD_DESC'">
+			 	 ORDER BY SBJ_CTGR_CD DESC	
+			</when>
+			<when test = "sortKey != null and sortKey == 'SBJ_NM_ASC'">
+			 	ORDER BY SBJ_NM ASC
+			</when>
+			<when test = "sortKey != null and sortKey == 'SBJ_NM_DESC'">
+				ORDER BY SBJ_NM DESC
+			</when>
+			<otherwise>
+			   ORDER  BY SBJ_NM 
+			</otherwise>
+		</choose> 	
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+
+	<select id="select" parameterType="offlineSubjectVO" resultType="offlineSubjectVO">
+	    <include refid="selectQuery" />
+	     AND A.SBJ_CD = #{sbjCd}		
+	</select>
+ 	<select id="listSearch" parameterType="offlineSubjectVO" resultType="offlineSubjectVO">
+	    <include refid="selectQuery" />
+			AND  A.USE_YN = 'Y'	
+		<if test = "orgCd != null and orgCd != ''">                          			
+	    	AND A.ORG_CD = #{orgCd}	
+	    </if>	
+		<if test = "sbjNm != null and sbjNm != ''">                          			
+	    	 AND CONCAT(A.SBJ_NM, A.SBJ_CD) like CONCAT('%', #{sbjNm}, '%')
+	    </if>
+			AND  A.SBJ_CTGR_CD =  #{sbjCtgrCd}  						
+
+			AND  A.SBJ_CD NOT IN 									
+		   			( SELECT SBJ_CD										
+		   			  FROM tb_crs_cre_crs_ofln_sbj					
+		   			  WHERE CRS_CRE_CD = #{crsCreCd} )					
+		 ORDER   BY SBJ_NM 										
+	</select>
+
+
+   <insert id="insert" parameterType="offlineSubjectVO">
+	 	INSERT  INTO tb_crs_ofln_sbj (				
+	       	ORG_CD								
+	        ,  SBJ_CD								
+	        ,  SBJ_NM								
+	        ,  SBJ_DESC							
+	        ,  SBJ_CTGR_CD							
+	        ,  USE_YN								
+	        ,  REG_NO								
+	        ,  REG_DTTM							
+		) VALUES ( 									
+	       	#{orgCd}	
+			,  #{sbjCd}
+	        ,  #{sbjNm}								
+	        ,  #{sbjDesc}							
+	        ,  #{sbjCtgrCd}							
+	        ,  #{useYn}								
+	        ,  #{regNo}								
+	        ,  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+	             )									
+    </insert>
+
+   <update id="update" parameterType="offlineSubjectVO">
+	 	UPDATE  tb_crs_ofln_sbj 											
+	      SET  SBJ_NM 				= #{sbjNm}								
+	        ,  SBJ_DESC 			= #{sbjDesc}								
+	        ,  SBJ_CTGR_CD 		= #{sbjCtgrCd}							
+	        ,  USE_YN				= #{useYn}								
+	        ,  MOD_NO				= #{modNo}								
+	        ,  MOD_DTTM 			= DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+	    WHERE  SBJ_CD 				= #{sbjCd}
+    </update>
+
+	<delete id="delete" parameterType="offlineSubjectVO">
+		 DELETE  FROM tb_crs_ofln_sbj  
+		 WHERE  SBJ_CD = #{sbjCd}			
+    </delete>
+
+
+</mapper>	

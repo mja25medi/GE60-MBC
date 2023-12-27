@@ -1,0 +1,15 @@
+@charset "utf-8";
+/* CSS Document */
+
+.srhBtn-option {padding-bottom:20px;}
+.srhBtn-option:after {content:''; height:0; display:block; clear:both;}
+.srhBtn-option .totalNum {display:inline-block; margin-right:20px; font-size:18px; color:#333; vertical-align:middle;}
+.srhBtn-option .btn_opt {float:right;}
+.srhBtn-option select {height:32px; padding:0px; color:#666; border:1px solid #d8d8d8; box-sizing:border-box; vertical-align:middle;}
+.srhBtn-option select {-webkit-appearance:none; -moz-appearance:none; appearance:none;}
+.srhBtn-option select {min-width:80px; padding-right:26px !important; background:#fff url(tpl/img/home/basic/bg/bg_select_arrow.gif) no-repeat right center; background-size:auto 24%;}
+.srhBtn-option select::-ms-expand {display:none;}
+.srh_input {display:inline-block; height:32px; border:1px solid #d8d8d8; box-sizing:border-box;}
+.srh_input input {width:200px; height:30px; margin:0; border:none;}
+.srh_input .srhBtn {display:inline-block; width:30px; height:30px; font-size:18px; text-align:center; vertical-align:top;}
+

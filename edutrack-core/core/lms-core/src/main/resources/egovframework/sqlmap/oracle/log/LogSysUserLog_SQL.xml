@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.log.sysuser.service.impl.LogSysUserLogMapper">	
+	
+	<select id="listCountry" parameterType="logSysUserLogVO" resultType="logSysUserLogVO">
+		/*
+			 SQL ID : listCountry
+			 설  명 : 국가별 가입 횟수
+	 	*/
+	 	<![CDATA[
+	        SELECT NVL(A.USER_DIV_CD, 'N/A') AS codeNm,
+	         	   COUNT(A.USER_NO) AS userCnt
+	          FROM TB_USR_USER_INFO A, TB_USR_LOGIN B
+	         WHERE A.USER_NO = B.USER_NO
+	           AND A.ORG_CD (+) = #{orgCd}
+	           AND TO_CHAR(TO_DATE(B.REG_DTTM, 'YYYYMMDDHH24MISS'), 'YYYYMMDD') 
+	       		   BETWEEN TO_CHAR(TO_DATE(REPLACE(#{startDt},'.',''), 'YYYYMMDDHH24MISS'), 'YYYYMMDD')
+	               	   AND TO_CHAR(TO_DATE(REPLACE(#{endDt},'.',''), 'YYYYMMDDHH24MISS'), 'YYYYMMDD')
+	         GROUP BY A.USER_DIV_CD
+	         ORDER BY A.USER_DIV_CD
+		]]>
+	</select>
+	
+	<select id="listSex" parameterType="logSysUserLogVO" resultType="logSysUserLogVO">
+		/*
+			 SQL ID : listSex
+			 설  명 : 성별 가입 횟수
+	 	*/
+	 	<![CDATA[
+			SELECT CASE WHEN A.SEX_CD = 'M' THEN 'MAN'
+	               WHEN A.SEX_CD = 'F' THEN 'WOMAN'
+	               ELSE 'N/A' END as codeNm,
+	               COUNT(A.USER_NO) AS userCnt
+	          FROM TB_USR_USER_INFO A, TB_USR_LOGIN B
+	         WHERE A.USER_NO = B.USER_NO
+	           AND A.ORG_CD (+) = #{orgCd}
+	           AND TO_CHAR(TO_DATE(B.REG_DTTM, 'YYYYMMDDHH24MISS'), 'YYYYMMDD') 
+	       		   BETWEEN TO_CHAR(TO_DATE(REPLACE(#{startDt},'.',''), 'YYYYMMDDHH24MISS'), 'YYYYMMDD')
+	               	   AND TO_CHAR(TO_DATE(REPLACE(#{endDt},'.',''), 'YYYYMMDDHH24MISS'), 'YYYYMMDD')
+	         GROUP BY A.SEX_CD
+	         ORDER BY A.SEX_CD
+		]]>
+	</select>
+	
+	<select id="listSns" parameterType="logSysUserLogVO" resultType="logSysUserLogVO">
+		/*
+			 SQL ID : listSns
+			 설  명 : 소셜별 가입 횟수
+	 	*/
+	 	<![CDATA[
+			SELECT NVL(B.SNS_DIV, 'N/A') AS codeNm,
+	         	   COUNT(B.USER_NO) AS userCnt
+	          FROM TB_USR_USER_INFO A, TB_USR_LOGIN B
+	         WHERE A.USER_NO = B.USER_NO
+	           AND A.ORG_CD (+) = #{orgCd}
+	           AND TO_CHAR(TO_DATE(B.REG_DTTM, 'YYYYMMDDHH24MISS'), 'YYYYMMDD') 
+	       		   BETWEEN TO_CHAR(TO_DATE(REPLACE(#{startDt},'.',''), 'YYYYMMDDHH24MISS'), 'YYYYMMDD')
+	               	   AND TO_CHAR(TO_DATE(REPLACE(#{endDt},'.',''), 'YYYYMMDDHH24MISS'), 'YYYYMMDD')
+	         GROUP BY B.SNS_DIV 
+	         ORDER BY B.SNS_DIV
+		]]>
+	</select>
+	
+	<select id="listAge" parameterType="logSysUserLogVO" resultType="logSysUserLogVO">
+		/*
+			 SQL ID : listAge
+			 설  명 : 연령별 가입 횟수
+	 	*/
+	 	<![CDATA[
+	 		SELECT CASE AT.codeNm 
+		            WHEN '0' THEN '10대이하'
+		            WHEN '1' THEN '10대'
+		            WHEN '2' THEN '20대'
+		            WHEN '3' THEN '30대'
+		            WHEN '4' THEN '40대'
+		            WHEN '5' THEN '50대'
+		            WHEN '6' THEN '60대'
+		            WHEN '7' THEN '70대'
+		            WHEN '8' THEN '80대'
+		            WHEN '0' THEN '90대'
+		            ELSE 'N/A' END AS codeNm,
+		            SUM(AT.userCnt) AS userCnt
+			  FROM (SELECT SUBSTR(LPAD(TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(SUBSTR(A.BIRTH, 1, 4), 'YYYY'))/12), 2, 0), 1, 1) AS codeNm,
+			         COUNT(A.USER_NO) AS userCnt
+			          FROM TB_USR_USER_INFO A, TB_USR_LOGIN B
+			         WHERE A.USER_NO = B.USER_NO
+			           AND A.ORG_CD (+) = #{orgCd}
+		           AND TO_CHAR(TO_DATE(B.REG_DTTM, 'YYYYMMDDHH24MISS'), 'YYYYMMDD') 
+		               BETWEEN TO_CHAR(TO_DATE(REPLACE(#{startDt},'.',''), 'YYYYMMDDHH24MISS'), 'YYYYMMDD')
+	           	   	       AND TO_CHAR(TO_DATE(REPLACE(#{endDt},'.',''), 'YYYYMMDDHH24MISS'), 'YYYYMMDD')
+		           GROUP BY A.BIRTH
+		           ORDER BY A.BIRTH DESC) AT
+		      GROUP BY AT.codeNm
+		      ORDER BY DECODE(codeNm,'10대이하',1,'10대',2,'20대',3,'30대',4,'40대',5,'50대',6,'60대',7,'70대',8,'80대',9,'90대',10,'N/A',11)
+		   
+		]]>
+	</select>
+	
+	<select id="selectAutoDate" parameterType="logSysUserLogVO" resultType="logSysUserLogVO">
+		/*
+			 SQL ID : selectAutoDate
+			 설  명 : 날짜 가져오기
+	 	*/
+	 	<![CDATA[
+			SELECT CASE WHEN #{dateType} = 'Day' THEN #{endDt}
+			            WHEN #{dateType} = 'Week' THEN TO_CHAR(TO_DATE(replace(#{endDt},'.',''),'YYYYMMDD') - 7,'YYYY.MM.DD')
+			            WHEN #{dateType} = 'Month' THEN TO_CHAR(TO_DATE(replace(#{endDt},'.',''),'YYYYMMDD') - 30,'YYYY.MM.DD')
+			            WHEN #{dateType} = 'Year' THEN TO_CHAR(TO_DATE(replace(#{endDt},'.',''),'YYYYMMDD') - 365,'YYYY.MM.DD')
+			       END as startDt
+			     , #{endDt} as endDt
+			  FROM DUAL 
+		]]>
+	</select>
+
+</mapper>

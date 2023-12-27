@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.board.faq.service.impl.BrdFaqCtgrMapper">	
+
+	<sql id="selectQuery">
+		<![CDATA[
+			SELECT ORG_CD as orgCd
+			     , CTGR_CD as ctgrCd
+			     , CTGR_NM as ctgrNm
+			     , CTGR_ODR as ctgrOdr
+			     , CTGR_DESC as ctgrDesc
+			     , USE_YN as useYn
+			     , ( SELECT COUNT(*)
+			           FROM TB_BRD_FAQ_ATCL
+			          WHERE CTGR_CD = A.CTGR_CD ) AS subCnt
+			     , REG_NO as regNo
+			     , ( SELECT FN_GET_USER_NAME(REG_NO) FROM DUAL) AS regNm
+			     , REG_DTTM as regDttm
+			     , MOD_NO as modNo
+			     , ( SELECT FN_GET_USER_NAME(MOD_NO) FROM DUAL) AS modNm
+			     , MOD_DTTM as modDttm
+			  FROM TB_BRD_FAQ_CTGR A
+			 WHERE ORG_CD = #{orgCd}
+		]]>
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		 ORDER BY CTGR_ODR
+	</sql>		
+
+	<select id="list" parameterType="brdFaqCtgrVO" resultType="brdFaqCtgrVO">
+		/*
+			 SQL ID : list
+			 설  명 : FAQ 분류의 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	</select>
+	
+	<select id="listPageing" parameterType="brdFaqCtgrVO" resultType="brdFaqCtgrVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : FAQ 분류의 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="brdFaqCtgrVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : FAQ 분류의 전체 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>	
+	
+	<select id="select" parameterType="brdFaqCtgrVO" resultType="brdFaqCtgrVO">
+		/*
+			 SQL ID : select
+			 설  명 : FAQ 분류의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+		   AND CTGR_CD = #{ctgrCd}	 	
+	</select>	
+	
+	<insert id="insert" parameterType="brdFaqCtgrVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : FAQ 분류의 정보 등록
+	 	*/
+		INSERT INTO TB_BRD_FAQ_CTGR (
+		       ORG_CD
+		     , CTGR_CD
+		     , CTGR_NM
+		     , CTGR_ODR
+		     , CTGR_DESC
+		     , USE_YN
+		     , REG_NO
+		     , REG_DTTM
+		     , MOD_NO
+		     , MOD_DTTM
+		) VALUES (
+		       #{orgCd}
+		     , #{ctgrCd}
+		     , #{ctgrNm}
+		     , NVL(( SELECT MAX(NVL(CTGR_ODR,0)) + 1
+		               FROM TB_BRD_FAQ_CTGR
+		              WHERE ORG_CD = #{orgCd}),1)
+		     , #{ctgrDesc}
+		     , #{useYn}
+		     , #{regNo}
+		     , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		     , #{modNo}
+		     , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		)	 	
+	</insert>
+	
+	<update id="update" parameterType="brdFaqCtgrVO" >
+		/*
+			 SQL ID : update
+			 설  명 : FAQ 분류의 정보 수정
+	 	*/
+		UPDATE TB_BRD_FAQ_CTGR
+		   SET CTGR_NM = #{ctgrNm}
+		     , CTGR_ODR = #{ctgrOdr}
+		     , CTGR_DESC = #{ctgrDesc}
+		     , USE_YN = #{useYn}
+		     , MOD_NO = #{modNo}
+		     , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		 WHERE ORG_CD = #{orgCd}
+		   AND CTGR_CD = #{ctgrCd}	 	
+	</update>	
+
+	<delete id="delete" parameterType="brdFaqCtgrVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : FAQ 분류의 정보 삭제
+	 	*/
+		DELETE FROM TB_BRD_FAQ_CTGR
+		 WHERE ORG_CD = #{orgCd}
+		   AND CTGR_CD = #{ctgrCd}
+	</delete>
+	
+	<select id="selectKey" resultType="String">
+		SELECT 'FAQ'||LPAD(SQ_BRD_FAQ_CTGR.nextVal,7,'0') FROM DUAL
+	</select>
+	
+</mapper>

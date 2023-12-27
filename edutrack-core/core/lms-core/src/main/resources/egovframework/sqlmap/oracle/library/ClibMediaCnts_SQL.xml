@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.library.cnts.media.service.impl.ClibMediaCntsMapper">	
+	<sql id="selectColumnQuery">
+		  		 CNTS_CD  
+		       , ORG_CD  
+		       , USER_NO  
+		       , CTGR_CD  
+		       , ( SELECT CTGR_NM 
+		             FROM TB_CLIB_CNTS_CTGR 
+		            WHERE ORG_CD = A.ORG_CD 
+		              AND CTGR_CD = A.CTGR_CD ) AS CTGR_NM 
+		       , THUMB_FILE_SN  
+		       , CNTS_NM  
+		       , CNTS_TAG  
+		       , CNTS_CTS  
+		       , CNTS_ODR  
+		       , USE_YN  
+		       , NVL(HITS,0) AS HITS  
+		       , PLAYER_DIV  
+		       , FILE_NM  
+		       , FILE_PATH  
+		       , ULD_STS_CD  
+		       , ULD_FILE_KEY  
+		       , MEDIA_CNTS_KEY  
+		       , CHANL_KEY  
+		       , CHANL_NM  
+		       , PROFILE_KEY  
+		       , REG_NO  
+			   , (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) REG_NM 
+		       , REG_DTTM  
+		       , MOD_NO  
+			   , (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) MOD_NM 
+		       , MOD_DTTM  
+		       , ( SELECT COUNT(*)  
+		             FROM TB_CLIB_SHARE_MEDIA_CNTS  
+		            WHERE ORIGIN_CNTS_CD = A.CNTS_CD ) AS SHARED_CNT   
+		       , CNTS_TYPE
+	</sql>
+	
+	<sql id="selectQuery">
+		  SELECT 
+		  <include refid="selectColumnQuery" />
+		  FROM TB_CLIB_MEDIA_CNTS A 
+		  WHERE ORG_CD = #{orgCd} 
+	</sql>
+	
+	<sql id="listQuery">
+	    <include refid="selectQuery" />
+	    <if test = "cntsType != null and cntsType != ''">
+			AND CNTS_TYPE = #{cntsType}
+		</if>	  
+		<if test = "userNo != null and userNo != ''">
+			AND USER_NO = #{userNo}
+		</if>
+		<if test = "ctgrCd != null and ctgrCd != ''">
+			AND CTGR_CD = #{ctgrCd}
+		</if>
+		<if test = "searchValue != null and searchValue != ''">
+			<if test = "searchKey != null and searchKey == 'cntsNm'">
+				AND UPPER(A.CNTS_NM) LIKE '%'||#{searchValue}||'%'
+			</if>
+			<if test = "searchKey != null and searchKey == 'cntsTag'">
+				AND UPPER(A.CNTS_TAG) LIKE '%'||#{searchValue}||'%'
+			</if>
+			<if test = "searchKey != null and searchKey == 'regUser'">
+				AND A.REG_NO IN (SELECT USER_NO FROM TB_USR_USER_INFO WHERE ORG_CD = #{orgCd} AND UPPER(USER_NM) LIKE '%'||#{searchValue}||'%')
+			</if>
+			<if test = "searchKey != null and searchKey == 'ALL'">
+				AND (											
+						UPPER(A.CNTS_NM) LIKE '%'||#{searchValue}||'%'  
+						OR UPPER(A.CNTS_TAG) LIKE '%'||#{searchValue}||'%' 
+						OR A.REG_NO IN (SELECT USER_NO FROM TB_USR_USER_INFO WHERE ORG_CD = #{orgCd} AND UPPER(USER_NM) LIKE '%'||#{searchValue}||'%') 
+					)											
+			</if>
+			
+		</if>
+		ORDER BY REG_DTTM DESC 
+	</sql>
+	
+	<select id="count" parameterType="clibMediaCntsVO" resultType="Integer">
+		 SELECT 
+		 	COUNT(*)
+		 FROM TB_CLIB_MEDIA_CNTS A 
+		 WHERE ORG_CD = #{orgCd}
+		<if test = "cntsType != null and cntsType != ''">
+			AND CNTS_TYPE = #{cntsType}
+		</if>	  
+		<if test = "userNo != null and userNo != ''">
+			AND USER_NO = #{userNo}
+		</if>
+		<if test = "ctgrCd != null and ctgrCd != ''">
+			AND CTGR_CD = #{ctgrCd}
+		</if>
+		<if test = "searchValue != null and searchValue != ''">
+			<if test = "searchKey != null and searchKey == 'cntsNm'">
+				AND UPPER(A.CNTS_NM) LIKE '%'||#{searchValue}||'%'
+			</if>
+			<if test = "searchKey != null and searchKey == 'cntsTag'">
+				AND UPPER(A.CNTS_TAG) LIKE '%'||#{searchValue}||'%'
+			</if>
+			<if test = "searchKey != null and searchKey == 'regUser'">
+				AND A.REG_NO IN (SELECT USER_NO FROM TB_USR_USER_INFO WHERE ORG_CD = #{orgCd} AND UPPER(USER_NM) LIKE '%'||#{searchValue}||'%')
+			</if>
+			<if test = "searchKey != null and searchKey == 'ALL'">
+				AND (											
+						UPPER(A.CNTS_NM) LIKE '%'||#{searchValue}||'%'  
+						OR UPPER(A.CNTS_TAG) LIKE '%'||#{searchValue}||'%' 
+						OR A.REG_NO IN (SELECT USER_NO FROM TB_USR_USER_INFO WHERE ORG_CD = #{orgCd} AND UPPER(USER_NM) LIKE '%'||#{searchValue}||'%') 
+					)											
+			</if>
+			
+		</if>	
+	</select>	
+	
+ 	<select id="list" parameterType="clibMediaCntsVO" resultType="clibMediaCntsVO">
+	    <include refid="listQuery" />
+	</select>
+     <select id="listPageing" parameterType="clibMediaCntsVO" resultType="clibMediaCntsVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="listQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	<select id="select" parameterType="clibMediaCntsVO" resultType="clibMediaCntsVO">
+	    <include refid="selectQuery" />
+	    <if test = "cntsType != null and cntsType != ''">
+			AND CNTS_TYPE = #{cntsType}
+		</if>	  
+		<if test = "userNo != null and userNo != ''">
+			AND USER_NO = #{userNo}
+		</if>
+			AND CNTS_CD = #{cntsCd} 
+	</select>
+ 	<select id="listOlc" parameterType="clibMediaCntsVO" resultType="clibMediaCntsVO">
+	    <include refid="selectQuery" />
+		<if test = "userNo != null and userNo != ''">
+			AND USER_NO = #{userNo}
+		</if>
+		<if test = "ctgrCd != null and ctgrCd != ''">
+			AND CTGR_CD = #{ctgrCd}
+		</if>
+			AND USE_YN = 'Y' 
+			AND ULD_STS_CD = 'complete' 
+		ORDER BY CTGR_CD, CNTS_ODR  
+	</select>
+	<select id="selectByUploadFileKey" parameterType="clibMediaCntsVO" resultType="clibMediaCntsVO">
+		  SELECT CNTS_CD  
+		       , ORG_CD  
+		       , USER_NO  
+		       , CTGR_CD  
+		       , THUMB_FILE_SN  
+		       , CNTS_NM  
+		       , CNTS_TAG  
+		       , CNTS_CTS  
+		       , CNTS_ODR  
+		       , USE_YN  
+		       , NVL(HITS,0) AS HITS  
+		       , PLAYER_DIV  
+		       , FILE_NM  
+		       , FILE_PATH  
+		       , ULD_STS_CD  
+		       , ULD_FILE_KEY  
+		       , MEDIA_CNTS_KEY  
+		       , CHANL_KEY  
+		       , CHANL_NM  
+		       , PROFILE_KEY  
+		       , REG_NO  
+			   , (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) REG_NM 
+		       , REG_DTTM  
+		       , MOD_NO  
+			   , (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) MOD_NM 
+		       , MOD_DTTM  
+		       , ( SELECT COUNT(*)  
+		             FROM TB_CLIB_SHARE_MEDIA_CNTS  
+		            WHERE ORIGIN_CNTS_CD = A.CNTS_CD ) AS SHARED_CNT   
+		       , CNTS_TYPE
+		    FROM TB_CLIB_MEDIA_CNTS A 
+		   WHERE ULD_FILE_KEY = #{uldFileKey} 
+	</select>
+
+
+    <insert id="insert" parameterType="clibMediaCntsVO">
+		  INSERT INTO TB_CLIB_MEDIA_CNTS ( 
+		         CNTS_CD  
+		       , ORG_CD  
+		       , USER_NO  
+		       , CTGR_CD  
+		       , THUMB_FILE_SN  
+		       , CNTS_NM  
+		       , CNTS_TAG  
+		       , CNTS_CTS  
+		       , CNTS_ODR  
+		       , USE_YN  
+		       , HITS  
+		       , PLAYER_DIV  
+		       , FILE_NM  
+		       , FILE_PATH  
+		       , ULD_STS_CD  
+		       , ULD_FILE_KEY  
+		       , MEDIA_CNTS_KEY  
+		       , CHANL_KEY  
+		       , CHANL_NM  
+		       , PROFILE_KEY  
+		       , REG_NO  
+		       , REG_DTTM  
+		       , MOD_NO  
+		       , MOD_DTTM
+		       , CNTY_TYPE  
+		 ) VALUES ( 
+		         #{cntsCd}  
+		       , #{orgCd}  
+		       , #{userNo}  
+		       , #{ctgrCd}  
+		       , #{thumbFileSn}  
+		       , #{cntsNm}  
+		       , #{cntsTag}  
+		       , #{cntsCts}  
+		       , ( SELECT NVL(MAX(CNTS_ODR),0) + 1 
+		             FROM TB_CLIB_MEDIA_CNTS 
+		            WHERE ORG_CD = #{orgCd} 
+		              AND USER_NO = #{userNo} 
+		              AND CTGR_CD = #{ctgrCd} ) 
+		       , #{useYn}  
+		       , 0  
+		       , #{playerDiv}  
+		       , #{fileNm}  
+		       , #{filePath}  
+		       , #{uldStsCd}  
+		       , #{uldFileKey}  
+		       , #{mediaCntsKey}  
+		       , #{chanlKey}  
+		       , #{chanlNm}  
+		       , #{profileKey}  
+		       , #{regNo}  
+		       , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 
+		       , #{modNo}  
+		       , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 
+		       , #{cntsType}
+		 ) 
+    </insert>
+
+	<select id="selectCntsCd" resultType="clibMediaCntsVO">
+	    SELECT 'LMC'||LPAD(SQ_CLIB_MEDIA_CNTS.nextVal,17,'0') AS CNTS_CD FROM DUAL	
+	</select>
+
+
+   <update id="update" parameterType="clibMediaCntsVO">
+		  UPDATE TB_CLIB_MEDIA_CNTS SET 
+		         CTGR_CD = #{ctgrCd}  
+		       , THUMB_FILE_SN = #{thumbFileSn}  
+		       , CNTS_NM = #{cntsNm}  
+		       , CNTS_TAG = #{cntsTag}  
+		       , CNTS_CTS = #{cntsCts}  
+		       , CNTS_ODR = #{cntsOdr}  
+		       , USE_YN = #{useYn}  
+		       , HITS = #{hits}  
+		       , PLAYER_DIV = #{playerDiv}  
+		       , FILE_NM = #{fileNm}  
+		       , FILE_PATH = #{filePath}  
+		       , ULD_STS_CD = #{uldStsCd}  
+		       , ULD_FILE_KEY = #{uldFileKey}  
+		       , MEDIA_CNTS_KEY = #{mediaCntsKey}  
+		       , CHANL_KEY = #{chanlKey}  
+		       , CHANL_NM = #{chanlNm}  
+		       , PROFILE_KEY = #{profileKey}  
+		       , MOD_NO = #{modNo}  
+		       , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 
+		       , CNTS_TYPE = #{cntsType}
+		   WHERE CNTS_CD = #{cntsCd}  
+		     AND ORG_CD = #{orgCd}  
+		     AND USER_NO = #{userNo}
+    </update>
+	<update id="updateBatch" parameterType="list" >
+		<foreach collection="list" item="item" index="index" open="DECLARE BEGIN" close="; END;" separator=";">
+		  UPDATE TB_CLIB_MEDIA_CNTS SET
+		  SET
+			     CTGR_CD = #{item.ctgrCd}  
+		       , THUMB_FILE_SN = #{item.thumbFileSn}  
+		       , CNTS_NM = #{item.cntsNm}  
+		       , CNTS_TAG = #{item.cntsTag}  
+		       , CNTS_CTS = #{item.cntsCts}  
+		       , CNTS_ODR = #{item.cntsOdr}  
+		       , USE_YN = #{item.useYn}  
+		       , HITS = #{item.hits}  
+		       , PLAYER_DIV = #{item.playerDiv}  
+		       , FILE_NM = #{item.fileNm}  
+		       , FILE_PATH = #{item.filePath}  
+		       , ULD_STS_CD = #{item.uldStsCd}  
+		       , ULD_FILE_KEY = #{item.uldFileKey}  
+		       , MEDIA_CNTS_KEY = #{item.mediaCntsKey}  
+		       , CHANL_KEY = #{item.chanlKey}  
+		       , CHANL_NM = #{item.chanlNm}  
+		       , PROFILE_KEY = #{item.profileKey}  
+		       , MOD_NO = #{item.modNo}  
+		       , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 	
+		       , CNTS_TYPE = #{cntsType}
+		   WHERE CNTS_CD = #{item.cntsCd}  
+		     AND ORG_CD = #{item.orgCd } 
+		     AND USER_NO = #{item.userNo} 
+		</foreach>	     
+	</update>
+	<delete id="delete" parameterType="clibMediaCntsVO">
+		  DELETE FROM TB_CLIB_MEDIA_CNTS 
+		   WHERE ORG_CD = #{orgCd }
+		   	AND CNTS_CD = #{cntsCd} 
+		   <if test = "userNo != null and userNo != ''">
+		     AND USER_NO = #{userNo} 
+		    </if>
+    </delete>
+
+    <insert id="insertShare" parameterType="clibMediaCntsVO">
+		  INSERT INTO TB_CLIB_SHARE_MEDIA_CNTS (  
+		         CNTS_CD  
+		       , CTGR_CD  
+		       , ORG_CD  
+		       , ORIGIN_CNTS_CD  
+		       , ORIGIN_USER_NO  
+		       , CCL_CD  
+		       , THUMB_FILE_SN  
+		       , CNTS_NM  
+		       , CNTS_TAG  
+		       , CNTS_ODR  
+		       , USE_YN  
+		       , SHARE_STS_CD  
+		       , HITS  
+		       , PLAYER_DIV  
+		       , FILE_NM  
+		       , FILE_PATH  
+		       , ULD_FILE_KEY  
+		       , MEDIA_CNTS_KEY  
+		       , CHANL_KEY  
+		       , CHANL_NM  
+		       , PROFILE_KEY  
+		       , REG_NO  
+		       , REG_DTTM  
+		       , MOD_NO  
+		       , MOD_DTTM  
+		       , CNTS_TYPE
+		         )  
+		  SELECT #{shareCntsCd}  
+		       , #{ctgrCd}  
+		       , #{orgCd}  
+		       , CNTS_CD
+		       , USER_NO  
+		       , #{cclCd}  
+		       , THUMB_FILE_SN  
+		       , #{cntsNm}  
+		       , CNTS_TAG  
+		       , ( SELECT NVL(MAX(CNTS_ODR),0) + 1 
+		             FROM TB_CLIB_SHARE_MEDIA_CNTS 
+		            WHERE ORG_CD = #{orgCd} 
+		              AND CTGR_CD = #{ctgrCd} ) 
+		       , 'Y'  
+		       , 'S'  
+		       , 0  
+		       , PLAYER_DIV  
+		       , FILE_NM  
+		       , FILE_PATH  
+		       , ULD_FILE_KEY  
+		       , MEDIA_CNTS_KEY  
+		       , CHANL_KEY  
+		       , CHANL_NM  
+		       , PROFILE_KEY  
+		       , #{regNo}  
+		       , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+		       , #{modNo}  
+		       , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+		       , #{cntsType}
+		    FROM TB_CLIB_MEDIA_CNTS  
+		   WHERE CNTS_CD = #{cntsCd}  
+		     AND ORG_CD = #{orgCd}  
+		     AND USER_NO = #{userNo}   
+    </insert>
+
+
+
+
+</mapper>	

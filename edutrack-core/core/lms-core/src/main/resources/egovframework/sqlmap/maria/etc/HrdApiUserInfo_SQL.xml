@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.etc.hrdapi.service.impl.HrdApiUserInfoMapper">	
+
+	<sql id="selectQuery">
+		SELECT 
+		  A.NUM
+		, A.AGENT_PK
+		, A.SEQ
+		, A.USER_AGENT_PK
+		, A.USER_NAME
+		, A.RES_NO
+		, A.ENC_RES_NO
+		, A.EMAIL
+		, A.MOBILE
+		, A.CHANGE_STATE
+		, DATE_FORMAT( A.REG_DATE, '%Y-%m-%d %H:%i:%s') as REG_DATE
+		, A.NW_INO
+		, A.TRNEE_SE
+		, A.IRGLBR_SE
+		, A.SYNC_STATUS
+		, A.SYNC_RESULT_MSG
+		, A.REG_NO
+		, A.REG_DTTM
+		, A.MOD_NO
+		, A.MOD_DTTM
+	</sql>
+	<sql id="fromQuery">
+		FROM tb_hrd_usr_user_info A
+	</sql>
+	<sql id="whereQuery">
+		WHERE 1=1
+		<if test = 'userAgentPk != null and userAgentPk != ""'>
+		   AND A.USER_AGENT_PK = #{userAgentPk}
+		</if>
+		<if test = 'num != null and num != ""'>
+		   AND A.NUM = #{num}
+		</if>
+		<if test = 'syncStatus != null and syncStatus != ""'>
+		   AND A.SYNC_STATUS = #{syncStatus}
+		</if>
+		<if test = "searchFrom != null and searchFrom != '' and searchTo != null and searchTo != ''">
+			AND DATE_FORMAT(A.REG_DTTM , '%Y%m%d') BETWEEN DATE_FORMAT(#{searchFrom} , '%Y%m%d') AND DATE_FORMAT(#{searchTo} , '%Y%m%d')
+		</if>
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		<include refid="fromQuery"/>
+		<include refid="whereQuery"/>
+	</sql>
+	<sql id="selectCountQuery">
+		SELECT COUNT(*)
+        <include refid="fromQuery"/>
+	</sql>
+	<select id="selectUserInfo" parameterType="hrdApiUserInfoVO" resultType="egovMap">
+		/*
+			 SQL ID : selectUserInfo
+			 설  명 : api 년도 기수별 전송 데이터 조회
+	 	*/
+		<include refid="selectQuery"/>
+		<include refid="fromQuery"/>
+		<include refid="whereQuery"/>
+		ORDER BY A.MOD_DTTM DESC
+	</select>
+	
+	<select id="listUserInfo" parameterType="hrdApiUserInfoVO" resultType="egovMap">
+		/*
+			 SQL ID : listUserInfo
+			 설  명 : api 년도 기수별 전송 데이터  리스트 조회
+	 	*/
+		<include refid="selectQuery"/>
+		<include refid="fromQuery"/>
+		<include refid="whereQuery"/>
+		<if test = "searchKey != null and searchKey == 'pk' and searchValue != null and searchValue != ''">
+			AND A.USER_AGENT_PK like CONCAT('%',#{searchValue},'%')
+		</if>
+		<if test = "searchKey != null and searchKey == 'pkNm' and searchValue != null and searchValue != ''">
+			AND A.USER_NAME like CONCAT('%',#{searchValue},'%')
+		</if>
+		<if test = 'sortKey == null or sortKey == ""'>
+		   ORDER BY A.MOD_DTTM DESC
+		</if>
+	</select>
+	
+	<select id="listPageingUserInfo" parameterType="hrdApiUserInfoVO" resultType="egovMap">
+		/*
+			 SQL ID : listPageingUserInfo
+			 설  명 : 년도 기수별 전송 데이터 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<if test = "searchKey != null and searchKey == 'pk' and searchValue != null and searchValue != ''">
+			AND A.USER_AGENT_PK like CONCAT('%',#{searchValue},'%')
+		</if>
+		<if test = "searchKey != null and searchKey == 'pkNm' and searchValue != null and searchValue != ''">
+			AND A.USER_NAME like CONCAT('%',#{searchValue},'%')
+		</if>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		<if test = 'sortKey == null or sortKey == ""'>
+		   ORDER BY MOD_DTTM DESC
+		</if>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="countUserInfo" parameterType="hrdApiUserInfoVO" resultType="Integer">
+		/*
+			 SQL ID : countUserInfo
+			 설  명 : 년도 기수별 전송 데이터 전체 카운트
+	 	*/
+		<include refid="selectCountQuery"/>
+		<include refid="whereQuery"/>
+	</select>		
+	
+	<insert id="insertUserInfo" parameterType="hrdApiUserInfoVO" >
+		/*
+			 SQL ID : insertUserInfo
+			 설  명 : api 년도 기수별 전송 데이터  등록
+	 	*/
+		INSERT INTO tb_hrd_usr_user_info (
+			  AGENT_PK
+			, SEQ
+			, USER_AGENT_PK
+			, USER_NAME
+			, RES_NO
+			, ENC_RES_NO
+			, EMAIL
+			, MOBILE
+			, CHANGE_STATE
+			, REG_DATE
+			, NW_INO
+			, TRNEE_SE
+			, IRGLBR_SE
+			, SYNC_STATUS
+			, SYNC_RESULT_MSG
+			, REG_NO
+			, REG_DTTM
+			, MOD_NO
+			, MOD_DTTM
+		) VALUES (
+			  #{agentPk}
+			, #{seq}
+			, #{userAgentPk}
+			, #{userName}
+			, #{resNo}
+			, #{encResNo}
+			, #{email}
+			, #{mobile}
+			, #{changeState}
+			, #{regDate}
+			, #{nwIno}
+			, #{trneeSe}
+			, #{irglbrSe}
+		    , #{syncStatus}
+		    , #{syncResultMsg} 
+		    , #{regNo}
+		    , DATE_FORMAT( NOW(), '%Y%m%d%H%i%s') 
+		    , #{modNo}
+		    , DATE_FORMAT( NOW(), '%Y%m%d%H%i%s') 
+		)	 	
+	</insert>
+	
+	<update id="updateUserInfo" parameterType="hrdApiUserInfoVO" >
+		/*
+			 SQL ID : updateUserInfo
+			 설  명 : api 년도 기수별 전송 데이터  수정
+	 	*/
+		UPDATE tb_hrd_usr_user_info
+		   SET MOD_DTTM         =   DATE_FORMAT( NOW(), '%Y%m%d%H%i%s')  
+			<if test = 'syncResultMsg != null'>
+			 , SYNC_RESULT_MSG  =   #{syncResultMsg}
+			</if>
+			<if test = 'modNo != null and modNo != ""'>
+			 , MOD_NO			=   #{modNo}
+			</if>
+			<if test = 'seq != null and seq != ""'>
+			 , SEQ			=   #{seq}
+			</if>
+			<if test = 'syncStatus != null and syncStatus != ""'>
+			 , SYNC_STATUS      =   #{syncStatus}
+			</if>
+			<if test = 'userName != null and userName != ""'>
+			 , USER_NAME      =   #{userName}
+			</if>
+			<if test = 'resNo != null and resNo != ""'>
+			 , RES_NO      =   #{resNo}
+			</if>
+			<if test = 'encResNo != null and encResNo != ""'>
+			 , ENC_RES_NO      =   #{encResNo}
+			</if>
+			<if test = 'email != null and email != ""'>
+			 , EMAIL      =   #{email}
+			</if>
+			<if test = 'mobile != null and mobile != ""'>
+			 , MOBILE      =   #{mobile}
+			</if>
+			<if test = 'changeState != null and changeState != ""'>
+			 , CHANGE_STATE      =   #{changeState}
+			</if>
+			<if test = 'nwIno != null and nwIno != ""'>
+			 , NW_INO      =   #{nwIno}
+			</if>
+			<if test = 'trneeSe != null and trneeSe != ""'>
+			 , TRNEE_SE      =   #{trneeSe}
+			</if>
+			<if test = 'irglbrSe != null and irglbrSe != ""'>
+			 , IRGLBR_SE      =   #{irglbrSe}
+			</if>
+			<if test = 'regDate != null and regDate != ""'>
+			 , REG_DATE      =   #{regDate}
+			</if>
+		WHERE 1 = 1
+		AND USER_AGENT_PK = #{userAgentPk}
+		<if test = 'num != null and num != ""'>
+			AND NUM = #{num}
+		</if>
+		<if test = "searchKey != null and searchKey == 'syncStatus' and searchValue != null and searchValue != ''">
+		   AND SYNC_STATUS = #{searchValue}
+		</if>
+	</update>
+	
+	<delete id="deleteUserInfo" parameterType="hrdApiUserInfoVO" >
+		/*
+			 SQL ID : deleteUserInfo
+			 설  명 : api 년도 기수별 전송 데이터  삭제
+	 	*/
+		DELETE FROM tb_hrd_usr_user_info
+		WHERE USER_AGENT_PK = #{userAgentPk}
+		<if test = 'num != null and num != ""'>
+			AND NUM = #{num}
+		</if>
+	</delete>
+	
+	<select id="listUserInfoHrdApiSync" parameterType="hrdApiUserInfoVO" resultType="egovMap">
+		SELECT 
+		  A.NUM
+		, A.AGENT_PK		
+		, ROW_NUMBER() OVER()  as SEQ		
+		, A.USER_AGENT_PK	
+		, A.USER_NAME	
+		, A.RES_NO		
+		, A.ENC_RES_NO	
+		, A.EMAIL		
+		, A.MOBILE		
+		, A.CHANGE_STATE	
+		, DATE_FORMAT( NOW(), '%Y-%m-%d %H:%i:%s') as REG_DATE		
+		, A.NW_INO		
+		, A.TRNEE_SE		
+		, A.IRGLBR_SE
+		FROM tb_hrd_usr_user_info A
+		WHERE 1=1
+		 AND A.SYNC_STATUS != 'S'
+		<if test = 'userAgentPk != null and userAgentPk != ""'>
+		   AND A.USER_AGENT_PK = #{userAgentPk}
+		</if>
+		<if test = 'num != null and num != ""'>
+		   AND A.NUM = #{num}
+		</if>
+		<if test = "searchFrom != null and searchFrom != '' and searchTo != null and searchTo != ''">
+			AND DATE_FORMAT(A.REG_DTTM , '%Y%m%d') BETWEEN DATE_FORMAT(#{searchFrom} , '%Y%m%d') AND DATE_FORMAT(#{searchTo} , '%Y%m%d')
+		</if>
+		<if test = "searchKey != null and searchKey == 'syncStatus' and searchValue != null and searchValue != ''">
+		   AND A.SYNC_STATUS = #{searchValue}
+		</if>
+	</select>
+	
+</mapper>

@@ -1,0 +1,127 @@
+@charset 'utf-8';
+
+.btn_org {
+	display:inline-block;
+	padding:3px 0 5px 3px;
+	height:14px;
+	background:url('/img/home/basic/button/btn_org01.gif') no-repeat 0 0;
+}
+.btn_org span {
+	padding:5px 9px 4px 6px;
+	color:#fff;
+	text-align:center;
+	background:url('/img/home/basic/button/btn_org02.gif') no-repeat 100% 0;
+}
+:root .btn_org span {padding:5px 9px 4px 6px\9;}
+.btn_bl {
+	display:inline-block;
+	padding:3px 0 5px 3px;
+	height:14px;
+	background:url('/img/home/basic/button/btn_bl01.gif') no-repeat 0 0;
+}
+.btn_bl span {
+	padding:5px 9px 4px 6px;
+	color:#fff;
+	text-align:center;
+	background:url('/img/home/basic/button/btn_bl02.gif') no-repeat 100% 0;
+}
+.btn_bl span.txt_b {font-weight:bold;}
+:root .btn_bl span {padding:5px 9px 4px 6px\9;}
+.btn_gr {
+	display:inline-block;
+	padding:3px 0 5px 3px;
+	height:14px;
+	background:url('/img/home/basic/button/btn_gr01.gif') no-repeat 0 0;
+}
+.btn_gr span {
+	padding:5px 9px 4px 6px;
+	color:#fff;
+	text-align:center;
+	background:url('/img/home/basic/button/btn_gr02.gif') no-repeat 100% 0;
+}
+:root .btn_gr span {padding:5px 9px 4px 6px\9;}
+.btn01 {
+	display:inline-block;
+	padding:3px 8px 2px;
+	background:#1268b3;
+	color:#fff;
+	font-size:11px;
+}
+.btn01:hover {color:#fff;}
+.btn02 {
+	display:inline-block;
+	padding:3px 8px 2px;
+	background:#0089ff;
+	color:#fff;
+	font-size:11px;
+}
+.btn02:hover {color:#fff;}
+
+/* 버튼 스타일 03 */
+.btn03, .btn03 * {
+	display:inline-block;
+	background:url(/img/home/basic/button/btn_03.gif) no-repeat right top;
+	height:28px;
+	font-size: 12px;
+	text-decoration: none !important;
+}
+.btn03 span, .btn03 span * {
+	display:inline-block;
+	background:url(/img/home/basic/button/btn_03.gif) no-repeat left top;
+	height:28px;
+	font-size: 12px;
+	color: #fff !important;
+	text-decoration: none !important;
+	padding: 5px 33px 0 33px;
+}
+
+/* 버튼 스타일 04 */
+.btn04, .btn04 * {
+	display:inline-block;
+	background:url(/img/home/basic/button/btn_04.gif) no-repeat right top;
+	height:24px;
+	font-size: 11px;
+	text-decoration:
+	none !important;
+}
+.btn04 span, .btn04 span * {
+	display:inline-block;
+	background:url(img/home/basic/button/btn_04.gif) no-repeat left top;
+	height:24px;
+	font-size: 11px;
+	color: #fff !important;
+	text-decoration: none !important;
+	padding: 3px 20px 0 20px;
+}
+
+.btn_area .btn_right {margin:-25px 0 0 0;}
+.btn_left {margin-top:20px;text-align:left;}
+.btn_right {margin-top:20px;text-align:right;}
+.btn_center {margin-top:20px;text-align:center;}
+.btn_center_txt {margin-top:45px;text-align:center;}
+
+.btn_txt {
+	display:inline-block;
+	padding:10px 15px 10px;
+	border:1px solid #ccc;
+	background:#004282;
+	color:#fff;
+	font-weight:bold;
+}
+.btn_txt:hover {color:#fff;}
+.btn_search {
+	width:52px;
+	height:24px;
+	border:none;
+	background:url('/img/home/ko/button/btn_search_g.gif') no-repeat 0 0;
+}
+
+.regist .btn_regist {
+	position:absolute;
+	top:1px;
+	right:0;
+	width:68px;
+	height:69px;
+	border:none;
+	background:url('/img/home/ko/button/btn_regist.gif') no-repeat 0 0;
+}

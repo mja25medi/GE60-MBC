@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.student.result.service.impl.EduResultMapper">
+
+	<sql id="selectColumnQuery">
+			  A.STD_NO
+			, A.CRS_CRE_CD
+			, A.USER_NO
+			, A.DECLS_NO
+			, B.USER_NM
+			, C.USER_ID
+			, B.EMAIL
+			, B.BIRTH
+			, A.ENRL_STS
+			, A.SCORE_ECLT_YN
+			, (SELECT FN_GET_CODE_NAME('ENRL_STS',A.ENRL_STS) FROM DUAL) AS ENRL_STS_NM
+			, A.EDU_NO
+			, TO_CHAR(TO_DATE(A.ENRL_START_DTTM,'YYYYMMDDHH24MISS'),'MM.DD')||'~'|| TO_CHAR(TO_DATE(A.ENRL_END_DTTM,'YYYYMMDDHH24MISS'),'MM.DD') AS ENRL_DURATION
+			, NVL(D.PRGR_SCORE,0) AS PRGR_SCORE
+			, NVL(D.PRGR_RATE,0) AS PRGR_RATE
+			, NVL(D.ATTD_SCORE,0) AS ATTD_SCORE
+			, NVL(D.EXAM_SCORE,0) AS EXAM_SCORE
+			, NVL(D.SEMI_EXAM_SCORE,0) AS SEMI_EXAM_SCORE
+			, NVL(D.ASMT_SCORE,0) AS ASMT_SCORE
+			, NVL(D.FORUM_SCORE,0) AS FORUM_SCORE
+			, NVL(D.PRJT_SCORE,0) AS PRJT_SCORE
+			, NVL(D.JOIN_SCORE,0) AS JOIN_SCORE
+			, NVL(D.ETC_SCORE,0) AS ETC_SCORE
+			, NVL(D.TOT_SCORE,0) AS TOT_SCORE
+			, NVL(D.CONV_SCORE,0) AS CONV_SCORE
+			, DECODE(D.STD_NO, null, 'N', 'Y') AS RESULT_YN
+			, (SELECT FN_GET_CRS_STD_PRGR(A.CRS_CRE_CD, A.STD_NO) FROM DUAL) AS TOT_RATIO
+			, ROUND((SELECT FN_GET_CRS_STD_BMKTIME(A.CRS_CRE_CD, A.STD_NO) FROM DUAL)) AS TOT_BMK_TIME
+	</sql>
+
+	<sql id="getListStudentQuery">
+		SELECT 
+		<include refid="selectColumnQuery" />
+		FROM TB_STD_STD A, TB_USR_USER_INFO B,
+			TB_USR_LOGIN C, TB_STD_EDU_RSLT D
+		WHERE A.USER_NO = B.USER_NO
+			AND B.USER_NO = C.USER_NO
+			AND A.CRS_CRE_CD = #{crsCreCd}
+			AND A.ENRL_STS IN ('S', 'C', 'F')
+			AND A.DECLS_NO = DECODE(#{declsNo}, null, A.DECLS_NO, 0, A.DECLS_NO, #{declsNo})
+			AND C.USER_STS ='U'
+			AND B.USER_NM like '%'||NVL(#{userNm}, '')||'%'
+			AND A.STD_NO = D.STD_NO(+)
+		<if test = "searchFrom != null and searchFrom != ''"> 
+			AND (SELECT FN_GET_CRS_STD_PRGR(A.CRS_CRE_CD, A.STD_NO) FROM DUAL) >= #{searchFrom}
+		</if>
+		<if test = "searchTo != null and searchTo != ''"> 
+		<![CDATA[
+			AND (SELECT FN_GET_CRS_STD_PRGR(A.CRS_CRE_CD, A.STD_NO) FROM DUAL) < #{searchTo}
+			]]>
+		</if>
+		<if test = "gradeCd != null and gradeCd != ''"> 
+			AND SUBSTR(C.USER_ID,-5,1) = #{gradeCd}
+		</if>
+		<if test = "banCd != null and banCd != ''"> 
+			AND SUBSTR(C.USER_ID,-4,2) = #{banCd}
+		</if>
+		<choose>
+			<when test="sortKey != null and sortKey == 'EDU_NO_ASC'">
+				ORDER BY A.EDU_NO ASC
+			</when>
+			<when test="sortKey != null and sortKey == 'EDU_NO_DESC'">
+				ORDER BY A.EDU_NO DESC
+			</when>
+			<when test="sortKey != null and sortKey == 'DECLS_NO_ASC'">
+				ORDER BY A.DECLS_NO ASC
+			</when>
+			<when test="sortKey != null and sortKey == 'DECLS_NO_DESC'">
+				ORDER BY A.DECLS_NO DESC
+			</when>
+			<when test="sortKey != null and sortKey == 'USER_NM_ASC'">
+				ORDER BY B.USER_NM ASC
+			</when>
+			<when test="sortKey != null and sortKey == 'USER_NM_DESC'">
+				ORDER BY B.USER_NM DESC
+			</when>
+			<when test="sortKey != null and sortKey == 'USER_ID_ASC'">
+				ORDER BY C.USER_ID ASC
+			</when>
+			<when test="sortKey != null and sortKey == 'USER_ID_DESC'">
+				ORDER BY C.USER_ID DESC
+			</when>
+			<when test="sortKey != null and sortKey == 'TOT_RATIO_ASC'">
+				ORDER BY TOT_RATIO ASC
+			</when>
+			<when test="sortKey != null and sortKey == 'TOT_RATIO_DESC'">
+				ORDER BY TOT_RATIO DESC
+			</when>
+			<otherwise>
+				ORDER BY A.EDU_NO, C.USER_ID
+			</otherwise>
+		</choose>
+	</sql>
+		
+	<sql id="getMergeQuery">
+		  		MERGE  INTO TB_STD_EDU_RSLT A								
+		       USING  DUAL													
+		          ON  (STD_NO 	= #{stdNo})									
+		        WHEN  MATCHED THEN											
+		      UPDATE														
+		         SET  PRGR_SCORE 	= #{prgrScore}							
+		           ,  ATTD_SCORE 	= #{attdScore}							
+		           ,  EXAM_SCORE 	= #{examScore}	
+		           ,  SEMI_EXAM_SCORE 	= #{semiExamScore}							
+		           ,  ASMT_SCORE 	= #{asmtScore}							
+		           ,  FORUM_SCORE 	= #{forumScore}							
+		           ,  PRJT_SCORE 	= #{prjtScore}							
+		           ,  JOIN_SCORE 	= #{joinScore}							
+		           ,  ETC_SCORE 	= #{etcScore}								
+		           ,  TOT_SCORE 	= #{totScore}								
+		           ,  CONV_SCORE 	= #{convScore}							
+		           ,  MOD_NO 		= #{modNo}								
+		           ,  MOD_DTTM 	= TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')	
+		        WHEN  NOT MATCHED THEN										
+		      INSERT (														
+		              STD_NO												
+		           ,  PRGR_SCORE											
+		           ,  ATTD_SCORE											
+		           ,  EXAM_SCORE		
+		           ,  SEMI_EXAM_SCORE										
+		           ,  ASMT_SCORE											
+		           ,  FORUM_SCORE											
+		           ,  PRJT_SCORE											
+		           ,  JOIN_SCORE											
+		           ,  ETC_SCORE											
+		           ,  TOT_SCORE											
+		           ,  CONV_SCORE											
+		           ,  REG_NO												
+		           ,  REG_DTTM												
+		           ,  MOD_NO												
+		           ,  MOD_DTTM												
+				) VALUES (													
+		              #{stdNo}												
+		           ,  #{prgrScore}											
+		           ,  #{attdScore}											
+		           ,  #{examScore}		
+		           ,  #{semiExamScore}									
+		           ,  #{asmtScore}											
+		           ,  #{forumScore}											
+		           ,  #{prjtScore}											
+		           ,  #{joinScore}											
+		           ,  #{etcScore}											
+		           ,  #{totScore}											
+		           ,  #{convScore}											
+		           ,  #{regNo}												
+		           ,  TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')					
+		           ,  #{modNo}												
+		           ,  TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')					
+				)															
+	</sql>
+	
+	<sql id="getUpdateStudentQuery">
+		 	UPDATE 	TB_STD_EDU_RSLT A											
+		      SET  A.PRGR_SCORE 	= #{prgrScore}								
+		        ,  A.ATTD_SCORE 	= #{attdScore}								
+		        ,  A.EXAM_SCORE 	= #{examScore}				
+		        ,  A.SEMI_EXAM_SCORE 	= #{semiExamScore}						
+		        ,  A.ASMT_SCORE 	= #{asmtScore}								
+		        ,  A.FORUM_SCORE 	= #{forumScore}								
+		        ,  A.PRJT_SCORE 	= #{prjtScore}								
+		        ,  A.JOIN_SCORE 	= #{joinScore}								
+		        ,  A.ETC_SCORE 	= #{etcScore}									
+		        ,  A.TOT_SCORE 	= #{totScore}									
+		        ,  A.CONV_SCORE 	= #{convScore}								
+		        ,  A.MOD_NO 		= #{modNo}									
+		        ,  A.MOD_DTTM 		= TO_CHAR(SYSDATE,'yyyymmddhh24miss')		
+		    WHERE  A.SBJ_CD 		= #{sbjCd}									
+		      AND  STD_NO 			= #{stdNo}									
+	</sql>
+	
+	<sql id="getListStudentOrderScore">
+		<!-- 학습자 목록 조회 쿼리 -->
+		 	SELECT 	*																							
+		 	  FROM 	(																							
+		 			 SELECT  A.STD_NO																			
+						  ,  A.CRS_CRE_CD																		
+						  ,  A.USER_NO																			
+		                 ,  A.DECLS_NO																			
+						  ,  B.USER_NM																			
+						  ,  C.USER_ID																			
+						  ,  B.EMAIL																			
+						  ,  B.BIRTH																			
+						  ,  A.ENRL_STS																			
+						  ,  (SELECT FN_GET_CODE_NAME('ENRL_STS',A.ENRL_STS) FROM DUAL) AS ENRL_STS_NM			
+						  ,  A.EDU_NO																			
+						  ,  TO_CHAR(TO_DATE(A.ENRL_START_DTTM,'YYYYMMDDHH24MISS'),'MM.DD')||'~'||				
+		                    TO_CHAR(TO_DATE(A.ENRL_END_DTTM,'YYYYMMDDHH24MISS'),'MM.DD') AS ENRL_DURATION		
+						  ,  NVL(D.PRGR_SCORE,0) AS PRGR_SCORE
+						  ,  NVL(D.PRGR_RATE,0) AS PRGR_RATE						  													
+						  ,  NVL(D.ATTD_SCORE,0) AS ATTD_SCORE													
+						  ,  NVL(D.EXAM_SCORE,0) AS EXAM_SCORE		
+						  ,  NVL(D.SEMI_EXAM_SCORE,0) AS SEMI_EXAM_SCORE												
+						  ,  NVL(D.ASMT_SCORE,0) AS ASMT_SCORE													
+						  ,  NVL(D.FORUM_SCORE,0) AS FORUM_SCORE												
+						  ,  NVL(D.PRJT_SCORE,0) AS PRJT_SCORE													
+						  ,  NVL(D.JOIN_SCORE,0) AS JOIN_SCORE													
+						  ,  NVL(D.ETC_SCORE,0) AS ETC_SCORE													
+						  ,  NVL(D.TOT_SCORE,0) AS TOT_SCORE													
+						  ,  NVL(D.CONV_SCORE,0) AS CONV_SCORE													
+						  ,  DECODE(D.STD_NO, null, 'N', 'Y') AS RESULT_YN										
+		   		   FROM  TB_STD_STD	A, TB_USR_USER_INFO B													
+		        		  ,  TB_USR_LOGIN C, TB_STD_EDU_RSLT D													
+					  WHERE  A.USER_NO 		= B.USER_NO															
+					    AND  B.USER_NO 		= C.USER_NO															
+					    AND  A.CRS_CRE_CD 	= #{crsCreCd}															
+					    AND  A.ENRL_STS IN ('S', 'C', 'F')														
+					    AND  B.USER_STS 	='U'																
+					    AND  B.USER_NM like '%'||NVL(#{userNm}, '')||'%'											
+					    AND  A.STD_NO 		= D.STD_NO (+)														
+		       	) T																							
+	</sql>
+	
+	<select id="count" parameterType="eduResultVO" resultType="Integer">
+	  	SELECT 
+	  		COUNT(*)
+		FROM TB_STD_STD A, TB_USR_USER_INFO B,
+			TB_USR_LOGIN C, TB_STD_EDU_RSLT D
+		WHERE A.USER_NO = B.USER_NO
+			AND B.USER_NO = C.USER_NO
+			AND A.CRS_CRE_CD = #{crsCreCd}
+			AND A.ENRL_STS IN ('S', 'C', 'F')
+			AND A.DECLS_NO = DECODE(#{declsNo}, null, A.DECLS_NO, 0, A.DECLS_NO, #{declsNo})
+			AND C.USER_STS ='U'
+			AND B.USER_NM like '%'||NVL(#{userNm}, '')||'%'
+			AND A.STD_NO = D.STD_NO(+)
+		<if test = "searchFrom != null and searchFrom != ''"> 
+			AND (SELECT FN_GET_CRS_STD_PRGR(A.CRS_CRE_CD, A.STD_NO) FROM DUAL) >= #{searchFrom}
+		</if>
+		<if test = "searchTo != null and searchTo != ''"> 
+		<![CDATA[
+			AND (SELECT FN_GET_CRS_STD_PRGR(A.CRS_CRE_CD, A.STD_NO) FROM DUAL) < #{searchTo}
+			]]>
+		</if>
+		<if test = "gradeCd != null and gradeCd != ''"> 
+			AND SUBSTR(C.USER_ID,-5,1) = #{gradeCd}
+		</if>
+		<if test = "banCd != null and banCd != ''"> 
+			AND SUBSTR(C.USER_ID,-4,2) = #{banCd}
+		</if>
+	</select>	
+
+	<select id="listResult" parameterType="eduResultVO" resultType="eduResultVO">
+		<!--학습결과 목록 조회 (전체) -->
+		<include refid="getListStudentQuery" />
+	</select>
+
+	<select id="listResultPaging" parameterType="eduResultVO" resultType="eduResultVO">
+		<!-- 학습결과 목록 조회 (페이징) -->
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix" />
+		<include refid="getListStudentQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix" />
+	</select>
+
+	<select id="selectResult" parameterType="eduResultVO" resultType="eduResultVO">
+	<!-- 학습결과 정보 조회 -->
+		 	SELECT  A.STD_NO													
+		        ,  A.PRGR_SCORE												
+		        ,  A.PRGR_RATE
+		        ,  A.ATTD_SCORE												
+		        ,  A.EXAM_SCORE			
+		        ,  A.SEMI_EXAM_SCORE											
+		        ,  A.ASMT_SCORE												
+		        ,  A.FORUM_SCORE												
+		        ,  A.PRJT_SCORE												
+		        ,  A.JOIN_SCORE												
+		        ,  A.ETC_SCORE													
+		        ,  A.TOT_SCORE													
+		        ,  A.CONV_SCORE												
+		        ,  A.REG_NO													
+		        ,  A.REG_DTTM													
+		        ,  A.MOD_NO													
+		        ,  A.MOD_DTTM													
+			     ,  (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) AS MOD_NM		
+			     ,  (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) AS REG_NM		
+		     FROM  TB_STD_EDU_RSLT A											
+		    WHERE  A.STD_NO = #{stdNo}											
+	</select>
+
+	<insert id="insertResult" parameterType="eduResultVO">
+		<include refid="getMergeQuery" />
+	</insert>
+
+	<update id="updateResult" parameterType="eduResultVO">
+		<!-- 학습결과 수정 -->
+		<include refid="getUpdateStudentQuery" />
+	</update>
+	
+	<select id="listStudentScore" parameterType="eduResultVO" resultType="eduResultVO">
+		<!-- 수강생 수료 처리를 위한 수강생 목록 조회 -->
+		<include refid="getListStudentOrderScore" />
+	</select>
+
+	<update id="insertEduResultSp" statementType="CALLABLE" parameterType="eduResultVO">
+		{call SP_AUTO_SCORE_STD( #{crsCreCd}, #{sbjCd}, #{stdNo} ) }
+	</update>
+	
+	<update id="insertEduResultCrsSp" statementType="CALLABLE" parameterType="eduResultVO">
+		{call SP_AUTO_SCORE_CRS( #{crsCreCd} ) }
+	</update>
+	
+	<update id="getInsertEduResult" statementType="CALLABLE" parameterType="eduResultVO">
+		{call SP_INSERT_EDU_RESULT( #{crsCreCd} ,#{stdNo}) }
+	</update>
+	
+	<update id="autoInserteduRslt" parameterType="eduResultVO">
+		{call SP_INSERT_EDU_RESULT( #{crsCreCd} ,#{stdNo}) }
+	</update>
+	
+	<sql id="selectCrmEduResult">
+		SELECT     B.CRS_CRE_CD
+	 	 		 , B.CRS_CRE_NM
+	 	 		 , C.CRS_YEAR
+	 	 		 , C.CRS_TERM 
+	 	 		 , A.ENRL_STS
+	 	 		 , A.STD_NO 
+	 	 		 , NVL(D.PRGR_SCORE,0) AS PRGR_SCORE				
+ 	 	 		 , NVL(D.PRGR_RATE,0) AS PRGR_RATE								
+		         , NVL(D.ATTD_SCORE,0) AS ATTD_SCORE											
+		    	 , NVL(D.EXAM_SCORE,0) AS EXAM_SCORE			
+		    	 , NVL(D.SEMI_EXAM_SCORE,0)	AS SEMI_EXAM_SCORE		        									
+		     	 , NVL(D.ASMT_SCORE,0) AS ASMT_SCORE												
+		    	 , NVL(D.FORUM_SCORE,0)	AS FORUM_SCORE											
+		     	 , NVL(D.PRJT_SCORE,0) AS PRJT_SCORE												
+		     	 , NVL(D.JOIN_SCORE,0) AS JOIN_SCORE												
+		     	 , NVL(D.ETC_SCORE,0) AS ETC_SCORE													
+		     	 , NVL(D.TOT_SCORE,0) AS TOT_SCORE
+		     	 , A.ENRL_APLC_DTTM		
+		 FROM tb_std_std A, tb_crs_cre_crs B, tb_crs_crs C, tb_std_edu_rslt D 							
+		 WHERE A.CRS_CRE_CD = B.CRS_CRE_CD
+		 AND B.CRS_CD = C.CRS_CD
+		 AND A.STD_NO = D.STD_NO 
+		 AND A.USER_NO = #{userNo}
+	</sql>
+	
+	<select id="listCrmEduResultPaging" parameterType="eduResultVO" resultType="eduResultVO">
+		<!-- 학습결과 목록 조회 (페이징) -->
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix" />
+		<include refid="selectCrmEduResult" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		ORDER BY ENRL_APLC_DTTM DESC
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix" />	
+	</select>	
+
+</mapper>

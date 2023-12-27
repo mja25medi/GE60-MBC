@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.assignmentbank.service.impl.AssignmentQbankQuestionMapper">	
+
+ 	<select id="list" parameterType="assignmentQbankQuestionVO" resultType="assignmentQbankQuestionVO">
+		SELECT  SBJ_CD              								
+	        ,  QSTN_SN              								
+	        ,  CTGR_CD              								
+	        ,  QSTN_TITLE            								
+	        ,  QSTN_CTS              								
+	        ,  REG_NO              								
+	        ,  REG_DTTM              								
+	        ,  MOD_NO              								
+	        ,  MOD_DTTM             	 							
+			 ,  (SELECT FN_GET_USER_NAME(MOD_NO) FROM DUAL) MOD_NM	
+			 ,  (SELECT FN_GET_USER_NAME(REG_NO) FROM DUAL) REG_NM	
+	     FROM  tb_crs_asmt_qbank_qstn A 							
+	    WHERE  SBJ_CD 	= #{sbjCd}									
+	      AND  CTGR_CD = #{ctgrCd} 									
+	    ORDER  BY QSTN_SN		
+	</select>
+
+	<select id="select" parameterType="assignmentQbankQuestionVO" resultType="assignmentQbankQuestionVO">
+		SELECT  SBJ_CD              									
+	        ,  QSTN_SN              									
+	        ,  CTGR_CD              									
+	        ,  QSTN_TITLE            									
+	        ,  QSTN_CTS              									
+	        ,  REG_NO              									
+	        ,  REG_DTTM              									
+	        ,  MOD_NO              									
+	        ,  MOD_DTTM             									
+			 ,  (SELECT FN_GET_USER_NAME(MOD_NO) FROM DUAL) MOD_NM		
+			 ,  (SELECT FN_GET_USER_NAME(REG_NO) FROM DUAL) REG_NM		
+	     FROM  tb_crs_asmt_qbank_qstn 									
+	    WHERE  SBJ_CD 	= #{sbjCd}										
+	      AND  CTGR_CD = #{ctgrCd} 										
+	      AND  QSTN_SN = #{qstnSn}
+	</select>
+
+
+    <insert id="insert" parameterType="assignmentQbankQuestionVO">
+			INSERT  INTO tb_crs_asmt_qbank_qstn (				
+		        	SBJ_CD              						
+		        ,  QSTN_SN              						
+		        ,  CTGR_CD              						
+		        ,  QSTN_TITLE              					
+		        ,  QSTN_CTS              						
+		        ,  REG_NO              						
+		        ,  REG_DTTM            						
+			) VALUES ( 											
+		        	#{sbjCd}              						
+		        ,  #{qstnSn}              						
+		        ,  #{ctgrCd }             						
+		        ,  #{qstnTitle}              					
+		        ,  #{qstnCts}              						
+		        ,  #{regNo}              						
+		        ,  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		        <!-- ,	DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	)  -->
+			)	
+    </insert>
+
+	<select id="selectSn" resultType="assignmentQbankQuestionVO">
+		SELECT nextval(SQ_CRS_ASMT_QBANK_QSTN) AS QSTN_SN FROM DUAL
+	</select>
+
+   <update id="update" parameterType="assignmentQbankQuestionVO">
+		UPDATE  tb_crs_asmt_qbank_qstn 								
+	      SET  QSTN_TITLE 	= #{qstnTitle}          					
+	        ,	QSTN_CTS  	= #{qstnCts}          					
+	        ,	MOD_NO    	= #{modNo}          						
+	        ,	MOD_DTTM  	= DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+	        <!-- ,	MOD_DTTM 	= DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') -->
+	    WHERE 	SBJ_CD 		= #{sbjCd}								
+	      AND 	CTGR_CD 	= #{ctgrCd}								
+	      AND 	QSTN_SN 	= #{qstnSn}  
+    </update>
+	<delete id="delete" parameterType="assignmentQbankQuestionVO">
+		 DELETE  FROM tb_crs_asmt_qbank_qstn
+		    WHERE  QSTN_SN = #{qstnSn}				
+    </delete>
+
+
+
+</mapper>		

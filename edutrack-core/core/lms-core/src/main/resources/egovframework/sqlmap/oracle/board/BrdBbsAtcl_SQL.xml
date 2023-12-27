@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.board.bbs.service.impl.BrdBbsAtclMapper">	
+
+	
+	<sql id="selectQuery">
+		<![CDATA[
+		SELECT A.ATCL_SN as atclSn
+		     , A.BBS_CD as bbsCd
+		     , (SELECT L.MENU_NM FROM TB_ORG_MENU M INNER JOIN TB_ORG_MENU_LANG L ON M.ORG_CD = L.ORG_CD AND M.MENU_CD = L.MENU_CD
+		         WHERE M.ORG_CD = #{orgCd} AND M.OPTN_CTGR_CD_1 = 'BBS' AND M.OPTN_CTGR_CD_2 = A.BBS_CD AND L.LANG_CD = 'ko') as bbsNm
+		     , A.PAR_ATCL_SN as parAtclSn
+		     , A.HEAD_CD as headCd
+		     , ( SELECT HEAD_NM
+		           FROM TB_BRD_BBS_HEAD
+		          WHERE BBS_CD = A.BBS_CD
+		            AND HEAD_CD = A.HEAD_CD ) AS headNm
+		     , A.THUMB_FILE_SN as thumbFileSn
+		     , A.ATCL_TITLE as atclTitle
+		     , A.ATCL_CTS as atclCts
+		     , REGEXP_REPLACE(A.ATCL_CTS, '<[^>]*>', ' ') AS atclCtsStr
+		     , A.ATCL_TAG as atclTag
+		     , A.ATCL_LVL as atclLvl
+		     , A.ATCL_ODR as atclOdr
+		     , A.NOTICE_YN as noticeYn
+		     , A.LOCK_YN as lockYn
+		     , A.HITS as hits
+		     , ( SELECT COUNT(*)
+		           FROM TB_BRD_BBS_CMNT
+		          WHERE ATCL_SN = A.ATCL_SN) AS cmntCnt
+		     , A.EDITOR_YN as editorYn
+		     , A.MOBILE_URL as mobileUrl
+		     , A.REG_NO as regNo
+		     , ( SELECT FN_GET_USER_ID(A.REG_NO) FROM DUAL) AS regId
+		     , A.REG_NM as regNm
+		     , ( SELECT FN_GET_USER_NAME_MNG(A.REG_NO) FROM DUAL) AS regMngNm
+		     , A.REG_DTTM as regDttm
+		     , A.MOD_NO as modNo
+		     , A.MOD_DTTM as modDttm
+		     , CASE WHEN A.REG_DTTM >= TO_CHAR(SYSDATE-1,'YYYYMMDDHH24MISS') THEN 'NEW'
+	           	    ELSE '' END AS recently
+	  	     , A.ORIGIN_REG_NO as originRegNo
+	  	     , ( SELECT P.REG_NO 
+	  	           FROM TB_BRD_BBS_ATCL P 
+	  	          WHERE P.ATCL_SN = A.PAR_ATCL_SN) AS parRegNo
+	  	     , ( SELECT COUNT(1) 
+	  	           FROM TB_BRD_BBS_ATCL C
+	  	          WHERE C.PAR_ATCL_SN = A.ATCL_SN) AS childCnt
+		  FROM TB_BRD_BBS_ATCL A
+		 WHERE ORG_CD = #{orgCd}
+		]]>
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		<if test = "bbsCd != null and bbsCd != ''">
+		   AND BBS_CD = #{bbsCd}
+		</if>
+		<if test = "bbsCd == null and bbsCd == ''">
+		   AND BBS_CD IN ('NOTICE', 'NEWS', 'QNA', 'PHOTO')
+		</if>
+		<if test = "headCd != null and headCd != ''">
+		   AND A.HEAD_CD = #{headCd}
+		</if>
+		<if test = 'listViewMode != null and listViewMode == "Y"'>
+		   AND A.REG_NO = #{regNo}
+		</if>
+		<if test = "searchValue != null and searchValue != ''">
+			<if test = "searchKey != null and searchKey == 'regNm'">
+			   AND A.REG_NM LIKE '%'||NVL(#{searchValue}, '')||'%'
+			</if>
+			<if test = "searchKey != null and searchKey == 'regDttm'">
+			   AND FN_GET_DATE_FORMAT(A.REG_DTTM , 'YYYY.MM.DD') LIKE '%'||NVL(#{searchValue}, '')||'%'
+			</if>
+			<if test = "searchKey != null and searchKey == 'all'">
+			   AND ( A.ATCL_TITLE LIKE '%'||NVL(#{searchValue}, '')||'%'
+				OR FN_GET_USER_NAME(A.REG_NO) LIKE '%'||NVL(#{searchValue}, '')||'%'
+				OR FN_GET_DATE_FORMAT(A.REG_DTTM , 'YYYY.MM.DD') LIKE '%'||NVL(#{searchValue}, '')||'%' )	
+			</if>
+			<if test = "searchKey != null and searchKey == 'title'">
+			   AND A.ATCL_TITLE LIKE '%'||NVL(#{searchValue}, '')||'%'
+			</if>
+			/* 사용자 쪽 검색 조건 cts, atcl, ALL */
+			<if test = "searchKey != null and searchKey == 'cts'">
+			   AND A.ATCL_CTS LIKE '%'||NVL(#{searchValue}, '')||'%'
+			</if>
+			<if test = "searchKey != null and searchKey == 'ALL'">
+			   AND ( A.ATCL_TITLE LIKE '%'||NVL(#{searchValue}, '')||'%'
+					OR A.ATCL_CTS LIKE '%'||NVL(#{searchValue}, '')||'%')	
+			</if>
+		</if>
+		<if test = "parAtclSn == '0'">
+		   AND A.PAR_ATCL_SN IS NULL
+		</if>
+		<if test = "bbsCd != null and bbsCd != ''">
+		 START WITH A.PAR_ATCL_SN IS NULL
+	   CONNECT BY A.PAR_ATCL_SN = PRIOR A.ATCL_SN
+		 ORDER SIBLINGS BY A.ATCL_ODR DESC
+		</if>
+		<if test = "bbsCd == null or bbsCd == ''">
+		 ORDER BY A.ATCL_SN DESC
+		</if>
+
+	</sql>		
+
+	<select id="list" parameterType="brdBbsAtclVO" resultType="brdBbsAtclVO">
+		/*
+			 SQL ID : list
+			 설  명 : 게시판 게시물의 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	</select>
+	
+	<select id="listPageing" parameterType="brdBbsAtclVO" resultType="brdBbsAtclVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 게시판 게시물의 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="brdBbsAtclVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 게시판 게시물의 전체 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>
+	
+	<select id="listTop" parameterType="brdBbsAtclVO" resultType="brdBbsAtclVO">
+		/*
+			 SQL ID : listTop
+			 설  명 : 게시판 게시물의 상위 목록
+	 	*/
+	 	<![CDATA[
+		SELECT * FROM (
+		  SELECT /*+ INDEX(A IF6_TB_BRD_BBS_ATCL) */ A.ATCL_SN as atclSn
+		       , A.BBS_CD as bbsCd
+		       , A.PAR_ATCL_SN as parAtclSn
+		       , A.HEAD_CD as headCd
+		       , A.THUMB_FILE_SN as thumbFileSn
+		       , A.ATCL_TITLE as atclTitle
+		       , A.ATCL_TAG as atclTag
+		       , A.ATCL_LVL as atclLvl
+		       , A.ATCL_ODR as atclOdr
+		       , A.NOTICE_YN as noticeYn
+		       , A.LOCK_YN as lockYn
+		       , A.HITS as hits
+		       , A.EDITOR_YN as editorYn
+		       , A.MOBILE_URL as mobileUrl
+			  	, CASE WHEN A.REG_DTTM >= TO_CHAR(SYSDATE-1,'YYYYMMDDHH24MISS') THEN 'NEW'
+			    	   ELSE '' END AS recently
+	  	       , A.ORIGIN_REG_NO as originRegNo
+		       , A.REG_NO as regNo
+		       , ( SELECT FN_GET_USER_ID(A.REG_NO) FROM DUAL) AS regId
+		       , A.REG_NM regNm
+		       , A.REG_DTTM as regDttm
+		       , A.MOD_NO as modNo
+		       , A.MOD_DTTM as modDttm
+		    FROM TB_BRD_BBS_ATCL A
+		   WHERE A.ORG_CD = #{orgCd}
+		     AND A.BBS_CD = #{bbsCd}
+		     AND A.ATCL_LVL = NVL(#{atclLvl}, 0)
+		   ORDER BY A.REG_DTTM DESC
+		)
+		WHERE ROWNUM <= #{topCnt}
+		]]>
+	</select>
+	
+	<select id="select" parameterType="brdBbsAtclVO" resultType="brdBbsAtclVO">
+		/*
+			 SQL ID : select
+			 설  명 : 게시판 게시물의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+		<if test = "bbsCd != null and bbsCd != ''">
+		   AND A.BBS_CD = #{bbsCd}
+		</if>
+	 	   AND A.ATCL_SN = #{atclSn}
+	</select>	
+	
+	<select id="selectKey" resultType="integer">
+		/*
+			 SQL ID : selectKey
+			 설  명 : 게시판 게시물의 키 생성
+	 	*/
+	 	SELECT SQ_BRD_BBS_ATCL.nextVal FROM DUAL
+	</select>	
+	
+	<insert id="insert" parameterType="brdBbsAtclVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 게시판 게시물의 정보 등록
+	 	*/
+		INSERT INTO TB_BRD_BBS_ATCL (
+		       ATCL_SN
+		     , PAR_ATCL_SN
+		     , ORG_CD
+		     , BBS_CD
+		     , HEAD_CD
+		     , THUMB_FILE_SN
+		     , ATCL_TITLE
+		     , ATCL_CTS
+		     , ATCL_TAG
+		     , ATCL_LVL
+		     , ATCL_ODR
+		     , NOTICE_YN
+		     , LOCK_YN
+		     , EDITOR_YN
+		     , HITS
+		     , MOBILE_URL
+	  	     , ORIGIN_REG_NO
+		     , REG_NO
+		     , REG_NM
+		     , REG_DTTM
+		     , MOD_NO
+		     , MOD_DTTM
+		) VALUES (
+		       #{atclSn}
+		     , #{parAtclSn}
+		     , #{orgCd}
+		     , #{bbsCd}
+		     , #{headCd}
+		     , #{thumbFileSn}
+		     , #{atclTitle}
+		     , #{atclCts}
+		     , #{atclTag}
+		     , NVL(#{atclLvl}, 0)
+		     , NVL(( SELECT MAX(NVL(ATCL_ODR,0)) + 1
+		               FROM TB_BRD_BBS_ATCL
+		              WHERE BBS_CD = #{bbsCd}
+		                AND NVL(PAR_ATCL_SN,1) = NVL(#{parAtclSn},1) ),1)
+		     , #{noticeYn}
+		     , #{lockYn}
+		     , #{editorYn}
+		     , 0
+		     , #{mobileUrl}
+		     , #{originRegNo}
+		     , #{regNo}
+		     , #{regNm}
+		     , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		     , #{modNo}
+		     , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		)	 	
+		
+	</insert>
+	
+	<update id="update" parameterType="brdBbsAtclVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 게시판 게시물의 정보 수정
+	 	*/
+		UPDATE TB_BRD_BBS_ATCL
+		   SET HEAD_CD = #{headCd}
+		     , THUMB_FILE_SN = #{thumbFileSn}
+		     , ATCL_TITLE = #{atclTitle}
+		     , ATCL_CTS = #{atclCts}
+		     , ATCL_TAG = #{atclTag}
+		     , ATCL_LVL = #{atclLvl}
+		     , ATCL_ODR = #{atclOdr}
+		     , NOTICE_YN = #{noticeYn}
+		     , LOCK_YN = #{lockYn}
+		     , EDITOR_YN = #{editorYn}
+		     , MOBILE_URL = #{mobileUrl}
+	  	     , ORIGIN_REG_NO = #{originRegNo}
+		     , MOD_NO = #{modNo}
+		     , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		 WHERE ATCL_SN = #{atclSn}	 	
+	</update>	
+
+	<delete id="delete" parameterType="brdBbsAtclVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 게시판 게시물의 정보 삭제
+	 	*/
+		DELETE FROM TB_BRD_BBS_ATCL
+         WHERE ATCL_SN = #{atclSn}
+	</delete>
+	
+	<update id="hitsup" parameterType="brdBbsAtclVO" >
+		/*
+			 SQL ID : hitsup
+			 설  명 : 게시판 게시물의 정보 수정
+	 	*/
+		UPDATE TB_BRD_BBS_ATCL
+		   SET HITS = HITS + 1
+		 WHERE ATCL_SN = #{atclSn}	 	
+	</update>	
+	
+	<select id="selectAtclWithPreNext" parameterType="brdBbsAtclVO" resultType="brdBbsAtclVO">
+		<![CDATA[
+		/*
+			 SQL ID : selectAtclWithPreNext
+			 설  명 : 게시판 게시물의 정보 조회(이전글 다음글 포함)
+	 	*/
+			SELECT C.* 
+			FROM (
+				SELECT ROWNUM AS RN, B.* 
+				    ,LEAD(B.atclTitle, 1, null) OVER (ORDER BY ROWNUM ASC) AS nextAtclTitle
+				    ,LEAD(B.atclSn, 1, null) OVER (ORDER BY ROWNUM ASC) AS nextAtclSn
+				    ,LAG(B.atclTitle, 1, null) OVER (ORDER BY ROWNUM ASC) AS preAtclTitle
+				    ,LAG(B.atclSn, 1, null) OVER (ORDER BY ROWNUM ASC) AS preAtclSn
+			    FROM (
+			        SELECT A.ATCL_SN as atclSn
+					     , A.BBS_CD as bbsCd
+					     , A.PAR_ATCL_SN as parAtclSn
+					     , A.HEAD_CD as headCd
+					     , ( SELECT HEAD_NM
+					           FROM TB_BRD_BBS_HEAD
+					          WHERE BBS_CD = A.BBS_CD
+					            AND HEAD_CD = A.HEAD_CD ) AS headNm
+					     , A.THUMB_FILE_SN as thumbFileSn
+					     , A.ATCL_TITLE as atclTitle
+					     , A.ATCL_CTS as atclCts
+					     , REGEXP_REPLACE(A.ATCL_CTS, '<[^>]*>', ' ') AS atclCtsStr
+					     , A.ATCL_TAG as atclTag
+					     , A.ATCL_LVL as atclLvl
+					     , A.ATCL_ODR as atclOdr
+					     , A.NOTICE_YN as noticeYn
+					     , A.LOCK_YN as lockYn
+					     , A.HITS as hits
+					     , ( SELECT COUNT(*)
+					           FROM TB_BRD_BBS_CMNT
+					          WHERE ATCL_SN = A.ATCL_SN) AS cmntCnt
+					     , A.EDITOR_YN as editorYn
+					     , A.MOBILE_URL as mobileUrl
+					     , A.REG_NO as regNo
+					     , ( SELECT FN_GET_USER_ID(A.REG_NO) FROM DUAL) AS regId
+					     , A.REG_NM as regNm
+					     , ( SELECT FN_GET_USER_NAME_MNG(A.REG_NO) FROM DUAL) AS regMngNm
+					     , A.REG_DTTM as regDttm
+					     , A.MOD_NO as modNo
+					     , A.MOD_DTTM as modDttm
+					     , CASE WHEN A.REG_DTTM >= TO_CHAR(SYSDATE-1,'YYYYMMDDHH24MISS') THEN 'NEW'
+				           	    ELSE '' END AS recently
+				  	     , A.ORIGIN_REG_NO as originRegNo
+				  	     , ( SELECT P.REG_NO 
+				  	           FROM TB_BRD_BBS_ATCL P 
+				  	          WHERE P.ATCL_SN = A.PAR_ATCL_SN) AS parRegNo
+					  FROM TB_BRD_BBS_ATCL A		
+							 WHERE A.ORG_CD = #{orgCd}
+							   AND A.BBS_CD = #{bbsCd}
+					START WITH A.PAR_ATCL_SN IS NULL
+				   CONNECT BY A.PAR_ATCL_SN = PRIOR A.ATCL_SN
+					 ORDER SIBLINGS BY A.ATCL_ODR DESC 
+				) B
+			) C
+		   WHERE C.atclSn = #{atclSn}
+		]]>
+	</select>
+	 
+
+
+</mapper>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.board.bbs.service.impl.BrdBbsCmntMapper">	
+
+	
+	<sql id="selectQuery">
+		<![CDATA[
+		SELECT CMNT_SN as cmntSn
+		     , ATCL_SN as atclSn
+		     , CMNT_CTS as cmntCts
+		     , EMOTICON_NO as emoticonNo
+		     , REG_NM as regNm
+		     , REG_NO as regNo
+		     , ( SELECT FN_GET_USER_ID(A.REG_NO) FROM DUAL) AS regId
+		     , REG_DTTM as regDttm
+		     , MOD_NO as modNo
+		     , MOD_DTTM as modDttm
+		  FROM TB_BRD_BBS_CMNT A
+		 WHERE '1' = '1'
+		]]>
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		   AND A.ATCL_SN = #{atclSn}
+		 ORDER BY A.CMNT_SN DESC
+	</sql>		
+
+	<select id="list" parameterType="brdBbsCmntVO" resultType="brdBbsCmntVO">
+		/*
+			 SQL ID : list
+			 설  명 : 게시판 댓글의 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	</select>
+	
+	<select id="listPageing" parameterType="brdBbsCmntVO" resultType="brdBbsCmntVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 게시판 댓글의 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="brdBbsCmntVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 게시판 댓글의 전체 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>	
+	
+	<select id="select" parameterType="brdBbsCmntVO" resultType="brdBbsCmntVO">
+		/*
+			 SQL ID : select
+			 설  명 : 게시판 댓글의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+	 	   AND A.CMNT_SN = #{cmntSn}
+	</select>	
+	
+	<select id="selectKey" resultType="integer">
+		/*
+			 SQL ID : selectKey
+			 설  명 : 게시판 댓글의 키 생성
+	 	*/
+	 	SELECT SQ_BRD_BBS_CMNT.nextVal FROM DUAL
+	</select>	
+	
+	<insert id="insert" parameterType="brdBbsCmntVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 게시판 댓글의 정보 등록
+	 	*/
+		INSERT INTO TB_BRD_BBS_CMNT (
+		       CMNT_SN
+		     , ATCL_SN
+		     , CMNT_CTS
+		     , EMOTICON_NO
+		     , REG_NM
+		     , REG_NO
+		     , REG_DTTM
+		     , MOD_NO
+		     , MOD_DTTM
+		) VALUES (
+		       #{cmntSn}
+		     , #{atclSn}
+		     , #{cmntCts}
+		     , #{emoticonNo}
+		     , ( SELECT FN_GET_USER_NAME(#{regNo}) FROM DUAL)
+		     , #{regNo}
+		     , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		     , #{modNo}
+		     , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		)	 	
+	</insert>
+	
+	<update id="update" parameterType="brdBbsCmntVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 게시판 댓글의 정보 수정
+	 	*/
+		UPDATE TB_BRD_BBS_CMNT
+		   SET CMNT_CTS = #{cmntCts}
+		     , EMOTICON_NO = #{emoticonNo}
+			 , MOD_NO = #{modNo}
+			 , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		 WHERE CMNT_SN = #{cmntSn}
+		   AND ATCL_SN = #{atclSn}	 	
+	</update>	
+
+	<delete id="delete" parameterType="brdBbsCmntVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 게시판 댓글의 정보 삭제
+	 	*/
+		DELETE FROM TB_BRD_BBS_CMNT
+         WHERE CMNT_SN = #{cmntSn}
+	</delete>
+
+	<delete id="deleteAll" parameterType="brdBbsCmntVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 게시판 게시글 전체 댓글의 정보 삭제
+	 	*/
+		DELETE FROM TB_BRD_BBS_CMNT
+         WHERE ATCL_SN = #{atclSn}
+	</delete>
+</mapper>

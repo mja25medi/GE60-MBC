@@ -1,0 +1,176 @@
+@charset "UTF-8";
+
+/*-----------------------------------------------------------*/
+/* COMMON                                                    */
+/*-----------------------------------------------------------*/
+
+*{margin:0;padding:0;}
+
+body {
+	*word-break:break-all;
+	-ms-word-break:break-all;
+	text-align:center;
+	font-size:0.9em;
+	line-height:1.3em;
+	font-family:나눔고딕,돋움,Dotum,굴림,Gulim,AppleGothic,Sans-serif;
+	color:#636363;
+}
+
+/*-----------------------------------------------------------*/
+/* MAIN LAYOUT                                               */
+/*-----------------------------------------------------------*/
+
+#main {
+	width:100%;
+}
+
+#main #container {
+	width:984px;
+	margin:0 auto;
+	text-align:left;
+	margin-top:20px
+}
+
+#main #container:after {
+	content:"";
+	display:block;
+	clear:both;
+}
+
+
+#main #container #menu {
+	float:left;
+	width:195px;
+	text-align:left;
+	margin-left:10px;
+}
+
+#main #container #body {
+	float:left;
+	width:525px;
+	text-align:left;
+}
+
+#main #login-box {
+	width:170px;
+	height:100px;
+	background:url(/img/1/cdc/main/login_bg.gif) no-repeat 0 0;
+}
+
+#main #logout-box {
+	width:170px;
+	height:100px;
+	font:0.9em 나눔고딕;
+	background:url(/img/1/cdc/main/logout_bg.gif) no-repeat 0 0;
+}
+
+#main .crs {
+	padding:10px 0 0 0;
+	font:0.8em 나눔고딕;
+	font-weight:bold
+}
+
+#main .crs_line {
+	background:url(/img/1/cdc/common/dot_hor1.gif) repeat-x left bottom;
+	padding:10px 0 0 0;
+	margin-bottom:12px;
+}
+
+/*-----------------------------------------------------------*/
+/* MAIN HEADER                                               */
+/*-----------------------------------------------------------*/
+
+#main #header {
+	width:984px;
+	margin:0 auto;
+	text-align:left;
+	position:relative;
+	top:0;
+	height:335px;
+	background:url(/img/1/cdc/main/top_bg.jpg) no-repeat 0px top;
+}
+
+#main #header #row1:after {
+	content:"";
+	display:block;
+	clear:both;
+}
+
+
+#main #header #row1 {
+	width:984px;
+	height:70px;
+	text-align:left;
+}
+
+
+#main #header #row1 .column1 {
+	width:250px;
+	margin-left:10px;
+	float:left;
+	text-align:left;
+}
+
+
+#main #header #row1 .column2 {	
+	width:720px;
+	float:left;
+	text-align:right;
+}
+
+
+#main #header #row2 {
+	width:984px;
+	position:relative;
+	top:0;
+}
+
+#main #header #navi-bar {
+	position:absolute;
+	left:0;
+	top:0;
+	z-index:200;
+}
+
+#main #header #mv {
+	position:absolute;
+	left:0;
+	top:-1px;
+	z-index:100;
+}
+
+/*-----------------------------------------------------------*/
+/* MAIN FOOTER                                               */
+/*-----------------------------------------------------------*/
+
+#main #footer {
+	margin: 35px 0px 20px 0px;
+	padding: 0px ;
+	width: 984;
+	text-align:center;
+	border-top:1px solid #D9D9D9;
+}
+
+#main #footer #f-container {
+	width:984px;
+	margin:0 auto;
+	text-align:left
+}
+
+#main #footer #f-container :after {
+	content:"";
+	display:block;
+	clear:both;
+}
+
+#main #footer #f-column1 {
+	width: 200px;
+	float: left;
+	text-align:center;
+}
+
+
+#main #footer #f-column2 {	
+	width: 780px;
+	float: left;
+}

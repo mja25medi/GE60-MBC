@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.attendance.service.impl.AttendanceMapper">	
+
+	<insert id="insertAttendDttm" parameterType="attendanceVO">
+		  INSERT INTO tb_attend_period (  
+		         CRS_CRE_CD 
+		       , ATTEND_DTTM
+		       , REG_NO  
+		       , REG_DTTM  
+		       , MOD_NO  
+		       , MOD_DTTM  
+		  ) VALUES (  
+		         #{crsCreCd}  
+			   , #{attendDttm}
+		       , #{regNo}  
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		       , #{modNo}  
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		  )  
+    </insert>
+    <select id="listPeriod" parameterType="attendanceVO" resultType="attendanceVO">
+    	SELECT CRS_CRE_CD
+    		, ATTEND_DTTM
+	   FROM tb_attend_period
+	   WHERE CRS_CRE_CD = #{crsCreCd}
+	   ORDER BY ATTEND_DTTM
+	</select>
+	
+	<select id="listPeriodMonDay" parameterType="attendanceVO" resultType="attendanceVO">
+    	SELECT DISTINCT DATE_FORMAT(ADDDATE(ATTEND_DTTM, -WEEKDAY(ATTEND_DTTM)+0),'%Y%m%d') AS ATTEND_DTTM
+		  FROM tb_attend_period 
+		 WHERE CRS_CRE_CD = #{crsCreCd}
+		  <if test = 'attendDttm != null and attendDttm != ""'>
+		  		AND DATE_FORMAT(ATTEND_DTTM,'%Y.%m.%d') = #{attendDttm}
+		  </if>
+		ORDER BY ATTEND_DTTM 
+	</select>
+	
+	<select id="periodDateStr" parameterType="String" resultType="String">
+		       SELECT 
+		       		CONCAT(DATE_FORMAT(ADDDATE(#{value}, -WEEKDAY(#{value})+0),'%Y%m%d'),
+		       					'_',DATE_FORMAT(ADDDATE(#{value}, -WEEKDAY(#{value})+1),'%Y%m%d'),
+		       					'_',DATE_FORMAT(ADDDATE(#{value}, -WEEKDAY(#{value})+2),'%Y%m%d'),
+		       					'_',DATE_FORMAT(ADDDATE(#{value}, -WEEKDAY(#{value})+3),'%Y%m%d'),
+		       					'_',DATE_FORMAT(ADDDATE(#{value}, -WEEKDAY(#{value})+4),'%Y%m%d')
+		       					)
+		       		FROM DUAL			
+	</select>
+	
+	
+	
+    <select id="listAttendance" parameterType="attendanceVO" resultType="attendanceVO">
+    <![CDATA[
+    	SELECT A.USER_NM,
+			       A.USER_NO, 
+			       max(A.col_0_1) as col_0_1, 
+			       max(A.col_0_2) as col_0_2, 
+			       max(A.col_0_3) as col_0_3, 
+			       max(A.col_0_4) as col_0_4, 
+			       max(A.col_0_5) as col_0_5, 
+			       max(A.col_0_6) as col_0_6, 
+			       max(A.col_0_7) as col_0_7, 
+			       max(A.col_0_8) as col_0_8,  
+			       max(A.col_1_1) as col_1_1, 
+			       max(A.col_1_2) as col_1_2, 
+			       max(A.col_1_3) as col_1_3, 
+			       max(A.col_1_4) as col_1_4, 
+			       max(A.col_1_5) as col_1_5, 
+			       max(A.col_1_6) as col_1_6, 
+			       max(A.col_1_7) as col_1_7, 
+			       max(A.col_1_8) as col_1_8,  
+			       max(A.col_2_1) as col_2_1, 
+			       max(A.col_2_2) as col_2_2, 
+			       max(A.col_2_3) as col_2_3, 
+			       max(A.col_2_4) as col_2_4, 
+			       max(A.col_2_5) as col_2_5, 
+			       max(A.col_2_6) as col_2_6, 
+			       max(A.col_2_7) as col_2_7, 
+			       max(A.col_2_8) as col_2_8,  
+			       max(A.col_3_1) as col_3_1, 
+			       max(A.col_3_2) as col_3_2, 
+			       max(A.col_3_3) as col_3_3, 
+			       max(A.col_3_4) as col_3_4, 
+			       max(A.col_3_5) as col_3_5, 
+			       max(A.col_3_6) as col_3_6, 
+			       max(A.col_3_7) as col_3_7, 
+			       max(A.col_3_8) as col_3_8,  
+			       max(A.col_4_1) as col_4_1, 
+			       max(A.col_4_2) as col_4_2, 
+			       max(A.col_4_3) as col_4_3, 
+			       max(A.col_4_4) as col_4_4, 
+			       max(A.col_4_5) as col_4_5, 
+			       max(A.col_4_6) as col_4_6, 
+			       max(A.col_4_7) as col_4_7, 
+			       max(A.col_4_8) as col_4_8,
+			       A.totalDay,
+			       IF((A.realDay - A.absentDay - truncate(((A.lateDay + A.leftDay + A.outDay)/3), 0)) < 0, 0, (A.realDay - A.absentDay - truncate(((A.lateDay + A.leftDay + A.outDay)/3), 0))) as realDay,
+			       A.absentDay,
+			       A.lateDay,
+			       A.leftDay,
+			       A.outDay
+			   ]]>
+			  FROM
+			       (SELECT B.USER_NM,
+			              B.USER_NO ,
+			              -- S(출석:○) F(결석:×) T(지각:◎) O(외출:◇) L(조퇴:▲) 
+			              <foreach collection="clsAttendDttm" item="item" open="" close="" separator="" index="index">
+			                  IF(DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = #{item} ,D.CLASS_STAT_1,'-') AS COL_#{index}_1,
+							  IF(DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = #{item} ,D.CLASS_STAT_2,'-') AS COL_#{index}_2,
+							  IF(DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = #{item} ,D.CLASS_STAT_3,'-') AS COL_#{index}_3,
+							  IF(DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = #{item} ,D.CLASS_STAT_4,'-') AS COL_#{index}_4,
+							  IF(DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = #{item} ,D.CLASS_STAT_5,'-') AS COL_#{index}_5,
+							  IF(DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = #{item} ,D.CLASS_STAT_6,'-') AS COL_#{index}_6,
+							  IF(DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = #{item} ,D.CLASS_STAT_7,'-') AS COL_#{index}_7,
+							  IF(DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = #{item} ,D.CLASS_STAT_8,'-') AS COL_#{index}_8, 
+						   </foreach>
+			              C.ATTEND_DTTM,
+			              (SELECT COUNT(*) FROM tb_attend_period WHERE CRS_CRE_CD=#{crsCreCd} AND DATE_FORMAT(ATTEND_DTTM,'%Y%m%d') IN
+			              <foreach collection="clsAttendDttm" item="item" open="(" close=")" separator=",">
+								#{item}
+						  </foreach>) as totalDay,
+			              (SELECT COUNT(*) FROM tb_attend_class WHERE USER_NO=B.USER_NO AND (CLASS_STAT_1='S' AND CLASS_STAT_2='S' AND CLASS_STAT_3='S' AND CLASS_STAT_4='S' AND CLASS_STAT_5='S' AND CLASS_STAT_6='S' AND CLASS_STAT_7='S' AND CLASS_STAT_8='S')
+			              AND DATE_FORMAT(ATTEND_DTTM,'%Y%m%d') IN
+			              <foreach collection="clsAttendDttm" item="item" open="(" close=")" separator=",">
+								#{item}
+						  </foreach>) as realDay,
+			              (SELECT COUNT(*) FROM tb_attend_class WHERE USER_NO=B.USER_NO AND (CLASS_STAT_1='F' AND CLASS_STAT_2='F' AND CLASS_STAT_3='F' AND CLASS_STAT_4='F' AND CLASS_STAT_5='F' AND CLASS_STAT_6='F' AND CLASS_STAT_7='F' AND CLASS_STAT_8='F')
+			              AND DATE_FORMAT(ATTEND_DTTM,'%Y%m%d') IN
+			              <foreach collection="clsAttendDttm" item="item" open="(" close=")" separator=",">
+								#{item}
+						  </foreach>) as absentDay,
+			              (SELECT COUNT(*) FROM tb_attend_class WHERE USER_NO=B.USER_NO AND (CLASS_STAT_1='T' OR CLASS_STAT_2='T' OR CLASS_STAT_3='T' OR CLASS_STAT_4='T' OR CLASS_STAT_5='T' OR CLASS_STAT_6='T' OR CLASS_STAT_7='T' OR CLASS_STAT_8='T')
+			              AND DATE_FORMAT(ATTEND_DTTM,'%Y%m%d') IN
+			              <foreach collection="clsAttendDttm" item="item" open="(" close=")" separator=",">
+								#{item}
+						  </foreach>) as lateDay,
+			              (SELECT COUNT(*) FROM tb_attend_class WHERE USER_NO=B.USER_NO AND (CLASS_STAT_1='L' OR CLASS_STAT_2='L' OR CLASS_STAT_3='L' OR CLASS_STAT_4='L' OR CLASS_STAT_5='L' OR CLASS_STAT_6='L' OR CLASS_STAT_7='L' OR CLASS_STAT_8='L')
+			              AND DATE_FORMAT(ATTEND_DTTM,'%Y%m%d') IN
+			              <foreach collection="clsAttendDttm" item="item" open="(" close=")" separator=",">
+								#{item}
+						  </foreach>) as leftDay,
+			              (SELECT COUNT(*) FROM tb_attend_class WHERE USER_NO=B.USER_NO AND (CLASS_STAT_1='O' OR CLASS_STAT_2='O' OR CLASS_STAT_3='O' OR CLASS_STAT_4='O' OR CLASS_STAT_5='O' OR CLASS_STAT_6='O' OR CLASS_STAT_7='O' OR CLASS_STAT_8='O')
+			              AND DATE_FORMAT(ATTEND_DTTM,'%Y%m%d') IN
+			              <foreach collection="clsAttendDttm" item="item" open="(" close=")" separator=",">
+								#{item}
+						  </foreach>) as outDay
+			         FROM TB_STD_STD A 
+			            INNER JOIN TB_USR_USER_INFO B 
+			                ON A.USER_NO = B.USER_NO 
+			            INNER JOIN TB_ATTEND_PERIOD C 
+			                ON C.CRS_CRE_CD = A.CRS_CRE_CD 
+			              AND DATE_FORMAT(C.ATTEND_DTTM,'%Y%m%d') IN
+			              <foreach collection="clsAttendDttm" item="item" open="(" close=")" separator=",">
+								#{item}
+						  </foreach>
+			            LEFT OUTER JOIN TB_ATTEND_CLASS D 
+			                ON D.CRS_CRE_CD = A.CRS_CRE_CD 
+			              AND D.ATTEND_DTTM = C.ATTEND_DTTM 
+			              AND D.USER_NO = A.USER_NO 
+			        WHERE A.CRS_CRE_CD = #{crsCreCd}
+			          GROUP BY B.USER_NO , 
+			              B.USER_NM , 
+			              C.ATTEND_DTTM  
+			       ) A 
+			   GROUP BY A.USER_NM,
+			       A.USER_NO
+			  ORDER BY A.USER_NM
+	</select>
+	
+	<select id="viewAttend" parameterType="attendanceVO" resultType="attendanceVO">
+		SELECT A.CRS_CRE_CD,
+			A.ATTEND_DTTM,
+			(SELECT USER_NM FROM TB_USR_USER_INFO WHERE USER_NO = #{userNo}) as USER_NM,
+			(SELECT USER_NO FROM TB_USR_USER_INFO WHERE USER_NO = #{userNo}) as USER_NO,
+			B.CLASS_STAT_1,
+			B.CLASS_STAT_2,
+			B.CLASS_STAT_3,
+			B.CLASS_STAT_4,
+			B.CLASS_STAT_5,
+			B.CLASS_STAT_6,
+			B.CLASS_STAT_7,
+			B.CLASS_STAT_8,
+			B.ENTER_FLAG,
+			B.ENTER_TIME,
+			B.QUIT_TIME
+		FROM TB_ATTEND_PERIOD A
+		LEFT JOIN TB_ATTEND_CLASS B ON A.CRS_CRE_CD = B.CRS_CRE_CD
+				AND A.ATTEND_DTTM = B.ATTEND_DTTM AND B.USER_NO=#{userNo}
+		WHERE DATE_FORMAT(A.ATTEND_DTTM, '%Y%m%d') = DATE_FORMAT(#{attendDttm}, '%Y%m%d')
+			AND A.CRS_CRE_CD = #{crsCreCd}
+	</select>
+	
+	<select id="selectUpdateLog" parameterType="attendanceVO" resultType="attendanceVO">
+		SELECT A.CRS_CRE_CD,
+			A.ATTEND_DTTM,
+			A.USER_NO,
+			A.CLASS_TIME,
+			A.CLASS_STAT,
+			A.MOD_NO,
+			A.MOD_DTTM,
+			B.USER_NM
+		FROM tb_attend_update_log A
+		inner join tb_usr_user_info B ON A.MOD_NO = B.USER_NO
+		WHERE A.CRS_CRE_CD = #{crsCreCd} 
+			AND DATE_FORMAT(A.ATTEND_DTTM, '%Y%m%d') = DATE_FORMAT(#{attendDttm}, '%Y%m%d') 
+			AND A.USER_NO = #{userNo}
+		ORDER BY A.MOD_DTTM
+	</select>
+	
+	<insert id="insertUpdateLog" parameterType="attendanceVO">
+		INSERT INTO tb_attend_update_log (
+			CRS_CRE_CD,
+			ATTEND_DTTM,
+			USER_NO,
+			CLASS_TIME,
+			CLASS_STAT,
+			MOD_NO,
+			MOD_DTTM
+		) VALUES (  
+	         #{crsCreCd}  
+		   , #{attendDttm}
+		   , #{userNo}
+	       , #{classTime}  
+	       , #{classStat}
+	       , #{modNo}  
+	       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+	  )  
+	</insert>
+	
+	<insert id="updateAttendStat" parameterType="attendanceVO" >
+		  INSERT INTO tb_attend_class(
+		  		CRS_CRE_CD,
+		  		ATTEND_DTTM,
+		  		USER_NO,
+		  		USER_NM,
+		  		CLASS_STAT_1,
+		  		CLASS_STAT_2,
+		  		CLASS_STAT_3,
+		  		CLASS_STAT_4,
+		  		CLASS_STAT_5,
+		  		CLASS_STAT_6,
+		  		CLASS_STAT_7,
+		  		CLASS_STAT_8,
+		  		MOD_NO,
+		  		MOD_DTTM
+		  ) VALUES (
+		  		#{crsCreCd},
+		  		#{attendDttm},
+		  		#{userNo},
+		  		#{userNm},
+		  		#{classStat1},
+		  		#{classStat2},
+		  		#{classStat3},
+		  		#{classStat4},
+		  		#{classStat5},
+		  		#{classStat6},
+		  		#{classStat7},
+		  		#{classStat8},
+		  		#{modNo},
+		  		DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		  ) ON DUPLICATE KEY UPDATE
+		  		CLASS_STAT_1 = #{classStat1},
+		  		CLASS_STAT_2 = #{classStat2},
+		  		CLASS_STAT_3 = #{classStat3},
+		  		CLASS_STAT_4 = #{classStat4},
+		  		CLASS_STAT_5 = #{classStat5},
+		  		CLASS_STAT_6 = #{classStat6},
+		  		CLASS_STAT_7 = #{classStat7},
+		  		CLASS_STAT_8 = #{classStat8},
+		  		MOD_NO = #{modNo},
+		  		MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+	</insert>
+	
+	<insert id="enterClass" parameterType="attendanceVO" >
+		  INSERT INTO tb_attend_class(
+		  		CRS_CRE_CD,
+		  		ATTEND_DTTM,
+		  		USER_NO,
+		  		USER_NM,
+		  		CLASS_STAT_1,
+		  		CLASS_STAT_2,
+		  		CLASS_STAT_3,
+		  		CLASS_STAT_4,
+		  		CLASS_STAT_5,
+		  		CLASS_STAT_6,
+		  		CLASS_STAT_7,
+		  		CLASS_STAT_8,
+				ENTER_FLAG,
+		  		ENTER_TIME,
+		  		QUIT_TIME,
+		  		REG_NO,
+		  		REG_DTTM
+		  ) VALUES (
+		  		#{crsCreCd},
+		  		#{attendDttm},
+		  		#{userNo},
+		  		#{userNm},
+		  		#{classStat1},
+		  		#{classStat2},
+		  		#{classStat3},
+		  		#{classStat4},
+		  		#{classStat5},
+		  		#{classStat6},
+		  		#{classStat7},
+		  		#{classStat8},
+ 				#{enterFlag},
+		  		#{enterTime},
+		  		#{quitTime},
+		  		#{regNo},
+		  		DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		  ) ON DUPLICATE KEY UPDATE
+		  		CLASS_STAT_1 = #{classStat1},
+		  		CLASS_STAT_2 = #{classStat2},
+		  		CLASS_STAT_3 = #{classStat3},
+		  		CLASS_STAT_4 = #{classStat4},
+		  		CLASS_STAT_5 = #{classStat5},
+		  		CLASS_STAT_6 = #{classStat6},
+		  		CLASS_STAT_7 = #{classStat7},
+		  		CLASS_STAT_8 = #{classStat8},
+		  		ENTER_FLAG = #{enterFlag},
+		  		ENTER_TIME = #{enterTime},
+		  		MOD_NO = #{modNo},
+		  		MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+	</insert>
+	<update id="quitClass" parameterType="attendanceVO">
+		UPDATE  tb_attend_class 
+		  SET
+			       CLASS_STAT_1 	= 'S'
+			    ,  CLASS_STAT_2 	= 'S'
+			    ,  CLASS_STAT_3 	= 'S'
+			    ,  CLASS_STAT_4 	= 'S'
+			    ,  CLASS_STAT_5 	= 'S'
+			    ,  CLASS_STAT_6 	= 'S'
+			    ,  CLASS_STAT_7 	= 'S'
+			    ,  CLASS_STAT_8 	= 'S'
+			    ,  ENTER_FLAG		= #{enterFlag}
+			    ,  QUIT_TIME 		= #{quitTime}						
+		        ,  MOD_NO 			= #{modNo}									
+		        ,  MOD_DTTM 		= DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		   WHERE  CRS_CRE_CD 		= #{crsCreCd}									
+		      AND DATE_FORMAT(ATTEND_DTTM, '%Y%m%d') = DATE_FORMAT(#{attendDttm}, '%Y%m%d')				
+		      AND USER_NO = #{userNo}
+	</update>
+	
+	<update id="tardyCheck" parameterType="attendanceVO">
+		UPDATE  tb_attend_class 
+		  SET
+		  		<if test = 'classStat1 != null and classStat1 != ""'>
+			       CLASS_STAT_1 	= #{classStat1}
+			    </if>
+			    <if test = 'classStat2 != null and classStat2 != ""'>
+			   	 ,  CLASS_STAT_2 	= #{classStat2}
+			   	</if>
+			   	<if test = 'classStat3 != null and classStat3 != ""'>
+			    ,  CLASS_STAT_3 	= #{classStat3}
+			    </if>
+			    <if test = 'classStat4 != null and classStat4 != ""'>
+			    ,  CLASS_STAT_4 	= #{classStat4}
+			    </if>
+			    <if test = 'classStat5 != null and classStat5 != ""'>
+			    ,  CLASS_STAT_5 	= #{classStat5}
+			    </if>
+			    <if test = 'classStat6 != null and classStat6 != ""'>
+			    ,  CLASS_STAT_6 	= #{classStat6}
+			    </if>
+			    <if test = 'classStat7 != null and classStat7 != ""'>
+			    ,  CLASS_STAT_7 	= #{classStat7}
+			    </if>
+			    <if test = 'classStat8 != null and classStat8 != ""'>
+			    ,  CLASS_STAT_8 	= #{classStat8}
+			    </if>						
+		   WHERE  CRS_CRE_CD 		= #{crsCreCd}									
+		      AND DATE_FORMAT(ATTEND_DTTM, '%Y%m%d') = DATE_FORMAT(#{attendDttm}, '%Y%m%d')				
+		      AND USER_NO = #{userNo}
+	</update>
+	<update id="leftClass" parameterType="attendanceVO">
+		UPDATE  tb_attend_class 
+		  SET
+			       CLASS_STAT_1 	= #{classStat1}
+			   	,  CLASS_STAT_2 	= #{classStat2}
+			    ,  CLASS_STAT_3 	= #{classStat3}
+			    ,  CLASS_STAT_4 	= #{classStat4}
+			    ,  CLASS_STAT_5 	= #{classStat5}
+			    ,  CLASS_STAT_6 	= #{classStat6}
+			    ,  CLASS_STAT_7 	= #{classStat7}
+			    ,  CLASS_STAT_8 	= #{classStat8}
+			    ,  ENTER_FLAG		= #{enterFlag}
+			    ,  QUIT_TIME 		= #{quitTime}						
+		        ,  MOD_NO 			= #{modNo}									
+		        ,  MOD_DTTM 		= DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		   WHERE  CRS_CRE_CD 		= #{crsCreCd}									
+		      AND DATE_FORMAT(ATTEND_DTTM, '%Y%m%d') = DATE_FORMAT(#{attendDttm}, '%Y%m%d')				
+		      AND USER_NO = #{userNo}
+	</update>
+	<update id="outClass" parameterType="attendanceVO">
+		UPDATE  tb_attend_class 
+		  SET
+			      CLASS_STAT_1 	= #{classStat1}
+			   	,  CLASS_STAT_2 	= #{classStat2}
+			    ,  CLASS_STAT_3 	= #{classStat3}
+			    ,  CLASS_STAT_4 	= #{classStat4}
+			    ,  CLASS_STAT_5 	= #{classStat5}
+			    ,  CLASS_STAT_6 	= #{classStat6}
+			    ,  CLASS_STAT_7 	= #{classStat7}
+			    ,  CLASS_STAT_8 	= #{classStat8}
+		   WHERE  CRS_CRE_CD 		= #{crsCreCd}									
+		      AND DATE_FORMAT(ATTEND_DTTM, '%Y%m%d') = DATE_FORMAT(#{attendDttm}, '%Y%m%d')				
+		      AND USER_NO = #{userNo}
+	</update>
+	
+</mapper>	

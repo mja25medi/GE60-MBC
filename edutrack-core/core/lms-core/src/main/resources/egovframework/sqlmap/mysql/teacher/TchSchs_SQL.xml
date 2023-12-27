@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.teacher.schs.service.impl.TchSchsMapper">
+	<select id="selectKey" resultType="Integer">
+		SELECT nextval('SQ_TCH_SCHS') AS SCHS_SN
+	</select>
+	
+	<sql id="selectColumnQuery">
+		 		 SCHS_SN 																	
+		       , USER_NO 																	
+		       , CONCAT(DATE_FORMAT(STR_TO_DATE(SUBSTR(ENTRGRAD_DT,1,6),'%Y%m'),'%Y.%m'), '-', 		
+		         DATE_FORMAT(STR_TO_DATE(SUBSTR(ENTRGRAD_DT,7,6),'%Y%m'),'%Y.%m')) 				
+		         AS ENTRGRAD_DT 															
+		       , DATE_FORMAT(STR_TO_DATE(SUBSTR(ENTRGRAD_DT,1,6),'%Y%m'),'%Y.%m') 				
+		         AS ENTR_DT																
+		       , DATE_FORMAT(STR_TO_DATE(SUBSTR(ENTRGRAD_DT,7,6),'%Y%m'),'%Y.%m')				
+		          AS GRAD_DT																
+		       , SCHL_NM 																	
+		       , SCHL_SUBJ 																
+		       , GRAD_DIV 																	
+		       , ( SELECT FN_GET_CODE_NAME('GRAD_DIV', GRAD_DIV) )				
+		         AS GRAD_DIV_NM															
+		       , LOCAT_NM 																	
+		       , REG_NO 																	
+		       , REG_DTTM 																	
+		       , MOD_NO 																	
+		       , MOD_DTTM 																	
+	</sql>
+
+	<select id="count" parameterType="tchSchsVO" resultType="Integer">
+		 SELECT 
+		 	COUNT(*)
+		 FROM tb_tch_schs																
+		 WHERE USER_NO = #{userNo}		
+	</select>	
+	
+	<sql id="selectQuery">
+		  SELECT 
+		  <include refid="selectColumnQuery" />															
+		  FROM tb_tch_schs																
+		  WHERE USER_NO = #{userNo}			
+	</sql>
+	
+	<select id="list" parameterType="tchSchsVO" resultType="tchSchsVO">
+		<include refid="selectQuery" />
+		 ORDER BY SUBSTR(ENTRGRAD_DT,1,6) ASC                            
+	</select>
+	
+	<select id="listPageing"  parameterType="tchSchsVO" resultType="tchSchsVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+			<include refid="selectQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>	
+		ORDER BY SUBSTR(ENTRGRAD_DT,1,6) ASC
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="select" parameterType="tchSchsVO" resultType="tchSchsVO">
+		<include refid="selectQuery" />
+		   AND SCHS_SN = #{schsSn}  												
+	</select>
+	
+	<insert id="insert" parameterType="tchSchsVO">
+		  INSERT INTO tb_tch_schs (               		
+		         SCHS_SN 								
+		       , USER_NO 								
+		       , ENTRGRAD_DT 							
+		       , SCHL_NM 								
+		       , SCHL_SUBJ 							
+		       , GRAD_DIV 								
+		       , LOCAT_NM 								
+		       , REG_NO 								
+		       , REG_DTTM 								
+		       , MOD_NO 								
+		       , MOD_DTTM 								
+		 ) VALUES (									
+		         #{schsSn} 								
+		       , #{userNo} 								
+		       , #{entrgradDt} 							
+		       , #{schlNm} 								
+		       , #{schlSubj} 							
+		       , #{gradDiv} 								
+		       , #{locatNm} 								
+		       , #{regNo} 								
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 	
+		       , #{modNo} 								
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 	
+		 )												
+	</insert>
+	
+	<update id="update" parameterType="tchSchsVO">
+		  UPDATE tb_tch_schs										
+		     SET ENTRGRAD_DT = #{entrgradDt} 						
+		       , SCHL_NM = #{schlNm} 								
+		       , SCHL_SUBJ = #{schlSubj} 							
+		       , GRAD_DIV = #{gradDiv} 								
+		       , LOCAT_NM = #{locatNm} 								
+		       , MOD_NO = #{modNo} 									
+		       , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+		   WHERE SCHS_SN = #{schsSn} 								
+		     AND USER_NO = #{userNo} 								
+	</update>
+		
+	<delete id="delete" parameterType="tchSchsVO">
+		   DELETE FROM tb_tch_schs   						
+		         WHERE USER_NO = #{userNo}                   
+		           AND SCHS_SN = #{schsSn}                   
+	</delete>
+	
+</mapper>

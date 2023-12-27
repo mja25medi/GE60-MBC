@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.org.creaplc.service.impl.OrgCreAplcInfoMapper">	
+
+	
+	<sql id="selectQuery">
+	 	SELECT 
+	 		CRE_APLC_SN as creAplcSn
+	 		, APLC_ORG_NM as aplcOrgNm
+	 		, PHONENO as phoneno
+	 		, MOBILE_NO as mobileNo
+	 		, EMAIL_ADDR as emailAddr
+	 		, EMAIL_CERT_YN as emailCertYn
+	 		, EMAIL_CERT_KEY as emailCertKey
+	 		, DOMAIN_NM as domainNm
+	 		, DOMAIN as domain
+	 		, PURP as purp
+	 		, CRE_ORG_CD as creOrgCd
+	 		, REG_NO as regNo
+	 		, REG_DTTM as regDttm
+	 		, MOD_NO as modNo
+	 		, MOD_DTTM as modDttm
+	 		, FN_GET_USER_NAME(REG_NO) as regNm
+	 		, FN_GET_USER_ID(REG_NO) as regId
+	 	FROM tb_org_cre_aplc_info
+	 	WHERE 1=1
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		<if test = "openYn != null and openYn != ''">
+			<if test = "openYn == 'Y'">
+			   AND CRE_ORG_CD IS NOT NULL
+			</if>
+			<if test = "openYn == 'N'">
+			   AND CRE_ORG_CD IS NULL
+			</if>
+		</if>		
+		<if test = "emailCertYn != null and emailCertYn != ''">
+		   AND EMAIL_CERT_YN = #{emailCertYn}
+		</if>
+		<if test = "searchValue != null and searchValue != ''">
+			<if test = "searchKey != null and searchKey == 'NM'">
+			   AND FN_GET_USER_NAME(REG_NO) LIKE CONCAT('%', #{searchValue}, '%') 
+			</if>
+			<if test = "searchKey != null and searchKey == 'ID'">
+			   AND FN_GET_USER_ID(REG_NO) LIKE CONCAT('%',#{searchValue},'%')
+			</if>
+			<if test = "searchKey != null and searchKey == 'ORGNM'">
+			   AND APLC_ORG_NM LIKE CONCAT('%',#{searchValue},'%') 
+			</if>
+		</if>		
+	</sql>		
+
+	<select id="list" parameterType="orgCreAplcInfoVO" resultType="orgCreAplcInfoVO">
+		/*
+			 SQL ID : list
+			 설  명 : 개설신청정보의 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	 	 ORDER BY CRE_APLC_SN DESC
+	</select>
+	
+	<select id="listPageing" parameterType="orgCreAplcInfoVO" resultType="orgCreAplcInfoVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 개설신청정보의 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+	 	ORDER BY CREAPLCSN DESC
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="orgCreAplcInfoVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 개설신청정보의 전체 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>
+	
+	<select id="select" parameterType="orgCreAplcInfoVO" resultType="orgCreAplcInfoVO">
+		/*
+			 SQL ID : select
+			 설  명 : 개설신청의 정보조회
+	 	*/
+	 	<include refid="selectQuery"/>
+           AND CRE_APLC_SN = #{creAplcSn}
+	</select>
+	
+	<select id="selectKey" resultType="Integer">
+		/*
+			 SQL ID : selectKey
+			 설  명 : 개설신청정보의 키 생성
+	 	*/
+	 	SELECT nextval('SQ_ORG_CRE_APLC_INFO') 
+	</select>
+	
+	
+	<insert id="insert" parameterType="orgCreAplcInfoVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 개설신청의 정보 등록
+	 	*/
+		INSERT INTO tb_org_cre_aplc_info (
+			CRE_APLC_SN
+	 		 , APLC_ORG_NM
+	 		 , PHONENO
+	 		 , MOBILE_NO
+	 		 , EMAIL_ADDR
+	 		 , EMAIL_CERT_YN
+	 		 , EMAIL_CERT_KEY
+	 		 , DOMAIN_NM
+	 		 , DOMAIN
+	 		 , PURP
+	 		 , CRE_ORG_CD
+		     , REG_NO
+		     , REG_DTTM
+		     , MOD_NO
+		     , MOD_DTTM
+		) VALUES (
+		       #{creAplcSn}
+		     , #{aplcOrgNm}
+		     , #{phoneno}
+		     , #{mobileNo}
+		     , #{emailAddr}
+		     , #{emailCertYn}
+		     , #{emailCertKey}
+		     , #{domainNm}
+		     , #{domain}
+		     , #{purp}
+		     , #{creOrgCd}
+		     , #{regNo}
+		     , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		     , #{modNo}
+		     , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		)	 	
+	</insert>
+	
+	<update id="update" parameterType="orgCreAplcInfoVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 개설신청의 정보 수정
+	 	*/
+		UPDATE tb_org_cre_aplc_info
+		   SET 
+		   	   APLC_ORG_NM = #{aplcOrgNm}
+		   	 , PHONENO = #{phoneno}
+		   	 , MOBILE_NO = #{mobileNo}
+		   	 , EMAIL_ADDR = #{emailAddr}
+		   	 , DOMAIN_NM = #{domainNm}
+		   	 , DOMAIN = #{domain}
+		   	 , PURP = #{purp}
+		     , MOD_NO = #{modNo}
+		     , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		 WHERE CRE_APLC_SN = #{creAplcSn}	 	
+	</update>	
+	
+	<update id="updateOrgCd" parameterType="orgCreAplcInfoVO" >
+		/*
+			 SQL ID : updateOrgCd
+			 설  명 : 개설신청의 정보 수정(기관코드 등록)
+	 	*/
+		UPDATE tb_org_cre_aplc_info
+		   SET 
+		   	 CRE_ORG_CD = #{creOrgCd}
+		     , MOD_NO = #{modNo}
+		     , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		 WHERE CRE_APLC_SN = #{creAplcSn}	 	
+	</update>	
+	
+	<update id="deleteOrgCd" parameterType="orgCreAplcInfoVO" >
+		/*
+			 SQL ID : deleteOrgCd
+			 설  명 : 개설신청의 정보 수정(기관코드 삭제)
+	 	*/
+		UPDATE tb_org_cre_aplc_info
+		   SET 
+		   	 CRE_ORG_CD = null
+		     , MOD_NO = #{modNo}
+		     , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		 WHERE CRE_ORG_CD = #{creOrgCd}
+	</update>	
+
+	<delete id="delete" parameterType="orgCreAplcInfoVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 개설신청정보 삭제
+	 	*/
+		DELETE FROM tb_org_cre_aplc_info
+         WHERE CRE_APLC_SN = #{creAplcSn}	 	
+	</delete>
+	
+	<update id="updateEmailCertYn" parameterType="orgCreAplcInfoVO" >
+		/*
+			 SQL ID : updateEmailCertYn
+			 설  명 : 사이트 이메일을 인증한다
+	 	*/
+		UPDATE tb_org_cre_aplc_info
+		   SET 
+		   	 EMAIL_CERT_YN = 'Y'
+		   	 , EMAIL_CERT_KEY = NULL
+		 WHERE CRE_APLC_SN = #{creAplcSn}	 
+		 	AND EMAIL_CERT_KEY = #{emailCertKey}	
+	</update>	
+	 
+</mapper>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.exambank.service.impl.ExamQbankQstnMapper">	
+	<select id="selectKey" resultType="Integer">
+	   SELECT SQ_CRS_EXAM_QBANK_QSTN.nextVal AS QSTN_SN FROM DUAL
+	</select>
+
+ 	<select id="list" parameterType="examQbankQstnVO" resultType="examQbankQstnVO">
+		 	SELECT  SBJ_CD              											
+		        ,  TITLE	              											
+		        ,  QSTN_SN              											
+		        ,  CTGR_CD              											
+		        ,  QSTN_TYPE              											
+		        ,  (SELECT CODE_NM 												
+		              FROM TB_SYS_CODE												
+		             WHERE CODE_CTGR_CD = 'QSTN_TYPE'         						
+		               AND CODE_CD = A.QSTN_TYPE ) AS QSTN_TYPE_NM					
+		        ,  QSTN_CTS              											
+		        ,  VIEW_1              											
+		        ,  VIEW_2              											
+		        ,  VIEW_3              											
+		        ,  VIEW_4              											
+		        ,  VIEW_5              											
+		        ,  RGT_ANSR              											
+		        ,  MULTI_RGT_ANSR              									
+		        ,  QSTN_EXPL              											
+		        ,  REG_NO              											
+		        ,  REG_DTTM              											
+		        ,  MOD_NO              											
+		        ,  MOD_DTTM             	 										
+			    ,  (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) AS MOD_NM			
+			    ,  (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) AS REG_NM			
+		     FROM  TB_CRS_EXAM_QBANK_QSTN A 										
+		    WHERE  SBJ_CD 	= #{sbjCd}												
+		      AND  CTGR_CD = #{ctgrCd }												
+		    ORDER  BY QSTN_TYPE_NM DESC	
+	</select>
+	<select id="select" parameterType="examQbankQstnVO" resultType="examQbankQstnVO">
+		 	SELECT  SBJ_CD              															
+		        ,  QSTN_SN              															
+		        ,  TITLE              																
+		        ,  CTGR_CD              															
+		        ,  QSTN_TYPE              															
+		        ,  (SELECT FN_GET_CODE_NAME('QSTN_TYPE',QSTN_TYPE) FROM DUAL) AS QSTN_TYPE_NM		
+		        ,  QSTN_CTS              															
+		        ,  VIEW_1              															
+		        ,  VIEW_2              															
+		        ,  VIEW_3              															
+		        ,  VIEW_4              															
+		        ,  VIEW_5              															
+		        ,  RGT_ANSR              															
+		        ,  MULTI_RGT_ANSR              													
+		        ,  QSTN_EXPL              															
+		        ,  REG_NO              															
+		        ,  REG_DTTM              															
+		        ,  MOD_NO              															
+		        ,  MOD_DTTM             	 														
+			    ,  (SELECT FN_GET_USER_NAME(MOD_NO) FROM DUAL) AS MOD_NM							
+		        ,  (SELECT FN_GET_USER_NAME(REG_NO) FROM DUAL) AS REG_NM							
+		     FROM  TB_CRS_EXAM_QBANK_QSTN 															
+		    WHERE  SBJ_CD 	= #{sbjCd}																
+		      AND  CTGR_CD = #{ctgrCd} 																
+		      AND  QSTN_SN = #{qstnSn}	
+	</select>
+    <insert id="insert" parameterType="examQbankQstnVO">
+		 	INSERT 	INTO TB_CRS_EXAM_QBANK_QSTN (				
+		        	SBJ_CD              						
+		        ,  QSTN_SN              						
+		        ,  CTGR_CD              						
+		        ,  QSTN_TYPE              						
+		        ,  TITLE	              						
+		        ,  QSTN_CTS              						
+		        ,  VIEW_1              						
+		        ,  VIEW_2              						
+		        ,  VIEW_3              						
+		        ,  VIEW_4              						
+		        ,  VIEW_5              						
+		        ,  RGT_ANSR              						
+		        ,  MULTI_RGT_ANSR              				
+		        ,  QSTN_EXPL              						
+		        ,  REG_NO              						
+		        ,  REG_DTTM             						
+			) VALUES ( 											
+		        	#{sbjCd}              						
+		        ,  #{qstnSn}              						
+		        ,  #{ctgrCd}              						
+		        ,  #{qstnType}              						
+		        ,  #{title}              						
+		        ,  #{qstnCts}              						
+		        ,  #{view1}              						
+		        ,  #{view2}              						
+		        ,  #{view3}              						
+		        ,  #{view4}              						
+		        ,  #{view5}              						
+		        ,  #{rgtAnsr}              						
+		        ,  #{multiRgtAnsr}              					
+		        ,  #{qstnExpl}              						
+		        ,  #{regNo}              						
+		        ,  TO_CHAR(SYSDATE,'yyyymmddhh24miss') )
+    </insert>
+
+
+   <update id="update" parameterType="examQbankQstnVO">
+		 	UPDATE  TB_CRS_EXAM_QBANK_QSTN 									
+		      SET  QSTN_TYPE 		= #{qstnType}          					
+		        ,  TITLE	  		= #{title}	          					
+		        ,  QSTN_CTS  		= #{qstnCts}          					
+		        ,  VIEW_1    		= #{view1}          						
+		        ,  VIEW_2    		= #{view2}          						
+		        ,  VIEW_3   		= #{view3}          						
+		        ,  VIEW_4    		= #{view4}          						
+		        ,  VIEW_5    		= #{view5}          						
+		        ,  RGT_ANSR  		= #{rgtAnsr}          					
+		        ,  MULTI_RGT_ANSR 	= #{multiRgtAnsr}        					
+		        ,  QSTN_EXPL 		= #{qstnExpl}            					
+		        ,  MOD_NO    		= #{modNo}          						
+		        ,  MOD_DTTM  		= TO_CHAR(SYSDATE,'yyyymmddhh24miss')	
+		    WHERE  SBJ_CD 			= #{sbjCd}								
+		      AND  CTGR_CD 		= #{ctgrCd}								
+		      AND  QSTN_SN 		= #{qstnSn} 
+    </update>
+
+	<delete id="delete" parameterType="examQbankQstnVO">
+	 	DELETE  FROM TB_CRS_EXAM_QBANK_QSTN		
+	  	 WHERE  SBJ_CD 	= #{sbjCd}				
+	      AND  CTGR_CD = #{ctgrCd}				
+	      AND  QSTN_SN = #{qstnSn}	  			
+    </delete>
+
+	<delete id="deleteAll" parameterType="examQbankQstnVO">
+	 	DELETE  FROM TB_CRS_EXAM_QBANK_QSTN		
+	  	 WHERE  SBJ_CD 	= #{sbjCd}				
+	      AND  CTGR_CD = #{ctgrCd}				
+    </delete>
+
+</mapper>	

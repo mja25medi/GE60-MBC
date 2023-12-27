@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd" >
+	
+    <!-- 환경설정 기본정보를 globals.properties 에서 참조하도록 propertyConfigurer 설정  -->
+    <bean id="propertyConfigurer"
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:/egovframework/properties/database.properties</value>
+                <value>classpath:/egovframework/properties/framework.properties</value>
+            </list>
+        </property>
+	</bean>
+	
+    <!-- 프로퍼티 정보 설정 -->
+    <bean name="propertiesService" class="egovframework.rte.fdl.property.impl.EgovPropertyServiceImpl" destroy-method="destroy">
+        <property name="properties">
+            <map>
+                <!-- <entry key="pageUnit" value="10"/>
+                <entry key="pageSize" value="10"/>
+                <entry key="posblAtchFileSize" value="5242880"/>
+                <entry key="Globals.fileStorePath" value="/user/file/sht/"/>
+                <entry key="Globals.addedOptions" value="false"/> -->
+            </map>
+        </property>
+    </bean>
+    
+	<!-- Site Config -->
+	<!-- <util:properties id="siteConfig">
+	<prop key="siteId">${Globals.siteId}</prop>
+	<prop key="siteTitle">${Globals.siteTitle}</prop>
+	<prop key="siteAdminTitle">${Globals.siteAdminTitle}</prop>
+	<prop key="mainBoardCntsSeqno">${Globals.mainBoardCntsSeqno}</prop>
+	<prop key="isRootSite">true</prop>
+	<prop key="fbClientId">${Globals.fbClientId}</prop>
+	<prop key="fbClientSecret">${Globals.fbClientSecret}</prop>
+	<prop key="twConsumerKey">${Globals.twConsumerKey}</prop>
+	<prop key="twConsumerSecret">${Globals.twConsumerSecret}</prop>
+	</util:properties> -->
+</beans>

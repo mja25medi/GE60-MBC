@@ -1,0 +1,127 @@
+$(document).ready(function () { 
+	
+    const $sect01Slider = $(".event_zone .slider")
+    $sect01Slider.slick({
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: true, 
+        dots:false
+    }).on("beforeChange", function (event, slick, currentSlide, nextSlide) {
+        $(".current").text(nextSlide + 1)
+    })
+    
+    
+    $(".control_pause").on("click", function () {
+        $(this).removeClass(AC).siblings("button").addClass(AC)
+        $(this).parent().siblings(".slider").slick("slickPause")
+    })    
+    $(".control_play").on("click", function () {
+        $(this).removeClass(AC).siblings("button").addClass(AC)
+        $(this).parent().siblings(".slider").slick("slickPlay")
+    })   
+
+    const $anmailStorySlider = $(".basic_edu .slider")
+    $anmailStorySlider.slick({
+        slidesToScroll: 1,
+        slidesToShow: 3,
+        autoplay: false,
+        dots: false
+    })
+    
+    const $lawStorySlider = $(".law_story .slider")
+    $lawStorySlider.slick({
+        slidesToScroll: 1,
+        slidesToShow: 1,
+        autoplay: true,
+        autoplaySpeed: 4000,
+        arrows: false,
+        dots: true,
+        vertical: true
+    })
+    
+	//리스트 sort
+    clickAC(".sort button");    
+
+    
+   $(".section02 .select .title").on("click", function () {
+        active(this, "active")
+    })      
+
+    //scrollAC(".section")
+    setTimeout(function(){$(".section").addClass(AC)},100)
+    
+    $('.slider_list').slick({
+        infinite: true,
+        arrows: false,
+        dots: false,
+        // autoplay: true,
+        autoplaySpeed: 5000,
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        responsive: [
+          {
+            breakpoint: 1024,
+            settings: {
+              dots: true,
+              slidesToShow: 2
+            }
+          },            
+            {
+              breakpoint: 786,
+              settings: {
+                dots: true,
+                slidesToShow: 2
+              }
+            },
+            {
+              breakpoint: 580,
+              settings: {
+                dots: true,
+                slidesToShow: 1
+              }
+            },
+            {
+              breakpoint: 380,
+              settings: {
+                dots: true,
+                slidesToShow: 1
+              }
+            }
+        ]
+    });
+    
+
+     /********** main popzone **********/
+   $('.pop-latest').slick({
+        infinite: true,
+        arrows: false,
+        dots: true,
+        autoplay: true,
+        autoplaySpeed: 4000,
+        fade: true,
+
+        responsive: [
+            {
+              breakpoint: 1217,
+              settings: {
+                fade: false,
+                slidesToShow: 1
+              }
+            },
+            {
+              breakpoint: 786,
+              settings: {
+                fade: false,
+                slidesToShow: 1
+              }
+            },
+            {
+              breakpoint: 480,
+              settings: {
+                slidesToShow: 1
+              }
+            }
+        ]
+    });
+})
+

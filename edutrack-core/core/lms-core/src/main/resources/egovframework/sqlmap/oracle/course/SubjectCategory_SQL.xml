@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.subject.service.impl.SubjectCategoryMapper">	
+
+	<select id="selectKey" resultType="String">
+		SELECT 'SC'||LPAD(SQ_CRS_SBJ_CTGR.nextVal,8,'0') AS SBJ_CTGR_CD FROM DUAL
+	</select>
+ 	<select id="list" parameterType="subjectCategoryVO" resultType="subjectCategoryVO">
+		<![CDATA[
+		 	SELECT  A.SBJ_CTGR_CD																
+		        ,  A.SBJ_CTGR_NM																
+		        ,  A.SBJ_CTGR_TYPE_CD 															
+		        ,  A.PAR_SBj_CTGR_CD															
+		        ,  A.CTGR_LVL 																	
+		        ,  A.CTGR_ODR																	
+		        ,  A.USE_YN 																	
+		        ,  A.REG_NO 																	
+		        ,  A.REG_DTTM 																	
+		        ,  A.MOD_NO 																	
+		        ,  A.MOD_DTTM 																	
+			    ,  (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) AS MOD_NM						
+		        ,  (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) AS REG_NM						
+		        ,  NVL(( SELECT SBJ_CTGR_NM														
+		                   FROM TB_CRS_SBJ_CTGR													
+		                  WHERE SBJ_CTGR_CD = A.PAR_SBJ_CTGR_CD),'ROOT') AS PAR_SBJ_CTGR_NM		
+		        ,  CASE WHEN (A.CTGR_LVL -1) < 0 THEN 0 ELSE (A.CTGR_LVL -1) END PAR_CTGR_LVL	
+		        ,  ( SELECT COUNT(*) 															
+		               FROM TB_CRS_SBJ_CTGR														
+		              WHERE PAR_SBJ_CTGR_CD = A.SBJ_CTGR_CD ) AS SUB_CNT						
+		     FROM  TB_CRS_SBJ_CTGR A	
+		]]>
+		    WHERE  A.SBJ_CTGR_TYPE_CD 	= #{sbjCtgrTypeCd}										
+		<if test = "orgCd != null and orgCd != ''">                          			
+	    	  		AND A.ORG_CD = #{orgCd}	
+	    </if>	
+		      		AND  NVL(A.USE_YN,'N') = NVL(#{useYn},NVL(A.USE_YN,'N'))							
+		    START  WITH NVL(PAR_SBJ_CTGR_CD,'1') = DECODE(#{parSbjCtgrCd},'','1',#{parSbjCtgrCd})	
+		    CONNECT  BY PRIOR SBJ_CTGR_CD = PAR_SBJ_CTGR_CD										
+		    ORDER  SIBLINGS BY CTGR_ODR	
+	</select>
+	<select id="listSort" parameterType="subjectCategoryVO" resultType="subjectCategoryVO">
+		 	SELECT * 																					
+		     FROM ( 																					
+		<![CDATA[
+		 			SELECT  A.ORG_CD																	
+		        		 ,  A.SBJ_CTGR_CD																
+		        		 ,  A.SBJ_CTGR_NM																
+		        		 ,  A.SBJ_CTGR_TYPE_CD 															
+		        		 ,  A.PAR_SBj_CTGR_CD															
+		        		 ,  A.CTGR_LVL 																	
+		        		 ,  A.CTGR_ODR																	
+		        		 ,  A.USE_YN 																	
+		        		 ,  A.REG_NO 																	
+		        		 ,  A.REG_DTTM 																	
+		         		 ,  A.MOD_NO 																	
+		        		 ,  A.MOD_DTTM 																	
+			     		 ,  (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) AS MOD_NM						
+		         		 ,  (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) AS REG_NM						
+		        		 ,  NVL(( SELECT SBJ_CTGR_NM													
+		                  			FROM TB_CRS_SBJ_CTGR												
+		               		       WHERE SBJ_CTGR_CD = A.PAR_SBJ_CTGR_CD),'ROOT') AS PAR_SBJ_CTGR_NM	
+		        		 ,  CASE WHEN (A.CTGR_LVL -1) < 0 THEN 0 ELSE (A.CTGR_LVL -1) END PAR_CTGR_LVL 	
+		        		 ,	( SELECT COUNT(*) 															
+		            			FROM TB_CRS_SBJ_CTGR													
+		           		       WHERE PAR_SBJ_CTGR_CD = A.SBJ_CTGR_CD ) AS SUB_CNT						
+		   		     FROM  TB_CRS_SBJ_CTGR A															
+		  			 WHERE  A.SBJ_CTGR_TYPE_CD = #{sbjCtgrTypeCd}											
+		           ) T 																					
+		  	 WHERE SUB_CNT > 0 																			
+		]]>
+		<if test = "orgCd != null and orgCd != ''">                          			
+	    	  		AND A.ORG_CD = #{orgCd}	
+	    </if>	
+		     START WITH NVL(PAR_SBJ_CTGR_CD,'1') 	= NVL(#{parSbjCtgrCd},'1')							
+		     CONNECT BY PRIOR SBJ_CTGR_CD 			= PAR_SBJ_CTGR_CD									
+		     ORDER SIBLINGS BY CTGR_ODR							
+	</select>
+	<select id="listSub" parameterType="subjectCategoryVO" resultType="subjectCategoryVO">
+		<![CDATA[
+		 SELECT  A.ORG_CD																	
+		      ,  A.SBJ_CTGR_CD																
+		      ,  A.SBJ_CTGR_NM																
+		      ,  A.SBJ_CTGR_TYPE_CD 														
+		      ,  A.PAR_SBJ_CTGR_CD															
+		      ,  A.CTGR_LVL 																
+		      ,  A.CTGR_ODR																	
+		      ,  A.USE_YN 																	
+		      ,  A.REG_NO 																	
+		      ,  A.REG_DTTM 																
+		      ,  A.MOD_NO 																	
+		      ,  A.MOD_DTTM 																
+			  ,  (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) AS MOD_NM					
+		      ,  (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) AS REG_NM					
+		      ,  NVL(( SELECT SBJ_CTGR_NM													
+		                 FROM TB_CRS_SBJ_CTGR												
+		                WHERE SBJ_CTGR_CD = A.PAR_SBJ_CTGR_CD),'ROOT') AS PAR_SBJ_CTGR_NM	
+		      ,  CASE WHEN (A.CTGR_LVL -1) < 0 THEN 0 ELSE (A.CTGR_LVL -1) END PAR_CTGR_LVL 
+		      ,  ( SELECT COUNT(*) 															
+		             FROM TB_CRS_SBJ_CTGR													
+		            WHERE PAR_SBJ_CTGR_CD = A.SBJ_CTGR_CD ) AS SUB_CNT						
+		   FROM  TB_CRS_SBJ_CTGR A															
+		]]>
+		  WHERE  NVL(PAR_SBJ_CTGR_CD,'1') = NVL(#{parSbjCtgrCd},'1')							
+		    AND  SBJ_CTGR_TYPE_CD = #{sbjCtgrTypeCd}											
+		<if test = "orgCd != null and orgCd != ''">                          			
+	    	  		AND  ORG_CD = #{orgCd}	
+	    </if>	
+		<if test = "useYn != null and useYn != ''">                          			
+	    	  		AND  USE_YN = #{useYn}
+	    </if>	
+		  ORDER  BY A.CTGR_ODR						
+	</select>
+	<select id="select" parameterType="subjectCategoryVO" resultType="subjectCategoryVO">
+		<![CDATA[
+		 	SELECT  A.ORG_CD																					
+		        ,  A.SBJ_CTGR_CD																				
+		        ,  A.SBJ_CTGR_NM																				
+		        ,  A.SBJ_CTGR_TYPE_CD 																			
+		        ,  A.PAR_SBj_CTGR_CD																			
+		        ,  A.CTGR_LVL 																					
+		        ,  A.CTGR_ODR																					
+		        ,  A.USE_YN 																					
+		        ,  A.SBJ_CTGR_PATH																				
+		        ,  A.SBJ_CTGR_PATH_NM																			
+		        ,  A.REG_NO 																					
+		        ,  A.REG_DTTM 																					
+		        ,  A.MOD_NO 																					
+		        ,  A.MOD_DTTM 																					
+			    ,  (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) AS MOD_NM										
+		        ,  (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) AS REG_NM										
+		        ,  NVL(( SELECT SBJ_CTGR_NM																	
+		                  FROM TB_CRS_SBJ_CTGR																	
+		                 WHERE SBJ_CTGR_CD = A.PAR_SBJ_CTGR_CD),'ROOT') AS PAR_SBJ_CTGR_NM						
+		        ,  CASE WHEN (A.CTGR_LVL -1) < 0 THEN 0 ELSE (A.CTGR_LVL -1) END PAR_CTGR_LVL 					
+		        ,  ( SELECT COUNT(*) 																			
+		               FROM TB_CRS_SBJ_CTGR																	
+		              WHERE PAR_SBJ_CTGR_CD = A.SBJ_CTGR_CD ) AS SUB_CNT										
+		        ,  (( SELECT COUNT(*) FROM TB_CRS_ONLN_SBJ WHERE SBJ_CTGR_CD = A.SBJ_CTGR_CD)					
+		           +( SELECT COUNT(*) FROM TB_CRS_OFLN_SBJ WHERE SBJ_CTGR_CD = A.SBJ_CTGR_CD)) AS SBJ_CNT		
+		     FROM  TB_CRS_SBJ_CTGR A																			
+		]]>
+		  	 WHERE  SBJ_CTGR_CD = #{sbjCtgrCd}
+	</select>
+
+    <insert id="insert" parameterType="subjectCategoryVO">
+	 	INSERT  INTO TB_CRS_SBJ_CTGR (								
+	           ORG_CD										 		
+	        ,  SBJ_CTGR_CD									 		
+	        ,  SBJ_CTGR_TYPE_CD 									
+	        ,  SBJ_CTGR_NM									 		
+	        ,  PAR_SBj_CTGR_CD										
+	        ,  CTGR_LVL 											
+	        ,  CTGR_ODR											
+	        ,  USE_YN 												
+	        ,  SBJ_CTGR_PATH										
+	        ,  SBJ_CTGR_PATH_NM									
+	        ,  REG_NO 												
+	        ,  REG_DTTM ) 											
+	 	SELECT 	#{orgCd} 												
+			, #{sbjCtgrCd}
+	        ,  #{sbjCtgrTypeCd} 										
+	        ,  #{sbjCtgrNm}											
+	        ,  #{parSbjCtgrCd} 										
+	        ,  #{ctgrLvl}	 	 									
+	        ,  NVL(MAX(CTGR_ODR),0)+1	 		 					
+	        ,  #{useYn} 												
+	        ,  #{sbjCtgrPath}||#{sbjCtgrCd}				       		
+	        ,  #{sbjCtgrPathNm}										
+	        ,  #{regNo} 	 											
+	        ,  TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 				
+	     FROM  TB_CRS_SBJ_CTGR										
+	    WHERE  NVL(PAR_SBJ_CTGR_CD,'1') = NVL(#{parSbjCtgrCd},'1')	
+	      AND  ORG_CD = #{orgCd}										
+    </insert>
+   <update id="update" parameterType="subjectCategoryVO">
+		 	UPDATE  TB_CRS_SBJ_CTGR 												
+		      SET  SBJ_CTGR_NM 		= #{sbjCtgrNm}								
+		        ,  PAR_SBJ_CTGR_CD 	= #{parSbjCtgrCd}								
+		        ,  CTGR_LVL 			= #{ctgrLvl}									
+		        ,  CTGR_ODR 			= #{ctgrOdr}									
+		        ,  USE_YN 				= #{useYn}									
+		        ,  SBJ_CTGR_PATH 		= NVL(( SELECT SBJ_CTGR_PATH        		
+		                              		      FROM TB_CRS_SBJ_CTGR				
+		                             		     WHERE SBJ_CTGR_CD = #{parSbjCtgrCd}	
+		 				            		   ),'')||'/'||#{sbjCtgrCd} 				
+		        ,  SBJ_CTGR_PATH_NM 	= NVL(( SELECT SBJ_CTGR_PATH_NM     		
+		                             	          FROM TB_CRS_SBJ_CTGR				
+		                               	     WHERE SBJ_CTGR_CD = #{parSbjCtgrCd}	
+		 				  	           		   ),'')||'/'||#{sbjCtgrNm} 				
+		        ,  MOD_NO 				= #{modNo}									
+		        ,  MOD_DTTM 			= TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')		
+		    WHERE  SBJ_CTGR_CD 		= #{sbjCtgrCd}	
+    </update>
+   	<update id="updateBatch" parameterType="list" >
+		<foreach collection="list" item="item" index="index" open="DECLARE BEGIN" close="; END;" separator=";">
+		  UPDATE  TB_CRS_SBJ_CTGR 
+		  SET
+				   SBJ_CTGR_NM 		= #{item.sbjCtgrNm}								
+		        ,  PAR_SBJ_CTGR_CD 	= #{item.parSbjCtgrCd}								
+		        ,  CTGR_LVL 			= #{item.ctgrLvl}									
+		        ,  CTGR_ODR 			= #{item.ctgrOdr}									
+		        ,  USE_YN 				= #{item.useYn}									
+		        ,  SBJ_CTGR_PATH 		= NVL(( SELECT SBJ_CTGR_PATH        		
+		                              		      FROM TB_CRS_SBJ_CTGR				
+		                             		     WHERE SBJ_CTGR_CD = #{item.parSbjCtgrCd}
+		 				            		   ),'')||'/'||#{item.sbjCtgrCd} 				
+		        ,  SBJ_CTGR_PATH_NM 	= NVL(( SELECT SBJ_CTGR_PATH_NM     		
+		                             	          FROM TB_CRS_SBJ_CTGR				
+		                               	     WHERE SBJ_CTGR_CD = #{item.parSbjCtgrCd}	
+		 				  	           		   ),'')||'/'||#{item.sbjCtgrNm} 				
+		        ,  MOD_NO 				= #{item.modNo}									
+		        ,  MOD_DTTM 			= TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')			
+		   WHERE  SBJ_CTGR_CD 		= #{item.sbjCtgrCd}
+		</foreach>	     
+	</update>
+    
+	<delete id="delete" parameterType="subjectCategoryVO">
+		 DELETE  FROM TB_CRS_SBJ_CTGR
+		 WHERE  SBJ_CTGR_CD = #{sbjCtgrCd}		
+    </delete>
+
+
+
+</mapper>	

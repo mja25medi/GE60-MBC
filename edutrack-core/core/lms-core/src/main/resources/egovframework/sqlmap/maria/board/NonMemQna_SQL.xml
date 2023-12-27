@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.board.qna.service.impl.NonMemQnaMapper">
+	<!-- 비회원 상담신청 -->
+	<select id="selectKey" resultType="integer">
+	 	SELECT nextval(SQ_BRD_QNA_NONMEM) FROM DUAL
+	</select>	
+ 	
+ 	<sql id="selectNonMemQuery">
+ 		SELECT 
+			QNA_SN 
+			,	ORG_CD
+			,	REG_NM 
+			,	REG_DTTM 
+			,	QS_TEL 
+			,	QS_CTS 
+			,	ANS_YN 
+			,	ANS_NO 
+			,	ANS_CTS 
+			,	ANS_DTTM 
+			,	MOD_DTTM
+		FROM
+			tb_brd_qna_nonmem
+		WHERE
+			ORG_CD = #{orgCd}
+ 	</sql>
+ 	
+ 	<sql id="listQuery">
+		<include refid="selectNonMemQuery"/>
+		<if test = "ansYn != null and ansYn != ''">
+			AND ANS_YN = #{ansYn}
+		</if>
+		<if test = "searchValue != null and searchValue != ''">
+			<if test = "searchKey != null and searchKey == 'qsCts'">
+				AND QS_CTS LIKE CONCAT('%', IFNULL(#{searchValue}, ''), '%')
+			<!-- AND FN_GET_USER_NAME(REG_NO) LIKE CONCAT('%', IFNULL(#{searchValue}, ''), '%') -->
+			</if>
+			<if test = "searchKey != null and searchKey == 'regNm'">
+				AND REG_NM LIKE CONCAT('%', IFNULL(#{searchValue}, ''), '%')
+			</if>
+		</if>		
+	</sql>	
+ 	
+	<insert id="insertNonMemQna" parameterType="nonMemQnaVO">
+	/*
+		 SQL ID : insertNonMemQna
+		 설  명 : 비회원 상담 신청 내용을 등록하고 결과를 반환한다.
+ 	*/
+		INSERT INTO tb_brd_qna_nonmem (
+			QNA_SN
+			,	ORG_CD
+			,	REG_NM
+			,	REG_DTTM
+			,	QS_TEL
+			,	QS_CTS
+			,	ANS_YN
+		) VALUES (
+			#{qnaSn}
+			,	#{orgCd}
+			,	#{regNm}
+			,	DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+			,	#{qsTel}
+			,	#{qsCts}
+			,	'N'
+		)
+	</insert>
+
+	<select id="list" parameterType="nonMemQnaVO" resultType="nonMemQnaVO">
+		/*
+			 SQL ID : list
+			 설  명 : 상담게시물 검색등
+	 	*/
+		<include refid="listQuery"/>
+	</select>
+	
+	<select id="selectNonMemQna" parameterType="nonMemQnaVO" resultType="nonMemQnaVO">
+		/*
+			 SQL ID : selectNonMemQna
+			 설  명 : 개별 상담의 단일항목 정보를 가져온다.
+	 	*/
+	 	SELECT 
+			QNA_SN 
+			,	ORG_CD
+			,	REG_NM 
+			,	REG_DTTM 
+			,	QS_TEL 
+			,	QS_CTS 
+			,	ANS_YN 
+			,	ANS_NO 
+			,	ANS_CTS 
+			,	ANS_DTTM 
+			,	MOD_DTTM
+		FROM
+			tb_brd_qna_nonmem
+	 	WHERE
+	 		QNA_SN = #{qnaSn}
+	</select>
+	
+	<update id="addNonMemAns" parameterType="nonMemQnaVO">
+		/*
+			 SQL ID : addNonMemAns
+			 설  명 : 개별 상담의 답변을 등록한다.
+	 	*/
+		UPDATE 
+			tb_brd_qna_nonmem 
+		SET 
+			ANS_YN = 'Y'
+			, ANS_NO = #{ansNo}
+			, ANS_CTS = #{ansCts}
+			, ANS_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		WHERE 
+			QNA_SN = #{qnaSn};
+	</update>
+	
+	<update id="updateNonMemAns" parameterType="nonMemQnaVO">
+		/*
+			 SQL ID : updateNonMemAns
+			 설  명 : 개별 상담의 답변을 수정한다.
+	 	*/
+		UPDATE 
+			tb_brd_qna_nonmem 
+		SET 
+			ANS_YN = 'Y'
+			, ANS_CTS = #{ansCts}
+			, MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		WHERE 
+			QNA_SN = #{qnaSn}
+		AND
+			ANS_NO = #{ansNo};
+	</update>
+	
+	<delete id="deleteNonMemQna" parameterType="nonMemQnaVO">
+		/*
+			 SQL ID : deleteNonMemQna
+			 설  명 : 비회원 상담의 단일항목 정보를 삭제하고 결과를 반환한다.
+	 	*/
+		DELETE FROM tb_brd_qna_nonmem
+		WHERE
+			QNA_SN = #{qnaSn};
+	</delete>
+	
+	<select id="countNonMemQna" parameterType="nonMemQnaVO" resultType="Integer">
+		/*
+			 SQL ID : countNonMemQna
+			 설  명 : 비회원 상담 게시물의 전체 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>
+	
+	<select id="listPageing" parameterType="nonMemQnaVO" resultType="nonMemQnaVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 :  비회원 상담게시물 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+	 	ORDER BY REG_DTTM DESC
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>		
+
+</mapper>

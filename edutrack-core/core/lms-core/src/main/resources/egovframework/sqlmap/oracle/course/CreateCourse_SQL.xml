@@ -1,0 +1,1479 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.createcourse.service.impl.CreateCourseMapper">	
+
+	<select id="selectCreateCourseCd" resultType="string">
+		 SELECT 'CE'||LPAD(SQ_CRS_CRE_CRS.nextVal,8,'0') AS CRS_CRE_CD FROM DUAL
+	</select>
+	<sql id="selectColumnQuery">
+		 		 A.CRS_CRE_CD  
+		       , A.ORG_CD  
+		       , A.CRS_CD  
+		       , A.CRE_TYPE_CD  
+		       , A.CRE_YEAR  
+		       , A.CRE_TERM  
+		       , A.CRS_CRE_NM  
+		       , A.ENRL_APLC_START_DTTM  
+		       , A.ENRL_APLC_END_DTTM  
+		       , A.OFLN_START_DTTM  
+		       , A.OFLN_END_DTTM  
+		       , A.ENRL_START_DTTM  
+		       , A.ENRL_END_DTTM  
+		       , A.AUDIT_END_DTTM  
+		       , A.NOP_LIMIT_YN  
+		       , NVL(A.ENRL_NOP,0) AS ENRL_NOP  
+		       , A.ONLN_EDU_TM  
+		       , A.OFLN_EDU_TM  
+		       , A.OFLN_EDU_PLACE  
+		       , A.EDU_PRICE  
+		       , A.SCORE_HANDL_CD  
+		       , A.CPLT_SCORE  
+		       , A.CPLT_PRGR_RATE
+		       , NVL(A.PRGR_RATIO,0) AS PRGR_RATIO 
+		       , NVL(A.ATTD_RATIO,0) AS ATTD_RATIO 
+		       , NVL(A.EXAM_RATIO,0) AS EXAM_RATIO 
+		       , NVL(A.SEMI_EXAM_RATIO,0) AS SEMI_EXAM_RATIO
+		       , NVL(A.FORUM_RATIO,0) AS FORUM_RATIO 
+		       , NVL(A.ASMT_RATIO,0) AS ASMT_RATIO 
+		       , NVL(A.PRJT_RATIO,0) AS PRJT_RATIO 
+		       , NVL(A.JOIN_RATIO,0) AS JOIN_RATIO 
+		       , NVL(A.ETC_RATIO,0) AS ETC_RATIO 
+		       , A.DAY_STUDY_LIMIT  
+		       , A.DEPT_CD AS DEPT_CD
+		       , (SELECT DEPT_NM FROM tb_usr_dept_info WHERE DEPT_CD = A.DEPT_CD) AS DEPT_NM
+		       , ( SELECT COUNT(*)  
+		             FROM TB_CRS_CRE_CRS_DECLS  
+		            WHERE CRS_CRE_CD = A.CRS_CRE_CD ) AS DECLS_CNT  
+		       , A.REG_NO  
+		       , A.REG_DTTM  
+		       , A.MOD_NO  
+		       , A.MOD_DTTM  
+			   , (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) AS MOD_NM  
+			   , (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) AS REG_NM  
+			   , A.CRE_DESC
+			   , B.CRS_NM
+			   , B.CRS_OPER_MTHD
+			   , (SELECT CERT_STS FROM tb_std_std where user_no =#{userNo} AND crs_cre_Cd = A.CRS_CRE_CD) AS CERT_STS
+			   , (SELECT COUNT(*) FROM tb_std_std C, tb_usr_login D  
+			            WHERE C.USER_NO = D.USER_NO  
+			            AND crs_cre_cd = A.CRS_CRE_CD 
+			            AND D.USER_STS = 'U'  
+			            AND C.CERT_STS ='I') AS WAIT_CERT_CNT
+			  , (SELECT COUNT(*) FROM tb_std_std C, tb_usr_login D  
+			            WHERE C.USER_NO = D.USER_NO  
+			            AND crs_cre_cd = A.CRS_CRE_CD 
+			            AND D.USER_STS = 'U'  
+			            AND C.CERT_APLC_DTTM  IS NOT NULL) AS APPLY_CERT_CNT      
+			    <if test = "selectMode == 'CREATE'"> -- 개설관리
+			       , ( SELECT COUNT(*)  
+			             FROM TB_STD_STD C, TB_USR_LOGIN D  
+			            WHERE C.USER_NO = D.USER_NO  
+			              AND D.USER_STS = 'U'  
+			              AND CRS_CRE_CD = A.CRS_CRE_CD  
+			              AND ENRL_STS in ('S','C','F') ) AS CNFM_CNT  
+			       , ( SELECT COUNT(*)  
+			             FROM TB_STD_STD C, TB_USR_LOGIN D  
+			            WHERE C.USER_NO = D.USER_NO  
+			              AND D.USER_STS = 'U'  
+			              AND CRS_CRE_CD = A.CRS_CRE_CD  
+			              AND ENRL_STS ='C' ) AS CPLT_CNT  
+			       , ( SELECT COUNT(*)  
+			             FROM TB_STD_STD C, TB_USR_LOGIN D  
+			            WHERE C.USER_NO = D.USER_NO  
+			              AND D.USER_STS = 'U'  
+			              AND CRS_CRE_CD = A.CRS_CRE_CD  
+			              AND ENRL_STS ='F' ) AS FAIL_CNT  
+			       , ( SELECT COUNT(*)  
+			             FROM TB_STD_STD C, TB_USR_LOGIN D  
+			            WHERE C.USER_NO = D.USER_NO  
+			              AND D.USER_STS = 'U'  
+			              AND CRS_CRE_CD = A.CRS_CRE_CD  
+			              AND ENRL_STS ='E' ) AS ENRL_CNT  
+			       , ( SELECT COUNT(*)  
+			             FROM TB_STD_STD C, TB_USR_LOGIN D  
+			            WHERE C.USER_NO = D.USER_NO  
+			              AND D.USER_STS = 'U'  
+			              AND CRS_CRE_CD = A.CRS_CRE_CD  
+			              AND ENRL_STS in ('E','S','C','F') ) AS STU_CNT  
+				</if>
+				<if test = "selectMode == 'MANAGE'"> -- 과정 운영 관리
+			       , ( SELECT COUNT(*) FROM TB_LEC_EXAM  
+			            WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+			              AND REG_YN = 'Y') AS EXAM_CNT  
+			       , ( SELECT COUNT(*) FROM TB_LEC_ASMT  
+			            WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+			              AND REG_YN = 'Y' ) AS ASMT_CNT  
+			       , ( SELECT COUNT(*) FROM TB_LEC_FORUM  
+			            WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+			              AND FORUM_REG_YN = 'Y' ) AS FORUM_CNT  
+			       , ( SELECT COUNT(*) FROM TB_LEC_RESH  
+			            WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+			              AND REG_YN = 'Y' ) AS RESH_CNT  
+			       , 0 AS PRJT_CNT  
+				</if>
+				<if test = "selectMode == 'UEINS'"> -- 과정운영
+			       , ( SELECT COUNT(*)  
+			             FROM TB_STD_STD C, TB_USR_LOGIN D  
+			            WHERE C.USER_NO = D.USER_NO  
+			              AND D.USER_STS = 'U'  
+			              AND CRS_CRE_CD = A.CRS_CRE_CD  
+			              AND ENRL_STS in ('S','C','F') ) AS CNFM_CNT  
+			       , ( SELECT COUNT(*)  
+			             FROM TB_STD_STD C, TB_USR_LOGIN D  
+			            WHERE C.USER_NO = D.USER_NO  
+			              AND D.USER_STS = 'U'  
+			              AND CRS_CRE_CD = A.CRS_CRE_CD  
+			              AND ENRL_STS in ('C') ) AS CPLT_CNT  
+			       , ( SELECT COUNT(*)  
+			             FROM TB_STD_STD C, TB_USR_LOGIN D  
+			            WHERE C.USER_NO = D.USER_NO  
+			              AND D.USER_STS = 'U'  
+			              AND CRS_CRE_CD = A.CRS_CRE_CD  
+			              AND ENRL_STS in ('F') ) AS FAIL_CNT  
+			       , ( SELECT COUNT(*)  
+			             FROM TB_STD_STD C, TB_USR_LOGIN D  
+			            WHERE C.USER_NO = D.USER_NO  
+			              AND D.USER_STS = 'U'  
+			              AND CRS_CRE_CD = A.CRS_CRE_CD  
+			              AND ENRL_STS NOT IN ('N','D')  
+			              AND UEINS_APLC_Yn = 'Y') AS UEINS_APLC_CNT   //-- 고용보험신청수
+			       , ( SELECT COUNT(*)  
+			             FROM TB_STD_STD C, TB_USR_LOGIN D  
+			            WHERE C.USER_NO = D.USER_NO  
+			              AND D.USER_STS = 'U'  
+			              AND CRS_CRE_CD = A.CRS_CRE_CD  
+			              AND ENRL_STS NOT IN ('N','D')  
+			              AND UEINS_APLY_Yn = 'Y') AS UEINS_APLY_CNT   //-- 고용보험적용수
+			       , NVL(( SELECT SUM(NVL(REFUND_PRICE,0))  
+			                 FROM TB_STD_STD C, TB_USR_LOGIN D  
+			                WHERE C.USER_NO = D.USER_NO  
+			                  AND D.USER_STS = 'U'  
+			                  AND CRS_CRE_CD = A.CRS_CRE_CD  
+			                  AND UEINS_APLY_Yn = 'Y'),0) AS REFUND_PRICE  
+				</if>
+				<if test = "selectMode == 'PAYMENT'"> -- 결제 관리
+			       , NVL(( SELECT SUM(PAYM_PRICE)  
+			                 FROM TB_STD_STD  
+			                WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+			                  AND PAYM_MTHD_CD = 'PAYM001'  
+			                  AND PAYM_STS_CD = 'Y'  
+			                  AND ENRL_STS != 'D' ),0) AS PAYM_CARD_PRICE  
+			       , NVL(( SELECT SUM(PAYM_PRICE)  
+			                 FROM TB_STD_STD  
+			                WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+			                  AND PAYM_MTHD_CD = 'PAYM002'  
+			                  AND PAYM_STS_CD = 'Y'  
+			                  AND ENRL_STS != 'D' ),0) AS PAYM_BANK_PRICE  
+			       , NVL(( SELECT SUM(PAYM_PRICE)  
+			                 FROM TB_STD_STD  
+			                WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+			                  AND PAYM_MTHD_CD = 'PAYM003'  
+			                  AND PAYM_STS_CD = 'Y'  
+			                  AND ENRL_STS != 'D' ),0) AS PAYM_BOOK_PRICE  
+			       , NVL(( SELECT SUM(PAYM_PRICE)  
+			                 FROM TB_STD_STD  
+			                WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+			                  AND PAYM_MTHD_CD = 'PAYM004'  
+			                  AND PAYM_STS_CD = 'Y'  
+			                  AND ENRL_STS != 'D' ),0) AS PAYM_SITE_PRICE  
+			       , NVL(( SELECT SUM(PAYM_PRICE)  
+			                 FROM TB_STD_STD  
+			                WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+			                  AND PAYM_STS_CD != 'Y'  
+			                  AND ENRL_STS != 'D' ),0) AS UNPAY_PRICE  
+			       , NVL(( SELECT SUM(PAYM_PRICE)  
+			                 FROM TB_STD_STD  
+			                WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+			                  AND PAYM_STS_CD = 'Y'  
+			                  AND REPAY_STS_CD = 'REFUND003'  
+			                  AND ENRL_STS != 'D' ),0) AS REPAY_PRICE  
+				</if>
+	</sql>
+		
+	<sql id="selectQuery">
+		  SELECT 
+		  <include refid="selectColumnQuery" />
+		  FROM TB_CRS_CRE_CRS	A, TB_CRS_CRS B
+		  WHERE A.CRS_CD = B.CRS_CD  
+		     	<if test = 'orgCd != null and orgCd != ""'>
+					AND A.ORG_CD = NVL(#{orgCd}, A.ORG_CD)  
+				</if>
+		     	<if test = 'crsCd != null and crsCd != ""'>
+					AND A.CRS_CD = NVL(#{crsCd},A.CRS_CD)  
+				</if>
+				<if test = 'deptCd != null and deptCd != ""'>
+					AND A.DEPT_CD = NVL(#{deptCd},A.DEPT_CD)
+				</if>
+		     	<if test = 'sbjCd != null and sbjCd != ""'>
+					AND A.SBJ_CD = NVL(#{sbjCd},A.SBJ_CD)
+				</if>
+		     	<if test = 'selectMode == "PAYMENT"'>
+					AND A.EDU_PRICE > 0  
+				</if>
+		     	<if test = 'creYear != null and creYear != ""'>
+					AND A.CRE_YEAR = NVL(#{creYear}, A.CRE_YEAR)  
+				</if>
+		     	<if test = 'crsCreNm != null and crsCreNm != ""'>
+					AND A.CRS_CRE_NM like '%'||NVL(#{crsCreNm}, '')||'%'  
+				</if>
+		     	<if test = 'creTerm != null and creTerm != ""'>
+					AND A.CRE_TERM like '%'||NVL(#{creTerm},'')||'%'  
+				</if>
+				<if test = 'creOperTypeCd != null and creOperTypeCd == "E" '>
+		       		AND A.CRE_OPER_TYPE_CD = #{creOperTypeCd}  
+		   		</if>
+		   		<if test = 'creOperTypeCd == null or creOperTypeCd == "" '>
+		       		AND A.CRE_OPER_TYPE_CD IS NULL
+		   		</if>
+		   		<if test = 'crsOperMthd == null or crsOperMthd == "" '>
+		       		AND B.CRS_OPER_MTHD = #{crsOperMthd}
+		   		</if>	
+		     	<if test = 'checkOrgCd != null and checkOrgCd == "Y"'>
+			     	AND ( SELECT COUNT(*)  
+			             FROM TB_STD_STD C, TB_USR_LOGIN D, TB_USR_USER_INFO E  
+			            WHERE C.USER_NO = D.USER_NO  
+			              AND D.USER_NO = E.USER_NO  
+			              AND D.USER_STS = 'U'  
+			              AND CRS_CRE_CD = A.CRS_CRE_CD  
+			              AND E.ORG_CD = #{orgCd}  
+			              AND ENRL_STS in ('E','S','C','F') ) > 0  				
+			    </if>
+			    <if test="searchMode != null and searchMode != ''">
+					<if test="searchMode == 'STDPAY'">
+						AND FN_GET_NULL(A.SBJ_CD) IS NOT NULL
+						AND FN_GET_NULL(A.DEPT_CD) IS NOT NULL 
+						AND FN_GET_NULL(A.CRS_CD) IS NOT NULL
+						<if test="deptCd != null and deptCd != ''">
+						AND A.DEPT_CD = #{deptCd}
+						</if>
+						<if test="crsCd != null and crsCd != ''">
+						AND A.CRS_CD = #{crsCd}
+						</if>
+					</if>
+				</if>
+	</sql>
+
+	<sql id="selectColumnQueryForEnroll">
+		<![CDATA[
+				 A.CRS_CRE_CD  
+		       , A.ORG_CD  
+		       , A.CRS_CD  
+		       , A.CRE_TYPE_CD  
+		       , A.CRE_YEAR  
+		       , A.CRE_TERM  
+		       , A.CRS_CRE_NM  
+		       , A.ENRL_APLC_START_DTTM  
+		       , A.ENRL_APLC_END_DTTM  
+		       , CASE WHEN TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') < A.ENRL_APLC_START_DTTM  
+		              THEN 'B' -- 수강신청전  
+		              WHEN TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') BETWEEN  
+		                   A.ENRL_APLC_START_DTTM AND A.ENRL_APLC_END_DTTM  
+		              THEN 'Y' -- 수강신청기간  
+		              WHEN TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') < A.ENRL_END_DTTM  
+		              THEN 'I' -- 수강기간  
+		              ELSE 'N' END AS ENRL_APLC_YN  
+		       , A.OFLN_START_DTTM  
+		       , A.OFLN_END_DTTM  
+		       , A.ENRL_START_DTTM  
+		       , A.ENRL_END_DTTM  
+		       , A.AUDIT_END_DTTM  
+		       , A.NOP_LIMIT_YN  
+		       , A.ENRL_NOP  
+		       , A.ONLN_EDU_TM  
+		       , A.OFLN_EDU_TM  
+		       , A.EDU_PRICE  
+		       , A.SCORE_HANDL_CD  
+		       , A.CPLT_SCORE  
+		       , A.CPLT_PRGR_RATE
+		       , NVL(A.PRGR_RATIO,0) AS PRGR_RATIO 
+		       , NVL(A.ATTD_RATIO,0) AS ATTD_RATIO 
+		       , NVL(A.EXAM_RATIO,0) AS EXAM_RATIO 
+		       , NVL(A.SEMI_EXAM_RATIO,0) AS SEMI_EXAM_RATIO 
+		       , NVL(A.FORUM_RATIO,0) AS FORUM_RATIO 
+		       , NVL(A.ASMT_RATIO,0) AS ASMT_RATIO 
+		       , NVL(A.PRJT_RATIO,0) AS PRJT_RATIO 
+		       , NVL(A.JOIN_RATIO,0) AS JOIN_RATIO 
+		       , NVL(A.ETC_RATIO,0) AS ETC_RATIO 
+		       , A.DAY_STUDY_LIMIT  
+		       , ( SELECT COUNT(*)  
+		             FROM TB_CRS_CRE_CRS_DECLS  
+		            WHERE CRS_CRE_CD = A.CRS_CRE_CD ) AS DECLS_CNT  
+		       , A.REG_NO  
+			   , (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) AS MOD_NM  
+		       , A.REG_DTTM  
+		       , A.MOD_NO  
+			   , (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) AS REG_NM  
+		       , A.MOD_DTTM  
+		       , A.OFLN_EDU_PLACE  
+		       , B.CRS_CTGR_CD  
+		       , B.EDU_TARGET  
+		       , B.CRS_OPER_TYPE  
+		       , B.CRS_OPER_MTHD  
+		       , B.CRS_DESC
+		       , A.ENRL_DAYCNT  
+		       , ( SELECT COUNT(*)  
+		             FROM TB_STD_STD C, TB_USR_LOGIN D  
+		            WHERE C.USER_NO = D.USER_NO  
+		              AND D.USER_STS = 'U'  
+		              AND CRS_CRE_CD = A.CRS_CRE_CD  
+		              AND ENRL_STS in ('S','C','F') ) AS CNFM_CNT  
+		       , ( SELECT COUNT(*)  
+		             FROM TB_STD_STD C, TB_USR_LOGIN D  
+		            WHERE C.USER_NO = D.USER_NO  
+		              AND D.USER_STS = 'U'  
+		              AND CRS_CRE_CD = A.CRS_CRE_CD  
+		              AND ENRL_STS ='E' ) AS ENRL_CNT  
+		       , ( SELECT COUNT(*)  
+		             FROM TB_STD_STD C, TB_USR_LOGIN D  
+		            WHERE C.USER_NO = D.USER_NO  
+		              AND D.USER_STS = 'U'  
+		              AND CRS_CRE_CD = A.CRS_CRE_CD  
+		              AND ENRL_STS in ('E','S','C','F') ) AS STU_CNT  
+		       , CASE WHEN ( SELECT COUNT(*) FROM TB_STD_STD  
+			    			 WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+			    			 		AND ENRL_STS IN ('E','S','C','F')  
+			    					AND USER_NO = #{regNo} ) > 0 THEN 'Y'  
+			     ELSE 'N' END AS ENRL_YN  
+		]]>
+	</sql>
+		
+	<sql id="selectQueryForEnroll">
+		  SELECT 
+		  <include refid="selectColumnQueryForEnroll" />		  
+		  FROM TB_CRS_CRE_CRS	A, TB_CRS_CRS B, TB_CRS_CRS_CTGR C  
+		  WHERE A.CRS_CD = B.CRS_CD  
+		    AND B.CRS_CTGR_CD = C.CRS_CTGR_CD  
+	</sql>
+	<sql id="selectColumnQueryForStudent">
+		<![CDATA[
+		   		  A.CRS_CRE_CD  
+		        , A.ORG_CD  
+		        , A.CRS_CD  
+		        , A.CRE_TYPE_CD  
+		        , A.CRE_YEAR  
+		        , A.CRE_TERM  
+		        , A.CRS_CRE_NM  
+		        , A.ENRL_DAYCNT  
+		        , A.OFLN_EDU_PLACE  
+		        , NVL(A.CPLT_SCORE,0) AS CPLT_SCORE  
+		        , NVL(A.CPLT_PRGR_RATE,0) AS CPLT_PRGR_RATE  
+		        , B.CRS_CTGR_CD  
+		        , (SELECT FN_GET_COURSE_CTGR_NAME(B.CRS_CTGR_CD) FROM DUAL) AS CRS_CTGR_NM  
+		        , B.CRS_OPER_MTHD  
+		        , B.CRS_OPER_TYPE  
+		        , C.STD_NO  
+		        , CASE WHEN B.CRS_OPER_TYPE = 'R' THEN A.ENRL_START_DTTM  
+		               ELSE C.ENRL_START_DTTM END AS START_DTTM  
+		        , CASE WHEN B.CRS_OPER_TYPE = 'R' THEN A.ENRL_END_DTTM  
+		               ELSE C.ENRL_END_DTTM END AS END_DTTM  
+		        , CASE WHEN B.CRS_OPER_TYPE = 'R' THEN A.AUDIT_END_DTTM  
+		               ELSE C.AUDIT_END_DTTM END AS AUDIT_END_DTTM  
+		        , C.ENRL_APLC_DTTM AS ENRL_APLC_DTTM  
+		        , A.OFLN_START_DTTM  
+		        , A.OFLN_END_DTTM  
+		        , CASE WHEN C.ENRL_STS in ('S','C','F') THEN  
+		                    CASE WHEN B.CRS_OPER_TYPE = 'R' THEN  
+		                              CASE WHEN TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') BETWEEN A.ENRL_START_DTTM AND A.ENRL_END_DTTM THEN 'Y'  
+		                                   WHEN TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') <= A.AUDIT_END_DTTM THEN 'C'  
+		                                   ELSE 'N' END  
+		                         ELSE  
+		                              CASE WHEN TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') BETWEEN C.ENRL_START_DTTM AND C.ENRL_END_DTTM THEN 'Y'  
+		                                   WHEN TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') >= C.AUDIT_END_DTTM THEN 'C'  
+		                                   ELSE 'N' END  
+		                         END  
+		               ELSE 'N' END AS CONNECT_YN  
+		        , C.ENRL_STS  
+		        , (SELECT FN_GET_CRS_STD_PRGR(C.CRS_CRE_CD, C.STD_NO) FROM DUAL) AS PRGR_RATIO  
+		        , B.CERT_ISSUE_YN  
+		        , C.CPLT_NO  
+		        , C.PAYM_NO  
+		        , ( SELECT COUNT(*)  
+		              FROM TB_STD_STD STD  
+		       	     WHERE STD.CRS_CRE_CD = A.CRS_CRE_CD  
+		       	       AND STD.ENRL_STS IN('S','E','C','F')) AS STU_CNT  
+		        , NVL((SELECT R.TOT_SCORE AS TOT_SCORE FROM TB_STD_EDU_RSLT R WHERE C.STD_NO = R.STD_NO),0) AS TOT_SCORE  
+		        , (SELECT COUNT(SBJ_CD) FROM TB_CRS_CRE_CRS_ONLN_SBJ WHERE CRS_CRE_CD = A.CRS_CRE_CD) AS SBJ_CNT
+		        , B.THUMB_FILE_SN
+
+		]]>
+	</sql>
+
+	<sql id="selectQueryForStudent">
+		  SELECT 
+		  <include refid="selectColumnQueryForStudent" />
+		  FROM TB_CRS_CRE_CRS A, TB_CRS_CRS B, TB_STD_STD C  
+		  WHERE A.CRS_CD = B.CRS_CD  
+		    AND A.CRS_CRE_CD = C.CRS_CRE_CD  
+	</sql>
+		
+	<sql id="selectColumnQueryForTeacher">
+		<![CDATA[
+		   		  A.CRS_CRE_CD  
+		        , A.CRS_CD  
+		        , A.CRE_TYPE_CD  
+		        , A.CRE_YEAR  
+		        , A.CRE_TERM  
+		        , A.CRS_CRE_NM  
+		        , B.CRS_CTGR_CD  
+		        , (SELECT FN_GET_COURSE_CTGR_NAME(B.CRS_CTGR_CD) FROM DUAL) AS CRS_CTGR_NM  
+		        , B.CRS_OPER_MTHD  
+		        , B.CRS_OPER_TYPE  
+		        , A.ENRL_START_DTTM AS START_DTTM  
+		        , A.ENRL_END_DTTM AS END_DTTM  
+		        , A.AUDIT_END_DTTM AS AUDIT_END_DTTM  
+		        , A.OFLN_START_DTTM  
+		        , A.OFLN_END_DTTM  
+		        , 'Y' AS CONNECT_YN  
+		        , B.CERT_ISSUE_YN  
+		        , ( SELECT COUNT(*)  
+		              FROM TB_STD_STD C, TB_USR_LOGIN D  
+		             WHERE C.USER_NO = D.USER_NO  
+		               AND D.USER_STS = 'U'  
+		               AND C.CRS_CRE_CD = A.CRS_CRE_CD  
+		               AND C.ENRL_STS in ('S','C','F') ) AS CFRM_CNT  
+		        , ( SELECT COUNT(*)  
+		              FROM TB_STD_STD C, TB_USR_LOGIN D  
+		             WHERE C.USER_NO = D.USER_NO  
+		               AND D.USER_STS = 'U'  
+		               AND C.CRS_CRE_CD = A.CRS_CRE_CD  
+		               AND C.ENRL_STS in ('E','S','C','F') ) AS STU_CNT  
+		        , A.ENRL_DAYCNT  
+		        , A.ENRL_APLC_START_DTTM  
+		        , A.ENRL_APLC_END_DTTM  
+		        , A.OFLN_EDU_PLACE  
+		]]>
+	</sql>	
+
+	<sql id="selectQueryForTeacher">
+		  SELECT 
+		  <include refid="selectColumnQueryForTeacher" />
+		  FROM TB_CRS_CRE_CRS A, TB_CRS_CRS B, TB_CRS_CRE_CRS_TCH C  
+		  WHERE A.CRS_CD = B.CRS_CD  
+		    AND A.CRS_CRE_CD = C.CRS_CRE_CD  
+	</sql>	
+		
+	<select id="listCreateCoursePageingCount" parameterType="createCourseVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		  FROM TB_CRS_CRE_CRS	A, TB_CRS_CRS B, TB_CRS_CRS_CTGR C  
+		  WHERE A.CRS_CD = B.CRS_CD  
+	     		AND B.CRS_CTGR_CD = C.CRS_CTGR_CD  
+	     	<if test = 'orgCd != null and orgCd != ""'>
+				AND A.ORG_CD = NVL(#{orgCd}, A.ORG_CD)  
+			</if>
+	     	<if test = 'crsCd != null and crsCd != ""'>
+				AND A.CRS_CD = NVL(#{crsCd},A.CRS_CD)  
+			</if>
+	     	<if test = 'selectMode == "PAYMENT"'>
+				AND A.EDU_PRICE > 0  
+			</if>
+	     	<if test = 'selectMode == "PAYMENT"'>
+				AND A.EDU_PRICE > 0  
+			</if>
+			<if test = 'crsCtgrCd != null and crsCtgrCd != ""'>
+				AND 
+				<foreach collection="crsCtgrArr" item="item" separator="OR" open="(" close=")"  index="index">
+					C.CRS_CTGR_PATH like '%'||#{item}||'%'
+				</foreach>
+			</if>
+	     	<if test = 'creYear != null and creYear != ""'>
+				AND A.CRE_YEAR = NVL(#{creYear}, A.CRE_YEAR)  
+			</if>
+	     	<if test = 'crsOperMthd != null and crsOperMthd != ""'>
+				AND B.CRS_OPER_MTHD = NVL(#{crsOperMthd}, B.CRS_OPER_MTHD)  
+			</if>
+	     	<if test = 'crsOperType != null and crsOperType != ""'>
+				AND B.CRS_OPER_TYPE = NVL(#{crsOperType}, B.CRS_OPER_TYPE)  
+			</if>
+	     	<if test = 'crsCreNm != null and crsCreNm != ""'>
+				AND A.CRS_CRE_NM like '%'||NVL(#{crsCreNm}, '')||'%'  
+			</if>
+	     	<if test = 'creTerm != null and creTerm != ""'>
+				AND A.CRE_TERM like '%'||NVL(#{creTerm},'')||'%'  
+			</if>
+	     	<if test = 'checkOrgCd != null and checkOrgCd == "Y"'>
+		     	AND ( SELECT COUNT(*)  
+		             FROM TB_STD_STD C, TB_USR_LOGIN D, TB_USR_USER_INFO E  
+		            WHERE C.USER_NO = D.USER_NO  
+		              AND D.USER_NO = E.USER_NO  
+		              AND D.USER_STS = 'U'  
+		              AND CRS_CRE_CD = A.CRS_CRE_CD  
+		              AND E.ORG_CD = #{orgCd}  
+		              AND ENRL_STS in ('E','S','C','F') ) > 0  				
+		    </if>			
+	</select>	
+	
+	<select id="listCreateCourse" parameterType="createCourseVO" resultType="createCourseVO">
+	    <include refid="selectQuery" />
+		<choose>
+			<when test = 'sortKey != null and sortKey == "CRS_CRE_NM_ASC"'>
+				 ORDER BY A.CRS_CRE_NM ASC  
+			</when>
+			<when test = 'sortKey != null and sortKey == "CRS_CRE_NM_DESC"'>
+			 	ORDER BY A.CRS_CRE_NM DESC  
+			</when>
+			<when test = 'sortKey != null and sortKey == "CRE_YEAR_ASC"'>
+			 	ORDER BY A.CRE_YEAR ASC  
+			</when>
+			<when test = 'sortKey != null and sortKey == "CRE_YEAR_DESC"'>
+			 	ORDER BY A.CRE_YEAR DESC  
+			</when>
+			<when test = 'sortKey != null and sortKey == "CRE_TERM_ASC"'>
+			 	ORDER BY A.CRE_TERM ASC  
+			</when>
+			<when test = 'sortKey != null and sortKey == "CRE_TERM_DESC"'>
+			 	ORDER BY A.CRE_TERM DESC  
+			</when>
+			<when test = 'sortKey != null and sortKey == "CRS_CD_ASC"'>
+			 	ORDER BY A.CRS_CD ASC  
+			</when>
+			<when test = 'sortKey != null and sortKey == "CRS_CD_DESC"'>
+			 	ORDER BY A.CRS_CD DESC  
+			</when>
+			<otherwise>
+			   ORDER BY A.CRE_YEAR DESC, A.ENRL_START_DTTM DESC, A.CRS_CRE_NM  
+			</otherwise>
+		</choose>	    
+	</select>
+	<select id="listCreateCoursePageing" parameterType="createCourseVO" resultType="createCourseVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectQuery" />
+		<choose>
+			<when test = 'sortKey != null and sortKey == "CRS_CRE_NM_ASC"'>
+				 ORDER BY A.CRS_CRE_NM ASC  
+			</when>
+			<when test = 'sortKey != null and sortKey == "CRS_CRE_NM_DESC"'>
+			 	ORDER BY A.CRS_CRE_NM DESC  
+			</when>
+			<when test = 'sortKey != null and sortKey == "CRE_TERM_ASC"'>
+			 	ORDER BY A.CRE_TERM ASC  
+			</when>
+			<when test = 'sortKey != null and sortKey == "CRE_TERM_DESC"'>
+			 	ORDER BY A.CRE_TERM DESC  
+			</when>
+			<otherwise>
+			   ORDER BY A.CRE_YEAR DESC, A.ENRL_START_DTTM DESC, A.CRS_CRE_NM  
+			</otherwise>
+		</choose>		    
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	<select id="listCreateCourseForEnroll" parameterType="createCourseVO" resultType="createCourseVO">
+	    <include refid="selectQueryForEnroll" />
+	    <if test = "orgCd != null and orgCd != ''">
+			AND A.ORG_CD = NVL(#{orgCd},A.ORG_CD) 
+		</if>	
+		<![CDATA[
+			AND A.CRS_CD = NVL(#{crsCd},A.CRS_CD)  
+			AND ( A.ENRL_END_DTTM >= TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+				  OR A.OFLN_END_DTTM >= TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') )  
+		ORDER BY A.CRE_YEAR, A.CRE_TERM, A.CRS_CRE_NM  
+		]]>
+	</select>
+	<select id="listCreateCourseForEnrollDate" parameterType="createCourseVO" resultType="createCourseVO">
+	    <include refid="selectQueryForEnroll" />
+	    <if test = "orgCd != null and orgCd != ''">
+			AND A.ORG_CD = NVL(#{orgCd},A.ORG_CD) 
+		</if>	
+			AND SUBSTR(A.ENRL_START_DTTM,0,8) LIKE #{enrlStartDttm}||'%'  
+		ORDER BY A.CRS_CRE_NM, A.CRE_YEAR, A.CRE_TERM  
+	</select>
+	<select id="listCreateCourseForEnrollDateOffline" parameterType="createCourseVO" resultType="createCourseVO">
+	    <include refid="selectQueryForEnroll" />
+	    	AND SUBSTR(DECODE(B.CRS_OPER_MTHD,'OF',A.ENRL_START_DTTM, A.OFLN_START_DTTM),0,8) = #{enrlStartDttm}  
+			AND B.CRS_OPER_MTHD IN ('OF','BL')  
+		ORDER BY A.CRE_YEAR, A.CRE_TERM, A.CRS_CRE_NM 
+	</select>
+	<select id="listCreateCourseForEnrollSearch" parameterType="createCourseVO" resultType="createCourseVO">
+	    <include refid="selectQueryForEnroll" />
+	    <if test = "orgCd != null and orgCd != ''">
+			AND A.ORG_CD = NVL(#{orgCd},A.ORG_CD)
+		</if>	
+	    <if test = "crsCtgrCd != null and crsCtgrCd != ''">
+			AND C.CRS_CTGR_PATH LIKE '%/'||#{crsCtgrCd}||'%'
+		</if>	
+	    <if test = "searchValue != null and searchValue != ''">
+			AND A.CRS_CRE_NM||B.CRS_NM like '%'||#{searchValue}||'%'
+		</if>	
+		<![CDATA[
+			AND ( A.ENRL_END_DTTM >= TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+				OR A.OFLN_END_DTTM >= TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') )  
+		ORDER BY A.CRE_YEAR, A.CRE_TERM, A.CRS_CRE_NM  
+		]]>
+	</select>
+
+	<select id="selectCreateCourse" parameterType="createCourseVO" resultType="createCourseVO">
+		 SELECT  A.CRS_CRE_CD 
+		       , A.CRS_CD 
+		       , A.CRE_TYPE_CD 
+		       , A.CRE_YEAR 
+		       , A.CRE_TERM 
+		       , A.CRS_CRE_NM 
+		       , A.SBJ_CD 
+		       , (select MAX(SBJ_CTGR_NM) from tb_crs_onln_sbj C, tb_crs_sbj_ctgr D where A.SBJ_CD = C.SBJ_CD AND C.SBJ_CTGR_CD = D.SBJ_CTGR_CD) as SBJ_CTGR_NM
+		       , FN_GET_DATE_FORMAT(A.ENRL_APLC_START_DTTM,'YYYY.MM.DD') AS ENRL_APLC_START_DTTM 
+		       , FN_GET_DATE_FORMAT(A.ENRL_APLC_END_DTTM,'yyyy.mm.dd') AS ENRL_APLC_END_DTTM 
+		       , FN_GET_DATE_FORMAT(A.ENRL_APLC_START_DTTM,'MM.DD')||'~'||	 
+		         FN_GET_DATE_FORMAT(A.ENRL_APLC_END_DTTM,'MM.DD') AS ENRL_APLC_DURATION	
+		       , FN_GET_DATE_FORMAT(A.OFLN_START_DTTM,'yyyy.mm.dd') AS OFLN_START_DTTM 
+		       , FN_GET_DATE_FORMAT(A.OFLN_END_DTTM,'yyyy.mm.dd') AS OFLN_END_DTTM 
+		       , FN_GET_DATE_FORMAT(A.ENRL_START_DTTM,'yyyy.mm.dd') AS ENRL_START_DTTM 
+		       , FN_GET_DATE_FORMAT(A.ENRL_END_DTTM,'yyyy.mm.dd') AS ENRL_END_DTTM 
+		       , FN_GET_DATE_FORMAT(A.AUDIT_END_DTTM,'yyyy.mm.dd') AS AUDIT_END_DTTM 
+		       , FN_GET_DATE_FORMAT(A.ENRL_START_DTTM,'MM.DD')||'~'|| 
+		         FN_GET_DATE_FORMAT(A.ENRL_END_DTTM,'MM.DD') AS ENRL_DURATION 
+		       , FN_GET_GAP_DATE(A.ENRL_START_DTTM, A.ENRL_END_DTTM,'DAY') + 1 AS SERVICE_DAY 
+		       , CASE WHEN TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') BETWEEN A.ENRL_APLC_START_DTTM 
+		                   AND A.ENRL_APLC_END_DTTM THEN 'Y' ELSE 'N' END AS ENRL_APLC_YN 
+		       , CASE WHEN B.CRS_OPER_TYPE = 'R' THEN FN_GET_GAP_DATE(A.ENRL_START_DTTM, A.ENRL_END_DTTM,'DAY') + 1	
+		              ELSE NVL(A.ENRL_DAYCNT,0) END AS ENRL_GAP_DATE 
+		       , NVL(A.ENRL_DAYCNT,0) AS ENRL_DAYCNT 
+		       , CASE WHEN SUBSTR(A.OFLN_START_DTTM,0,8) = SUBSTR(OFLN_END_DTTM,0,8) 
+		              THEN TO_CHAR(TO_DATE(A.OFLN_START_DTTM,'YYYYMMDDHH24MISS'),'MM.DD') 
+		              ELSE TO_CHAR(TO_DATE(A.OFLN_START_DTTM,'YYYYMMDDHH24MISS'),'MM.DD')||'~' 
+		                   ||TO_CHAR(TO_DATE(A.OFLN_END_DTTM,'YYYYMMDDHH24MISS'),'MM.DD') END AS OFLN_DURATION 
+		       , NVL(A.NOP_LIMIT_YN,'N') AS NOP_LIMIT_YN 
+		       , A.ENRL_NOP 
+		       , A.ONLN_EDU_TM 
+		       , A.OFLN_EDU_TM 
+		       , A.REFUND_YN 
+		       , A.REFUND_PRICE 
+		       , NVL(A.EDU_PRICE,0) AS EDU_PRICE 
+		       , A.SCORE_HANDL_CD 
+		       , A.CPLT_SCORE 
+		       , A.CPLT_PRGR_RATE
+		       , NVL(A.PRGR_RATIO,0) AS PRGR_RATIO 
+		       , NVL(A.ATTD_RATIO,0) AS ATTD_RATIO 
+		       , NVL(A.EXAM_RATIO,0) AS EXAM_RATIO 
+		       , NVL(A.FORUM_RATIO,0) AS FORUM_RATIO 
+		       , NVL(A.ASMT_RATIO,0) AS ASMT_RATIO 
+		       , NVL(A.PRJT_RATIO,0) AS PRJT_RATIO 
+		       , NVL(A.JOIN_RATIO,0) AS JOIN_RATIO 
+		       , NVL(A.ETC_RATIO,0) AS ETC_RATIO 
+		       , A.DAY_STUDY_LIMIT 
+		 	   , (SELECT COUNT(*)  
+		 	      FROM TB_CRS_CRE_CRS_DECLS  
+		 	      WHERE CRS_CRE_CD = A.CRS_CRE_CD ) AS DECLS_CNT 
+		 	   , A.REG_NO 
+		 	   , (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) AS REG_NM 
+		 	   , A.REG_DTTM 
+		       , A.MOD_NO 
+			   , (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) AS MOD_NM 
+		       , A.MOD_DTTM 
+		       , A.OFLN_EDU_PLACE 
+		       , A.TRACSE_TME 
+		       , A.CRE_DESC
+		       , B.CRS_OPER_MTHD 
+		       , B.CRS_OPER_TYPE
+		       , B.CRS_YEAR
+		       , B.CRS_TERM
+		       , B.CRS_NM
+		       , ( SELECT COUNT(*) 
+		             FROM TB_STD_STD 
+		            WHERE CRS_CRE_CD = A.CRS_CRE_CD 
+		              AND ENRL_STS IN ('S','C','F')) AS CNFM_CNT  
+		       , ( SELECT COUNT(*) 
+		             FROM TB_STD_STD 
+		            WHERE CRS_CRE_CD = A.CRS_CRE_CD 
+		              AND ENRL_STS IN ('E','S','C','F')) AS STU_CNT  
+		       , ( SELECT COUNT(T.CRS_CRE_CD) 
+		             FROM ( SELECT CRS_CRE_CD 
+		         	           FROM TB_CRS_CRE_CRS_ONLN_SBJ 
+		              		  UNION ALL 
+		              	     SELECT CRS_CRE_CD 
+		              		   FROM TB_CRS_CRE_CRS_OFLN_SBJ 
+		           	   ) T 
+		            WHERE T.CRS_CRE_CD = A.CRS_CRE_CD ) AS SBJ_CNT 
+		       , ( SELECT COUNT(*) 
+		             FROM TB_CRS_CRE_CRS_TCH 
+		         	WHERE CRS_CRE_CD = A.CRS_CRE_CD ) AS TCH_CNT 
+		       , (SELECT COUNT(*)  
+		            FROM TB_CRS_SBJ_CNTS  
+		       	   WHERE UNIT_TYPE = 'L' 
+		       		 AND PRGR_CHK_YN = 'Y' 
+		       		 AND SBJ_CD IN ( SELECT SBJ_CD   
+		                               FROM TB_CRS_CRE_CRS_ONLN_SBJ  
+		                              WHERE CRS_CRE_CD = A.CRS_CRE_CD ) ) AS SBJ_CNTS 
+		    FROM TB_CRS_CRE_CRS A, TB_CRS_CRS B 
+		   WHERE A.CRS_CD = B.CRS_CD 
+		     AND CRS_CRE_CD	= #{crsCreCd} 
+		    <if test = 'creOperTypeCd != null and creOperTypeCd == "E"'>
+		       	AND A.CRE_OPER_TYPE_CD = #{creOperTypeCd}  
+		   	</if>
+		  	<if test = 'creOperTypeCd == null or creOperTypeCd == "" '>
+		       		AND A.CRE_OPER_TYPE_CD IS NULL
+		   	</if>
+	</select>
+
+    <insert id="insertCreateCourse" parameterType="createCourseVO">
+		  INSERT INTO TB_CRS_CRE_CRS (  
+		         CRS_CRE_CD  
+		       , ORG_CD  
+		       , CRS_CD  
+		       , SBJ_CD  
+		       , DEPT_CD
+		       , CRE_TYPE_CD  
+		       , CRE_OPER_TYPE_CD
+		       , CRE_YEAR  
+		       , CRE_TERM  
+		       , CRS_CRE_NM  
+		       , ENRL_APLC_START_DTTM  
+		       , ENRL_APLC_END_DTTM  
+		       , ENRL_DAYCNT  
+		       , OFLN_START_DTTM  
+		       , OFLN_END_DTTM  
+		       , ENRL_START_DTTM  
+		       , ENRL_END_DTTM  
+		       , AUDIT_END_DTTM  
+		       , NOP_LIMIT_YN  
+		       , ENRL_NOP  
+		       , ONLN_EDU_TM  
+		       , OFLN_EDU_TM  
+		       , EDU_PRICE  
+		       , SCORE_HANDL_CD  
+		       , CPLT_SCORE  
+		       , CPLT_PRGR_RATE
+		       , PRGR_RATIO  
+		       , ATTD_RATIO  
+		       , EXAM_RATIO  
+		       , SEMI_EXAM_RATIO  
+		       , FORUM_RATIO  
+		       , ASMT_RATIO  
+		       , PRJT_RATIO  
+		       , JOIN_RATIO  
+		       , ETC_RATIO  
+		       , DAY_STUDY_LIMIT  
+		       , DECLS_CNT  
+		       , TRACSE_TME  
+		       , REG_NO  
+		       , REG_DTTM  
+		       , MOD_NO  
+		       , MOD_DTTM  
+		       , CRE_DESC
+		 ) VALUES (  
+		         #{crsCreCd}  
+		       , #{orgCd}  
+		       , #{crsCd}  
+		       , #{sbjCd}  
+		       , #{deptCd}
+		       , #{creTypeCd} 
+		       , #{creOperTypeCd} 
+		       , #{creYear}  
+		       , #{creTerm}  
+		       , #{crsCreNm}  
+		       , #{enrlAplcStartDttm}  
+		       , #{enrlAplcEndDttm}  
+		       , #{enrlDaycnt}  
+		       , #{oflnStartDttm}  
+		       , #{oflnEndDttm}  
+		       , #{enrlStartDttm}  
+		       , #{enrlEndDttm}  
+		       , #{auditEndDttm}  
+		       , #{nopLimitYn}  
+		       , #{enrlNop}  
+		       , #{onlnEduTm}  
+		       , #{oflnEduTm}  
+		       , #{eduPrice}  
+		       , #{scoreHandlCd}  
+		       , #{cpltScore}  
+		       , NVL(#{prgrRatio},0)  
+		       , NVL(#{attdRatio},0)  
+		       , NVL(#{examRatio},0)  
+		       , NVL(#{forumRatio},0)  
+		       , NVL(#{asmtRatio},0)  
+		       , NVL(#{prjtRatio},0)  
+		       , NVL(#{joinRatio},0)  
+		       , NVL(#{etcRatio},0)  
+		       , #{dayStudyLimit}  
+		       , #{declsCnt}  
+		       , #{regNo}  
+		       , NVL(#{regDttm}, TO_CHAR(SYSDATE,'yyyymmddhh24miss'))  
+		       , #{modNo}  
+		       , NVL(#{modDttm}, TO_CHAR(SYSDATE,'yyyymmddhh24miss'))  
+		       , #{creDesc} 
+		)  
+    </insert>
+
+
+   <update id="updateCreateCourse" parameterType="createCourseVO">
+		  UPDATE TB_CRS_CRE_CRS  
+		     SET MOD_NO = #{modNo}  
+		       , MOD_DTTM = TO_CHAR(SYSDATE,'yyyymmddhh24miss')  
+		       <if test = "creOperTypeCd != null and creOperTypeCd != ''">
+		       , CRE_OPER_TYPE_CD = #{creOperTypeCd}  
+		       </if>	
+		        <if test = "creTypeCd != null and creTypeCd != ''">
+		       , CRE_TYPE_CD = #{creTypeCd}  
+		       </if>	        
+		       <if test = "creYear != null and creYear != ''">
+		       , CRE_YEAR = #{creYear}  
+		       </if>
+		       <if test = "creTerm != null and creTerm != ''">
+		       , CRE_TERM = #{creTerm}  
+		       </if>
+		       <if test = "crsCreNm != null and crsCreNm != ''">
+		       , CRS_CRE_NM = #{crsCreNm}  
+		       </if>
+		       <if test = "enrlAplcStartDttm != null and enrlAplcStartDttm != ''">
+		       , ENRL_APLC_START_DTTM = #{enrlAplcStartDttm}
+		       </if>  
+		       <if test = "enrlAplcEndDttm != null and enrlAplcEndDttm != ''">
+		       , ENRL_APLC_END_DTTM = #{enrlAplcEndDttm}
+		       </if>  
+		       <if test = "enrlDaycnt != null and enrlDaycnt != ''">
+		       , ENRL_DAYCNT = #{enrlDaycnt}
+		       </if>  
+		       <if test = "oflnStartDttm != null and oflnStartDttm != ''">
+		       , OFLN_START_DTTM = #{oflnStartDttm}
+		       </if>  
+		       <if test = "oflnEndDttm != null and oflnEndDttm != ''">
+		       , OFLN_END_DTTM = #{oflnEndDttm}
+		       </if>  
+		       <if test = "enrlStartDttm != null and enrlStartDttm != ''">
+		       , ENRL_START_DTTM = #{enrlStartDttm}
+		       </if>  
+		       <if test = "enrlEndDttm != null and enrlEndDttm != ''">
+		       , ENRL_END_DTTM = #{enrlEndDttm}
+		       </if>  
+		       <if test = "auditEndDttm != null and auditEndDttm != ''">
+		       , AUDIT_END_DTTM = #{auditEndDttm}
+		       </if>  
+		       <if test = "nopLimitYn != null and nopLimitYn != ''">
+		       , NOP_LIMIT_YN = #{nopLimitYn}
+		       </if>  
+		       <if test = "enrlNop != null and enrlNop != ''">
+		       , ENRL_NOP = #{enrlNop}
+		       </if>  
+		       <if test = "onlnEduTm != null and onlnEduTm != ''">
+		       , ONLN_EDU_TM = #{onlnEduTm}
+		       </if>  
+		       <if test = "oflnEduTm != null and oflnEduTm != ''">
+		       , OFLN_EDU_TM = #{oflnEduTm}
+		       </if>  
+		       <if test = "eduPrice != null and eduPrice >= 0">
+		       , EDU_PRICE = #{eduPrice}
+		       </if>  
+		       <if test = "refundYn != null and refundYn != ''">
+		       , REFUND_YN = #{refundYn}
+		       </if>  
+		       <if test = "refundPrice != null and refundPrice != ''">
+		       , REFUND_PRICE = #{refundPrice}
+		       </if>  
+		       <if test = "scoreHandlCd != null and scoreHandlCd != ''">
+		       , SCORE_HANDL_CD = #{scoreHandlCd}
+		       </if>  
+		       <if test = "cpltScore != null and cpltScore >= 0">
+		       , CPLT_SCORE = #{cpltScore}
+		       </if>
+		       <if test = "cpltPrgrRate != null and cpltPrgrRate >= 0">
+		       , CPLT_PRGR_RATE = #{cpltPrgrRate}
+		       </if>		       
+		       <if test = "prgrRatio != null and prgrRatio >= 0">   
+		       , PRGR_RATIO = NVL(#{prgrRatio},0)  
+		       </if>
+		       <if test = "attdRatio != null and attdRatio >= 0">  
+		       , ATTD_RATIO = NVL(#{attdRatio},0)  
+		       </if>
+		       <if test = "examRatio != null and examRatio >= 0">  
+		       , EXAM_RATIO = NVL(#{examRatio},0)  
+		       </if>
+		       <if test = "semiExamRatio != null and semiExamRatio >= 0">  
+		       , SEMI_EXAM_RATIO = NVL(#{semiExamRatio},0)  
+		       </if>
+		       <if test = "forumRatio != null and forumRatio >= 0">  
+		       , FORUM_RATIO = NVL(#{forumRatio},0)  
+		       </if>
+		       <if test = "asmtRatio != null and asmtRatio >= 0">  
+		       , ASMT_RATIO = NVL(#{asmtRatio},0) 
+		       </if> 
+		       <if test = "prjtRatio != null and prjtRatio >= 0">  
+		       , PRJT_RATIO = NVL(#{prjtRatio},0)  
+		       </if>
+		       <if test = "joinRatio != null and joinRatio >= 0">  
+		       , JOIN_RATIO = NVL(#{joinRatio},0)
+		       </if>
+		       <if test = "etcRatio != null and etcRatio >= 0"> 
+		       , ETC_RATIO = NVL(#{etcRatio},0)  
+		       </if>
+		       <if test = "dayStudyLimit != null and dayStudyLimit >= 0">		       
+		       , DAY_STUDY_LIMIT = #{dayStudyLimit}
+		       </if>
+		       <if test = "declsCnt != null and declsCnt >= 0">  
+		       , DECLS_CNT = #{declsCnt}
+		       </if>
+		       <if test = "oflnEduPlace != null and oflnEduPlace != ''">  
+		       , OFLN_EDU_PLACE = #{oflnEduPlace}
+		       </if>  
+		       <if test = "tracseTme != null and tracseTme >= 0">  
+		       , TRACSE_TME = #{tracseTme}
+		       </if>  
+		       <if test = "creDesc != null and creDesc != ''">
+		       , CRE_DESC = #{creDesc}
+		       </if>   
+		   WHERE CRS_CRE_CD = #{crsCreCd}  
+    </update>
+
+	<delete id="deleteCreateCourse" parameterType="createCourseVO">
+		 DELETE FROM TB_CRS_CRE_CRS  
+  		 WHERE CRS_CRE_CD = #{crsCreCd}
+    </delete>
+
+
+	<select id="listCreateCourseForResearch" parameterType="java.util.Map" resultType="researchCourseVO">
+		   SELECT A.CRS_CRE_CD  
+				, A.ORG_CD  
+		        , A.CRS_CD  
+		       	, A.CRE_YEAR  
+		       	, A.CRE_TERM  
+		       	, A.CRS_CRE_NM  
+		       	, A.OFLN_START_DTTM  
+		       	, A.OFLN_END_DTTM  
+		       	, A.ENRL_START_DTTM  
+		       	, A.ENRL_END_DTTM  
+		       	, A.AUDIT_END_DTTM  
+		       	, A.OFLN_EDU_PLACE  
+		       	, B.CRS_CTGR_CD  
+		       	, (SELECT FN_GET_COURSE_CTGR_NAME(B.CRS_CTGR_CD) FROM DUAL) AS CRS_CTGR_NM  
+		       	, B.CRS_OPER_MTHD  
+		       	, B.CRS_OPER_TYPE  
+		       	, B.CERT_ISSUE_YN  
+		       	, C.RESH_SN  
+		       	, C.START_DTTM  
+		       	, C.END_DTTM  
+		       	, C.REG_YN  
+		     FROM TB_CRS_CRE_CRS A,TB_CRS_CRS B, tb_crs_cre_crs_resh C  
+		    WHERE A.CRS_CD = B.CRS_CD  
+		      AND A.CRS_CRE_CD = C.CRS_CRE_CD  
+		      AND C.RESH_SN = #{reshSn}  	
+
+	</select>
+
+	<select id="listCreateCourseForStudent" parameterType="java.util.Map" resultType="userCourseVO">
+	    <include refid="selectQueryForStudent" />
+	    <if test = "creYear != null and creYear != ''">
+			 AND A.CRE_YEAR = NVL(#{creYear},A.CRE_YEAR)
+		</if>	
+	    <if test = "crsCd != null and crsCd != ''">
+			 AND B.CRS_CD = #{crsCd}
+		</if>	
+	    <if test = "enrlSts != null and enrlSts != ''">
+		    <if test = "enrlSts == 'ing'">
+		      AND C.ENRL_STS in ('S', 'C', 'F')  
+		      AND ( TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')   
+		      			BETWEEN DECODE(B.CRS_OPER_TYPE,'R',A.ENRL_START_DTTM, C.ENRL_START_DTTM)  
+		      			AND DECODE(B.CRS_OPER_TYPE,'R',A.ENRL_END_DTTM, C.ENRL_END_DTTM)     
+		      		OR TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')    
+		      			BETWEEN DECODE(B.CRS_OPER_TYPE,'R',A.OFLN_START_DTTM, C.ENRL_START_DTTM)  
+		      			AND DECODE(B.CRS_OPER_TYPE,'R',A.OFLN_END_DTTM, C.ENRL_END_DTTM)				  
+		      )  
+		      AND C.USER_NO = #{userNo}  
+		    ORDER BY A.CRS_CRE_NM, A.CRE_YEAR, A.CRE_TERM  
+			</if>	
+		    <if test = "enrlSts == 'bef'">
+				<![CDATA[
+			      AND C.ENRL_STS in ('E', 'S')  
+			      AND TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') <=  
+			          CASE WHEN B.CRS_OPER_TYPE = 'S' THEN DECODE(C.ENRL_STS, 'E', '99991231235959', C.ENRL_START_DTTM)  
+		              ELSE CASE WHEN B.CRS_OPER_MTHD = 'BL' THEN FN_GET_MAX_DATE(A.ENRL_START_DTTM, A.OFLN_START_DTTM)  
+		              ELSE A.ENRL_START_DTTM END END 
+			      AND C.USER_NO = #{userNo}  
+			    ORDER BY START_DTTM DESC, A.CRE_YEAR, A.CRE_TERM, A.CRS_CRE_NM  
+				]]>
+			</if>	
+		    <if test = "enrlSts == 'his'">
+		    <![CDATA[
+		      AND C.ENRL_STS in ('S', 'C', 'F')  
+		      AND TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+		          >= DECODE(B.CRS_OPER_TYPE,'R',A.ENRL_END_DTTM, C.ENRL_END_DTTM)  
+		      AND C.USER_NO = #{userNo}  
+		    ORDER BY END_DTTM DESC, A.CRE_YEAR, A.CRE_TERM, A.CRS_CRE_NM  
+		    ]]>
+			</if>	
+		</if>	
+
+	</select>
+
+	<select id="listCreateCourseForStudentPageingCount" parameterType="java.util.Map" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM TB_CRS_CRE_CRS A, TB_CRS_CRS B, TB_STD_STD C  
+		WHERE A.CRS_CD = B.CRS_CD  
+		  AND A.CRS_CRE_CD = C.CRS_CRE_CD  
+	    <if test = "creYear != null and creYear != ''">
+			 AND A.CRE_YEAR = NVL(#{creYear},A.CRE_YEAR)
+		</if>	
+	    <if test = "crsCd != null and crsCd != ''">
+			 AND B.CRS_CD = #{crsCd}
+		</if>	
+	    <if test = "enrlSts != null and enrlSts != ''">
+		    <if test = "enrlSts == 'ing'">
+		      AND C.ENRL_STS in ('S', 'C', 'F')  
+		      AND ( TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')   
+		      			BETWEEN DECODE(B.CRS_OPER_TYPE,'R',A.ENRL_START_DTTM, C.ENRL_START_DTTM)  
+		      			AND DECODE(B.CRS_OPER_TYPE,'R',A.ENRL_END_DTTM, C.ENRL_END_DTTM)     
+		      		OR TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')    
+		      			BETWEEN DECODE(B.CRS_OPER_TYPE,'R',A.OFLN_START_DTTM, C.ENRL_START_DTTM)  
+		      			AND DECODE(B.CRS_OPER_TYPE,'R',A.OFLN_END_DTTM, C.ENRL_END_DTTM)				  
+		      )  
+		      AND C.USER_NO = #{userNo}  
+			</if>	
+		    <if test = "enrlSts == 'bef'">
+				<![CDATA[
+			      AND C.ENRL_STS in ('E', 'S')  
+			      AND TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') <=  
+			          CASE WHEN B.CRS_OPER_TYPE = 'S' THEN DECODE(C.ENRL_STS, 'E', '99991231235959', C.ENRL_START_DTTM)  
+		              ELSE CASE WHEN B.CRS_OPER_MTHD = 'BL' THEN FN_GET_MAX_DATE(A.ENRL_START_DTTM, A.OFLN_START_DTTM)  
+		              ELSE A.ENRL_START_DTTM END END 
+			      AND C.USER_NO = #{userNo}  
+				]]>
+			</if>	
+		    <if test = "enrlSts == 'his'">
+		    <![CDATA[
+		      AND C.ENRL_STS in ('S', 'C', 'F')  
+		      AND TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+		          >= DECODE(B.CRS_OPER_TYPE,'R',A.ENRL_END_DTTM, C.ENRL_END_DTTM)  
+		      AND C.USER_NO = #{userNo}  
+		    ]]>
+			</if>	
+		</if>		  
+	</select>
+	
+	<select id="listCreateCourseForStudentPageing" parameterType="java.util.Map" resultType="userCourseVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectQueryForStudent" />
+	    <if test = "creYear != null and creYear != ''">
+			 AND A.CRE_YEAR = NVL(#{creYear},A.CRE_YEAR)
+		</if>	
+	    <if test = "crsCd != null and crsCd != ''">
+			 AND B.CRS_CD = #{crsCd}
+		</if>	
+	    <if test = "enrlSts != null and enrlSts != ''">
+		    <if test = "enrlSts == 'ing'">
+		      AND C.ENRL_STS in ('S', 'C', 'F')  
+		      AND ( TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')   
+		      			BETWEEN DECODE(B.CRS_OPER_TYPE,'R',A.ENRL_START_DTTM, C.ENRL_START_DTTM)  
+		      			AND DECODE(B.CRS_OPER_TYPE,'R',A.ENRL_END_DTTM, C.ENRL_END_DTTM)     
+		      		OR TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')    
+		      			BETWEEN DECODE(B.CRS_OPER_TYPE,'R',A.OFLN_START_DTTM, C.ENRL_START_DTTM)  
+		      			AND DECODE(B.CRS_OPER_TYPE,'R',A.OFLN_END_DTTM, C.ENRL_END_DTTM)				  
+		      )  
+		      AND C.USER_NO = #{userNo}  
+		    ORDER BY A.CRS_CRE_NM, A.CRE_YEAR, A.CRE_TERM  
+			</if>	
+		    <if test = "enrlSts == 'bef'">
+				<![CDATA[
+			      AND C.ENRL_STS in ('E', 'S')  
+			      AND TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') <=  
+			          CASE WHEN B.CRS_OPER_TYPE = 'S' THEN DECODE(C.ENRL_STS, 'E', '99991231235959', C.ENRL_START_DTTM)  
+		              ELSE CASE WHEN B.CRS_OPER_MTHD = 'BL' THEN FN_GET_MAX_DATE(A.ENRL_START_DTTM, A.OFLN_START_DTTM)  
+		              ELSE A.ENRL_START_DTTM END END 
+			      AND C.USER_NO = #{userNo}  
+			    ORDER BY START_DTTM DESC, A.CRE_YEAR, A.CRE_TERM, A.CRS_CRE_NM  
+				]]>
+			</if>	
+		    <if test = "enrlSts == 'his'">
+		    <![CDATA[
+		      AND C.ENRL_STS in ('S', 'C', 'F')  
+		      AND TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')  
+		          >= DECODE(B.CRS_OPER_TYPE,'R',A.ENRL_END_DTTM, C.ENRL_END_DTTM)  
+		      AND C.USER_NO = #{userNo}  
+		    ORDER BY END_DTTM DESC, A.CRE_YEAR, A.CRE_TERM, A.CRS_CRE_NM  
+		    ]]>
+			</if>	
+		</if>	
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		<if test = "enrlSts != null and enrlSts != ''">
+		 <if test = "enrlSts == 'ing'">
+		 ORDER BY CRS_CRE_NM, CRE_YEAR, CRE_TERM  
+		 </if>	
+		 <if test = "enrlSts == 'bef'">
+		 ORDER BY OFLN_START_DTTM DESC, CRE_YEAR, CRE_TERM, CRS_CRE_NM  
+		 </if>	
+		 <if test = "enrlSts == 'his'">
+		 ORDER BY OFLN_END_DTTM DESC, CRE_YEAR, CRE_TERM, CRS_CRE_NM  
+		 </if>
+		</if>
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+
+	</select>
+
+	<select id="listCreateCourseForTeacherCount" parameterType="java.util.Map" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM TB_CRS_CRE_CRS A, TB_CRS_CRS B, TB_CRS_CRE_CRS_TCH C  
+		WHERE A.CRS_CD = B.CRS_CD  
+		 	AND A.CRS_CRE_CD = C.CRS_CRE_CD 		
+			AND A.CRE_YEAR = NVL(#{creYear}, A.CRE_YEAR)  
+			AND C.USER_NO = #{userNo}  
+			<if test = "crsCd != null and crsCd != ''">
+			AND B.CRS_CD = #{crsCd}
+			</if>
+			<if test = "crsCreNm != null and crsCreNm != ''">
+			AND A.CRS_CRE_NM LIKE '%'||#{crsCreNm}||'%' 
+			</if>		  	
+	</select>
+
+	<select id="listCreateCourseForTeacher" parameterType="java.util.Map" resultType="userCourseVO">
+	    <include refid="selectQueryForTeacher" />
+			AND A.CRE_YEAR = NVL(#{creYear}, A.CRE_YEAR)  
+			AND C.USER_NO = #{userNo}  
+			<if test = "crsCd != null and crsCd != ''">
+			AND B.CRS_CD = #{crsCd}
+			</if>
+			<if test = "crsCreNm != null and crsCreNm != ''">
+			AND A.CRS_CRE_NM LIKE '%'||#{crsCreNm}||'%' 
+			</if>
+
+		ORDER BY A.CRS_CRE_NM, A.CRE_YEAR, A.CRE_TERM  
+
+	</select>
+
+	<select id="listCreateCourseForMonth" parameterType="createCourseVO" resultType="createCourseVO">
+		   SELECT A.CRS_CRE_CD  
+		        , A.CRS_CD  
+		        , A.CRE_YEAR  
+		        , A.CRE_TERM  
+		        , A.CRS_CRE_NM  
+		     FROM TB_CRS_CRE_CRS A, TB_CRS_CRS B  
+		    WHERE A.CRS_CD = B.CRS_CD  
+			  AND A.CRS_CD = NVL(#{crsCd},A.CRS_CD)  
+		      AND SUBSTR(A.ENRL_START_DTTM,0,6) = #{yearMonth}  
+		    ORDER  BY A.CRE_YEAR, A.CRE_TERM, A.CRS_CRE_NM   
+
+	</select>
+
+	<select id="calendarCreateCourseForMonth" parameterType="createCourseVO" resultType="createCourseVO">
+		<![CDATA[
+			SELECT  W_0, DECODE(W_0,'','', (SELECT FN_GET_COURSE_SCHEDULE(#{orgCd}, #{yearMonth}||W_0) FROM DUAL)) AS W_0_STR  
+		        ,  W_1, DECODE(W_1,'','', (SELECT FN_GET_COURSE_SCHEDULE(#{orgCd}, #{yearMonth}||W_1) FROM DUAL)) AS W_1_STR  
+		        ,  W_2, DECODE(W_2,'','', (SELECT FN_GET_COURSE_SCHEDULE(#{orgCd}, #{yearMonth}||W_2) FROM DUAL)) AS W_2_STR  
+		        ,  W_3, DECODE(W_3,'','', (SELECT FN_GET_COURSE_SCHEDULE(#{orgCd}, #{yearMonth}||W_3) FROM DUAL)) AS W_3_STR  
+		        ,  W_4, DECODE(W_4,'','', (SELECT FN_GET_COURSE_SCHEDULE(#{orgCd}, #{yearMonth}||W_4) FROM DUAL)) AS W_4_STR  
+		        ,  W_5, DECODE(W_5,'','', (SELECT FN_GET_COURSE_SCHEDULE(#{orgCd}, #{yearMonth}||W_5) FROM DUAL)) AS W_5_STR  
+		        ,  W_6, DECODE(W_6,'','', (SELECT FN_GET_COURSE_SCHEDULE(#{orgCd}, #{yearMonth}||W_6) FROM DUAL)) AS W_6_STR  
+		     FROM (  
+		        	SELECT  LPAD(MIN (DECODE (TO_CHAR (DAYS, 'D'), 1, TO_CHAR (DAYS, 'FMDD'))),2,'0') W_0  
+		                ,  LPAD(MIN (DECODE (TO_CHAR (DAYS, 'D'), 2, TO_CHAR (DAYS, 'FMDD'))),2,'0') W_1  
+		                ,  LPAD(MIN (DECODE (TO_CHAR (DAYS, 'D'), 3, TO_CHAR (DAYS, 'FMDD'))),2,'0') W_2  
+		                ,  LPAD(MIN (DECODE (TO_CHAR (DAYS, 'D'), 4, TO_CHAR (DAYS, 'FMDD'))),2,'0') W_3  
+		                ,  LPAD(MIN (DECODE (TO_CHAR (DAYS, 'D'), 5, TO_CHAR (DAYS, 'FMDD'))),2,'0') W_4  
+		                ,  LPAD(MIN (DECODE (TO_CHAR (DAYS, 'D'), 6, TO_CHAR (DAYS, 'FMDD'))),2,'0') W_5  
+		                ,  LPAD(MIN (DECODE (TO_CHAR (DAYS, 'D'), 7, TO_CHAR (DAYS, 'FMDD'))),2,'0') W_6  
+		             FROM  (SELECT  BASE_MON + LEVEL - 1 DAYS  
+		                         ,  (  TRUNC (BASE_MON + LEVEL - 1, 'D')  
+		                               - TRUNC (TRUNC (BASE_MON + LEVEL - 1, 'Y'), 'D')  
+		                            ) / 7 + 1 WEEK_GRP  
+		                      FROM  (SELECT TO_DATE (#{yearMonth}, 'YYYYMM') BASE_MON FROM DUAL)  
+		                   CONNECT  BY BASE_MON + LEVEL - 1 <= LAST_DAY (BASE_MON))  
+		             GROUP  BY WEEK_GRP  
+		             ORDER  BY WEEK_GRP  
+		          )  
+		]]>
+	</select>
+
+	<select id="listCourseTerm" parameterType="createCourseVO" resultType="createCourseVO">
+		   SELECT A.CRS_CD  
+		        , (SELECT CRS_NM FROM TB_CRS_CRS WHERE CRS_CD = A.CRS_CD) AS CRS_NM  
+		        , A.CRS_CRE_CD  
+		        , A.CRS_CRE_NM  
+		        , A.CRE_YEAR  
+		        , A.CRE_TERM  
+		        , A.CRS_CRE_NM  
+		     FROM TB_CRS_CRE_CRS A  
+		    WHERE A.CRS_CD = #{crsCd}  
+		      AND A.CRE_YEAR = #{creYear}  
+	</select>
+
+
+	<select id="calendarCreateCourse" parameterType="createCourseVO" resultType="createCourseVO">
+		<![CDATA[
+			SELECT  W_0, DECODE(W_0,'','', (SELECT FN_GET_COURSE_SCHEDULE_CNT(#{yearMonth}||W_0) FROM DUAL)) AS W_0_STR  
+		        ,  W_1, DECODE(W_1,'','', (SELECT FN_GET_COURSE_SCHEDULE_CNT(#{yearMonth}||W_1) FROM DUAL)) AS W_1_STR  
+		        ,  W_2, DECODE(W_2,'','', (SELECT FN_GET_COURSE_SCHEDULE_CNT(#{yearMonth}||W_2) FROM DUAL)) AS W_2_STR  
+		        ,  W_3, DECODE(W_3,'','', (SELECT FN_GET_COURSE_SCHEDULE_CNT(#{yearMonth}||W_3) FROM DUAL)) AS W_3_STR  
+		        ,  W_4, DECODE(W_4,'','', (SELECT FN_GET_COURSE_SCHEDULE_CNT(#{yearMonth}||W_4) FROM DUAL)) AS W_4_STR  
+		        ,  W_5, DECODE(W_5,'','', (SELECT FN_GET_COURSE_SCHEDULE_CNT(#{yearMonth}||W_5) FROM DUAL)) AS W_5_STR  
+		        ,  W_6, DECODE(W_6,'','', (SELECT FN_GET_COURSE_SCHEDULE_CNT(#{yearMonth}||W_6) FROM DUAL)) AS W_6_STR  
+		     FROM (  
+		        	SELECT  LPAD(MIN (DECODE (TO_CHAR (DAYS, 'D'), 1, TO_CHAR (DAYS, 'FMDD'))),2,'0') W_0  
+		                ,  LPAD(MIN (DECODE (TO_CHAR (DAYS, 'D'), 2, TO_CHAR (DAYS, 'FMDD'))),2,'0') W_1  
+		                ,  LPAD(MIN (DECODE (TO_CHAR (DAYS, 'D'), 3, TO_CHAR (DAYS, 'FMDD'))),2,'0') W_2  
+		                ,  LPAD(MIN (DECODE (TO_CHAR (DAYS, 'D'), 4, TO_CHAR (DAYS, 'FMDD'))),2,'0') W_3  
+		                ,  LPAD(MIN (DECODE (TO_CHAR (DAYS, 'D'), 5, TO_CHAR (DAYS, 'FMDD'))),2,'0') W_4  
+		                ,  LPAD(MIN (DECODE (TO_CHAR (DAYS, 'D'), 6, TO_CHAR (DAYS, 'FMDD'))),2,'0') W_5  
+		                ,  LPAD(MIN (DECODE (TO_CHAR (DAYS, 'D'), 7, TO_CHAR (DAYS, 'FMDD'))),2,'0') W_6  
+		             FROM  (SELECT  BASE_MON + LEVEL - 1 DAYS  
+		                         ,  (  TRUNC (BASE_MON + LEVEL - 1, 'D')  
+		                               - TRUNC (TRUNC (BASE_MON + LEVEL - 1, 'Y'), 'D')  
+		                            ) / 7 + 1 WEEK_GRP  
+		                      FROM  (SELECT TO_DATE (#{yearMonth}, 'YYYYMM') BASE_MON FROM DUAL)  
+		                   CONNECT  BY BASE_MON + LEVEL - 1 <= LAST_DAY (BASE_MON))  
+		             GROUP  BY WEEK_GRP  
+		             ORDER  BY WEEK_GRP  
+		          )   
+		]]>
+	</select>
+
+
+	<select id="selectMaxTerm" parameterType="createCourseVO" resultType="createCourseVO">
+		 SELECT MAX(TO_NUMBER(CRE_TERM)) AS CRE_TERM  
+		   FROM TB_CRS_CRE_CRS  
+		  WHERE CRS_CD = #{crsCd}  
+		    AND CRE_YEAR = #{creYear}  
+	</select>
+
+	<select id="listCreateCourseForEnrollSearchPagingCount" parameterType="createCourseVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM TB_CRS_CRE_CRS	A, TB_CRS_CRS B, TB_CRS_CRS_CTGR C  
+		WHERE A.CRS_CD = B.CRS_CD  
+		  AND B.CRS_CTGR_CD = C.CRS_CTGR_CD  	
+		<if test = "orgCd != null and orgCd != ''">
+		 AND A.ORG_CD = NVL(#{orgCd},A.ORG_CD) 
+		</if>
+		<if test = "crsCtgrCd != null and crsCtgrCd != ''">
+		 AND C.CRS_CTGR_PATH LIKE '%/'||#{crsCtgrCd}||'%'
+		</if>
+		<if test = "searchValue != null and searchValue != ''">
+		 AND A.CRS_CRE_NM||B.CRS_NM like '%'||#{searchValue}||'%'
+		</if>
+
+	<![CDATA[
+	     AND ( B.CRS_OPER_TYPE = 'S' OR (A.ENRL_END_DTTM >= TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+				OR A.OFLN_END_DTTM >= TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')) )  
+	]]>		  		
+	</select>
+	
+	<select id="listCreateCourseForEnrollSearchPaging" parameterType="createCourseVO" resultType="createCourseVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectQueryForEnroll" />
+			<if test = "orgCd != null and orgCd != ''">
+			 AND A.ORG_CD = NVL(#{orgCd},A.ORG_CD) 
+			</if>
+			<if test = "crsCtgrCd != null and crsCtgrCd != ''">
+			 AND C.CRS_CTGR_PATH LIKE '%/'||#{crsCtgrCd}||'%'
+			</if>
+			<if test = "searchValue != null and searchValue != ''">
+			 AND A.CRS_CRE_NM||B.CRS_NM like '%'||#{searchValue}||'%'
+			</if>
+
+		<![CDATA[
+		     AND ( B.CRS_OPER_TYPE = 'S' OR (A.ENRL_END_DTTM >= TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+					OR A.OFLN_END_DTTM >= TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')) )  
+		ORDER BY A.CRE_YEAR, A.CRE_TERM, A.CRS_CRE_NM  
+		]]>
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+
+	</select>
+	<select id="listSubInfo" parameterType="createCourseVO" resultType="createCourseVO">
+		 SELECT  A.CRS_CRE_CD  
+		       , A.ORG_CD  
+		       , A.CRS_CD  
+		       , A.CRE_YEAR  
+		       , A.CRE_TERM  
+		       , A.CRS_CRE_NM  
+		       , A.ENRL_APLC_START_DTTM  
+		       , A.ENRL_APLC_END_DTTM  
+		       , A.OFLN_START_DTTM  
+		       , A.OFLN_END_DTTM  
+		       , A.ENRL_START_DTTM  
+		       , A.ENRL_END_DTTM  
+		       , A.AUDIT_END_DTTM  
+		       , A.ONLN_EDU_TM  
+		       , A.OFLN_EDU_TM  
+		       , ( SELECT COUNT(*)  
+		             FROM TB_CRS_CRE_CRS_DECLS  
+		            WHERE CRS_CRE_CD = A.CRS_CRE_CD ) AS DECLS_CNT  
+		       , A.REG_NO  
+			   , (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) AS MOD_NM  
+		       , A.REG_DTTM  
+		       , A.MOD_NO  
+			   , (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) AS REG_NM  
+		       , A.MOD_DTTM  
+		       , B.CRS_OPER_MTHD  
+		       , B.CRS_OPER_TYPE  
+		   FROM TB_CRS_CRE_CRS	A, TB_CRS_CRS B, TB_CRS_CRS_CTGR C, TB_CRS_CRE_CRS_ONLN_SBJ D  
+		   WHERE A.CRS_CD = B.CRS_CD  
+		      AND B.CRS_CTGR_CD = C.CRS_CTGR_CD  
+			  AND A.ORG_CD = NVL(#{orgCd},A.ORG_CD)  
+			  AND A.CRS_CRE_CD = D.CRS_CRE_CD  
+			  AND D.SBJ_CD = #{sbjCd}  
+		   ORDER BY A.CRE_YEAR DESC, A.ENRL_START_DTTM DESC, A.CRS_CRE_NM  
+
+	</select>
+	<select id="listSubInfoOffline" parameterType="createCourseVO" resultType="createCourseVO">
+		  SELECT A.CRS_CRE_CD  
+		       , A.ORG_CD  
+		       , A.CRS_CD  
+		       , A.CRE_YEAR  
+		       , A.CRE_TERM  
+		       , A.CRS_CRE_NM  
+		       , A.ENRL_APLC_START_DTTM  
+		       , A.ENRL_APLC_END_DTTM  
+		       , A.OFLN_START_DTTM  
+		       , A.OFLN_END_DTTM  
+		       , A.ENRL_START_DTTM  
+		       , A.ENRL_END_DTTM  
+		       , A.AUDIT_END_DTTM  
+		       , A.ENRL_DAYCNT  
+		       , A.ONLN_EDU_TM  
+		       , A.OFLN_EDU_TM  
+		       , ( SELECT COUNT(*)  
+		             FROM TB_CRS_CRE_CRS_DECLS  
+		            WHERE CRS_CRE_CD = A.CRS_CRE_CD ) AS DECLS_CNT  
+		       , A.REG_NO  
+			   , (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) AS MOD_NM  
+		       , A.REG_DTTM  
+		       , A.MOD_NO  
+			   , (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) AS REG_NM  
+		       , A.MOD_DTTM  
+		       , B.CRS_OPER_MTHD  
+		       , B.CRS_OPER_TYPE  
+		    FROM TB_CRS_CRE_CRS	A, TB_CRS_CRS B, TB_CRS_CRS_CTGR C, TB_CRS_CRE_CRS_OFLN_SBJ D  
+		   WHERE A.CRS_CD = B.CRS_CD  
+		     AND B.CRS_CTGR_CD = C.CRS_CTGR_CD  
+			 AND A.ORG_CD = NVL(#{orgCd},A.ORG_CD)  
+			 AND A.CRS_CRE_CD = D.CRS_CRE_CD  
+			 AND D.SBJ_CD = #{sbjCd}  
+		   ORDER BY A.CRE_YEAR DESC, A.ENRL_START_DTTM DESC, A.CRS_CRE_NM  
+
+	</select>
+
+	<select id="listCreateCourseTodoList" parameterType="createCourseVO" resultType="createCourseVO">
+		SELECT * FROM (  
+		  SELECT A.CRS_CRE_CD AS CRS_CRE_CD  
+		       , 'EXAM' AS COURSE_TYPE  
+		       , A.EXAM_SN AS COURSE_SN  
+		       , A.EXAM_TITLE AS COURSE_TITLE  
+		       , A.EXAM_START_DTTM AS COURSE_START_DTTM  
+		       , A.EXAM_END_DTTM AS COURSE_END_DTTM  
+		       , A.EXAM_END_DTTM AS COURSE_EXT_SEND_DTTM  
+		       , CASE WHEN NVL(( SELECT STARE_CNT FROM TB_LEC_EXAM_STARE WHERE CRS_CRE_CD = A.CRS_CRE_CD AND STD_NO = #{stdNo} AND EXAM_SN = A.EXAM_SN ),0) = 0  
+		              THEN 'N' ELSE 'Y' END AS COURSE_STARE_YN  
+		       , 0 AS ATCL_COUNT  
+		       , 0 AS CMNT_COUNT  
+		    FROM TB_LEC_EXAM A  
+		   WHERE A.CRS_CRE_CD = #{crsCreCd}  
+		     AND NVL(A.REG_YN,'N') = NVL('Y', NVL(A.REG_YN,'N'))  
+		  UNION ALL  
+		  SELECT A.CRS_CRE_CD AS CRS_CRE_CD  
+		       , 'FORUM' AS COURSE_TYPE  
+		       , A.FORUM_SN AS COURSE_SN  
+		       , A.FORUM_TITLE AS COURSE_TITLE  
+		       , A.FORUM_START_DTTM AS COURSE_START_DTTM  
+		       , A.FORUM_END_DTTM AS COURSE_END_DTTM  
+		       , A.FORUM_END_DTTM AS COURSE_EXT_SEND_DTTM  
+		       , 'N' AS COURSE_STARE_YN  
+		       , NVL((SELECT COUNT(1) FROM TB_LEC_FORUM_ATCL B WHERE A.FORUM_SN = B.FORUM_SN AND B.REG_NO=#{regNo}), 0) AS ATCL_COUNT  
+		       , NVL((SELECT COUNT(1) FROM TB_LEC_FORUM_CMNT B WHERE A.FORUM_SN = B.FORUM_SN AND B.REG_NO=#{regNo}), 0) AS CMNT_COUNT  
+		    FROM TB_LEC_FORUM A  
+		   WHERE A.CRS_CRE_CD = #{crsCreCd}  
+		     AND A.FORUM_REG_YN = 'Y'  
+		  UNION ALL  
+		  SELECT A.CRS_CRE_CD AS CRS_CRE_CD  
+		       , 'ASMT' AS COURSE_TYPE  
+		       , A.ASMT_SN AS COURSE_SN  
+		       , A.ASMT_TITLE AS COURSE_TITLE  
+		       , A.ASMT_START_DTTM AS COURSE_START_DTTM  
+		       , A.ASMT_END_DTTM AS COURSE_END_DTTM  
+		       , A.EXT_SEND_DTTM AS COURSE_EXT_SEND_DTTM  
+		       , CASE WHEN NVL(B.SEND_CNT,0) = 0 THEN 'N' ELSE 'Y' END AS COURSE_STARE_YN  
+		       , 0 AS ATCL_COUNT  
+		       , 0 AS CMNT_COUNT  
+		    FROM TB_LEC_ASMT A, TB_LEC_ASMT_SEND B  
+		   WHERE A.CRS_CRE_CD = #{crsCreCd}  
+		    AND  A.CRS_CRE_CD = B.CRS_CRE_CD (+)  
+		    AND  A.ASMT_SN = B.ASMT_SN(+)  
+		    AND  A.REG_YN = 'Y'  
+		    AND  B.STD_NO (+) = #{stdNo}  
+		  UNION ALL  
+		  SELECT A.CRS_CRE_CD AS CRS_CRE_CD  
+		       , 'RESH' AS COURSE_TYPE  
+		       , A.RESH_SN AS COURSE_SN  
+		       , B.RESH_TITLE AS COURSE_TITLE  
+		       , A.START_DTTM AS COURSE_START_DTTM  
+		       , A.END_DTTM AS COURSE_END_DTTM  
+		       , A.END_DTTM AS COURSE_EXT_SEND_DTTM  
+		       , CASE WHEN NVL(( SELECT COUNT(1)FROM TB_CRS_RESH_ANSR WHERE CRS_CRE_CD = A.CRS_CRE_CD AND RESH_SN = A.RESH_SN AND STD_NO = #{stdNo} ),0) = 0  
+		              THEN 'N' ELSE 'Y' END AS COURSE_STARE_YN  
+		       , 0 AS ATCL_COUNT  
+		       , 0 AS CMNT_COUNT  
+		   FROM tb_crs_cre_crs_resh A, TB_CRS_RESH_BANK B  
+		  WHERE A.RESH_SN = B.RESH_SN  
+		    AND A.CRS_CRE_CD = #{crsCreCd}  
+		    AND A.USE_YN = 'Y'  
+		    AND A.REG_YN = 'Y'  
+		) A  
+		WHERE A.COURSE_EXT_SEND_DTTM > TO_CHAR(SYSDATE, 'yyyymmddhh24miss')  
+		ORDER BY A.COURSE_END_DTTM DESC   
+
+	</select>
+
+	<select id="listCreateCourseForAll" parameterType="createCourseVO" resultType="createCourseVO">
+		 SELECT  A.CRS_CRE_CD	
+					, A.ORG_CD	
+					, A.CRS_CD	
+					, A.CRE_YEAR	
+					, A.CRE_TERM	
+					, B.CRS_NM	
+					, A.CRS_CRE_NM	
+					, A.ENRL_START_DTTM	
+					, A.ENRL_END_DTTM	
+					, A.REG_NO	
+					, A.REG_DTTM	
+					, A.MOD_NO	
+					, A.MOD_DTTM	
+					, (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) AS MOD_NM	
+					, (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) AS REG_NM	
+					, ( SELECT COUNT(*)	
+						   FROM TB_STD_STD C, TB_USR_LOGIN D	
+						  WHERE C.USER_NO = D.USER_NO	
+						    AND D.USER_STS = 'U'	
+						    AND CRS_CRE_CD = A.CRS_CRE_CD		
+						    AND ENRL_STS in ('S','C','F') ) AS CNFM_CNT --수강인원	
+					, ( SELECT COUNT(*)	
+						   FROM TB_STD_STD C, TB_USR_LOGIN D	
+						  WHERE C.USER_NO = D.USER_NO	
+						    AND D.USER_STS = 'U'	
+						    AND CRS_CRE_CD = A.CRS_CRE_CD		
+						    AND ENRL_STS = 'C') AS CPLT_CNT --교육 수료인원                 
+					, ( SELECT COUNT(*)	
+						   FROM TB_STD_STD C, TB_USR_LOGIN D	
+						  WHERE C.USER_NO = D.USER_NO	
+						    AND D.USER_STS = 'U'	
+						    AND CRS_CRE_CD = A.CRS_CRE_CD		
+						    AND ENRL_STS in ('S','F') ) AS FAIL_CNT --교육 미수료인원		
+				FROM TB_CRS_CRE_CRS	A, TB_CRS_CRS B, TB_CRS_CRS_CTGR C		
+				WHERE A.CRS_CD = B.CRS_CD		
+					AND B.CRS_CTGR_CD = C.CRS_CTGR_CD		
+					AND A.CRE_YEAR = NVL(#{creYear}, A.CRE_YEAR)		
+					AND A.ORG_CD = #{orgCd}		
+					AND A.ORG_CD = B.ORG_CD		
+		<if test = "sortKey != null and sortKey != ''">
+		<choose>
+			<when test = "sortKey != null and sortKey == 'CRS_CRE_NM_ASC'">
+				 ORDER BY A.CRS_CRE_NM ASC		
+			</when>
+			<when test = "sortKey != null and sortKey == 'CRS_CRE_NM_DESC'">
+			 	ORDER BY A.CRS_CRE_NM DESC		
+			</when>
+			<when test = "sortKey != null and sortKey == 'CRS_NM_ASC'">
+			 	ORDER BY A.CRS_NM	ASC		
+			</when>
+			<when test = "sortKey != null and sortKey == 'CRS_NM_DESC'">
+			 	ORDER BY A.CRS_NM	DESC		
+			</when>
+			<when test = "sortKey != null and sortKey == 'CRE_TERM_ASC'">
+			 	ORDER BY A.CRE_TERM ASC		
+			</when>
+			<when test = "sortKey != null and sortKey == 'CRE_TERM_DESC'">
+				ORDER BY A.CRE_TERM  DESC
+			</when>
+			<otherwise>
+			   ORDER BY B.CRS_CD ASC		
+			</otherwise>
+		</choose>
+		</if>
+	</select>
+
+
+</mapper>	

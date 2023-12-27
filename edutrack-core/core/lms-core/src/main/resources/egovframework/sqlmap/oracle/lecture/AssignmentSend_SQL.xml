@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.lecture.assignment.service.impl.AssignmentSendMapper">
+
+	<sql id="selectColumnQuery">
+		  A.STD_NO  
+	    , A.CRS_CRE_CD  
+	    , A.USER_NO  
+	    , B.USER_NM  
+	    , C.USER_ID  
+	    , B.EMAIL  
+	    , B.BIRTH  
+	    , A.ENRL_STS  
+	    , A.EDU_NO  
+	    , NVL(D.SCORE,0) AS SCORE  
+	    , NVL(D.SEND_CNT,0) AS SEND_CNT  
+	    , NVL(D.REG_DTTM,'') AS REG_DTTM  
+	    , D.RATE_YN  
+	    , (SELECT COUNT(1) FROM TB_LEC_ASMT_SEND E WHERE E.ASMT_SN = D.ASMT_SN) AS SCORE_YN  
+	</sql>
+		
+	<sql id="listQuery">
+		  SELECT 
+	 	 <include refid="selectColumnQuery" />
+	     FROM  TB_STD_STD A, TB_USR_USER_INFO B,  
+	           TB_USR_LOGIN C, TB_LEC_ASMT_SEND D  
+	 	 WHERE  A.USER_NO = B.USER_NO  
+	      AND  B.USER_NO = C.USER_NO  
+	      AND  A.CRS_CRE_CD  = #{crsCreCd}  
+	      AND  A.ENRL_STS IN('S','C','F')  
+	      AND  A.CRS_CRE_CD = D.CRS_CRE_CD(+)  
+	      AND  A.STD_NO = D.STD_NO(+) 
+		<if test = "userNm != null and userNm != ''">
+			AND  B.USER_NM LIKE '%'||#{userNm}||'%'  
+		</if> 
+		<if test = "declsNo != null and declsNo gt 0">
+			AND  A.DECLS_NO = DECODE(#{declsNo}, null, A.DECLS_NO, 0, A.DECLS_NO, #{declsNo})  
+		</if>
+	      AND  C.USER_STS = 'U'  
+	      AND  D.ASMT_SN(+) = #{asmtSn}  
+		<![CDATA[
+	      AND  CASE WHEN NVL(D.SEND_CNT, 0) > 0 THEN 'Y' ELSE 'N' END  =  
+	           DECODE(#{sendYn},'Y','Y','N','N',CASE WHEN NVL(D.SEND_CNT, 0) > 0 THEN 'Y' ELSE 'N' END)  
+		]]>
+	</sql>
+	
+	<select id="count" parameterType="assignmentSendVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+	     FROM  TB_STD_STD A, TB_USR_USER_INFO B,  
+	           TB_USR_LOGIN C, TB_LEC_ASMT_SEND D  
+	 	 WHERE  A.USER_NO = B.USER_NO  
+	      AND  B.USER_NO = C.USER_NO  
+	      AND  A.CRS_CRE_CD  = #{crsCreCd}  
+	      AND  A.ENRL_STS IN('S','C','F')  
+	      AND  A.CRS_CRE_CD = D.CRS_CRE_CD(+)  
+	      AND  A.STD_NO = D.STD_NO(+) 
+		<if test = "userNm != null and userNm != ''">
+			AND  B.USER_NM LIKE '%'||#{userNm}||'%'  
+		</if> 
+		<if test = "declsNo != null and declsNo gt 0">
+			AND  A.DECLS_NO = DECODE(#{declsNo}, null, A.DECLS_NO, 0, A.DECLS_NO, #{declsNo})  
+		</if>
+	      AND  C.USER_STS = 'U'  
+	      AND  D.ASMT_SN(+) = #{asmtSn}  
+		<![CDATA[
+	      AND  CASE WHEN NVL(D.SEND_CNT, 0) > 0 THEN 'Y' ELSE 'N' END  =  
+	           DECODE(#{sendYn},'Y','Y','N','N',CASE WHEN NVL(D.SEND_CNT, 0) > 0 THEN 'Y' ELSE 'N' END)  
+		]]>			
+	</select>
+		
+	<select id="list" parameterType="assignmentSendVO" resultType="assignmentSendVO">
+		<include refid="listQuery" />
+		ORDER  BY B.USER_NM
+	</select>
+	
+	<select id="listPageing"  parameterType="assignmentSendVO" resultType="assignmentSendVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+			<include refid="listQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="select" parameterType="assignmentSendVO" resultType="assignmentSendVO">
+		SELECT  STD_NO														
+		        ,  CRS_CRE_CD													
+		        ,  ASMT_SN														
+		        ,  SEND_TITLE													
+		        ,  SEND_CTS													
+		        ,  SEND_CNT													
+		        ,  SCORE														
+		        ,  ATCH_CTS													
+		        ,  NVL(ASMT_SUB_SN, 0)	ASMT_SUB_SN								
+		        ,  REG_NO														
+		        ,  REG_DTTM													
+		        ,  MOD_NO														
+		        ,  MOD_DTTM													
+			     ,  (SELECT FN_GET_USER_NAME(MOD_NO) FROM DUAL) AS MOD_NM		
+			     ,  (SELECT FN_GET_USER_NAME(REG_NO) FROM DUAL) AS REG_NM		
+			     ,  RATE_YN														
+		     FROM  TB_LEC_ASMT_SEND											
+		    WHERE  STD_NO       = #{stdNo}										
+		      AND  CRS_CRE_CD   = #{crsCreCd}									
+		      AND  ASMT_SN      = #{asmtSn}
+	</select>
+	
+	<insert id="insert" parameterType="assignmentSendVO">
+		INSERT 	INTO TB_LEC_ASMT_SEND (						
+		           STD_NO										
+		        ,  CRS_CRE_CD									
+		        ,  ASMT_SN										
+		        ,  SEND_TITLE									
+		        ,  SEND_CTS									
+		        ,  SEND_CNT									
+		        ,  SCORE										
+		        ,  ATCH_CTS									
+		        ,  ASMT_SUB_SN									
+		        ,  REG_NO										
+		        ,  REG_DTTM									
+		        ,  MOD_NO										
+		        ,  MOD_DTTM									
+		 	) VALUES (											
+		           #{stdNo}										
+		        ,  #{crsCreCd}									
+		        ,  #{asmtSn}										
+		        ,  #{sendTitle}									
+		        ,  #{sendCts}									
+		        ,  #{sendCnt}
+		        ,  #{score}										
+		        ,  #{atchCts}									
+		        ,  DECODE(#{asmtSubSn},0,null,#{asmtSubSn})		
+		        ,  #{regNo}										
+		        ,  TO_CHAR(SYSDATE,'yyyymmddhh24miss')			
+		        ,  #{modNo}										
+		        ,  TO_CHAR(SYSDATE,'yyyymmddhh24miss')			
+		 	)
+	</insert>
+	
+	<update id="update" parameterType="assignmentSendVO">
+		UPDATE TB_LEC_ASMT_SEND SET										
+		        STD_NO           =   #{stdNo}								
+		      , CRS_CRE_CD       =   #{crsCreCd}								
+		      , ASMT_SN          =   #{asmtSn}								
+		      , SEND_TITLE       =   #{sendTitle}							
+		      , SEND_CTS         =   #{sendCts}								
+		      , SEND_CNT         =   #{sendCnt}								
+		      , SCORE            =   #{score}								
+		      , ATCH_CTS         =   #{atchCts}								
+		      , ASMT_SUB_SN      =   DECODE(#{asmtSubSn},'0','',#{asmtSubSn})	
+		      , REG_NO           =   #{regNo}								
+		      , REG_DTTM         =   TO_CHAR(SYSDATE,'yyyymmddhh24miss')	
+		      , MOD_NO           =   #{modNo}								
+		      , MOD_DTTM         =   TO_CHAR(SYSDATE,'yyyymmddhh24miss')	
+		      , RATE_YN          =   #{rateYn}								
+		  WHERE STD_NO           =   #{stdNo}								
+		    AND CRS_CRE_CD       =   #{crsCreCd}								
+		    AND ASMT_SN          =   #{asmtSn}
+	</update>
+	
+	<delete id="delete" parameterType="assignmentSendVO">
+		DELETE  FROM  TB_LEC_ASMT_SEND           
+		  	 WHERE  STD_NO          =   #{stdNo}       
+		      AND  CRS_CRE_CD      =   #{crsCreCd}    
+		      AND  ASMT_SN         =   #{asmtSn}
+	</delete>
+	
+	<delete id="deleteAll" parameterType="assignmentVO">
+		DELETE  FROM  TB_LEC_ASMT_SEND           
+		  	 WHERE  CRS_CRE_CD      =   #{crsCreCd}    
+		      AND  ASMT_SN         =   #{asmtSn}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.user.dept.service.impl.UsrDeptInfoMapper">	
+
+	<select id="selectKey" resultType="String">
+		/*
+			 SQL ID : selectKey
+			 설  명 : 부서 정보 키 코드 생성
+	 	*/
+	 	SELECT CONCAT('DEPT',LPAD(nextval('SQ_USR_USER_INFO'), 6, '0')) 
+	</select>
+	
+	<sql id="selectQuery">
+		SELECT ORG_CD as orgCd
+             , DEPT_CD as deptCd
+		     , AREA_CD as areaCd
+		     , DEPT_NM as deptNm
+		     , DEPT_ENG_NM as deptEngNm
+		     , DEPT_TYPE_CD as deptTypeCd
+		     , PHONENO as phoneno		     
+		     , FAX_NO as faxNo
+		     , DEPT_ODR as deptOdr
+		     , USE_YN as useYn
+		     , DEPT_MNG_NO as deptMngNo
+		     , (SELECT USER_NM FROM tb_usr_user_info WHERE USER_NO = A.DEPT_MNG_NO) as deptMngNm
+		     , REG_NUM as regNum
+		     , EXP_START_DATE as expStartDate
+		     , EXP_END_DATE as expEndDate
+		     , CEO_NM as ceoNm
+		     , STAFF_CNT as staffCnt
+		     , BSNS_TYPE_CD as bsnsTypeCd
+		     , BSNS_CNDTN as bsnsCndtn
+		     , DEPT_POST_NO as deptPostNo
+		     , DEPT_ADDR_1 as deptAddr1
+		     , DEPT_ADDR_2 as deptAddr2
+		     , DEPT_EMAIL as deptEmail
+		     , INFO_MNG_NM as infoMngNm
+		     , STORE_REG_NO as storeRegNo
+		     , PARTNER as partner
+		     , BSNS_LCNS_FILE_SN as bsnsLcnsFileSn
+		     , REG_NO as regNo
+		     , (SELECT FN_GET_USER_NAME(REG_NO) FROM DUAL) AS regNm
+		     , REG_DTTM as regDttm
+		     , MOD_NO as modNo
+		     , (SELECT FN_GET_USER_NAME(MOD_NO) FROM DUAL) AS modNm
+		     , MOD_DTTM as modDttm
+		     <if test = "searchFrom != null and searchFrom == 'courseWrite'">
+		     , CASE WHEN (SELECT COUNT(*) FROM tb_crs_cre_crs TCCC WHERE DEPT_CD = A.DEPT_CD AND CRS_CD = #{searchValue}) > 0 THEN 'N'	ELSE 'Y' END AS DELETE_YN
+		     </if>
+		  FROM tb_usr_dept_info A
+         WHERE 1=1
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		<if test = "orgCd != null and orgCd != ''">
+           AND ORG_CD = #{orgCd}
+		</if>
+		<if test = "useYn != null and useYn != ''">
+           AND USE_YN = #{useYn}
+		</if>
+		<if test = "searchKey != null and searchKey == 'deptNm'">
+		   AND DEPT_NM like CONCAT('%',#{searchValue},'%')
+		</if>
+		<if test = "searchKey != null and searchKey == 'deptMngNo'">
+		   AND DEPT_MNG_NO like CONCAT('%',#{searchValue},'%')
+		</if>
+		<if test = "searchKey != null and searchKey == 'deptMngNm'">
+		   AND DEPT_MNG_NO IN (SELECT USER_NO FROM tb_usr_user_info WHERE USER_NM like CONCAT('%',#{searchValue},'%'))
+		</if>
+		<if test = "searchKey != null and searchKey == 'deptCd'">
+		   AND DEPT_CD like CONCAT('%',#{searchValue},'%')
+		</if>
+		<if test = "areaCd != null and areaCd != ''">
+		   AND AREA_CD = #{areaCd}
+		</if>
+		<if test="searchMode != null and searchMode != ''">
+			<if test="searchMode == 'STDPAY'">
+				AND A.DEPT_CD IN (	SELECT DEPT_CD
+									FROM tb_crs_cre_crs
+									WHERE 1=1
+										AND FN_GET_NULL(SBJ_CD) IS NOT NULL
+										AND FN_GET_NULL(DEPT_CD) IS NOT NULL 
+										AND FN_GET_NULL(CRS_CD) IS NOT NULL
+										<if test="crsCd != null and crsCd != ''">
+										AND CRS_CD = #{crsCd}
+										</if>
+										<if test="sbjCd != null and sbjCd != ''">
+										AND SBJ_CD = #{sbjCd}
+										</if>
+								  )
+			</if>
+		</if>
+	</sql>		
+
+	<select id="list" parameterType="usrDeptInfoVO" resultType="usrDeptInfoVO">
+		/*
+			 SQL ID : list
+			 설  명 : 부서 정보의 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	 	<if test = 'sortKey != null and sortKey != ""'>
+			<if test = 'sortKey == "DEPT_CD_ASC"'>
+			 ORDER BY DEPT_CD ASC
+			</if>
+			<if test = 'sortKey == "DEPT_CD_DESC"'>
+			 ORDER BY DEPT_CD DESC
+			</if>
+			<if test = 'sortKey == "DEPT_NM_ASC"'>
+			 ORDER BY DEPT_NM ASC
+			</if>
+			<if test = 'sortKey == "DEPT_NM_DESC"'>
+			 ORDER BY DEPT_NM DESC
+			</if>
+			<if test = 'sortKey == "DEPT_NM_HANGUL_ASC"'>
+				<![CDATA[
+				 ORDER BY (CASE WHEN ASCII(SUBSTRING(DEPT_NM,1)) BETWEEN 48 AND 57 THEN 3
+ 				 WHEN ASCII(SUBSTRING(DEPT_NM,1)) < 128 THEN 2 ELSE 1 END), DEPT_NM ASC
+				]]> 
+			</if>
+			<if test = 'sortKey == "DEPT_NM_HANGUL_DESC"'>
+			 <![CDATA[
+				 ORDER BY (CASE WHEN ASCII(SUBSTRING(DEPT_NM,1)) BETWEEN 48 AND 57 THEN 3
+ 				 WHEN ASCII(SUBSTRING(DEPT_NM,1)) < 128 THEN 2 ELSE 1 END), DEPT_NM DESC
+				]]> 
+			</if>
+		</if>
+		<if test = 'sortKey == null or sortKey == ""'>
+		   ORDER BY DEPT_ODR DESC
+		</if>
+	</select>
+	
+	<select id="listPageing" parameterType="usrDeptInfoVO" resultType="usrDeptInfoVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 부서 정보의 페이징 목록
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+	 	ORDER BY DEPTODR DESC
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="usrDeptInfoVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 부서 정보의 전체 카운트
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>	
+	
+	<select id="select" parameterType="usrDeptInfoVO" resultType="usrDeptInfoVO">
+		/*
+			 SQL ID : select
+			 설  명 : 부서 정보의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+           AND DEPT_CD = #{deptCd}
+	</select>
+	
+	<select id="searchList" parameterType="usrDeptInfoVO" resultType="usrDeptInfoVO">
+		/*
+			 SQL ID : searchList
+			 설  명 : 부서 정보의 전체 목록
+	 	*/
+	 	<include refid="selectQuery"/>
+	 		AND REG_NUM = #{regNum}
+	 	ORDER BY DEPT_ODR DESC
+	</select>
+
+	<insert id="insert" parameterType="usrDeptInfoVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 부서 정보의 정보 등록
+	 	*/
+		INSERT INTO tb_usr_dept_info (
+			  ORG_CD
+			, DEPT_CD
+			, AREA_CD
+			, DEPT_NM
+			, DEPT_ENG_NM
+			, DEPT_TYPE_CD
+			, PHONENO     
+			, FAX_NO
+			, DEPT_ODR
+			, USE_YN
+			, DEPT_MNG_NO
+			, REG_NUM
+			, EXP_START_DATE
+			, EXP_END_DATE
+			, CEO_NM
+			, STAFF_CNT
+			, BSNS_TYPE_CD
+			, BSNS_CNDTN
+			, DEPT_POST_NO
+			, DEPT_ADDR_1
+			, DEPT_ADDR_2
+			, DEPT_EMAIL
+			, INFO_MNG_NM
+			, STORE_REG_NO
+			, PARTNER
+			, BSNS_LCNS_FILE_SN
+		    , REG_NO
+		    , REG_DTTM
+		    , MOD_NO
+		    , MOD_DTTM
+		) VALUES (
+			  #{orgCd}
+			, #{deptCd}
+			, #{areaCd}
+			, #{deptNm}
+			, #{deptEngNm}
+			, #{deptTypeCd}
+			, #{phoneno}
+			, #{faxNo}
+		    , NVL((SELECT MAX(DEPT_ODR)
+		              FROM tb_usr_dept_info AS SUBQUERY ),0)+1
+			, #{useYn}
+			, #{deptMngNo}
+			, #{regNum}
+			, #{expStartDate}
+			, #{expEndDate}
+			, #{ceoNm}
+			, #{staffCnt}
+			, #{bsnsTypeCd}
+			, #{bsnsCndtn}
+			, #{deptPostNo}
+			, #{deptAddr1}
+			, #{deptAddr2}
+			, #{deptEmail}
+			, #{infoMngNm}
+			, #{storeRegNo}
+			, #{partner}
+			, #{bsnsLcnsFileSn}
+		    , #{regNo}
+		    , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		    , #{modNo}
+		    , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		)	 	
+	</insert>
+	
+	<update id="update" parameterType="usrDeptInfoVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 부서 정보의 정보 수정
+	 	*/
+		UPDATE tb_usr_dept_info
+		   SET AREA_CD = #{areaCd}
+		     , DEPT_NM = #{deptNm}
+		     , DEPT_ENG_NM = #{deptEngNm}
+		     , DEPT_TYPE_CD = #{deptTypeCd}
+		     , PHONENO = #{phoneno}
+		     , FAX_NO = #{faxNo}
+		     , USE_YN = #{useYn}
+		     , DEPT_MNG_NO = #{deptMngNo}
+		     , REG_NUM = #{regNum}
+		     , EXP_START_DATE = #{expStartDate}
+		     , EXP_END_DATE = #{expEndDate}
+		     , CEO_NM = #{ceoNm}
+		     , STAFF_CNT = #{staffCnt}
+			 , BSNS_TYPE_CD = #{bsnsTypeCd}
+			 , BSNS_CNDTN = #{bsnsCndtn}		     
+			 , DEPT_POST_NO = #{deptPostNo}
+			 , DEPT_ADDR_1 = #{deptAddr1}
+			 , DEPT_ADDR_2 = #{deptAddr2}
+			 , DEPT_EMAIL = #{deptEmail}
+			 , INFO_MNG_NM = #{infoMngNm}
+			 , STORE_REG_NO = #{storeRegNo}
+			 , PARTNER = #{partner}
+			 , BSNS_LCNS_FILE_SN = #{bsnsLcnsFileSn}
+		     , MOD_NO = #{modNo}
+		     , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		 WHERE DEPT_CD = #{deptCd}
+	</update>	
+
+	<delete id="delete" parameterType="usrDeptInfoVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 부서 정보의 정보 삭제
+	 	*/
+		DELETE FROM tb_usr_dept_info
+		 WHERE DEPT_CD = #{deptCd}
+	</delete>
+	
+	<select id="selectDeptCdCheck" parameterType="usrDeptInfoVO" resultType="String">
+		/*
+			 SQL ID : selectDeptCdCheck
+			 설  명 : 기업코드 중복 체크
+	 	*/
+		SELECT CASE WHEN COUNT(*) = 0 THEN 'Y' ELSE 'N' END AS isUseable
+		  FROM tb_usr_dept_info
+		 WHERE DEPT_CD = #{deptCd}
+	</select>
+	
+	<select id="listSearch" parameterType="UsrDeptInfoVO" resultType="usrUserInfoVO">
+		SELECT
+			  A.USER_NO 														
+			, A.USER_DIV_CD														
+			, A.USER_NM 														
+			, A.PHOTO_FILE_SN 													
+			, A.BIRTH 															
+			, A.SEX_CD 															
+			, A.HOME_POST_NO 													
+			, A.HOME_ADDR_1 													
+			, A.HOME_ADDR_2 													
+			, A.HOME_PHONENO 													
+			, A.MOBILE_NO														
+			, A.EMAIL 															
+			, A.COMP_NM 														
+			, A.DEPT_NM 														
+			, A.AREA_CD 														
+			, A.ORG_CD 															
+			, ( SELECT ORG_NM FROM tb_org_org_info 								
+			     WHERE ORG_CD = A.ORG_CD) AS ORG_NM								
+			, A.COMP_PHONENO 													
+			, A.COMP_FAX_NO 													
+			, A.COMP_POST_NO 													
+			, A.COMP_ADDR_1 													
+			, A.COMP_ADDR_2 													
+			, B.USER_ID															
+			, B.USER_STS														
+			, B.REG_NO															
+			, B.REG_DTTM														
+			, B.MOD_NO															
+			, B.MOD_DTTM														
+		FROM tb_usr_user_info A, tb_usr_login B								
+		WHERE A.USER_NO = B.USER_NO	
+		AND EXISTS ( SELECT USER_NO FROM tb_usr_user_auth_grp				
+					 WHERE USER_NO = A.USER_NO							
+		   				   AND MENU_TYPE = 'MANAGE'	 							
+		   				   AND AUTH_GRP_CD = 'DEPTMNG' ) 						
+	    <if test = "orgCd != null and orgCd != ''">       						
+	    	AND A.ORG_CD = #{orgCd}	
+	    </if>										
+		ORDER BY A.USER_NM			
+   </select>	 
+</mapper>

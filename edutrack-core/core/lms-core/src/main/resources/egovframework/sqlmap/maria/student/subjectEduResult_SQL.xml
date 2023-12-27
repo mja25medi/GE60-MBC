@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.sqlmap.oracle.student.subjectEduResult_SQL">
+
+	<sql id="selectColumnQuery">
+		  		   A.STD_NO																	
+		        ,  IFNULL(FN_GET_NULL(D.SBJ_CD), #{sbjCd}) AS SBJ_CD												
+		        ,  A.EDU_NO																	
+		        ,  B.USER_NM																	
+		        ,  C.USER_ID																	
+		        ,  B.USER_NO																	
+		        ,  (SELECT FN_GET_DEPT_NAME(B.DEPT_CD) FROM DUAL) AS DEPT_CD_NM				
+		        ,  (SELECT FN_GET_CODE_NAME('POSNG_CD',B.POSNG_CD) FROM DUAL) AS POSNG_CD_NM	
+		        ,  IFNULL(FN_GET_NULL(D.PRGR_SCORE),0) AS PRGR_SCORE											
+		        ,  IFNULL(FN_GET_NULL(D.EXAM_SCORE),0) AS EXAM_SCORE											
+		        ,  IFNULL(FN_GET_NULL(D.ASMT_SCORE),0) AS ASMT_SCORE											
+		        ,  IFNULL(FN_GET_NULL(D.FORUM_SCORE),0) AS FORUM_SCORE											
+		        ,  IFNULL(FN_GET_NULL(D.ETC_1_SCORE),0) AS ETC_1_SCORE											
+		        ,  IFNULL(FN_GET_NULL(D.ETC_2_SCORE),0) AS ETC_2_SCORE											
+		        ,  IFNULL(FN_GET_NULL(D.ETC_3_SCORE),0) AS ETC_3_SCORE											
+		        ,  IFNULL(FN_GET_NULL(D.PLUS_SCORE),0) AS PLUS_SCORE											
+		        ,  IFNULL(FN_GET_NULL(D.TOT_SCORE),0) AS TOT_SCORE												
+		        ,  IFNULL(FN_GET_NULL(D.AVG_SCORE),0) AS AVG_SCORE												
+	</sql>
+	
+	<sql id="getListQuery">
+		SELECT 
+		<include refid="selectColumnQuery" />													
+		FROM  tb_std_std A, tb_usr_user_info B											
+	        ,  tb_usr_login C
+	    LEFT OUTER JOIN
+	    	TB_STD_SBJ_EDU_RSLT D										
+	   	ON
+	   		(
+	       		A.STD_NO = D.STD_NO												
+	       AND  D.SBJ_CD = #{sbjCd}		   		
+	   		)
+	    WHERE  A.USER_NO 		= B.USER_NO													
+	       AND  B.USER_NO 		= C.USER_NO													
+	       AND  A.CRS_CRE_CD 	= #{crsCreCd}													
+	       AND  A.ENRL_STS IN ('S','C','F')													
+	       AND  B.USER_STS 		= 'U'														
+	       AND  B.USER_NM LIKE CONCAT('%',IFNULL(FN_GET_NULL(#{userNm}), ''),'%')		
+	</sql>
+
+	<select id="count" parameterType="subjectEduResultVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM  tb_std_std A, tb_usr_user_info B											
+		    ,  tb_usr_login C
+		LEFT OUTER JOIN
+			TB_STD_SBJ_EDU_RSLT D
+			ON
+			(
+			A.STD_NO = D.STD_NO
+			AND D.SBJ_CD = #{sbjCd}
+			)										
+	    WHERE  A.USER_NO 		= B.USER_NO													
+	      AND  B.USER_NO 		= C.USER_NO													
+	      AND  A.CRS_CRE_CD 	= #{crsCreCd}													
+	      AND  A.ENRL_STS IN ('S','C','F')													
+	      AND  B.USER_STS 		= 'U'														
+	      AND  B.USER_NM LIKE CONCAT('%',IFNULL(FN_GET_NULL(#{userNm}), ''),'%')	
+	</select>
+		
+	<sql id="getSelectQuery">
+		  	SELECT  A.STD_NO															
+		        ,  IFNULL(FN_GET_NULL(D.SBJ_CD), #{sbjCd}) AS SBJ_CD										
+		        ,  A.EDU_NO															
+		        ,  B.USER_NM															
+		        ,  C.USER_ID															
+		        ,  (SELECT FN_GET_DEPT_NAME(B.DEPT_CD) AS DEPT_CD_NM					
+		        ,  (SELECT FN_GET_CODE_NAME('POSNG_CD',B.POSNG_CD) AS POSNG_CD_NM		
+		        ,  IFNULL(FN_GET_NULL(D.PRGR_SCORE),0) AS PRGR_SCORE									
+		        ,  IFNULL(FN_GET_NULL(D.EXAM_SCORE),0) AS EXAM_SCORE									
+		        ,  IFNULL(FN_GET_NULL(D.ASMT_SCORE),0) AS ASMT_SCORE									
+		        ,  IFNULL(FN_GET_NULL(D.FORUM_SCORE),0) AS FORUM_SCORE									
+		        ,  IFNULL(FN_GET_NULL(D.ETC_1_SCORE),0) AS ETC_1_SCORE									
+		        ,  IFNULL(FN_GET_NULL(D.ETC_2_SCORE),0) AS ETC_2_SCORE									
+		        ,  IFNULL(FN_GET_NULL(D.ETC_3_SCORE),0) AS ETC_3_SCORE									
+		        ,  IFNULL(FN_GET_NULL(D.PLUS_SCORE),0) AS PLUS_SCORE									
+		        ,  IFNULL(FN_GET_NULL(D.TOT_SCORE),0) AS TOT_SCORE										
+		        ,  IFNULL(FN_GET_NULL(D.AVG_SCORE),0) AS AVG_SCORE										
+		     FROM  tb_std_std A, tb_usr_user_info B									
+		        ,  tb_usr_login C
+		     LEFT OUTER JOIN
+		     	TB_STD_SBJ_EDU_RSLT D								
+		     ON
+		     	(
+		     	A.STD_NO 		= D.STD_NO
+		     	AND D.SBJ_CD  	= #{sbjCd}
+		     	)
+		    WHERE  A.USER_NO 		= B.USER_NO											
+		      AND  B.USER_NO 		= C.USER_NO											
+		      AND  A.CRS_CRE_CD 	= #{crsCreCd}											
+		      AND  A.ENRL_STS IN ('S','C','F')											
+		      AND  A.STD_NO 		= #{stdNo}											
+	</sql>
+
+	 <sql id="getMergeQuery">
+		  		 MERGE  INTO TB_STD_SBJ_EDU_RSLT A							
+		        USING  DUAL												
+		           ON  (  STD_NO 		= #{stdNo}							
+		                 AND SBJ_CD 	= #{sbjCd}							
+		               )													
+		         WHEN  MATCHED THEN										
+		       UPDATE 														
+		          SET  PRGR_SCORE 	= #{prgrScore}							
+		            ,  EXAM_SCORE 	= #{examScore}							
+		            ,  ASMT_SCORE 	= #{asmtScore}							
+		            ,  FORUM_SCORE = #{forumScore}							
+		            ,  ETC_1_SCORE = #{etc1Score}							
+		            ,  ETC_2_SCORE = #{etc2Score}							
+		            ,  ETC_3_SCORE = #{etc3Score}							
+		            ,  PLUS_SCORE 	= #{plusScore}							
+		            ,  TOT_SCORE 	= #{totScore}								
+		            ,  AVG_SCORE 	= #{avgScore}								
+		            ,  MOD_NO 		= #{modNo}								
+		            ,  MOD_DTTM 	= DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+		         WHEN  NOT MATCHED THEN									
+		       INSERT  (													
+		              	STD_NO												
+		            ,  SBJ_CD												
+		            ,  PRGR_SCORE											
+		            ,  EXAM_SCORE											
+		            ,  ASMT_SCORE											
+		            ,  FORUM_SCORE											
+		            ,  ETC_1_SCORE											
+		            ,  ETC_2_SCORE											
+		            ,  ETC_3_SCORE											
+		            ,  PLUS_SCORE											
+		            ,  TOT_SCORE											
+		            ,  AVG_SCORE											
+		            ,  REG_NO												
+		            ,  REG_DTTM											
+		            ,  MOD_NO												
+		            ,  MOD_DTTM											
+				) VALUES (													
+		               #{stdNo}												
+		            ,  #{sbjCd}												
+		            ,  #{prgrScore}											
+		            ,  #{examScore}											
+		            ,  #{asmtScore}											
+		            ,  #{forumScore	}										
+		            ,  #{etc1Score}											
+		            ,  #{etc2Score}											
+		            ,  #{etc3Score}											
+		            ,  #{plusScore}											
+		            ,  #{totScore}											
+		            ,  #{avgScore}											
+		            ,  #{regNo}												
+		            ,  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')					
+		            ,  #{modNo}												
+		            ,  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')					
+				)															
+	</sql>
+
+	<sql id="getInsertEduResult">
+		 call SP_INSERT_EDU_RESULT( #{crsCreCd} , #{stdNo}) ")
+	</sql>	
+				
+	<select id="list" parameterType="subjectEduResultVO" resultType="subjectEduResultVO">
+		<include refid="getListQuery" />
+		 ORDER  BY A.EDU_NO ASC, B.USER_NM ASC	
+	</select>
+	
+	<select id="listPageing"  parameterType="subjectEduResultVO" resultType="subjectEduResultVO">
+		WITH RECURSIVE CTE AS (
+		    SELECT
+		     DEPT_CD , DEPT_CD AS PATH
+		    FROM tb_usr_dept_cd
+			WHERE DEPT_CD_LVL = 2
+			AND PAR_DEPT_CD IS NULL
+		    AND DEPT_CD = #{deptCd}
+		    UNION ALL
+		    SELECT
+		       A.UNIT_CD, CONCAT(CTE.path,',',A.DEPT_CD) as path
+		    FROM tb_usr_dept_cd A
+		    inner join CTE on A.PAR_DEPT_CD = CTE.DEPT_CD
+			WHERE DEPT_CD_LVL = 2
+			AND DEPT_CD = #{deptCd}
+		)
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+			<include refid="getListQuery" />
+			<if test = "deptCd != null and deptCd != ''">
+			AND B.DEPT_CD IN (SELECT A.DEPT_CD 																			
+			  							FROM tb_usr_dept_cd A, CTE CTE																	
+									   WHERE DEPT_CD_LVL = 2 		
+									   AND A.DEPT_CD = CTE.DEPT_CD
+									   ORDER BY PATH															
+							 ) 
+			</if> 	
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>	
+		ORDER  BY EDU_NO ASC, USER_NM ASC
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="select" parameterType="subjectEduResultVO" resultType="subjectEduResultVO">
+		<include refid="getSelectQuery" />
+	</select>
+	
+	<update id="merge" parameterType="subjectEduResultVO" >
+		<include refid="getMergeQuery" />
+	</update>
+	
+	<update id="autoInserteduRslt" parameterType="subjectEduResultVO" >
+		<include refid="getInsertEduResult" />
+	</update>
+
+	<update id="mergeBatch" parameterType="list">
+	<!--  학습 결과 점수 저장 batch  -->
+		BEGIN
+		<foreach collection="list" item="item" index="index" separator=" ">
+		  		MERGE  INTO TB_STD_SBJ_EDU_RSLT A							
+		        USING  DUAL												
+		           ON  (  STD_NO 		= #{item.stdNo}							
+		                 AND SBJ_CD 	= #{item.sbjCd}							
+		               )													
+		         WHEN  MATCHED THEN										
+		       UPDATE 														
+		          SET  PRGR_SCORE 	= #{item.prgrScore}							
+		            ,  EXAM_SCORE 	= #{item.examScore}							
+		            ,  ASMT_SCORE 	= #{item.asmtScore}							
+		            ,  FORUM_SCORE = #{item.forumScore}							
+		            ,  ETC_1_SCORE = #{item.etc1Score}							
+		            ,  ETC_2_SCORE = #{item.etc2Score}							
+		            ,  ETC_3_SCORE = #{item.etc3Score}							
+		            ,  PLUS_SCORE 	= #{item.plusScore}							
+		            ,  TOT_SCORE 	= #{item.totScore}								
+		            ,  AVG_SCORE 	= #{item.avgScore}								
+		            ,  MOD_NO 		= #{item.modNo}								
+		            ,  MOD_DTTM 	= DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+		         WHEN  NOT MATCHED THEN									
+		       INSERT  (													
+		              	STD_NO												
+		            ,  SBJ_CD												
+		            ,  PRGR_SCORE											
+		            ,  EXAM_SCORE											
+		            ,  ASMT_SCORE											
+		            ,  FORUM_SCORE											
+		            ,  ETC_1_SCORE											
+		            ,  ETC_2_SCORE											
+		            ,  ETC_3_SCORE											
+		            ,  PLUS_SCORE											
+		            ,  TOT_SCORE											
+		            ,  AVG_SCORE											
+		            ,  REG_NO												
+		            ,  REG_DTTM											
+		            ,  MOD_NO												
+		            ,  MOD_DTTM											
+				) VALUES (													
+		               #{item.stdNo}												
+		            ,  #{item.sbjCd}												
+		            ,  #{item.prgrScore}											
+		            ,  #{item.examScore}											
+		            ,  #{item.asmtScore}											
+		            ,  #{item.forumScore	}										
+		            ,  #{item.etc1Score}											
+		            ,  #{item.etc2Score}											
+		            ,  #{item.etc3Score}											
+		            ,  #{item.plusScore}											
+		            ,  #{item.totScore}											
+		            ,  #{item.avgScore}											
+		            ,  #{item.regNo]												
+		            ,  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')					
+		            ,  #{item.modNo}												
+		            ,  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')					
+				)			
+		</foreach>
+		END;
+	</update>
+	
+	<delete id="deleteOnlnSbjResult" parameterType="subjectEduResultVO">
+		 	DELETE  FROM TB_STD_SBJ_EDU_RSLT																				
+		 	 WHERE  SBJ_CD =  (SELECT SBJ_CD FROM tb_crs_cre_crs_onln_sbj WHERE CRS_CRE_CD = #{crsCreCd})						
+		 	   AND  STD_NO IN (SELECT STD_NO FROM tb_std_std WHERE CRS_CRE_CD = #{crsCreCd} AND ENRL_STS IN ('S','C','F'))	
+	</delete>
+		
+	<delete id="deleteOflnSbjResult" parameterType="subjectEduResultVO">
+		 	DELETE  FROM TB_STD_SBJ_EDU_RSLT																				
+		 	 WHERE  SBJ_CD =  (SELECT SBJ_CD FROM tb_crs_cre_crs_ofln_sbj WHERE CRS_CRE_CD = #{crsCreCd})						
+		 	   AND  STD_NO IN (SELECT STD_NO FROM tb_std_std WHERE CRS_CRE_CD = #{crsCreCd} AND ENRL_STS IN ('S','C','F'))	
+		
+	</delete>
+		
+		
+	<insert id="autoInserteduRsltBatch" parameterType="list">
+	<!--수강생 교육결과 저장 (프로시저 이용)   -->
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+		     call SP_INSERT_EDU_RESULT( #{item.crsCreCd} , #{item.stdNo}) ")
+		</foreach>
+	</insert>
+		
+</mapper>

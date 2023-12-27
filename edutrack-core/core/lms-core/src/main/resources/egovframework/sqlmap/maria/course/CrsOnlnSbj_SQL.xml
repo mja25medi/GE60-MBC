@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.coursesubject.service.impl.CrsOnlnSbjMapper">	
+
+
+	<sql id="selectColumnQuery">
+				 A.CRS_CD  
+		       , A.SBJ_CD  
+		       , A.STUDY_MTHD
+		       , A.SBJ_TYPE  
+			   , (SELECT FN_GET_CODE_NAME('STUDY_MTHD', A.STUDY_MTHD) ) AS STUDY_MTHD_NM  
+		       , A.SBJ_ODR  
+		       , A.REG_NO  
+			   , (SELECT FN_GET_USER_NAME(A.REG_NO) ) AS REG_NM  
+		       , A.REG_DTTM  
+		       , A.MOD_NO  
+			   , (SELECT FN_GET_USER_NAME(A.MOD_NO) ) AS MOD_NM  
+		       , A.MOD_DTTM  
+		       , B.SBJ_NM  
+		       , B.SBJ_CTGR_CD  
+		       , C.SBJ_CTGR_NM  
+		       , ( SELECT COUNT(*) FROM tb_crs_sbj_cnts  
+		            WHERE SBJ_CD = B.SBJ_CD ) AS UNIT_CNT  
+	</sql>
+	<sql id="selectQuery">
+		  SELECT 
+		  <include refid="selectColumnQuery" />
+		  FROM tb_crs_crs_onln_sbj A, tb_crs_onln_sbj B, tb_crs_sbj_ctgr C  
+		  WHERE A.SBJ_CD = B.SBJ_CD  
+		    AND B.SBJ_CTGR_CD = C.SBJ_CTGR_CD  
+		    AND A.CRS_CD = #{crsCd}  
+	</sql>
+	
+	<sql id="selectColumnSearchQuery">
+				 A.SBJ_CD  
+		       , A.SBJ_NM
+		       , A.SBJ_TYPE 
+		       , A.SBJ_CTGR_CD  
+		       , B.SBJ_CTGR_NM  
+		       , ( SELECT COUNT(*) FROM tb_crs_sbj_cnts  
+		            WHERE SBJ_CD = A.SBJ_CD ) AS CONTENTS_CNT  
+	</sql>
+	<sql id="selectSearchQuery">
+		  SELECT 
+		  <include refid="selectColumnSearchQuery" />
+		  FROM tb_crs_onln_sbj A, tb_crs_sbj_ctgr B  
+		  WHERE A.SBJ_CTGR_CD = B.SBJ_CTGR_CD 
+	</sql>
+
+	<select id="listPageingCount" parameterType="crsOnlnSbjVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM tb_crs_crs_onln_sbj A, tb_crs_onln_sbj B, tb_crs_sbj_ctgr C  
+		WHERE A.SBJ_CD = B.SBJ_CD  
+		  AND B.SBJ_CTGR_CD = C.SBJ_CTGR_CD  
+		  AND A.CRS_CD = #{crsCd}  			
+	</select>
+		
+ 	<select id="list" parameterType="crsOnlnSbjVO" resultType="crsOnlnSbjVO">
+	    <include refid="selectQuery" />
+		ORDER BY SBJ_ODR	
+	</select>
+
+     <select id="listPageing" parameterType="crsOnlnSbjVO" resultType="crsOnlnSbjVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		ORDER BY SBJ_ODR
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+
+	<select id="select" parameterType="crsOnlnSbjVO" resultType="crsOnlnSbjVO">
+	    <include refid="selectQuery" />
+	     AND A.SBJ_CD = #{sbjCd}	
+	</select>
+
+    <insert id="insert" parameterType="crsOnlnSbjVO">
+		  INSERT INTO tb_crs_crs_onln_sbj (  
+		         CRS_CD  
+		       , SBJ_CD  
+		       , STUDY_MTHD  
+		       , SBJ_ODR  
+		       , REG_NO  
+		       , REG_DTTM  
+		       , MOD_NO  
+		       , MOD_DTTM
+		       , SBJ_TYPE  
+		   ) VALUES (  
+		         #{crsCd}  
+		       , #{sbjCd}  
+		       , #{studyMthd}  
+		       , IFNULL(( SELECT MAX(IFNULL(FN_GET_NULL(SBJ_ODR),0)) + 1 
+		                 FROM tb_crs_crs_onln_sbj AS SUBQUERY
+		                WHERE CRS_CD = #{crsCd}),1)  
+		       , #{regNo}  
+		       , IFNULL(FN_GET_NULL(#{regDttm}), DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')) 
+		       , #{modNo}  
+		       , IFNULL(FN_GET_NULL(#{modDttm}), DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'))
+		       , #{sbjType}
+		   )   
+    </insert>
+    
+	<update id="updateBatch" parameterType="list" >
+		<foreach collection="list" item="item" index="index" open="DECLARE BEGIN" close="; END;" separator=";">
+		  UPDATE tb_crs_crs_onln_sbj  
+		  SET
+			     STUDY_MTHD = #{item.studyMthd}  
+		       , SBJ_ODR = #{item.sbjOdr}  
+		       , MOD_NO = #{item.modNo}  
+		       , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		   WHERE CRS_CD = #{item.crsCd}  
+		     AND SBJ_CD = #{item.sbjCd}   
+		</foreach>	     
+	</update>    
+
+	<update id="update" parameterType="crsOnlnSbjVO" >
+		  UPDATE tb_crs_crs_onln_sbj  
+		  SET
+			     STUDY_MTHD = #{studyMthd}  
+		       , MOD_NO = #{modNo}  
+		       , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		   WHERE CRS_CD = #{crsCd}  
+		     AND SBJ_CD = #{sbjCd}   
+	</update> 
+	
+ 	<delete id="delete" parameterType="crsOnlnSbjVO">
+		 DELETE FROM tb_crs_crs_onln_sbj  
+		  WHERE CRS_CD = #{crsCd}  
+		    AND SBJ_CD = #{sbjCd}   			
+    </delete>
+ 
+ 	<delete id="deleteAll" parameterType="crsOnlnSbjVO">
+		 DELETE FROM tb_crs_crs_onln_sbj  
+		  WHERE CRS_CD = #{crsCd}  
+    </delete>
+
+	<select id="listSearchPageingCount" parameterType="crsOnlnSbjVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM tb_crs_onln_sbj A, tb_crs_sbj_ctgr B  
+		WHERE A.SBJ_CTGR_CD = B.SBJ_CTGR_CD 		
+	     AND A.USE_YN = 'Y'  
+	     AND A.SBJ_CD NOT IN (SELECT SBJ_CD FROM tb_crs_crs_onln_sbj  
+			   				  WHERE CRS_CD = #{crsCd} )  
+		<if test = "orgCd != null and orgCd != ''">                          			
+		    	AND A.ORG_CD = #{orgCd} 	
+	    </if>	
+		<if test = "sbjNm != null and sbjNm != ''">                          			
+		    	AND A.SBJ_NM like CONCAT('%',#{sbjNm},'%')  	
+	    </if>				
+	</select>	
+	
+ 	<select id="listSearch" parameterType="crsOnlnSbjVO" resultType="onlineSubjectVO">
+	    <include refid="selectSearchQuery" />
+	     AND A.USE_YN = 'Y'  
+	     AND A.SBJ_CD NOT IN (SELECT SBJ_CD FROM tb_crs_crs_onln_sbj  
+			   				  WHERE CRS_CD = #{crsCd} )  
+		<if test = "orgCd != null and orgCd != ''">                          			
+		    	AND A.ORG_CD = #{orgCd} 	
+	    </if>	
+		<if test = "sbjNm != null and sbjNm != ''">                          			
+		    	AND A.SBJ_NM like CONCAT('%', #{sbjNm}, '%')  	
+	    </if>
+	    <if test = "sbjType != null and sbjType != ''">                          			
+		    	AND A.SBJ_TYPE = #{sbjType}  	
+	    </if>	
+	    
+	    <if test = "sbjCtgrCd != null and sbjCtgrCd != ''">                          			
+		    	AND A.SBJ_CTGR_CD = #{sbjCtgrCd}  
+	    </if>	
+	    
+	   ORDER BY SBJ_NM  	
+	</select>
+
+
+ 	<select id="listSearchPageing" parameterType="crsOnlnSbjVO" resultType="onlineSubjectVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectSearchQuery" />
+		     AND A.USE_YN = 'Y'  
+		     AND A.SBJ_CD NOT IN (SELECT SBJ_CD FROM tb_crs_crs_onln_sbj  
+				   				  WHERE CRS_CD = #{crsCd} )  
+		<if test = "orgCd != null and orgCd != ''">                          			
+		    	AND A.ORG_CD = #{orgCd} 	
+	    </if>	
+		<if test = "sbjNm != null and sbjNm != ''">                          			
+		    	AND A.SBJ_NM like CONCAT('%',#{sbjNm},'%') 	
+	    </if>	
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		ORDER BY SBJ_NM
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/> 	
+	</select>
+
+    <insert id="openCourseInsert" parameterType="crsOnlnSbjVO">
+		  INSERT INTO tb_cro_open_crs_sbj (  
+		         CRS_CD  
+		       , SBJ_CD  
+		       , SBJ_ODR  
+		       , REG_NO  
+		       , REG_DTTM  
+		       , MOD_NO  
+		       , MOD_DTTM  
+		  ) VALUES (  
+		         #{crsCd}  
+		       , #{sbjCd}  
+		       , IFNULL(( SELECT MAX(IFNULL(FN_GET_NULL(SBJ_ODR),0)) + 1  
+		                 FROM tb_cro_open_crs_sbj AS SUBQUERY
+		                WHERE CRS_CD = #{crsCd}),1)  
+		       , #{regNo}  
+		       , IFNULL(FN_GET_NULL(#{regDttm}), DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')) 
+		       , #{modNo}  
+		       , IFNULL(FN_GET_NULL(#{modDttm}), DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'))
+		  )  
+    </insert>
+
+ 	<select id="openCourseListSearch" parameterType="crsOnlnSbjVO" resultType="onlineSubjectVO">
+	    <include refid="selectSearchQuery" />
+		     AND A.SBJ_CD NOT IN (SELECT SBJ_CD FROM tb_cro_open_crs_sbj 
+				   					WHERE CRS_CD = #{crsCd} )  
+		<if test = "sbjCtgrCd != null and sbjCtgrCd != ''">                          			
+		    	AND A.SBJ_CTGR_CD = #{sbjCtgrCd}  
+	    </if>	
+		<if test = "orgCd != null and orgCd != ''">                          			
+		    	AND A.ORG_CD = #{orgCd} 	
+	    </if>	
+		<if test = "sbjNm != null and sbjNm != ''">                          			
+		    	AND A.SBJ_NM like CONCAT('%', #{sbjNm}, '%') 
+	    </if>	
+		   ORDER BY SBJ_NM  	    
+	</select>
+
+</mapper>		

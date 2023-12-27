@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.course.creCrsResh.service.impl.CreCrsReshMapper">	
+	<sql id="selectColumnQuery">
+		<![CDATA[
+				 A.CRS_CRE_CD 									
+		       , (SELECT C.CRS_CRE_NM FROM tb_crs_cre_crs C WHERE A.CRS_CRE_CD = C.CRS_CRE_CD) AS CRS_CRE_NM	
+		       , A.RESH_SN 									
+		       , B.RESH_TITLE 									
+		       , B.RESH_CTS 									
+		       , A.USE_YN 										
+		       , A.START_DTTM 									
+		       , (SELECT FN_GET_DATE_FORMAT(A.START_DTTM,'%H') ) AS START_HOUR  
+		       , (SELECT FN_GET_DATE_FORMAT(A.START_DTTM,'%i') ) AS START_MIN  
+		       , A.END_DTTM 									
+		       , (SELECT FN_GET_DATE_FORMAT(A.END_DTTM,'%H') ) AS END_HOUR  
+		       , (SELECT FN_GET_DATE_FORMAT(A.END_DTTM,'%i') ) AS END_MIN  
+		       , A.REG_YN 										
+		       , A.REG_NO 										
+			    , (SELECT FN_GET_USER_NAME(A.REG_NO) 			
+		            ) AS REG_NM						
+		       , A.REG_DTTM 									
+		       , A.MOD_NO 										
+			    , (SELECT FN_GET_USER_NAME(A.MOD_NO) 			
+		            ) AS MOD_NM						
+		       , A.MOD_DTTM 									
+		       , ( SELECT COUNT(*)								
+		             FROM tb_crs_resh_ansr						
+		            WHERE CRS_CRE_CD = A.CRS_CRE_CD			
+		              AND RESH_SN = A.RESH_SN ) AS ANSR_CNT	
+		       , ( SELECT COUNT(*) 							
+		             FROM tb_crs_resh_item						
+		            WHERE RESH_SN = A.RESH_SN ) AS ITEM_CNT	
+		       , CASE WHEN ( SELECT COUNT(*) 					
+		                       FROM tb_crs_resh_ansr			
+		                      WHERE RESH_SN = A.RESH_SN		
+		                        AND STD_NO = #{stdNo}						
+		                        AND CRS_CRE_CD = #{crsCreCd} ) > 0			
+		              THEN 'Y' ELSE 'N' END AS JOIN_YN						
+		       , CASE WHEN DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 			
+		                   BETWEEN IFNULL(FN_GET_NULL(A.START_DTTM),'19000101000001')		
+		                       AND IFNULL(FN_GET_NULL(A.END_DTTM),'99991231235959')			       
+		              THEN 'Y' ELSE 'N' END AS ANSR_USE_YN		
+		       ,(SELECT COUNT(*) FROM (	
+		       			SELECT STD_NO, RESH_SN	
+		        		FROM tb_crs_resh_ansr 	
+		        		WHERE CRS_CRE_CD = #{crsCreCd}	
+		        		GROUP BY STD_NO, RESH_SN	
+		         	) ANSR	
+		       		WHERE ANSR.RESH_SN = A.RESH_SN	
+		         ) AS STD_CNT 	
+		 ]]>
+	</sql>
+	
+	<sql id="selectQuery">
+		  SELECT 
+		  <include refid="selectColumnQuery" />
+		  FROM tb_crs_cre_crs_resh A, tb_crs_resh_bank B		
+		  WHERE A.RESH_SN = B.RESH_SN							
+		  AND A.CRS_CRE_CD = #{crsCreCd}	
+	</sql>
+	<select id="count" parameterType="creCrsReshVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM tb_crs_cre_crs_resh A, tb_crs_resh_bank B		
+		WHERE A.RESH_SN = B.RESH_SN							
+		AND A.CRS_CRE_CD = #{crsCreCd}
+		<if test = "useYn != null and useYn != ''">                          			
+	    	AND A.USE_YN = #{useYn}			
+	    </if>	
+		<if test = "regYn != null and regYn != ''">                          			
+	    	AND A.REG_YN = #{regYn}			
+	    </if>		  
+	</select>
+	
+	
+	<select id="itemCount" parameterType="creCrsReshVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM tb_crs_cre_crs_resh A, tb_crs_resh_item B
+		WHERE A.RESH_SN = B.RESH_SN							
+		AND A.CRS_CRE_CD = #{crsCreCd}
+		<if test = "useYn != null and useYn != ''">                          			
+	    	AND A.USE_YN = #{useYn}			
+	    </if>	
+		<if test = "regYn != null and regYn != ''">                          			
+	    	AND A.REG_YN = #{regYn}			
+	    </if>		  
+	</select>
+	
+	<select id="ansrCount" parameterType="creCrsReshVO" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM tb_crs_resh_ansr 
+		WHERE RESH_SN IN (SELECT RESH_SN FROM tb_crs_cre_crs_resh  
+							  WHERE CRS_CRE_CD = #{crsCreCd} AND  STD_NO =#{stdNo}) 			
+	</select>
+		
+	<select id="list" parameterType="creCrsReshVO" resultType="creCrsReshVO">
+	    <include refid="selectQuery" />
+		<if test = "useYn != null and useYn != ''">                          			
+	    	AND A.USE_YN = #{useYn}			
+	    </if>	
+		<if test = "regYn != null and regYn != ''">                          			
+	    	AND A.REG_YN = #{regYn}			
+	    </if>	
+		 ORDER  BY RESH_SN DESC
+	</select>
+
+   <select id="listPageing" parameterType="creCrsReshVO" resultType="creCrsReshVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="selectQuery" />
+		<if test = "useYn != null and useYn != ''">                          			
+	    	AND A.USE_YN = #{useYn}			
+	    </if>	
+		<if test = "regYn != null and regYn != ''">                          			
+	    	AND A.REG_YN = #{regYn}			
+	    </if>	
+		 <include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		ORDER  BY RESH_SN DESC
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	<select id="select" parameterType="creCrsReshVO" resultType="creCrsReshVO">
+	    <include refid="selectQuery" />
+	     AND  A.RESH_SN = #{reshSn}	
+	</select>
+
+    <insert id="insert" parameterType="creCrsReshVO">
+		  INSERT INTO tb_crs_cre_crs_resh (			
+		         CRS_CRE_CD 							
+		       , RESH_SN 								
+		       , USE_YN 								
+		       , START_DTTM 							
+		       , END_DTTM 								
+		       , REG_YN 								
+		       , REG_NO 								
+		       , REG_DTTM 								
+		       , MOD_NO 								
+		       , MOD_DTTM 								
+		  ) VALUES (                                   
+		         #{crsCreCd} 							
+		       , #{reshSn} 								
+		       , #{useYn} 								
+		       , #{startDttm} 							
+		       , #{endDttm} 								
+		       , #{regYn} 								
+		       , #{regNo} 								
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		       , #{modNo} 								
+		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+		  )		
+    </insert>
+
+   <update id="update" parameterType="creCrsReshVO">
+		  UPDATE tb_crs_cre_crs_resh								
+		     SET USE_YN = #{useYn} 									
+		       , START_DTTM = #{startDttm} 							
+		       , END_DTTM = #{endDttm} 								
+		       , REG_YN = #{regYn} 									
+		       , MOD_NO = #{modNo} 									
+		       , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		   WHERE CRS_CRE_CD = #{crsCreCd} 							
+		     AND RESH_SN = #{reshSn} 
+    </update>
+	<delete id="delete" parameterType="creCrsReshVO">
+		 	DELETE  FROM tb_crs_cre_crs_resh    	
+		    WHERE CRS_CRE_CD = #{crsCreCd} 			
+		     	AND RESH_SN = #{reshSn} 	 
+    </delete>
+
+</mapper>	

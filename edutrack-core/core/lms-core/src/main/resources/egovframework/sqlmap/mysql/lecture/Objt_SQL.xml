@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.lecture.objt.service.impl.LecObjtMapper">
+
+	<sql id="selectColumnQuery">
+				OBJT_SN as objtSn
+			,	CRS_CRE_CD as crsCreCd
+			,	TITLE as title
+			,	CTS as cts
+			,	HITS as hits
+			,	STS as stsCd
+			,	REG_NO as regNo
+			,	REG_NM as regNm
+			,	REG_DTTM as regDttm
+			,	MOD_NO as modNo
+			,	MOD_DTTM as modDttm																	
+	</sql>
+	
+	<sql id="listByCreCdQuery">
+		SELECT
+			<include refid="selectColumnQuery" />
+			,   (SELECT COUNT(1) 
+					FROM tb_lec_objt_cmnt B
+					WHERE
+						B.OBJT_SN = A.OBJT_SN) as cmntsCnt
+		FROM
+			tb_lec_objt A
+		WHERE
+			CRS_CRE_CD = #{crsCreCd}
+	</sql>
+
+	<select id="selectKey" resultType="integer">
+		SELECT nextval('SQ_LEC_OBJT')
+	</select>
+	
+	<select id="count" parameterType="lecObjtVO" resultType="Integer">
+		SELECT 
+			COUNT(1)
+		FROM tb_lec_objt  
+		WHERE
+			CRS_CRE_CD = #{crsCreCd}
+		<if test = "regNo != null and regNo != ''">
+			AND REG_NO = #{regNo}
+		</if>
+		<if test = "stsCd != null and stsCd != ''">
+			AND STS = #{stsCd}
+		</if>
+	</select>
+	
+	<select id="listByCreCd" parameterType="lecObjtVO" resultType="lecObjtVO">
+		<include refid="listByCreCdQuery" />
+		<if test = "regNo != null and regNo != ''">
+			AND REG_NO = #{regNo}
+		</if>
+		<if test = "stsCd != null and stsCd != ''">
+			AND STS = #{stsCd}
+		</if>
+	</select>
+	
+	<select id="listPageingByCreCd" parameterType="lecObjtVO" resultType="lecObjtVO">
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listByCreCdQuery" />
+		<if test = "regNo != null and regNo != ''">
+			AND REG_NO = #{regNo}
+		</if>
+		<if test = "stsCd != null and stsCd != ''">
+			AND STS = #{stsCd}
+		</if>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+	 	ORDER BY REGDTTM DESC
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="selectBySn" parameterType="lecObjtVO" resultType="lecObjtVO">
+		SELECT
+			<include refid="selectColumnQuery" />
+		FROM
+			tb_lec_objt
+		WHERE
+			OBJT_SN = #{objtSn}
+	</select>
+	
+	<insert id="insert" parameterType="lecObjtVO">
+		INSERT INTO tb_lec_objt (
+				OBJT_SN
+			,	CRS_CRE_CD
+			,	TITLE
+			,	CTS
+			,	HITS
+			,	STS
+			,	REG_NO
+			,	REG_NM
+			,	REG_DTTM
+			,	MOD_NO
+			,	MOD_DTTM
+		) VALUES (
+				#{objtSn}
+			,	#{crsCreCd}
+			,	#{title}
+			,	#{cts}
+			,	0
+			,	'I'
+			,	#{regNo}
+			,	#{regNm}
+			,	DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+			,	#{modNo}
+			,	DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		)
+	</insert>
+	
+	<update id="updateSts" parameterType="lecObjtVO">
+		UPDATE 	
+			tb_lec_objt
+		SET 	STS = 'C'
+		WHERE
+			OBJT_SN = #{objtSn}
+	</update>
+	
+	<update id="hitsup" parameterType="lecObjtVO" >
+		UPDATE tb_lec_objt
+		   SET HITS = HITS + 1
+		 WHERE OBJT_SN = #{objtSn}	 	
+	</update>	
+</mapper>

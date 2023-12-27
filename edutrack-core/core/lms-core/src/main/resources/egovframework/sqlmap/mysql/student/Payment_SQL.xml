@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.student.payment.service.impl.PaymentMapper">
+	
+	<select id="selectKey" resultType="String">
+		 SELECT CONCAT('PI',LPAD(nextval('SQ_STD_PAY_INFO'),10,'0')) AS PAYM_NO 
+		 FROM DUAL
+	</select>
+	
+	<insert id="insertPayInfo" parameterType="PaymentVO">
+		INSERT INTO tb_std_pay_info (
+			PAYM_NO
+			, PAYM_MTHD_CD
+			, USER_NO
+			, PAYM_STS_CD
+			, PAYM_PRICE
+			, PAYM_DTTM
+			, PAYM_BANK_NM
+			, PAYM_OID_NO                                     
+			, TID                                         
+			, PAY_METHOD                                  
+			, TOT_PRICE                                   
+			, MOID                                        
+			, APPL_DATE                                   
+			, APPL_TIME                                   
+			, CARD_NUM                                    
+			, APPL_NUM                                    
+			, EVENT_CODE                                  
+			, CARD_QUOTA                                  
+			, CARD_INTEREST                               
+			, INTEREST_FREE_YN                            
+			, CARD_POINT                                  
+			, CARD_CODE                                   
+			, CARD_CODE_NM                                   
+			, CARD_CROP_FLAG             
+			, CARD_CHECK_FLAG  
+			, CARD_PRTC_CODE   
+			, CARD_BANKCODE    
+			, CARD_SRC_CODE    
+			, ACCT_BANK_CODE    
+			, CSHR_RESULT_CODE  
+			, CSHR_TYPE        
+			, ACCT_Name        
+			, VACT_NUM         
+			, VACT_BANK_CODE    
+			, VACT_BANK_NAME   
+			, VACT_NAME        
+			, VACT_INPUT_NAME   
+			, VACT_DATE        
+			, VACT_TIME        
+			, DEVICE_TYPE      
+			, REG_IP                                          
+			, REG_NO                                          
+			, REG_DTTM                                        
+		)VALUES (                                             
+			#{paymNo}                                         
+			, #{paymMthdCd}                                   
+			, #{userNo}                                       
+			, #{paymStsCd}                                    
+			, #{paymPrice}        
+			, NVL((#{paymDttm}), DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'))			                            
+			, #{paymBankNm}                                   
+			, #{paymOidNo}                                    
+			, #{tid}                                           
+			, #{payMethod}                                    
+			, #{totPrice}                                     
+			, #{moid}                                         
+			, #{applDate}        
+			, #{applTime}        
+			, #{cardNum}         
+			, #{applNum}         
+			, #{eventCode}       
+			, #{cardQuota}       
+			, #{cardInterest}    
+			, #{interestFreeYn} 
+			, #{cardPoint}       
+			, #{cardCode}        
+			, #{cardCodeNm}        
+			, #{cardCropFlag}   
+			, #{cardCheckFlag}  
+			, #{cardPrtcCode}   
+			, #{cardBankcode}    
+			, #{cardSrcCode}    
+			, #{acctBankCode}    
+			, #{cshrResultCode}
+			, #{cshrType}        
+			, #{acctName}        
+			, #{vactNum}         
+			, #{vactBankCode}    
+			, #{vactBankName}   
+			, #{vactName}        
+			, #{vactInputName}   
+			, #{vactDate}        
+			, #{vactTime}        
+			, #{deviceType}      
+			, #{regIp}
+			, #{regNo}
+			, DATE_FORMAT(NOW(),'%Y%m%d%H%i%s')
+		)
+		
+	</insert>
+	
+	<insert id="mergeBasket" parameterType="PaymentVO">
+		INSERT INTO tb_std_pay_bsk
+			(
+				CRS_CRE_CD
+			  , USER_NO
+			  , REG_DTTM 
+			)VALUES (
+				#{crsCreCd}
+			  , #{userNo}
+			  , DATE_FORMAT(NOW(),'%Y%m%d%H%i%s')			
+			) ON DUPLICATE KEY UPDATE
+				MOD_DTTM = DATE_FORMAT(NOW(),'%Y%m%d%H%i%s')		
+			;
+	</insert>
+	
+	<delete id="deleteBasket" parameterType="PaymentVO">
+		DELETE FROM tb_std_pay_bsk
+		WHERE CRS_CRE_CD = #{crsCreCd}
+			AND USER_NO = #{userNo}
+	</delete>
+	
+	<delete id="deleteUserBasket" parameterType="PaymentVO">
+		DELETE FROM tb_std_pay_bsk
+		WHERE USER_NO = #{userNo}
+	</delete>
+	
+	<delete id="deleteBasketNoEnrollAplcPeriod" parameterType="PaymentVO">
+		DELETE FROM tb_std_pay_bsk
+		WHERE USER_NO = #{userNo}
+			AND CRS_CRE_CD NOT IN (
+									select CRS_CRE_CD 
+									from tb_crs_cre_crs A, tb_crs_crs B
+									where A.CRS_CRE_CD = B.CRS_CD 
+									AND DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') BETWEEN B.ENRL_APLC_START_DTTM AND B.ENRL_APLC_END_DTTM
+									)
+	</delete>
+	
+	<select id="listBasketByUserNo" parameterType="PaymentVO" resultType="PaymentVO">
+		SELECT A.CRS_CRE_CD, A.USER_NO
+		FROM tb_std_pay_bsk A
+		WHERE A.USER_NO = #{userNo}
+	
+	</select>
+	
+	<select id="listBasketForEnrollByUserNoDeptCd" parameterType="PaymentVO" resultType="PaymentVO">
+		/*
+			수강신청 가능한 강의 조회 : 기수의 수강신청기간, 강의가격 > 0, 수강상태가 수강대기(E),수강중(S),수료(C),수료취소(F) 를 제외한 강의
+		*/
+		SELECT 
+				A.CRS_CRE_CD
+				, A.USER_NO
+				, B.CRS_CRE_NM
+				, B.EDU_PRICE
+				, B.REFUND_YN
+				, B.NOP_LIMIT_YN 
+				, B.ENRL_NOP 
+				, B.SBJ_CD 
+				, (SELECT COUNT(*) FROM tb_crs_sbj_cnts WHERE SBJ_CD = B.SBJ_CD ) AS CONTENTS_CNT		
+				, C.CRS_YEAR
+				, C.CRS_TERM
+				, C.ENRL_APLC_START_DTTM 
+				, C.ENRL_APLC_END_DTTM 
+				, C.ENRL_START_DTTM 
+				, C.ENRL_END_DTTM 
+				, C.TERM_END_DTTM 
+		FROM tb_std_pay_bsk A, tb_crs_cre_crs B, tb_crs_crs C
+		WHERE A.CRS_CRE_CD = B.CRS_CRE_CD 
+		AND B.CRS_CD = C.CRS_CD
+		AND DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') BETWEEN C.ENRL_APLC_START_DTTM AND C.ENRL_APLC_END_DTTM 
+		AND B.EDU_PRICE > 0
+		AND A.USER_NO = #{userNo}
+		AND B.DEPT_CD = #{deptCd}
+		AND A.CRS_CRE_CD NOT IN (
+									SELECT CRS_CRE_CD 
+									FROM tb_std_std
+									WHERE ENRL_STS IN ('E','S','C','F')
+									AND USER_NO = #{userNo}		
+								)
+		<if test = "crsCreCd != null and crsCreCd != ''">
+			AND A.CRS_CRE_CD = #{crsCreCd}
+		</if>
+	</select>
+	
+	<sql id="getPayColumn">
+		A.PAYM_NO 
+			 	, A.PAYM_MTHD_CD
+			 	, A.USER_NO
+				, A.PAYM_STS_CD
+				, A.PAYM_PRICE
+				, A.PAYM_DTTM
+				, A.PAYM_BANK_NM
+				, A.PAYM_OID_NO
+				, A.IN_DTTM
+				, A.IN_PRICE
+				, A.PAYM_ITGY_DIV
+				, A.REFUND_PRICE
+				, A.REPAY_PRICE
+				, A.REPAY_MTHD_CD
+				, A.REPAY_STS_CD
+				, A.REPAY_REQ_DTTM
+				, A.REPAY_DTTM
+				, A.REPAY_BANK_NM
+				, A.REPAY_USER_NM
+				, A.REPAY_ACNT_NO
+				, A.REPAY_REASON
+				, A.REPAY_RSLT_CD
+				, A.COMP_NM
+				, A.BIZZ_NO
+				, A.ORG_CD
+				, A.TID
+				, A.PAY_METHOD
+				, A.TOT_PRICE
+				, A.MOID
+				, A.APPL_DATE
+				, A.APPL_TIME
+				, A.CARD_NUM
+				, A.APPL_NUM
+				, A.EVENT_CODE
+				, A.CARD_QUOTA
+				, A.CARD_INTEREST
+				, A.INTEREST_FREE_YN
+				, A.CARD_POINT
+				, A.CARD_CODE
+				, A.CARD_CROP_FLAG
+				, A.CARD_CHECK_FLAG
+				, A.CARD_PRTC_CODE
+				, A.CARD_BANKCODE
+				, A.CARD_SRC_CODE
+				, A.ACCT_BANK_CODE
+				, A.CSHR_RESULT_CODE
+				, A.CSHR_TYPE
+				, A.ACCT_Name
+				, A.VACT_NUM
+				, A.VACT_BANK_CODE
+				, A.VACT_BANK_NAME
+				, A.VACT_NAME
+				, A.VACT_INPUT_NAME
+				, A.VACT_DATE
+				, A.VACT_TIME
+				, A.DEVICE_TYPE
+				, A.REG_IP
+				, A.REG_NO
+				, A.REG_DTTM
+				, A.MOD_NO
+				, A.MOD_DTTM
+	</sql>
+	
+	
+	<select id="selectByPaymOidNo" parameterType="PaymentVO" resultType="PaymentVO">
+		SELECT 	<include refid="getPayColumn"/>
+		FROM tb_std_pay_info A
+		WHERE A.MOID = #{paymOidNo}
+	</select>
+	
+	<select id="selectUserPayByPaymNo" parameterType="PaymentVO" resultType="PaymentVO">
+		SELECT 	<include refid="getPayColumn"/>
+		FROM tb_std_pay_info A
+		WHERE A.PAYM_NO = #{paymNo}
+			AND A.USER_NO = #{userNo}
+	</select>
+	
+	<update id="updatePaymentInfoVbank" parameterType="PaymentVO">
+		UPDATE tb_std_pay_info
+		SET   IN_DTTM = #{inDttm}
+			, IN_PRICE = #{inPrice}
+			, VACT_INPUT_DTTM = #{vactInputDttm}
+			, VACT_INPUT_PRICE = #{vactInputPrice}
+			, PAYM_STS_CD = #{paymStsCd}
+			, MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		WHERE MOID = #{paymOidNo}
+	</update>
+	
+</mapper>

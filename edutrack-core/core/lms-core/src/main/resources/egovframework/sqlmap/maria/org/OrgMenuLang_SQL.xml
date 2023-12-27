@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.org.menu.service.impl.OrgMenuLangMapper">	
+	
+	<sql id="selectQuery">
+		SELECT ORG_CD as orgCd
+		     , MENU_CD as menuCd
+		     , LANG_CD as langCd
+		     , MENU_NM as menuNm
+		     , MENU_DESC as menuDesc
+		     , MENU_TITLE as menuTitle
+		     , LEFT_MENU_TITLE as leftMenuTitle
+		     , TOP_MENU_IMG as topMenuImg
+		     , LEFT_MENU_IMG as leftMenuImg
+		  FROM tb_org_menu_lang
+		 WHERE ORG_CD = #{orgCd}		  
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		   AND MENU_CD = #{menuCd}
+		 ORDER BY LANG_CD		
+	</sql>		
+
+	<select id="list" parameterType="orgMenuLangVO" resultType="orgMenuLangVO">
+		/*
+			 SQL ID : list
+			 설  명 : 기관 메뉴 언어의 전체 목록
+	 	*/
+	 	<include refid="listQuery"/>
+	</select>
+	
+	<select id="select" parameterType="orgMenuLangVO" resultType="orgMenuLangVO">
+		/*
+			 SQL ID : select
+			 설  명 : 기관 메뉴 언어의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+		   AND MENU_CD = #{menuCd}
+		   AND LANG_CD = #{langCd}	 	
+	</select>	
+	
+	<insert id="insert" parameterType="orgMenuLangVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 기관 메뉴 언어의 정보 등록
+	 	*/
+		INSERT INTO tb_org_menu_lang (
+		       ORG_CD
+		     , MENU_CD
+		     , LANG_CD
+		     , MENU_NM
+		     , MENU_DESC
+		     , MENU_TITLE
+		     , LEFT_MENU_TITLE
+		     , TOP_MENU_IMG
+		     , LEFT_MENU_IMG
+		) VALUES (
+		       #{orgCd}
+		     , #{menuCd}
+		     , #{langCd}
+		     , #{menuNm}
+		     , #{menuDesc}
+		     , #{menuTitle}
+		     , #{leftMenuTitle}
+		     , #{topMenuImg}
+		     , #{leftMenuImg}
+		)	 	
+	</insert>
+	
+	<update id="update" parameterType="orgMenuLangVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 기관 메뉴 언어의 정보 수정
+	 	*/
+		UPDATE tb_org_menu_lang
+		   SET MENU_NM = #{menuNm}
+		     , MENU_DESC = #{menuDesc}
+		     , MENU_TITLE = #{menuTitle}
+		     , LEFT_MENU_TITLE = #{leftMenuTitle}
+		     , TOP_MENU_IMG = #{topMenuImg}
+		     , LEFT_MENU_IMG = #{leftMenuImg}
+		 WHERE ORG_CD = #{orgCd}
+		   AND MENU_CD = #{menuCd}
+		   AND LANG_CD = #{langCd}	 	
+	</update>	
+
+	<delete id="delete" parameterType="orgMenuLangVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 기관 메뉴 언어의 정보 삭제
+	 	*/
+		DELETE FROM tb_org_menu_lang
+		 WHERE ORG_CD = #{orgCd}
+		   AND MENU_CD = #{menuCd}
+		   AND LANG_CD = #{langCd}	 	
+	</delete>
+
+	<delete id="deleteAll" parameterType="orgMenuLangVO" >
+		/*
+			 SQL ID : deleteAll
+			 설  명 : 기관 메뉴 언어의 전체 정보 삭제
+	 	*/
+		DELETE FROM tb_org_menu_lang
+		 WHERE ORG_CD = #{orgCd}
+		   AND MENU_CD = #{menuCd}
+	</delete>
+	 
+	<insert id="insertInit" parameterType="orgMenuLangVO" >
+		/*
+			 SQL ID : insertInit
+			 설  명 : 기관 메뉴 언어의 정보 초기화 등록
+	 	*/
+		INSERT INTO tb_org_menu_lang (
+		       ORG_CD
+		     , MENU_CD
+		     , LANG_CD
+		     , MENU_NM
+		     , MENU_DESC
+		     , MENU_TITLE
+		     , LEFT_MENU_TITLE
+		     , TOP_MENU_IMG
+		     , LEFT_MENU_IMG 
+		)
+		SELECT #{orgCd}
+		     , MENU_CD
+		     , LANG_CD
+		     , MENU_NM
+		     , MENU_DESC
+		     , MENU_TITLE
+		     , LEFT_MENU_TITLE
+		     , TOP_MENU_IMG
+		     , LEFT_MENU_IMG
+		  FROM tb_sys_menu_lang
+		 WHERE MENU_CD IN
+		       ( SELECT MENU_CD
+		           FROM tb_sys_menu
+		          WHERE MENU_TYPE = #{menuType} ) 	
+	</insert>
+	
+	<delete id="deleteInit" parameterType="orgMenuLangVO" >
+		/*
+			 SQL ID : deleteInit
+			 설  명 : 기관 메뉴 언어의 정보 초기화 삭제
+	 	*/
+		DELETE FROM tb_org_menu_lang
+		 WHERE ( ORG_CD , MENU_CD ) IN
+		       ( SELECT ORG_CD, MENU_CD
+		           FROM tb_org_menu
+		          WHERE ORG_CD = #{orgCd}
+		            AND MENU_TYPE = #{menuType} )
+	</delete>	
+</mapper>

@@ -1,0 +1,46 @@
+@charset "UTF-8";
+
+/* Outline */
+div.dvcontainer {position:relative; width:100%; height:100%; overflow:auto;}
+div.dvwrap	{z-index:1; position:relative; min-width:960px; min-height:100%;margin-bottom:60px;}
+
+	/* Navigation Skip - for Accessibility */
+	div.accessibility {display:none;} /*추후 다시 수정*/
+
+	/* Header */
+	div.dvhead	{z-index:2; position:relative; height:83px; background:url(/img/manage/common/top_bg.gif) repeat-x; min-width:960px; }
+
+	/* Body */
+	div.dvbody {z-index:2; position:relative; min-height: 400px; min-width:960px;}
+
+		/* Menu */
+		div.sidebar {z-index:3; position:relative; float:left; width:200px;display:inline-block;}
+			div.sidebar ul {width:200px;background:#e3e4e9;}
+			div.sidebar ul li {background:#67686c url(/img/manage/common/bg_lnb_h3.png) no-repeat;}
+			div.sidebar ul li a {padding-left:20px;width:200px; height:40px;line-height:40px;}
+			div.sidebar ul li ul {width:200px;}
+			div.sidebar ul li ul li {background:#9fa4b1 url(/img/manage/common/bg_lnb_sub.png) no-repeat;background-position:0px -34px;border-bottom:1px solid #cdcdcd;}
+			div.sidebar ul li ul li a {padding-left:20px;width:200px; height:34px; line-height:34px;}
+			
+			div.sidebar ul li ul li ul {width:200px; margin:0; padding:0;}
+			div.sidebar ul li ul li ul li {width:200px; margin:0; padding:0;}
+			div.sidebar ul li ul li ul li a {margin-left:50px;}
+			
+			div.sidebar .selected {color:yellow;font-weight:bold}
+			div.sidebar .noneselected {color:black}
+
+		/* Contents */
+		div.contents {position:relative; z-index:3; margin-left:200px; min-width: 750px; margin-right:10px;padding-left:20px;}
+			div.dvtitle {z-index:4; height:60px;line-height:60px;min-width: 730px;padding-left:0px;}
+				div.mtitle {z-index:5; position:absolute; float:left; height:50px;margin-top:10px;}
+				div.mlocation {z-index:5; float:right;text-align:right;height:50px;margin-top:10px;}
+			div.dvcontents {z-index:4; min-width:730px;}
+			div.subhead {float:left; width:100%; height:25px; }
+				div.subtitle {float:left; font-weight:bold; font-size:14px; margin-top:5px;}
+
+	/* Footer */
+	div.dvfoot	{position:relative; width:100%; height:70px; paddng-top:20px; margin:-90px auto 0 auto; font-family:Meiryo, "돋움", Tahoma, sans-serif; border-top:3px solid #cdcdcd; min_width:960px; background:#f3f3f3;}
+
+/* Frame Outline */
+div.frmdvwrap	{z-index:1; position:relative; width:100%; }
+

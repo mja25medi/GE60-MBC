@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.log.usesize.service.impl.LogUseSizeLogMapper">	
+	
+	<select id="select" parameterType="logUseSizeLogVO" resultType="logUseSizeLogVO">
+		/*
+			 SQL ID : select
+			 설  명 : 사용량 로그 검색
+	 	*/
+		SELECT ORG_CD as orgCd
+		     , DIV_CD as divCd
+		     , SAVE_DTTM as saveDttm
+		     , USE_SIZE as useSize
+		  FROM TB_LOG_USE_SIZE_LOG
+		 WHERE ORG_CD = #{orgCd}
+		   AND DIV_CD = #{divCd}
+		   AND ROWNUM = 1
+		 ORDER BY SAVE_DTTM DESC
+	</select>
+	
+	<select id="selectAtchSize" parameterType="logUseSizeLogVO" resultType="logUseSizeLogVO">
+		/*
+			 SQL ID : selectAtchSize
+			 설  명 : 첨부 파일의 사이즈
+	 	*/
+		SELECT SUM(FILE_SIZE) AS useSize
+		  FROM TB_SYS_FILE
+		 WHERE ORG_CD = #{orgCd}	 	
+	</select>
+	
+	<insert id="insert" parameterType="logUseSizeLogVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 사용량 로그 등록
+	 	*/
+		MERGE INTO TB_LOG_USE_SIZE_LOG A
+			  USING DUAL
+			   ON (     A.ORG_CD = #{orgCd}
+				    AND A.DIV_CD = #{divCd}
+					AND TO_CHAR(TO_DATE(A.SAVE_DTTM,'YYYYMMDDHH24MISS'),'YYYYMMDD') = TO_CHAR(SYSDATE,'YYYYMMDD')
+				  )
+			  WHEN MATCHED THEN
+		   	       UPDATE SET USE_SIZE = #{useSize}
+			  WHEN NOT MATCHED THEN
+		           INSERT (
+		                  ORG_CD
+		                , DIV_CD
+		                , SAVE_DTTM
+		                , USE_SIZE
+		           ) VALUES (
+		                  #{orgCd}
+		                , #{divCd}
+		                , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		                , #{useSize}
+		          )
+	</insert>	
+
+</mapper>

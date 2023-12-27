@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.log.prnlog.service.impl.LogPrnLogMapper">	
+
+	<sql id="selectPrnKey">
+	    SELECT SQ_LOG_PRN_LOG.nextVal FROM DUAL
+	</sql>
+
+	<sql id="selectQuery">
+		<![CDATA[
+		SELECT PRN_SN as prnSn
+		     , USER_NO as userNo
+		     , USER_NM as userNm
+		     , PRN_DOC as prnDoc
+		     , PARAM as param
+		     , PRN_DTTM as prnDttm
+		  FROM TB_LOG_PRN_LOG
+		 WHERE 1 = 1	
+		]]>
+	</sql>
+	
+	<sql id="listQuery">
+		<include refid="selectQuery"/>
+		   AND USER_NM like '%'||NVL(#{userNm}, USER_NM)||'%'
+		   AND SUBSTR(PRN_DTTM,0,8) BETWEEN NVL(REPLACE(#{startDate},'.',''), '19900101') AND NVL(REPLACE(#{endDate},'.',''),'99991231')
+		 ORDER BY PRN_DTTM DESC		
+	</sql>		
+
+	<select id="list" parameterType="logPrnLogVO" resultType="logPrnLogVO">
+		/*
+			 SQL ID : list
+			 설  명 : 출력물 로그 전체 목록을 조회한다.
+	 	*/
+	 	<include refid="listQuery"/>
+	</select>
+	
+	<select id="listPageing" parameterType="logPrnLogVO" resultType="logPrnLogVO">
+		/*
+			 SQL ID : listPageing
+			 설  명 : 출력물 로그의 페이징 목록을 조회한다.
+	 	*/
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	 	<include refid="listQuery"/>
+	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="count" parameterType="logPrnLogVO" resultType="Integer">
+		/*
+			 SQL ID : count
+			 설  명 : 출력물 로그의 검색 수를 반환한다.
+	 	*/
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	) T
+	</select>	
+	
+	<select id="select" parameterType="logPrnLogVO" resultType="logPrnLogVO">
+		/*
+			 SQL ID : select
+			 설  명 : 출력물 로그의 디테일 정보를 조회한다.
+	 	*/
+	 	<include refid="selectQuery"/>
+	 	   AND PRN_SN = #{prnSn}	 	
+	</select>
+	
+	<insert id="insert" parameterType="logPrnLogVO" >
+		<selectKey resultType="Integer" keyProperty="prnSn" order="BEFORE">
+	        <include refid="selectPrnKey"/>    
+	    </selectKey> 
+		/*
+			 SQL ID : insert
+			 설  명 : 출력물 로그의 정보를 등록한다.
+	 	*/
+		INSERT INTO TB_LOG_PRN_LOG (
+		       PRN_SN
+		     , USER_NO
+		     , USER_NM
+		     , PRN_DOC
+		     , PARAM
+		     , PRN_DTTM
+		) VALUES (
+		   	   #{prnSn}
+		     , #{userNo}
+		     , #{userNm}
+		     , #{prnDoc}
+		     , #{param}
+		     , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+		)
+	</insert>
+
+</mapper>

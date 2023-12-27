@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.olc.olcctgr.service.impl.OlcCtgrMapper">
+	
+	<sql id="selectQuery">
+		SELECT CTGR_CD 
+		       , PAR_CTGR_CD 
+		       , ORG_CD 
+		       , USER_NO 
+		       , CTGR_NM 
+		       , CTGR_LVL 
+		       , CTGR_ODR 
+		       , CTGR_PATH 
+		       , CTGR_PATH_NM 
+		       , CTGR_DESC 
+		       , REG_NO 
+			   , (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) REG_NM 
+		       , REG_DTTM 
+		       , MOD_NO 
+			   , (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) MOD_NM 
+		       , MOD_DTTM 
+		       , NVL(( SELECT CTGR_NM 
+		                 FROM TB_OLC_CARTRG_CTGR 
+		                WHERE CTGR_CD = A.PAR_CTGR_CD 
+		                  AND ORG_CD = A.ORG_CD 
+		                  AND USER_NO = A.USER_NO ),'ROOT') AS PAR_CTGR_NM 
+		       , ( SELECT COUNT(*) 
+		             FROM TB_OLC_CARTRG_CTGR 
+		            WHERE PAR_CTGR_CD = A.CTGR_CD 
+		              AND ORG_CD = A.ORG_CD 
+		              AND USER_NO = A.USER_NO ) AS SUB_CNT 
+		       , USE_YN 
+		    FROM TB_OLC_CARTRG_CTGR A 
+		   WHERE ORG_CD = #{orgCd} 
+		     AND USER_NO = #{userNo}
+	</sql>
+	
+	<select id="select" parameterType="olcCtgrVO" resultType="olcCtgrVO">
+		<!--  분류 정보를 조회한다. -->
+		<include refid="selectQuery" />
+		AND CTGR_CD = #{ctgrCd}
+	</select>
+	
+	<select id="listTree" parameterType="olcCtgrVO" resultType="olcCtgrVO">
+		<!-- OLC 분류를 TREE 형 목록으로 조회  -->
+		<include refid="selectQuery" />
+	</select>
+	
+	<select id="listSub" parameterType="olcCtgrVO" resultType="olcCtgrVO">
+		<!-- OLC 분류의 하위 분류를 목록으로 가져온다. -->
+		<include refid="selectQuery" />
+		 AND NVL(PAR_CTGR_CD,'1') = NVL(#{parCtgrCd},'1') 
+		   ORDER BY CTGR_ODR
+	</select>
+	
+	<select id="selectCtgrCd" resultType="olcCtgrVO">
+		<!--  분류 코드 조회를 생성해서 반환한다. -->
+		 SELECT 'OLC'||LPAD(SQ_OLC_CARTRG_CTGR.nextVal,7,'0') AS CTGR_CD FROM DUAL 
+	</select>
+	
+	<insert id="insert" parameterType="olcCtgrVO">
+		<!-- 분류를 등록하고 결과를 반환한다.  -->
+		INSERT INTO TB_OLC_CARTRG_CTGR ( 
+		         CTGR_CD 
+		       , PAR_CTGR_CD 
+		       , ORG_CD 
+		       , USER_NO 
+		       , CTGR_NM 
+		       , CTGR_LVL 
+		       , CTGR_ODR 
+		       , CTGR_PATH 
+		       , CTGR_PATH_NM 
+		       , CTGR_DESC 
+		       , REG_NO 
+		       , REG_DTTM 
+		       , MOD_NO 
+		       , MOD_DTTM 
+		       , USE_YN 
+		 ) VALUES ( 
+		         #{ctgrCd} 
+		       , #{parCtgrCd} 
+		       , #{orgCd} 
+		       , #{userNo}
+		       , #{ctgrNm} 
+		       , #{ctgrLvl} 
+		       , ( SELECT NVL(MAX(CTGR_ODR),0) + 1 
+		             FROM TB_OLC_CARTRG_CTGR 
+		            WHERE ORG_CD = #{orgCd} 
+		              AND USER_NO = #{userNo} 
+		              AND NVL(PAR_CTGR_CD,'1') = NVL(#{parCtgrCd},'1') ) 
+		       , #{ctgrPath} 
+		       , #{ctgrPathNm} 
+		       , #{ctgrDesc} 
+		       , #{regNo} 
+		       , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 
+		       , #{modNo} 
+		       , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 
+		       , #{useYn} 
+		 )
+	</insert>
+	
+	<update id="update" parameterType="olcCtgrVO">
+		<!-- 분류를 수정하고 결과를 반환한다. -->
+		UPDATE TB_OLC_CARTRG_CTGR SET 
+		         PAR_CTGR_CD = #{parCtgrCd} 
+		       , CTGR_NM = #{ctgrNm}
+		       , CTGR_LVL = #{ctgrLvl} 
+		       , CTGR_ODR = #{ctgrOdr} 
+		       , CTGR_PATH = #{ctgrPath} 
+		       , CTGR_PATH_NM = #{ctgrPathNm} 
+		       , CTGR_DESC = #{ctgrDesc}
+		       , MOD_NO = #{modNo} 
+		       , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 
+		       , USE_YN = #{useYn} 
+		   WHERE ORG_CD = #{orgCd} 
+		     AND USER_NO = #{userNo} 
+		     AND CTGR_CD = #{ctgrCd}
+	</update>
+	
+	<update id="updateBatch" parameterType="list">
+	<!-- 분류 정보의 다중 목록을 Update하고 결과를 반환한다.  -->
+	<!--  List<OlcCtgrVO> itemArray -->
+		<foreach collection="list" item="item" index="index" open="DECLARE BEGIN" close="; END;" separator=";">
+			UPDATE TB_OLC_CARTRG_CTGR
+		    SET
+				 PAR_CTGR_CD = #{item.parCtgrCd} 
+		       , CTGR_NM = #{item.ctgrNm}
+		       , CTGR_LVL = #{item.ctgrLvl} 
+		       , CTGR_ODR = #{item.ctgrOdr} 
+		       , CTGR_PATH = #{item.ctgrPath} 
+		       , CTGR_PATH_NM = #{item.ctgrPathNm} 
+		       , CTGR_DESC = #{item.ctgrDesc}
+		       , MOD_NO = #{item.modNo} 
+		       , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 
+		       , USE_YN = #{item.useYn}
+				WHERE ORG_CD = #{item.orgCd} 
+			     AND USER_NO = #{item.userNo} 
+			     AND CTGR_CD = #{item.ctgrCd}
+		</foreach>
+	</update>
+	
+	<delete id="delete" parameterType="olcCtgrVO">
+		<!-- 하위 분류를 삭제하고 결과를 반환한다.  -->
+		DELETE FROM TB_OLC_CARTRG_CTGR 
+		   WHERE ORG_CD = #{orgCd} 
+		     AND USER_NO = #{userNo} 
+		     AND PAR_CTGR_CD = #{parCtgrCd}
+	</delete>
+	
+</mapper>

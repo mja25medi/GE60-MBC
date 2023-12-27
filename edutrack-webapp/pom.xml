@@ -1,0 +1,636 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  	<modelVersion>4.0.0</modelVersion>
+  	<groupId>medi.edutrack.ge</groupId>
+  	<artifactId>edutrack</artifactId>
+  	<version>0.1.0-SNAPSHOT</version>
+  	<packaging>pom</packaging>
+  	<name>edutrack platform</name>
+  	<description>Edutrack Enterprise Version 1.0</description>
+
+  	<modules>
+		<module>webapp</module> 
+	</modules>
+
+	<dependencies>
+		<!-- 테스트 스코프 -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-all</artifactId>
+			<version>1.1</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- 로깅 : log4j -->
+		<dependency>
+		   <groupId>org.apache.logging.log4j</groupId>
+		   <artifactId>log4j-api</artifactId>
+		   <version>${log4j.version}</version>
+		</dependency>
+		<dependency>
+		   <groupId>org.apache.logging.log4j</groupId>
+		   <artifactId>log4j-core</artifactId>
+		   <version>${log4j.version}</version>
+		</dependency>	
+		<dependency>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-slf4j-impl</artifactId>
+		    <version>${log4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<!--
+		<dependency> 
+			<groupId>org.slf4j</groupId> 
+			<artifactId>slf4j-log4j12</artifactId> 
+			<version>1.6.1</version> 
+		</dependency>
+		--> 
+		<dependency> 
+			<groupId>org.slf4j</groupId> 
+			<artifactId>jcl-over-slf4j</artifactId> 
+			<version>1.6.1</version> 
+		</dependency>			
+		
+		 <!-- Jasypt -->    
+        <dependency>
+            <groupId>org.jasypt</groupId>
+            <artifactId>jasypt-spring31</artifactId>
+            <version>1.9.2</version>
+        </dependency>
+        
+        <!-- sitemesg3 -->
+   		<dependency>
+			<groupId>org.sitemesh</groupId>
+			<artifactId>sitemesh</artifactId>
+			<version>${sitemesh.version}</version>
+		</dependency>  
+ 		     
+	</dependencies>
+
+	<build>
+		<sourceDirectory>
+			${project.basedir}/src/main/java
+        </sourceDirectory>        
+		<testSourceDirectory>
+			${project.basedir}/src/test/java
+        </testSourceDirectory>
+		<resources>
+			<resource>
+				<directory>${project.basedir}/src/main/java</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+				<filtering>true</filtering>
+			</resource>
+			<resource>
+				<directory>${project.basedir}/src/main/resources</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>				
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>${project.basedir}/src/test/java</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+				<filtering>true</filtering>
+			</testResource>
+		</testResources>
+
+		<plugins>
+			<!-- 메이븐 컴파일러 플러그인 -->
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.7.0</version>
+				<configuration>
+					<source>${javac.version}</source>
+					<target>${javac.version}</target>
+					<encoding>${encoding.type}</encoding>
+				</configuration>
+			</plugin>
+			<plugin> 
+				<groupId>org.apache.maven.plugins</groupId> 
+				<artifactId>maven-surefire-plugin</artifactId> 
+				<version>2.19.1</version> 
+				<configuration> 
+					<testFailureIgnore>true</testFailureIgnore> 
+				</configuration> 
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<encoding>${encoding.type}</encoding>
+				</configuration>
+			</plugin>
+			<!-- 메이븐 기본형 플러그인?? -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>
+							jar-with-dependencies
+                        </descriptorRef>
+					</descriptorRefs>
+				</configuration>
+			</plugin>
+			<!-- 메이븐 배포 플러그인 -->
+			<!-- <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.0.1</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.4</version>
+			</plugin> -->
+			<!-- 메이븐 통합테스트를 위한 surefire 플러그인 : 누락될 경우 스프링 컨텍스트가 형성되지 않는다. -->
+			<!-- <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.4.3</version>
+				<configuration>
+					<junitArtifactName>junit:junit
+					</junitArtifactName>
+				</configuration>
+			</plugin> -->
+			<!-- 이클립스 통합을 위한 플러그인 -->
+			<!-- <plugin>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<additionalProjectnatures>
+						<projectnature>org.springframework.ide.eclipse.core.springnature
+						</projectnature>
+					</additionalProjectnatures>
+					<additionalBuildcommands>
+						<buildcommand>org.springframework.ide.eclipse.core.springbuilder
+						</buildcommand>
+					</additionalBuildcommands>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>true</downloadJavadocs>
+					<wtpversion>2.0</wtpversion>
+				</configuration>
+			</plugin> -->
+			<!-- IntelliJ 통합을 위한 플러그인 -->
+			<!-- <plugin>
+				<artifactId>maven-idea-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>true</downloadJavadocs>
+					<dependenciesAsLibraries>true</dependenciesAsLibraries>
+					<useFullNames>false</useFullNames>
+				</configuration>
+			</plugin> -->
+		</plugins>
+	</build>
+
+	<distributionManagement>
+		<repository>
+			<id>mediopia-deploy</id>
+			<name>Mediopia releases</name>
+			<url>http://210.101.173.237:8081/repository/maven-releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>mediopia-deploy</id>
+			<name>Mediopia snapshots</name>
+			<url>http://210.101.173.237:8081/repository/maven-snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<repositories>
+		<repository>
+			<id>localRepo</id>
+			<name>local Repositories</name>
+			<url>file://D:/EDUTRACK_GE60/MavenRepository</url>
+		</repository>
+		<repository>
+			<id>mediopia</id>
+			<name>Mediopia Repositories</name>
+			<url>http://210.101.173.237:8081/repository/maven-public/</url>
+		</repository>
+		<repository>
+			<id>mvn2</id>
+			<url>https://repo1.maven.org/maven2/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>	
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>egovframe</id>
+			<url>https://www.egovframe.go.kr/maven/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>spring-milestone</id>
+			<url>https://repo.spring.io/libs-release</url>
+		</repository>
+		<repository>
+			<id>mesir-repo</id>
+			<url>https://mesir.googlecode.com/svn/trunk/mavenrepo</url>
+		</repository>
+		<repository>
+			<id>oracle</id>
+			<name>ORACLE JDBC Repository</name>
+			<url>https://maven.jahia.org/maven2</url>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>mediopia</id>
+			<name>Mediopia Repositories</name>
+			<url>http://210.101.173.237:8081/repository/maven-public/</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<properties>
+		<!-- application settings -->
+		<spring.maven.artifact.version>4.3.16.RELEASE</spring.maven.artifact.version>
+		<egovframework.rte.version>3.8.0</egovframework.rte.version>
+		<sitemesh.version>3.0-alpha-2</sitemesh.version>
+		<webapp.basedir>webapps</webapp.basedir>
+		<copyright.year>2020</copyright.year>
+		<encoding.type>UTF-8</encoding.type>
+		<javac.version>1.8</javac.version>
+
+		<!-- 의존 라이브러리 버젼 -->
+		<junit.version>4.7</junit.version>
+		<log4j.version>2.19.0</log4j.version>
+		<slf4j.version>1.7.7</slf4j.version>
+		<spring.version>3.0.4.RELEASE</spring.version>
+		<aspectj.version>1.6.6</aspectj.version>
+		<!-- medi platform 라이브러리 버젼 -->
+		<edutrack.lms.core.version>0.1.0-SNAPSHOT</edutrack.lms.core.version>
+
+
+
+		<!-- 프로파일에 영향을 받지 않는 웹컨텍스트 설정 -->
+		<edutrack.product.home>${edutrack.product}</edutrack.product.home>
+		<edutrack.product.admin>${edutrack.product}</edutrack.product.admin>
+		<edutrack.product.admin.port>8080</edutrack.product.admin.port>
+
+		<edutrack.url.home>${edutrack.url}</edutrack.url.home>
+		<edutrack.url.admin>${edutrack.url}:${edutrack.product.admin.port}</edutrack.url.admin>
+
+		<edutrack.context.home></edutrack.context.home>
+		<edutrack.context.admin></edutrack.context.admin>
+
+		<edutrack.product.name.home>KED-X</edutrack.product.name.home>
+		<edutrack.product.name.admin>KED-X Next Generation</edutrack.product.name.admin>
+	</properties>
+
+	<profiles>
+		<profile>
+			<!-- 개발 프로파일 -->
+			<id>local</id>
+			<properties>
+				<env>loc</env>
+				<edutrack.config.path>D:/EDUTRACK/DevelWAS/edutrack/config</edutrack.config.path>
+				<!--  기본 도메인 및 프로덕트 설정 -->
+				<edutrack.product>http://www.edutrack.co.kr</edutrack.product>
+				<edutrack.product.domain>www.edutrack.co.kr</edutrack.product.domain>
+				<!--  도메인 서비스 : domain, 가상디렉토리 서비스 : context -->
+				<edutrack.product.service_type>domain</edutrack.product.service_type>
+				
+
+				<!--  언어 관련 설정 -->
+				<edutrack.language.support>ko/en/ja</edutrack.language.support>
+				<edutrack.language.default>ko</edutrack.language.default>
+				<edutrack.language.site>ko</edutrack.language.site>
+				<edutrack.language.multiuse>Y</edutrack.language.multiuse>
+
+				<!--  Message 사용 여부 설정 -->
+				<edutrack.message.sms>Y</edutrack.message.sms>
+				<edutrack.message.email>Y</edutrack.message.email>
+				<edutrack.message.note>Y</edutrack.message.note>
+
+				<!--  Message 발송시 표시 이름 -->
+				<edutrack.message.sms.addr>02-3460-8500</edutrack.message.sms.addr>
+				<edutrack.message.sms.name>Mediopia Tech</edutrack.message.sms.name>
+				<edutrack.message.email.addr>master@edutrack.co.kr</edutrack.message.email.addr>
+				<edutrack.message.email.name>Mediopia Tech</edutrack.message.email.name>
+
+				<!-- Database settings (default developement) -->
+				<jdbc.groupId>thirdparty.jdbc.oracle</jdbc.groupId>
+				<jdbc.artifactId>ojdbc6</jdbc.artifactId>
+				<jdbc.version>11.2.0.3.0</jdbc.version>
+				<jdbc.jndiname>jdbc/edutrack_store</jdbc.jndiname>
+
+				<!-- Framework properties -->
+				<edutrack.server_type>windows</edutrack.server_type><!-- windows, unix -->
+				<edutrack.url></edutrack.url>
+				<edutrack.fileserver.url></edutrack.fileserver.url>
+				<edutrack.path.attachfiles>D:/EDUTRACK_GE60/DevelWAS/edutrack/WebRepository/attachfiles</edutrack.path.attachfiles>
+				<edutrack.path.contents>D:/EDUTRACK_GE60/DevelWAS/edutrack/WebRepository/contents</edutrack.path.contents>
+
+				<!-- 메일 서버 정보 -->
+				<edutrack.mail.agent>JavaMail</edutrack.mail.agent> <!-- JavaMail,  ThunderMail-->
+
+				<!-- JavaMail 환경설정 -->
+<!-- 				<edutrack.mail.javamail.host>210.101.173.178</edutrack.mail.javamail.host> -->
+<!-- 				<edutrack.mail.javamail.user>Nan</edutrack.mail.javamail.user> -->
+<!-- 				<edutrack.mail.javamail.pass>Nan</edutrack.mail.javamail.pass> -->
+				<edutrack.mail.javamail.host>mail.mediopia.co.kr</edutrack.mail.javamail.host>
+				<edutrack.mail.javamail.user>Nan</edutrack.mail.javamail.user>
+				<edutrack.mail.javamail.pass>Nan</edutrack.mail.javamail.pass>
+				<edutrack.mail.javamail.auth>false</edutrack.mail.javamail.auth>
+				<edutrack.mail.javamail.starttls.enable>false</edutrack.mail.javamail.starttls.enable>
+
+				<!-- ThunderMail 자동메일(단건) 환경설정 -->
+				<edutrack.mail.thundermail.automail.apiurl>http://58.225.56.100:8081/tm6/app/api/automail/send</edutrack.mail.thundermail.automail.apiurl>
+				<edutrack.mail.thundermail.automail.mailid>802e2656b2e6aacd7d4a34fa749fa7a5</edutrack.mail.thundermail.automail.mailid>
+
+				<!-- ThunderMail 대량메일 환경설정 -->
+				<edutrack.mail.thundermail.massmail.apiurl>http://58.225.56.100:8081/tm6/app/api/massmail/send</edutrack.mail.thundermail.massmail.apiurl>
+				<edutrack.mail.thundermail.massmail.usercode>7f70404cec14c2cd2b52d23620968768</edutrack.mail.thundermail.massmail.usercode>
+
+				<!-- KISA Keyfile Path -->
+				<kisa.keyfile.path>D:/EDUTRACK_GE60/DevelWAS/edutrack-hrd</kisa.keyfile.path>
+
+				<!--  Exception DB LOG USE  -->
+				<edutrack.dblog.exception>use</edutrack.dblog.exception>
+
+				<!--  Jquery error message use -->
+				<edutrack.ajax.message>nouse</edutrack.ajax.message>
+
+				<!--  Wowza Swerver  -->
+				<edutrack.wowza.use>nouse</edutrack.wowza.use>
+				<edutrack.wowza.url.rtmp>rtmp://</edutrack.wowza.url.rtmp>
+				<edutrack.wowza.url.rtsp>rtsp://</edutrack.wowza.url.rtsp>
+				<edutrack.wowza.url.http>http://</edutrack.wowza.url.http>
+
+				<!--  Media Server -->
+				<edutrack.media.use>nouse</edutrack.media.use>
+				<edutrack.media.url>mms://</edutrack.media.url>
+
+				<!--  Mediaplayer Configration -->
+				<edutrack.media.player>flowplayer</edutrack.media.player> <!-- flowplayer -->
+				<edutrack.flowplayer.key></edutrack.flowplayer.key> <!-- flowplayer 일때만 사용 -->
+				<edutrack.kollus.api.url>http://api.kr.kollus.com</edutrack.kollus.api.url><!-- kollus 일때만 사용 -->
+				<edutrack.kollus.player.url>http://v.kr.kollus.com</edutrack.kollus.player.url><!-- kollus 일때만 사용 -->
+
+				<!--  Webeditor  -->
+				<edutrack.webeditor.useyn>Y</edutrack.webeditor.useyn>
+				<edutrack.webeditor.name>SUMMERNOTE</edutrack.webeditor.name>
+
+				<!--  Contents Satisfication  -->
+				<edutrack.contents.satis.useyn>Y</edutrack.contents.satis.useyn>
+				<edutrack.contents.manager.useyn>Y</edutrack.contents.manager.useyn>
+
+
+
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<!-- 운영 프로파일 -->
+			<id>production</id>
+			<properties>
+				<env>prd</env>
+				<edutrack.config.path>D:/EDUTRACK/DevelWAS/edutrack/config</edutrack.config.path>
+				<!--  기본 도메인 및 프로덕트 설정 -->
+				<edutrack.product>https://www.gkedc.go.kr</edutrack.product>
+				<edutrack.product.domain>gkedc.go.kr</edutrack.product.domain>
+<!-- 				<edutrack.product.domain>kedm.kr</edutrack.product.domain> -->
+				<!--  서브도메인 서비스 : domain, 가상디렉토리 서비스 : context -->
+				<edutrack.product.service_type>domain</edutrack.product.service_type>
+				
+				<!--  언어 관련 설정 -->
+				<edutrack.language.support>ko/en/ja</edutrack.language.support>
+				<edutrack.language.default>ko</edutrack.language.default>
+				<edutrack.language.site>ko</edutrack.language.site>
+				<edutrack.language.multiuse>Y</edutrack.language.multiuse>
+
+				<!--  Message 사용 여부 설정 -->
+				<edutrack.message.sms>Y</edutrack.message.sms>
+				<edutrack.message.email>Y</edutrack.message.email>
+				<edutrack.message.note>Y</edutrack.message.note>
+
+				<!--  Message 발송시 표시 이름 -->
+				<edutrack.message.sms.addr>02-3460-8500</edutrack.message.sms.addr>
+				<edutrack.message.sms.name>Mediopia Tech</edutrack.message.sms.name>
+				<edutrack.message.email.addr>master@edutrack.co.kr</edutrack.message.email.addr>
+				<edutrack.message.email.name>Mediopia Tech</edutrack.message.email.name>
+
+				<!-- Database settings (default developement) -->
+				<jdbc.groupId>thirdparty.jdbc.oracle</jdbc.groupId>
+				<jdbc.artifactId>ojdbc6</jdbc.artifactId>
+				<jdbc.version>11.2.0.3.0</jdbc.version>
+				<jdbc.jndiname>jdbc/edutrack_store</jdbc.jndiname>
+
+				<!-- Framework properties -->
+				<edutrack.server_type>unix</edutrack.server_type><!-- windows, unix -->
+				<edutrack.url></edutrack.url>
+				<edutrack.fileserver.url></edutrack.fileserver.url>
+				<edutrack.path.attachfiles>/home/storage/hrd/WebRepository/attachfiles</edutrack.path.attachfiles>
+				<edutrack.path.contents>/home/storage/hrd/WebRepository/contents</edutrack.path.contents>
+
+				<!-- 메일 서버 정보 -->
+				<edutrack.mail.agent>JavaMail</edutrack.mail.agent> <!-- JavaMail,  ThunderMail-->
+
+				<!-- JavaMail 환경설정 -->
+<!-- 				<edutrack.mail.javamail.host>211.253.143.199</edutrack.mail.javamail.host> -->
+<!-- 				<edutrack.mail.javamail.user>Nan</edutrack.mail.javamail.user> -->
+<!-- 				<edutrack.mail.javamail.pass>Nan</edutrack.mail.javamail.pass> -->
+				<edutrack.mail.javamail.host>mail.gkedc.go.kr</edutrack.mail.javamail.host>
+				<edutrack.mail.javamail.user>gkedcenter</edutrack.mail.javamail.user>
+				<edutrack.mail.javamail.pass>kedc4114!</edutrack.mail.javamail.pass>
+				<edutrack.mail.javamail.auth>false</edutrack.mail.javamail.auth>
+				<edutrack.mail.javamail.starttls.enable>false</edutrack.mail.javamail.starttls.enable>
+
+				<!-- ThunderMail 자동메일(단건) 환경설정 -->
+				<edutrack.mail.thundermail.automail.apiurl>http://58.225.56.100:8081/tm6/app/api/automail/send</edutrack.mail.thundermail.automail.apiurl>
+				<edutrack.mail.thundermail.automail.mailid>802e2656b2e6aacd7d4a34fa749fa7a5</edutrack.mail.thundermail.automail.mailid>
+
+				<!-- ThunderMail 대량메일 환경설정 -->
+				<edutrack.mail.thundermail.massmail.apiurl>http://58.225.56.100:8081/tm6/app/api/massmail/send</edutrack.mail.thundermail.massmail.apiurl>
+				<edutrack.mail.thundermail.massmail.usercode>7f70404cec14c2cd2b52d23620968768</edutrack.mail.thundermail.massmail.usercode>
+
+				<!-- KISA Keyfile Path -->
+				<kisa.keyfile.path>/data/hrd/webapp</kisa.keyfile.path>
+
+				<!--  Exception DB LOG USE  -->
+				<edutrack.dblog.exception>use</edutrack.dblog.exception>
+
+				<!--  Jquery error message use -->
+				<edutrack.ajax.message>nouse</edutrack.ajax.message>
+
+				<!--  Wowza Swerver  -->
+				<edutrack.wowza.use>nouse</edutrack.wowza.use>
+				<edutrack.wowza.url.rtmp>rtmp://</edutrack.wowza.url.rtmp>
+				<edutrack.wowza.url.rtsp>rtsp://</edutrack.wowza.url.rtsp>
+				<edutrack.wowza.url.http>http://</edutrack.wowza.url.http>
+
+				<!--  Media Server -->
+				<edutrack.media.use>nouse</edutrack.media.use>
+				<edutrack.media.url>mms://</edutrack.media.url>
+
+				<!--  Mediaplayer Configration -->
+				<edutrack.media.player>flowplayer</edutrack.media.player> <!-- flowplayer -->
+				<edutrack.flowplayer.key></edutrack.flowplayer.key> <!-- flowplayer 일때만 사용 -->
+				<edutrack.kollus.api.url>http://api.kr.kollus.com</edutrack.kollus.api.url><!-- kollus 일때만 사용 -->
+				<edutrack.kollus.player.url>http://v.kr.kollus.com</edutrack.kollus.player.url><!-- kollus 일때만 사용 -->
+
+				<!--  Webeditor  -->
+				<edutrack.webeditor.useyn>Y</edutrack.webeditor.useyn>
+				<edutrack.webeditor.name>SUMMERNOTE</edutrack.webeditor.name>
+
+				<!--  Contents Satisfication  -->
+				<edutrack.contents.satis.useyn>Y</edutrack.contents.satis.useyn>
+				<edutrack.contents.manager.useyn>Y</edutrack.contents.manager.useyn>
+
+
+			</properties>
+
+		</profile>
+		<profile>
+			<!-- 통합 테스트 프로파일 -->
+			<id>devel</id>
+			<properties>
+				<!--  기본 도메인 및 프로덕트 설정 -->
+				<edutrack.product>http://ge60.edutrack.co.kr</edutrack.product>
+				<edutrack.product.domain>edutrack.co.kr</edutrack.product.domain>
+				<!--  서브도메인 서비스 : domain, 가상디렉토리 서비스 : context -->
+				<edutrack.product.service_type>domain</edutrack.product.service_type>
+				
+				<!--  언어 관련 설정 -->
+				<edutrack.language.support>ko/en/ja</edutrack.language.support>
+				<edutrack.language.default>ko</edutrack.language.default>
+				<edutrack.language.site>ko</edutrack.language.site>
+				<edutrack.language.multiuse>Y</edutrack.language.multiuse>
+
+				<!--  Message 사용 여부 설정 -->
+				<edutrack.message.sms>Y</edutrack.message.sms>
+				<edutrack.message.email>Y</edutrack.message.email>
+				<edutrack.message.note>Y</edutrack.message.note>
+
+				<!--  Message 발송시 표시 이름 -->
+				<edutrack.message.sms.addr>02-3460-8500</edutrack.message.sms.addr>
+				<edutrack.message.sms.name>Mediopia Tech</edutrack.message.sms.name>
+				<edutrack.message.email.addr>master@edutrack.co.kr</edutrack.message.email.addr>
+				<edutrack.message.email.name>Mediopia Tech</edutrack.message.email.name>
+
+				<!-- 메일 서버 정보 -->
+				<edutrack.mail.agent>JavaMail</edutrack.mail.agent> <!-- JavaMail,  ThunderMail-->
+
+				<!-- JavaMail 환경설정 -->
+<!-- 				<edutrack.mail.javamail.host>211.253.143.199</edutrack.mail.javamail.host> -->
+<!-- 				<edutrack.mail.javamail.user>Nan</edutrack.mail.javamail.user> -->
+<!-- 				<edutrack.mail.javamail.pass>Nan</edutrack.mail.javamail.pass> -->
+				<edutrack.mail.javamail.host>mail.gkedc.go.kr</edutrack.mail.javamail.host>
+				<edutrack.mail.javamail.user>gkedcenter</edutrack.mail.javamail.user>
+				<edutrack.mail.javamail.pass>kedc4114!</edutrack.mail.javamail.pass>
+				<edutrack.mail.javamail.auth>false</edutrack.mail.javamail.auth>
+				<edutrack.mail.javamail.starttls.enable>false</edutrack.mail.javamail.starttls.enable>
+
+				<!-- ThunderMail 자동메일(단건) 환경설정 -->
+				<edutrack.mail.thundermail.automail.apiurl>http://jn.thundermail.co.kr:8080/tm6/app/api/automail/send</edutrack.mail.thundermail.automail.apiurl>
+				<edutrack.mail.thundermail.automail.mailid>d583f08bb141803c024b16f9af1fabf0</edutrack.mail.thundermail.automail.mailid>
+
+				<!-- ThunderMail 대량메일 환경설정 -->
+				<edutrack.mail.thundermail.massmail.apiurl>http://jn.thundermail.co.kr:8080/tm6/app/api/massmail/send</edutrack.mail.thundermail.massmail.apiurl>
+				<edutrack.mail.thundermail.massmail.usercode>74a1501762eadb9cc8063196836f0f4d</edutrack.mail.thundermail.massmail.usercode>
+
+				<!-- KISA Keyfile Path -->
+				<kisa.keyfile.path>D:/EDUTRACK_GE60/DevelWAS/edutrack-hrd</kisa.keyfile.path>
+
+				<!--  Exception DB LOG USE  -->
+				<edutrack.dblog.exception>use</edutrack.dblog.exception>
+
+				<!--  Jquery error message use -->
+				<edutrack.ajax.message>nouse</edutrack.ajax.message>
+
+				<!--  Wowza Swerver  -->
+				<edutrack.wowza.use>nouse</edutrack.wowza.use>
+				<edutrack.wowza.url.rtmp>rtmp://</edutrack.wowza.url.rtmp>
+				<edutrack.wowza.url.rtsp>rtsp://</edutrack.wowza.url.rtsp>
+				<edutrack.wowza.url.http>http://</edutrack.wowza.url.http>
+
+				<!--  Media Server -->
+				<edutrack.media.use>nouse</edutrack.media.use>
+				<edutrack.media.url>mms://</edutrack.media.url>
+
+				<!--  Mediaplayer Configration -->
+				<edutrack.media.player>weandsoft</edutrack.media.player> <!-- flowplayer  -->
+				<edutrack.flowplayer.key></edutrack.flowplayer.key> <!-- flowplayer 일때만 사용 -->
+				<edutrack.kollus.api.url>http://api.kr.kollus.com</edutrack.kollus.api.url><!-- kollus 일때만 사용 -->
+				<edutrack.kollus.player.url>http://v.kr.kollus.com</edutrack.kollus.player.url><!-- kollus 일때만 사용 -->
+
+				<!--  Webeditor  -->
+				<edutrack.webeditor.useyn>Y</edutrack.webeditor.useyn>
+				<edutrack.webeditor.name>SUMMERNOTE</edutrack.webeditor.name>
+
+				<!--  Contents Satisfication  -->
+				<edutrack.contents.satis.useyn>Y</edutrack.contents.satis.useyn>
+				<edutrack.contents.manager.useyn>Y</edutrack.contents.manager.useyn>
+
+			</properties>
+		</profile>
+
+		<!-- 디버그레벨 로그 프로파일 -->
+		<profile>
+			<id>log-debug</id>
+			<properties>
+				<!-- LOG 레벨 -->
+				<log.level.uniedu>debug</log.level.uniedu>
+				<log.level.thirdparty>info</log.level.thirdparty>
+				<log.level.spring>info</log.level.spring>
+				<log.level.jdbc>debug</log.level.jdbc>
+				<log.level.jdbc.param>trace</log.level.jdbc.param>
+				<log.level.root>debug</log.level.root>
+			</properties>
+		</profile>
+		<!-- 인포레벨 로그 프로파일 -->
+		<profile>
+			<id>log-info</id>
+			<properties>
+				<!-- LOG 레벨 -->
+				<log.level.edutrack>info</log.level.edutrack>
+				<log.level.thirdparty>info</log.level.thirdparty>
+				<log.level.spring>info</log.level.spring>
+				<log.level.jdbc>info</log.level.jdbc>
+				<log.level.jdbc.param>info</log.level.jdbc.param>
+				<log.level.root>info</log.level.root>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+	</profiles>
+</project>
