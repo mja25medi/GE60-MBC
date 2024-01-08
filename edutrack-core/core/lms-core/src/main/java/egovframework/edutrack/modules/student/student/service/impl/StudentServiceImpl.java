@@ -1421,6 +1421,16 @@ public class StudentServiceImpl extends EgovAbstractServiceImpl implements Stude
 	public int addStudentForHrdApi(StudentVO vo) {
 		return studentMapper.insertStudent(vo);
 	}
+
+	
+	@Override
+	@HrdApiStdStd(SyncType.UPDATE)
+	public int addStudentIdeUrl(StudentVO vo) {
+		int result = 0;
+		result = studentMapper.updateStudentIdeUrl(vo);
+
+		return result;
+	}
 	
 	@Override
 	@HrdApiStdStd(SyncType.DELETE)

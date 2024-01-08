@@ -18,20 +18,26 @@
 	    <link rel="stylesheet" href="/tpl/003/css/sub.css"><!-- sub 페이지에서 사용 -->
 	
     	<script src="/app/js/Context.js"></script>
+	    <script src="/tpl/003/jquery/jquery-3.2.1.min.js"></script>
+	    <script defer src="/tpl/003/jquery/slick.min.js"></script>
+	    <script defer src="/tpl/003/js/func.min.js"></script>
+	    <script defer src="/tpl/003/js/common.js"></script>
 	    <script defer src="/js/common.js"></script>
 	    <script defer src="/tpl/003/js/common_function.js"></script>
 	    <script defer src="/tpl/003/js/common_util.js"></script>
 	    <script src="/tpl/003/js/common_conf.js"></script>
-	    <script src="/tpl/003/jquery/jquery-3.2.1.min.js"></script>
-	    <script async src="/tpl/003/jquery/slick.min.js"></script>
-	    <script defer src="/tpl/003/js/func.min.js"></script>
-	    <script defer src="/tpl/003/js/common.js"></script>
+	     <script src="/tpl/003/jquery/jquery.form.js"></script>
 	    <script defer src="/tpl/003/js/main.js"></script>
 	    <script src="/tpl/003/jquery/jquery.cycle2.js"></script>
+	     <script defer src="/tpl/003/js/sub.js"></script>
 
 	    <script src="/js/nuguya/nice.nuguya.oivs.crypto.js"></script>
 		<script src="/js/nuguya/nice.nuguya.oivs.msg.js"></script>
 		<script src="/js/nuguya/nice.nuguya.oivs.util.js"></script>
+		
+		<meditag:css href="css/jquery-ui-1.11.0.custom/jquery-ui.css"/>
+		<script src="/tpl/002/js/jquery/jquery.min.js"></script>
+		<script src="/tpl/002/js/jquery/jquery-ui.min.js"></script>
 
     <c:if test="${not empty summernote}">
 <%--  	   <link href="/libs/bootstrap-3.3.5/css/bootstrap.css" rel="stylesheet">
@@ -72,7 +78,7 @@
 	</c:if>
 	<meditag:js src="/tpl/003/js/modaldialog2.js"/>
 	<meditag:js src="/js/jquery/jquery.form.js"/>
-    <script defer src="/tpl/003/js/sub.js"></script>
+   
 	    
 		<sitemesh:write property="head"/>
 	

@@ -121,6 +121,35 @@ public class UsrUserInfoVO extends UsrLoginVO {
 	
 	private String avatar;
 	
+	private String ideUrl;
+	private String[] userNos;
+	private String[] ideUrls;
+	
+
+	public String[] getUserNos() {
+		return userNos;
+	}
+
+	public void setUserNos(String[] userNos) {
+		this.userNos = userNos;
+	}
+
+	public String[] getIdeUrls() {
+		return ideUrls;
+	}
+
+	public void setIdeUrls(String[] ideUrls) {
+		this.ideUrls = ideUrls;
+	}
+
+	public String getIdeUrl() {
+		return ideUrl;
+	}
+
+	public void setIdeUrl(String ideUrl) {
+		this.ideUrl = ideUrl;
+	}
+
 	public String getAvatar() {
 		return avatar;
 	}

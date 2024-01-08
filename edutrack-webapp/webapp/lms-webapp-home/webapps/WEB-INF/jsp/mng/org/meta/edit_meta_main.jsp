@@ -110,6 +110,11 @@
    			var data = JSON.parse(obj);
    			$("#roomUrl").val(data.roomUrl.public.guest);
    			
+			if($("#roomUrl").val() == "") alert("api 연동에 실패했습니다.");
+   			
+   			$('#orgInfoForm').attr("action", "/mng/org/meta/editMeta");
+   			$('#orgInfoForm').ajaxSubmit(processCallback);
+   			
    		})
    		.catch(error => {
    		 	alert("api 연동에 실패했습니다.");

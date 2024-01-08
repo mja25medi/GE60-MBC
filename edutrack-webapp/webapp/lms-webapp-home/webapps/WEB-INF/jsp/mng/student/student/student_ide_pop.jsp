@@ -32,7 +32,7 @@
 						<td>${item.userNm}</td>
 						<td>${item.userId }</td>
 						<td>
-						<select id="ideUrl" name="ideUrls" class="form-control input-sm">
+						<select id="ideUrl" name="ideUrls" class="form-control input-sm" onchange="urlCheck(this)">
 							<c:if test="${not empty item.ideUrl }">
 								<option value="${item.ideUrl}">${item.ideUrl }</option>
 								<c:forEach items="${ideList}" var="ideList" varStatus="status">
@@ -72,9 +72,29 @@ function editStudent(){
 	process("editStudentUrl");
 }
 
+function urlCheck(obj){
+	
+	var vals = [];
+	var x = 0;
+
+	$('select[name=ideUrls]').each(function(i){
+		vals[i] = $(this).val();
+	});
+
+ 	$(vals).each(function(i){
+ 		if(vals[i] == obj.value){x++;}
+ 		if( x > 1 ){
+ 			alert("IDE는 중복 선택 하실 수 없습니다.");
+ 			$(obj).find("option:eq(0)").prop("selected","true");
+ 			return false;
+ 		}
+	});
+
+}
+
 function process(cmd) {
 
-	//if(validate(document.studentForm) ==false) return ;
+	//if(validate(document.studentForm) == false) return ;
 
 	$('#studentForm').attr("action" , "/mng/std/student/" + cmd );
 	$('#studentForm').ajaxSubmit(processCallback);

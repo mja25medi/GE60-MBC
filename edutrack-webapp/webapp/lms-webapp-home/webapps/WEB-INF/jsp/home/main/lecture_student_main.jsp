@@ -1,7 +1,50 @@
 <%@	page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/jsp/common/page_init.jsp" %>
 <c:url var="img_base" value="/img/home" />
-    
+
+	<div class="segment">
+		<div class="course_info style_home" style="align-items: flex-end;">
+		    <div class="img_box">
+		       <img src="/app/file/thumb/${createCourseVO.thumbFileSn }" alt="이미지" aria-hidden="true" onerror="this.style.display='none'">
+		    </div>
+	        <div class="item">
+				<label class="category" style="width: fit-content; padding: 0.3rem 1rem;">${courseVO.crsCtgrNm }</label>
+	           	<div class="class_row">
+					<h2>${createCourseVO.crsCreNm }</h2>
+	            </div>
+				<ul>
+					<li><span>교육기간</span>${createCourseVO.enrlStartDttm } ~ ${createCourseVO.enrlEndDttm }</li>
+					<li><span>성적열람 시작일</span>${createCourseVO.scoreOpenDttm }</li>
+	             	<li>
+		                <c:if test="${authGrpCd ne 'TCH'}">
+		                <span><i class="xi-calendar-check" aria-hidden="true"></i>전체 ${createCourseVO.sbjCnt }개의 과목 중</span>
+			            <c:if test="${empty createCourseVO.sbjCnts}">0</c:if><c:if test="${not empty createCourseVO.sbjCnts}">${createCourseVO.sbjCnts }</c:if>개 수강 완료
+		                </c:if>
+		                <c:if test="${authGrpCd eq 'TCH'}">
+		                <span><i class="xi-calendar-check" aria-hidden="true"></i>전체 ${createCourseVO.sbjCnt }개의 과목</span>
+		                </c:if>
+	             	</li>					                
+				</ul>
+			</div>
+			<div>
+				<c:if test="${authGrpCd eq 'TCH'}">
+	                <button type="button" class="btn type6" onclick="resHelp()">코딩실습 도움주기</button>
+	            </c:if>
+				<c:if test="${authGrpCd ne 'TCH'}">
+	            	<c:if test="${createCourseVO.creTypeCd eq 'OF' or createCourseVO.creTypeCd eq 'BL' }">
+		                 <c:if test="${attendanceVO.enterFlag ne 'E'}">
+                         	<button type="button" class="btn type3" onclick="enterClass()">출석하기</button>
+                         </c:if>
+                         <c:if test="${attendanceVO.enterFlag eq 'E'}">
+                         	 <button type="button" id="quitBtn" class="btn type3" onclick="quitClass()" style="display: none;">퇴실하기</button>
+                         	 <button type="button" class="btn type3" onclick="classOutingCheck()">외출/조퇴하기</button>
+                         </c:if>
+	                 </c:if>
+	            </c:if>
+			</div>
+	    </div>
+	</div>    
+	
 	<div class="segment grid_2">
 	    <div class="prog_rate">
 	        <h3>학습진도율</h3>
@@ -223,8 +266,8 @@
 		}else{
 			//listContents();
 		}
-		
 		$(".modal").css("display","none");
+		$("#course").css("display","none");
 
 	});
 

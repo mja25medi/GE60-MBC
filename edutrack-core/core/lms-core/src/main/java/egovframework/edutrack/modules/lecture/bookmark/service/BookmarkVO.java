@@ -70,6 +70,7 @@ public class BookmarkVO
 	private String				mobileType;
 	private String				cntsTypeCd ;
 	private String				sceneId ;
+	private String				roomId ;
 	private String				zoomUrl ;
 
 	private String				errorCode	= "0";
@@ -106,6 +107,7 @@ public class BookmarkVO
 	
 	private AttendStatusCode	attendStsCd;
 	private int 				asmtSn;
+	private int					asmtSubSn;
 	
 	//성적 API 발송 용 필드 (start의 경우 eduResult를 사용하지 않아 사용하는 VO별 선언)
   	private String scoreSaveType;//START,END,RATE,RESET
@@ -119,7 +121,15 @@ public class BookmarkVO
 		if(!attendStsCd.equals(AttendStatusCode.ABSENCE))
 			this.studyYn = "Y";
 	}
+	
+	public String getRoomId() {
+		return roomId;
+	}
 
+	public void setRoomId(String roomId) {
+		this.roomId = roomId;
+	}
+	
 	public String getRegIp() {
 		return regIp;
 	}
@@ -894,6 +904,14 @@ public class BookmarkVO
 
 	public void setAsmtSn(int asmtSn) {
 		this.asmtSn = asmtSn;
+	}
+
+	public int getAsmtSubSn() {
+		return asmtSubSn;
+	}
+
+	public void setAsmtSubSn(int asmtSubSn) {
+		this.asmtSubSn = asmtSubSn;
 	}
 	
 }

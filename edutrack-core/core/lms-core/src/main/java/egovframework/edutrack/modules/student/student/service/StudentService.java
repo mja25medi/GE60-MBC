@@ -316,6 +316,9 @@ public interface StudentService {
 	@HrdApiStdStd(SyncType.CREATE)
 	public abstract int addStudentForHrdApi(StudentVO vo);
 	
+	@HrdApiStdStd(SyncType.UPDATE)
+	public abstract int addStudentIdeUrl(StudentVO vo);
+	
 	@HrdApiStdStd(SyncType.DELETE)
 	public abstract int deleteStudentForHrdApi(StudentVO vo);
 
@@ -427,5 +430,6 @@ public interface StudentService {
 	 * @return  ProcessResultVO
 	 */
 	public abstract ProcessResultVO<StudentVO> cancelStudentCertPass(StudentVO iStudentVO) throws Exception;
+
 	
 }

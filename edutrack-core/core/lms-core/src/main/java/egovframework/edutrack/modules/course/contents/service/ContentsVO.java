@@ -56,10 +56,19 @@ public class ContentsVO extends DefaultVO {
 	
 	private String	zoomUrl;
 	private String sceneId;
+	private String roomId;
 	private String asmtSn;
 	
 	private String preUnitCd; /* 이전차시 */
 	private String nextUnitCd; /* 이후차시 */
+	
+	public String getRoomId() {
+		return roomId;
+	}
+
+	public void setRoomId(String roomId) {
+		this.roomId = roomId;
+	}
 	
 	
 	public String getAsmtSn() {

@@ -93,7 +93,7 @@
 			                                <button type="button" class="basic data" onclick="fileDownload('${contentsItem.atchFilePath}')">학습자료</button>     
 			                            </c:if>
 			                            
-			                            <c:if test="${contentsItem.cntsTypeCd eq 'CODING_L' or contentsItem.cntsTypeCd eq 'CODING_T' or contentsItem.cntsTypeCd eq 'META'}">
+			                            <c:if test="${contentsItem.cntsTypeCd eq 'CODING_T'}">
 				                            <c:if test="${not empty contentsItem.unitFilePath}">
 				                                <button type="button" class="basic" onclick="previewShareCnts('${contentsItem.unitFilePath}')">학습영상</button>     
 				                            </c:if>
@@ -120,7 +120,7 @@
 				                            			</c:choose>
 				                            		</c:when>
 				                            		<c:otherwise> <!-- 온라인일때 -->
-					                            		<button type="button" class="primary ${btnDisabled}" onclick="checkDayLimit('${contentsItem.sbjCd}','${contentsItem.unitCd}','${contentsItem.prgrRatio}','${contentsItem.cntsTypeCd}')">학습하기</button>				                            			
+					                            		<button type="button" class="primary" onclick="checkDayLimit('${contentsItem.sbjCd}','${contentsItem.unitCd}','${contentsItem.prgrRatio}','${contentsItem.cntsTypeCd}')">학습하기</button>				                            			
 				                            		</c:otherwise>
 				                            	</c:choose>
 			                            	</c:when>
@@ -141,7 +141,7 @@
  			                            					<button type="button" class="primary ${btnDisabled}" onclick="editAvatar();">학습하기</button>
  			                            				</c:if>
  			                            				<c:if test="${not empty userVo.avatar}">
- 			                            					<button type="button" class="primary ${btnDisabled}" onclick="goMeta('${contentsItem.unitFilePath}','${contentsItem.sceneId}','${productDomain}','${userVo.avatar}','${userVo.userNm}','${contentsItem.sbjCd}','${contentsItem.unitCd}');">학습하기</button>
+ 			                            					<button type="button" class="primary ${btnDisabled}" onclick="goMeta('${contentsItem.unitFilePath}','${contentsItem.sceneId}','${productDomain}','${userVo.avatar}','${userVo.userNm}','${contentsItem.sbjCd}','${contentsItem.unitCd}','${contentsItem.roomId}');">학습하기</button>
  			                            				</c:if>
  			                            			</c:when>
  			                            			<c:otherwise><button type="button" class="primary ${btnDisabled} disabled" >학습종료</button></c:otherwise>
@@ -171,7 +171,6 @@
 					                            			</c:otherwise>
 					                            		</c:choose> 
 					                            		--%>
-					                            		 
 					                            		<c:if test="${not empty contentsItem.unitFilePath}"> <!-- 콘텐츠 연결이 있을때만 버튼 노출 --> 
 						                            		<c:choose>
 						                            			<c:when test="${nowDate < createCourseVO.enrlStartDttm }">	<!-- 수강기간 이전일 경우 disabled -->
@@ -180,7 +179,7 @@
 						                            			<c:otherwise>
 						                            				<c:choose>
 						                            					<c:when test="${nowDate > createCourseVO.enrlEndDttm }"> <!-- 수강기간 이후일 경우 -->
-						                            						<button type="button" class="default" title="복습하기" onclick="checkDayLimit('${contentsItem.sbjCd}','${contentsItem.unitCd}','${contentsItem.prgrRatio}','${contentsItem.cntsTypeCd}','','Y')">복습하기</button>
+						                            						<button type="button" class="primary" title="복습하기" onclick="checkDayLimit('${contentsItem.sbjCd}','${contentsItem.unitCd}','${contentsItem.prgrRatio}','${contentsItem.cntsTypeCd}','','Y')">복습하기</button>
 						                            					</c:when>
 						                            					<c:otherwise>
 						                            						<button type="button" class="primary ${btnDisabled}" title="학습하기" onclick="checkDayLimit('${contentsItem.sbjCd}','${contentsItem.unitCd}','${contentsItem.prgrRatio}','${contentsItem.cntsTypeCd}')">학습하기</button>
@@ -241,14 +240,12 @@
 	}
 	
 	
-	function goMeta(unitFilePath,sceneId,productDomain,avatar,userNm,sbjCd,unitCd){
+	function goMeta(unitFilePath,sceneId,productDomain,avatar,userNm,sbjCd,unitCd,roomId){
 		
-		var roomId = unitFilePath.split("=")[1];
 		//alert(unitFilePath);
 		//alert(roomId);
 		//https://room.xrcloud.app:4000/ZQZYC4B/메타버스-메타버스?public=6a8457ab-710e-4717-a112-6e1043d4892b
-		
-		
+		//https://room.xrcloud.app:4000/A8dKWB3/빌리버-테스트?public=ada2446d-110f-42c7-bc25-7c9c6566ea56
    		fetch('https://api.xrcloud.app/api/rooms/'+roomId+'?userId=${vo.stdNo}_${vo.crsCreCd}_'+sbjCd+'_'+unitCd, {
    			headers: {'X-XRCLOUD-API-KEY' : '${xrcloud_api_key}'}
    		})

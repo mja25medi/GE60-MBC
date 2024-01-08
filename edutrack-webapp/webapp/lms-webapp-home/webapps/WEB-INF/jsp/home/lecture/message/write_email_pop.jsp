@@ -24,6 +24,7 @@
                         <label class="form-label col-sm-2">수신자</label>
                         <div class="col-sm-10">
                        		<c:set var="receverCnt" value="0" />
+		    				   <ul class="message_box">
 		    				<c:forEach var="recever" items="${targetList}">
 		    					<%-- <c:if test="${recever.recvYn eq 'Y'}">
 		    						<c:set var="receverCnt" value="${receverCnt + 1}" />
@@ -31,8 +32,9 @@
 		    						${recever.recvNm}(${recever.recvAddr})
 		    					</c:if>
 		    					</c:if> --%>
-		    					${recever.recvNm}(${recever.recvAddr})
+		    					<li>${recever.recvNm}(${recever.recvAddr})</li>
 	    					</c:forEach>
+	    					</ul>
 	    					<%-- <c:if test="${receverCnt > 1}">
 				    			<div style="float:right;">
 				    				<div style="float:left;"><spring:message code="common.message.usercnt.include" arguments="${receverCnt}"/>&nbsp;</div>
@@ -58,38 +60,11 @@
                         <label class="form-label col-sm-2">수신거부자</label>
                         <div class="col-sm-10">
                             <ul class="message_box">
-                               <li>수신거부자에게는 메일이 발송되지 않습니다.
-                               		<div>
-										<div style="float:left">
-						    			<c:set var="receverCnt" value="0" />
-						    			<c:forEach var="recever" items="${targetList}">
-						    				<c:if test="${recever.recvYn ne 'Y'}">
-						    					<c:set var="receverCnt" value="${receverCnt + 1}" />
-						    					<c:if test="${receverCnt == 1 }">
-						    						${recever.recvNm}(${recever.recvAddr})
-						    					</c:if>
-						    				</c:if>
-						    			</c:forEach>
-						    			</div>
-						    			<c:if test="${receverCnt > 1}">
-						    			<div style="float:right;">
-						    				<div style="float:left;"><spring:message code="common.message.usercnt.include" arguments="${receverCnt}"/>&nbsp;</div>
-											<div class="input-group-btn btn-group">
-						  						<ul class="dropdown-menu" role="menu" style="padding:10px;right:0;left:auto;">
-						  							<c:forEach var="recever" items="${targetList}">
-					    								<c:if test="${recever.recvYn ne 'Y'}">
-						    								<li>${recever.recvNm}&lt;${recever.recvAddr}&gt;</li>
-						    							</c:if>
-						    						</c:forEach>
-						  						</ul>
-						    					<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-						    						<span class="caret"></span>
-						  						</button>
-						  					</div>
-						  				</div>
-						  				</c:if>
-									</div>
-                               </li>
+	  							<c:forEach var="recever" items="${targetList}">
+	   								<c:if test="${recever.recvYn ne 'Y'}">
+	    								<li>${recever.recvNm}&lt;${recever.recvAddr}&gt;</li>
+	    							</c:if>
+	    						</c:forEach>
                             </ul>
                         </div>
                     </div>

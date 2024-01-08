@@ -395,12 +395,12 @@
 	}
 	
 	/**
-	 * 개설 과정 수정 팝업
+	 * qr코드 보기 팝업
 	 */
-	function readCourseQrPop(qrfilePath,qrNo) {
+	function readCourseQrPop(qrFileSn) {
 		var addContent  = "<iframe id='addFrame' name='addFrame' width='100%' height='100%' "
 			+ "frameborder='0' src='<c:url value="/mng/course/createCourse/readCourseQrPop"/>"
-			+ "?qrfilePath="+qrfilePath+ "&qrNo="+qrNo+"+'/>";
+			+ "?qrFileSn="+qrFileSn+"'/>";
 		modalBox.clear();
 		modalBox.addContents(addContent);
 		modalBox.resize(500, 550);

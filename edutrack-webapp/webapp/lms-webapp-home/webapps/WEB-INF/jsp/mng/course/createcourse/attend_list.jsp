@@ -79,6 +79,7 @@
                                     </thead>
                                     <tbody>    
                                     
+                                    <c:if test="${not empty attendList }">
                                     <c:forEach var="data" items="${attendList}" varStatus="status">                            
 	                                    <tr>
 	                                        <td>${status.count}</td>
@@ -576,7 +577,12 @@
 											<td>${data.outDay}</td>	
 	                                    </tr>
                                     </c:forEach> 
-                                    
+                                    </c:if>
+                                    <c:if test="${empty attendList }">
+										<tr>
+											<td colspan='48'>해당 기간에 데이터가 없습니다.</td>
+										</tr>                                    
+                                    </c:if>
                                     </tbody>
                                 </table>
                             </div>

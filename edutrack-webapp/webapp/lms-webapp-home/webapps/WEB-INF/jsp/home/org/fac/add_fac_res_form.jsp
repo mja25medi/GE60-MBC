@@ -153,8 +153,8 @@
 		
 		var t = new Date();
 		var y = t.getFullYear(); // 년도
-		var m = t.getMonth() + 1;  // 월
-		var d = t.getDate();  // 날짜
+		var m = ("0" + (1 + t.getMonth())).slice(-2);  // 월
+		var d = ("0" + t.getDate()).slice(-2);  // 날짜
 		var today = y + '-' + m + '-' + d; // 오늘날짜
 		
 		if(resDt < today){

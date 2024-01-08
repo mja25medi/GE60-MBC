@@ -10,6 +10,7 @@
 												<col style="width:250px"/>
 												<col style="width:auto"/>
 												<col style="width:70px"/>
+												<col style="width:70px"/>
 												<col style="width:80px"/>
 												<col style="width:100px"/>
 											</colgroup>
@@ -60,6 +61,7 @@
 													</c:otherwise>
 												</c:choose>
 												</th>
+												<th scope="col">과목구분</th>
 												<th scope="col">사용</th>
 												<th scope="col"><spring:message code="course.title.subject.contents.cnt"/></th>
 												<th scope="col"><spring:message code="course.title.contents.manage"/></th>
@@ -74,6 +76,7 @@
 													${item.sbjNm}
 													<a href="javascript:sbjEdit('${item.sbjCd}');" ><i class="fa fa-cog"></i></a>
 												</td>
+												<td class="text-center">${item.sbjType}</td>
 												<td class="text-center">${item.useYn}</td>
 												<td class="text-center">${item.contentsCnt}</td>
 												<td class="text-center">

@@ -124,6 +124,14 @@ $(document).ready(function () {
         ]
     });
 
+    /********** popupBox **********/
+    $('.popup-close').unbind('click').bind('click', function(e) {
+      $('.popup-wrap, .popup-close').hide();
+    });
+    $('.popup-open').on('click', function() {
+        $('.popup-wrap, .popup-close').css('display', 'flex');
+        $('#slides').get(0).slick.setPosition()
+    });
 
     /********** main hot news **********/
     $('.news_slider_list').slick({

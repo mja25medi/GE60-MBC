@@ -522,7 +522,60 @@
 
         </main>
         <%@ include file="../inc/hrd_footer.jsp" %>
-       
+
+        <!-- 팝업 보기 -->
+        <div class="popup-wrap on">
+            <div class="inner-box">
+                <div class="head-box">
+                    <a href="#0">오늘 하루 열지 않기 <i class="xi-close"></i></a>
+                </div>
+                <ul id="slides-main">
+                    <li>
+                        <iframe id="iframe1" src="iframe_main_popup.jsp"></iframe>
+                    </li>
+                    <li>
+                        <iframe id="iframe1" src="iframe_main_popup2.jsp"></iframe>
+                    </li>
+                    <li>
+                        <iframe id="iframe1" src="iframe_main_popup3.jsp"></iframe>
+                    </li>
+                </ul>
+            </div>
+            <div class="popup-overlay"></div>
+        </div>
+        <div class="popup-btn-box">
+            <a href="#0" class="popup-close"><i class="xi-close-min"></i></a>
+            <a href="#0" class="popup-open"><i class="xi-library-books-o"></i><label class="ui blue small circular label">3</label></a>
+        </div>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                var slider = $('#slides-main').slick({
+                    arrows: true,
+                    autoplay: true,
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                    responsive: [
+                        { 
+                            breakpoint: 950,
+                            settings: {
+                            slidesToShow: 1
+                            }
+                        },
+                        { 
+                            breakpoint: 480,
+                            settings: {
+                            slidesToShow: 1,
+                            arrows: true,
+                            dots: true
+                            }
+                        }
+
+                    ]
+                });
+            });
+        </script>
+        
     </div>
 </body>
 

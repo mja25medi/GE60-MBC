@@ -83,6 +83,16 @@
 		 ORDER  BY POPUP_SN DESC
 	</select>
 	
+	<select id="listPopupCnt" parameterType="brdPopupNoticeVO" resultType="Integer">
+	 	SELECT COUNT(*) FROM (
+	 	<include refid="listQuery"/>
+	 	
+		AND USE_YN_WWW = IFNULL( FN_GET_NULL(#{useYnWww}) , USE_YN_WWW) 
+		AND (CASE WHEN IFNULL( FN_GET_NULL(#{searchDate}) ,'N') = 'Y' THEN DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') ELSE START_DTTM END) >= START_DTTM
+		AND (CASE WHEN IFNULL( FN_GET_NULL(#{searchDate}) ,'N') = 'Y' THEN DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') ELSE END_DTTM END) <![CDATA[<=]]> END_DTTM	
+		) popupCnt
+	</select>
+	
 	<select id="count" parameterType="brdPopupNoticeVO" resultType="Integer">
 		/*
 			 SQL ID : count

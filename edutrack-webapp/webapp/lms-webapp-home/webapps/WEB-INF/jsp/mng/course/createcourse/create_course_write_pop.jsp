@@ -31,6 +31,22 @@
 			</td>
 		</tr>
 		
+		<tr id="qrInput" style="display: none;">
+			<th scope="row"><label for="QR">QR 등록</label></th>
+			<td colspan="3">
+				<a href="javascript:uploderclick('QRuploader');" class="btn btn-primary btn-xs"><spring:message code="button.select.file"/></a>
+				<input type="file" name="QRuploader" id="QRuploader" title="QRuploader" multiple style="display:none" accept="image/*"  "/><%-- 첨부파일 버튼 --%>
+				<div class="upload">
+					<div class="upload_inbox">
+						<div id="QRprogress" class="progress">
+		    				<div class="progress-bar progress-bar-success"></div>
+						</div>
+					</div>
+					<div id="QRfiles" class="multi_inbox"></div>
+				</div>
+			</td>
+		</tr>
+		
 		<tr>
 			<th scope="row"><span style="color:red;">* </span><spring:message code="course.title.createcourse.duration.aplc"/></th>
 			<td colspan="4">
@@ -333,15 +349,18 @@
 	<input type="hidden" name="scoreOpenDttm" id="scoreOpenDttm" value="${vo.scoreOpenDttm }"/>
 	<input type="hidden" name="creTypeCd" id="creTypeCd" value="${vo.creTypeCd}"/>
 	<input type="hidden" name="creDesc" id="creDesc" value="${vo.creDesc}"/>
+	<input type="hidden" name="qrFileSn" id="qrFileSn" />
 	<input type="submit" value="submit" style="display:none" />
 	</form>
 
-
+<script type="text/JavaScript" src="/js/jquery/jquery-fileupload/jquery.fileupload.js"></script>
+<script type="text/JavaScript" src="/js/common_fileupload.js"></script>	
 <script type="text/javascript">
 	var creCnt = ${creCnt};
 	var runCnt = 0;
 	var endCnt = 0;
 
+	var qrFile;
 	$(document).ready(function() {
 		$('.inputNumber').inputNumber();	// 숫자만 입력되도록 설정.
 		$('.inputDate').inputDate();	// 날짜 형식만 입력되도록 설정.
@@ -350,8 +369,28 @@
 			chgCreTerm(i);
 			sumTotal(i);
 		}
+		
+		qrFile = new $M.JqueryFileUpload({
+			"varName"			: "qrFile",
+			"files" 			: $.parseJSON('${vo.qrFileJson}'),
+			"uploaderId"		: "QRuploader",
+			"fileListId"		: "QRfiles",
+			"progressId"		: "QRprogress",
+			"maxcount"			: 1,
+			"previewImage"		: true,
+			"infoUse"		: true,
+			"uploadSetting"		: {
+				'formData'		: { 'repository': 'CRS_CRE_CRS_QR',
+	                                'organization' : "${USER_ORGCD}",
+									'type'		: 'QR' }
+			}
+		});
 	});
 
+	function uploderclick(str) {
+		$("#"+str).click();
+	}
+	
 	/**
 	 * 서브밋 처리
 	 */
@@ -399,6 +438,7 @@
 
   		if(error == 0) {
 			setValue(runCnt);
+			//첨부파일
 			process("addCreateCourse");	// cmd
 		}
 	}
@@ -669,7 +709,8 @@
 		$("#scoreOpenDttm").val($("#scoreOpenDttm_"+str).val());
 		$("#creTypeCd").val($("#creTypeCd_"+str).val());
 		$("#creDesc").val($("#creDesc_"+str).val());
-
+		var _qrFile = qrFile.getFileSnAll();
+		$("#qrFileSn").val(_qrFile);
 	}
 
 	function setAuditDttm(str, gep) {
@@ -784,8 +825,10 @@
 	    var operType = $("#creTypeCd_0").val();
 	    if (operType == 'OF' || operType == 'BL') {
 	      $('#oflnEduPlace_0').show();
+	      $('#qrInput').show();
 	    } else {
 	      $('#oflnEduPlace_0').hide();
+	      $('#qrInput').hide();
 	    }
 		
 	}
@@ -829,7 +872,6 @@
 	        sumTotal(0);
 	    });
 	})
-	
 	
 
 </script>

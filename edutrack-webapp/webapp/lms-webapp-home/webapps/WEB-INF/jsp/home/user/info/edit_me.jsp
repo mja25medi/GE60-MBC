@@ -223,7 +223,7 @@
 			"modalid" : "modal1"
 		});
 		
-		$( "#changePasswd-modal" ).dialog({
+		/* $( "#changePasswd-modal" ).dialog({
 			autoOpen: false,
 			modal: true ,
 			width:'550',
@@ -234,7 +234,7 @@
 			$("#changePasswd-modal").load("<c:url value="/home/user/editPassForm"/>", function(){
 				$( "#changePasswd-modal" ).dialog( "open" );
 			});
-		});
+		}); */
 		
 		
 		// 이미지 파일 첨부 바인딩 및 초기화
@@ -257,11 +257,11 @@
 													'organization' : "${USER_ORGCD}",
 													'type'		: 'usrPhoto' }
 							}
-						}); */
+						});
 		
 		checkBirthDay();
 		emailSet();
-		
+		 */
 	});
 	
 	function searchAddress() {

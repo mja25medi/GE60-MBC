@@ -229,7 +229,9 @@ public class CreateCourseVO extends DefaultVO {
 	private String crsCreQrOutFilePath; 	// 퇴실 QR 이미지 경로
 	private String crsCreQrOutNo;			// 퇴실 QR 번호
 	
-	
+	/*  첨부파일 목록 */
+	private Integer qrFileSn;
+	private SysFileVO qrFile;
 	
 	public String getMngType() {
 		return mngType;
@@ -1305,5 +1307,25 @@ public class CreateCourseVO extends DefaultVO {
 	}
 	public void setCrsSvcType(String crsSvcType) {
 		this.crsSvcType = crsSvcType;
+	}
+	//-- 썸네일 파일 관련 처리
+	public Integer getQrFileSn() {
+		if(ValidationUtils.isNull(this.qrFileSn))
+		return this.getQrFile().getFileSn();
+		else return this.qrFileSn;
+	}
+	public void setQrFileSn(Integer qrFileSn) {
+		this.getQrFile().setFileSn(qrFileSn);
+	}
+	public SysFileVO getQrFile() {
+		if (this.qrFile == null)
+			this.qrFile = new SysFileVO();
+		return this.qrFile;
+	}
+	public void setQrFile(SysFileVO qrFile) {
+		this.qrFile = qrFile;
+	}
+	public String getQrFileJson() {
+		return SysFileVOUtil.getJson(this.getQrFile(), false);
 	}
 }

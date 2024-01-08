@@ -87,7 +87,7 @@
 				<select name="sbjType" id="sbjType" class="form-control input-sm">
 					<option value=""><spring:message code="common.title.select"/></option>
 					<option value="ON" <c:if test="${vo.sbjType eq 'ON'}">selected</c:if>>온라인</option>
-					<option value="OFF" <c:if test="${vo.sbjType eq 'OFF'}">selected</c:if>>오프라인</option>
+					<option value="OF" <c:if test="${vo.sbjType eq 'OF'}">selected</c:if>>오프라인</option>
 				</select>
 			</td>
 		</tr>

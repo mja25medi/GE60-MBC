@@ -241,6 +241,55 @@ section06
 .section06 .news_slider_list .slick-dots li.slick-active { opacity: 1; display: inline-block; background-color: hsl(208, 100%, 34%); }
 .section06 .news_slider_list .slick-dots li.slick-active button:before { display: none; }
 
+/* =======================================================================================
+팝업 배너
+======================================================================================= */
+/* 메인 레이어 팝업 CSS */
+.popup-wrap { display: none; align-items: center; justify-content: center; position: fixed; top: 0px; left: 0px; right: 0px; height: 100vh; z-index: 9999; }
+.popup-wrap .inner-box { position: relative; width: 920px; opacity: 1; z-index: 1; }
+.popup-wrap .inner-box .head-box { display: flex; align-items: center; padding-bottom: 1.2rem; padding-right: 3rem; }
+.popup-wrap .inner-box .head-box a { display: inline-block; margin-left: auto; padding: 1rem 2.5rem; font-size: 1.6rem; color: #fff; text-align: center; border: 2px solid #fff; border-radius: 2.4rem; background: rgba(0, 0, 0, .5); }
+.popup-wrap .inner-box .head-box a:hover {color: #38ffff; background-color: rgba(0, 0, 0, .8);}
+.popup-wrap .inner-box .slick-track { margin: 0 auto; }
+.popup-wrap .inner-box ul li { text-align: center; max-width:420px; height: 420px; margin-left: 20px; margin-right: 20px; background-color: transparent;}
+.popup-wrap .inner-box ul li iframe {width: 100%; height: 100%; background-color: transparent;}
+.popup-wrap .inner-box ul li img { display: inline-block; width: 420px; max-width: 100%;}
+.popup-wrap .inner-box .slick-prev, .popup-wrap .inner-box .slick-next { width: 64px; height: 64px; color: #fff; border: none; border-radius: 100%; background: rgba(0, 0, 0, .9); }
+.popup-wrap .inner-box .slick-prev { left: -64px; }
+.popup-wrap .inner-box .slick-next { right: -64px; }
+.popup-wrap .inner-box .slick-prev:before, .popup-wrap .inner-box .slick-next:before { -webkit-filter: grayscale(1) invert(1); }
+.popup-wrap .inner-box .slick-prev:before { position: absolute; top: 50%; left: 50%; width: 9px; height: 15px; margin: -7px 0 0 -6px; content: ''; background: url(../img/page_arrow_left.png); background-size: cover; }
+.popup-wrap .inner-box .slick-dots li {height: auto; background-color: transparent;}
+.popup-wrap .popup-overlay { position: fixed; left: 0; top: 0; right: 0; bottom: 0; min-width: 100%; min-height: 100%; background: rgba(0, 0, 0, 0.5); }
+.popup-wrap.on { display: flex; }
+.popup-wrap.on ~ .popup-btn-box .popup-close { display: flex; }
+.popup-btn-box .popup-close { display: none; }
+.popup-btn-box { position: fixed; right: 1em; bottom: 1em; z-index: 9999; }
+.popup-btn-box a { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 64px; height: 64px; box-shadow: 0px 1px 3px 0px #d4d4d5, 0px 0px 0px 1px #d4d4d5; border-radius: 100%; background: #fff; }
+.popup-btn-box a i { font-size: 2.5em; }
+.popup-btn-box a:last-child { margin-top: 10px; }
+.popup-btn-box .popup-close i { font-size: 2.5em; }
+.popup-btn-box .popup-open i { font-size: 1.5em; }
+.popup-btn-box a:last-child label { position: absolute; right: 0; bottom: 0; }
+.ui.circular.blue.label { min-width: 2rem; min-height: 2rem; padding: 0.5em !important; line-height: 1rem; text-align: center; border-radius: 500rem; background-color: #2185D0 !important; border-color: #2185D0 !important; color: #FFFFFF !important; }
+@media (max-width: 1024px) {
+  .popup-wrap .inner-box .slick-prev { left: -34px; z-index: 1000; }
+  .popup-wrap .inner-box .slick-next { right: -34px; }
+}
+@media (max-width: 950px) {
+  .popup-wrap .inner-box {width: 460px; box-sizing: border-box;}
+  /* .popup-wrap .inner-box { width: 80%; }
+  .popup-wrap .inner-box ul li {max-width:360px; height: 360px;} */
+}
+/* @media (max-width: 768px) {
+  .popup-wrap .inner-box { width: 70%; }
+} */
+@media (max-width: 480px) {
+  .popup-wrap .inner-box { width: 90%; }
+  .popup-wrap .inner-box ul li img { width: 100%; }
+  .popup-wrap .inner-box .slick-prev { left: -10px; z-index: 1000; }
+  .popup-wrap .inner-box .slick-next { right: -10px; }
+}
 
 @media (max-width:1380px) {
   .mv_banner {width:100%; left:auto; right:2rem;}

@@ -6,6 +6,7 @@ import java.util.Map;
 import egovframework.edutrack.modules.course.course.service.CourseVO;
 import egovframework.edutrack.modules.lecture.bookmark.service.BookmarkVO;
 import egovframework.edutrack.modules.student.student.service.StudentVO;
+import egovframework.edutrack.modules.user.info.service.UsrUserInfoVO;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 
 @Mapper("studentMapper")
@@ -52,6 +53,13 @@ public interface StudentMapper {
 	 * @reurn ProcessResultVO
 	 */
 	public abstract int insertStudent(StudentVO iStudentVO);
+	
+	/**
+	 * 수강생 IDE URL 등록
+	 *
+	 * @reurn ProcessResultVO
+	 */
+	public int updateStudentIdeUrl(StudentVO vo);
 
     /**
      * 수강생 일괄등록
@@ -488,5 +496,21 @@ public interface StudentMapper {
 	 * @return ProcessReslutListVO
 	 */
 	public abstract int deleteCreateCourseStd(StudentVO iStudentVO) throws Exception;
+
+	/**
+	 * 아이디로 수강생 번호 조회
+	 * @param request
+	 *
+	 * @return  ProcessResultVO
+	 */
+	public abstract StudentVO selectStdNo(StudentVO iStudentVO);
+	
+	/**
+	 * 아이디로 수강생 번호 조회
+	 * @param request
+	 *
+	 * @return  ProcessResultVO
+	 */
+	public abstract int selectCreIdeUrl(StudentVO iStudentVO);
 	
 }

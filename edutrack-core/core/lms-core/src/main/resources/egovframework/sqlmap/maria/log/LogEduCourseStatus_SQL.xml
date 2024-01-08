@@ -69,13 +69,13 @@
 		     , A.CRS_CRE_NM as crsCreNm
 		     , A.CRE_YEAR as creYear
 		     , A.CRE_TERM as creTerm
-		     , B.ENRL_START_DTTM as enrlStartDttm
-		     , B.ENRL_END_DTTM as enrlEndDttm
+		     , A.ENRL_START_DTTM as enrlStartDttm
+		     , A.ENRL_END_DTTM as enrlEndDttm
 		     , A.OFLN_START_DTTM as oflnStartDttm
 		     , A.OFLN_END_DTTM as oflnEndDttm
 		     , B.CRS_OPER_MTHD as crsOperMthd
 		     , A.DEPT_CD
-			 , C.DEPT_NM
+			 <!-- , C.DEPT_NM -->
 		     , ( SELECT COUNT(*)
 		           FROM tb_std_std
 		          WHERE CRS_CRE_CD = A.CRS_CRE_CD
@@ -88,9 +88,9 @@
 		           FROM tb_std_std
 		          WHERE CRS_CRE_CD = A.CRS_CRE_CD
 		            AND ENRL_STS = 'F' ) AS failCnt
-		  FROM tb_crs_cre_crs A, tb_crs_crs B, tb_usr_dept_info C
+		  FROM tb_crs_cre_crs A, tb_crs_crs B <!-- tb_usr_dept_info C -->
 		 WHERE A.CRS_CD = B.CRS_CD
-		 AND A.DEPT_CD = C.DEPT_CD
+		<!--  AND A.DEPT_CD = C.DEPT_CD -->
 	</sql>
 	
 	<sql id="whereStatusQuery">
@@ -106,6 +106,9 @@
 		<if test = 'crsCd != null and crsCd != ""'>
 			AND A.CRS_CD = IFNULL((#{crsCd}),A.CRS_CD)
 		</if>
+		<if test = 'creCrsCnt != null and creCrsCnt != ""'>
+			AND A.CRE_TERM = IFNULL((#{creCrsCnt}),A.CRE_TERM)
+		</if>
 		<if test = 'deptCd != null and deptCd != ""'>
 			AND A.DEPT_CD = IFNULL((#{deptCd}),A.DEPT_CD)
 		</if>
@@ -119,7 +122,7 @@
 			AND SUBSTR(B.ENRL_END_DTTM,1,8) BETWEEN #{enrlEndDttmStart} AND #{enrlEndDttmEnd}
 		</if>
 		<if test = 'searchValue != null and searchValue != ""'>
-		   AND (CASE WHEN #{searchKey} = 'crsNm' THEN B.CRS_NM  WHEN #{searchKey} = 'crsCreNm' THEN A.CRS_CRE_NM ELSE C.DEPT_NM END)  like CONCAT('%',#{searchValue},'%')
+		   AND (CASE WHEN #{searchKey} = 'crsNm' THEN B.CRS_NM  WHEN #{searchKey} = 'crsCreNm' THEN A.CRS_CRE_NM END)  like CONCAT('%',#{searchValue},'%')
 		</if>
 	</sql>
 	

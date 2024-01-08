@@ -544,6 +544,10 @@
 			alert('<spring:message code="course.message.course.alert.nodupchek"/>');
 			return;
 		}
+		if($('#eduNop').val() == '') {
+			alert('수강인원이 입력되지 않았습니다.');
+			return;
+		}
 		if("BL" == $("#crsOperMthd").val()){
 			$("#eduTm").val($("#eduTm_tempBl").val());
 			$("#oflnEduTm").val($("#oflnEduTm_tempBl").val());

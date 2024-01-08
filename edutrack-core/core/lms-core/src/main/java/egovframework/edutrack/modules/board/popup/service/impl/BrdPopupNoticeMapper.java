@@ -69,5 +69,7 @@ public interface BrdPopupNoticeMapper {
     /**
      * 팝업 공지사항을 삭제한다.  
      */
-    public int delete(BrdPopupNoticeVO vo) throws Exception ;  
+    public int delete(BrdPopupNoticeVO vo) throws Exception ;
+
+	public int listPopupCnt(BrdPopupNoticeVO vo) throws Exception ;
 }

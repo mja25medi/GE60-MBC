@@ -7,6 +7,7 @@
 				<col style="width:auto;"/>
 				<col style="width:auto"/>
 				<col style="width:auto"/>
+				<col style="width:auto"/>
 				<col style="width:66px;"/>
 			</colgroup>
 			<thead>
@@ -14,6 +15,7 @@
 					<th scope="col"><spring:message code="course.title.subject.category"/></th>
 					<th scope="col"><spring:message code="course.title.subject.name"/></th>
 					<th scope="col"><spring:message code="course.title.subject.studymthd"/></th>
+					<th scope="col"><spring:message code="course.title.subject.type"/></th>
 					<th scope="col"><spring:message code="course.title.subject.contents.cnt"/></th>
 					<th scope="col"><spring:message code="common.title.select"/></th>
 				</tr>
@@ -24,7 +26,7 @@
 					<td class="wordbreak">${item.sbjCtgrNm}</td>
 					<td class="wordbreak">${item.sbjNm}</td>
 					<td>
-						<select name="studyMthd_${item.sbjCd}" id="studyMthd_${item.sbjCd}" class="form-control input-sm">
+						<select name="studyMthd_${item.sbjCd}" id="studyMthd_${item.sbjCd}" class="form-control input-sm" <c:if test="${item.sbjType eq 'OF' }"> disabled </c:if>>
 						<c:forEach var="code" items="${studyMthdList}">
 							<c:set var="codeName" value="${code.codeNm}"/>
 							<c:forEach var="lang" items="${code.codeLangList }">
@@ -34,6 +36,7 @@
 						</c:forEach>
 						</select>
 					</td>
+					<td>${item.sbjType}</td>
 					<td>${item.contentsCnt}</td>
 					<td class="text-center">
 						<c:if test="${item.contentsCnt > 0 }">

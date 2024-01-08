@@ -142,7 +142,7 @@ header
 .topmenu .depth1.on .submenu { opacity: 0; }
 .topmenu .depth1.active.on .submenu { opacity: 1; }
 .topmenu .submenu { /* transition: 0.35s, max-height 1.35s cubic-bezier(0.13, 0.67, 0.59, 0.98); */
-	opacity: 0; visibility: hidden; overflow: hidden; max-height: 0; position: absolute; left: -2rem; top: 5.2rem; z-index: 20; min-width: 180px; background-color: #fff; text-align: left; border-radius: 0 0 1rem 1rem; box-shadow: 0 2rem 2rem rgba(0, 0, 0, 0.12); }
+	opacity: 0; visibility: hidden; overflow: hidden; max-height: 0; position: absolute; left: -2rem; top: 5.7rem; z-index: 20; min-width: 180px; background-color: #fff; text-align: left; border-radius: 0 0 1rem 1rem; box-shadow: 0 2rem 2rem rgba(0, 0, 0, 0.12); }
 .topmenu .depth2 { margin: 2rem; position: relative; overflow-y: auto; display: flex; flex-direction: column; flex-wrap: wrap; }
 .topmenu .depth2 > li { flex: 0 0 23.2%; margin-left: 0; position: relative; margin-bottom: 0rem; }
 .topmenu .depth2 > li:last-child { margin-bottom: 0rem; }
@@ -174,7 +174,7 @@ header
 .allmenu .pop_close { display: block; position: absolute; right: 3rem; top: 3rem; font-size: 2.5rem; color: #242427; }
 .allmenu .header { position: static; }
 .allmenu .header .member_area { display: block; }
-.allmenu .header .gnb_area .nav { display: block; width: 1280px; height: 90%; background-color: #fff; position: absolute; transform: translate(-50%, -50%); left: 50%; top: 50%; z-index: 10; border-radius: 0; padding: 3rem; }
+.allmenu .header .gnb_area .nav { display: block; width: 1280px; height: 90%; background-color: #fff; position: absolute; transform: translate(-50%, -50%); left: 50%; top: 50%; z-index: 220; border-radius: 0; padding: 3rem; }
 .allmenu .header .gnb_area .nav::before { display: none; }
 .allmenu .topmenu { display: flex; flex-wrap: wrap; justify-content: left; width: 100%; height: 90%; padding-right: 2%; overflow: auto; 
 	/*
@@ -255,8 +255,7 @@ footer
 .modal_popup_wrap .modal_popup.m_large { width: 90rem; }
 .modal_popup_wrap .modal_popup .modal_title { border-bottom: 1px solid #DDD; padding-bottom: 2rem; font-size: 2rem; font-weight: 600; color: #333; }
 .modal_popup_wrap .modal_popup .modal_close { position: absolute; right: 4rem; top: 4rem; font-size: 2.4rem; }
-/* .modal_cont { flex: 1; padding: 2rem 0; overflow: hidden; overflow-y: auto; scrollbar-width: none; } */
-.modal_cont { flex: 1; padding: 2rem 0; overflow: hidden;  }
+.modal_cont { flex: 1; padding: 2rem 0; overflow: hidden; overflow-y: auto; scrollbar-width: none; }
 .modal_cont .xi-warning { font-size: 5.6rem; color: #ACAFB8; display: block; margin-bottom: 3rem; }
 .modal_cont .ctl::before { display: none; }
 .scroll_custom {height: auto;}
@@ -267,6 +266,9 @@ footer
 .modal_btns .btn { min-width: 12rem; padding: 1.2rem 4rem; }
 .modal_wide {width: 80% !important;}
 .modal_medium {width: 50% !important;}
+#main_popup {background-color: transparent;}
+#main_popup .modal_cont {padding: 0;}
+
 
 /* .modal_popup_wrap iframe { width: 100%; height: calc(100% - 4px); } */
 .modal_popup_wrap .join_cont .join_area.cert_div { width: 100%; font-size: 16px; }

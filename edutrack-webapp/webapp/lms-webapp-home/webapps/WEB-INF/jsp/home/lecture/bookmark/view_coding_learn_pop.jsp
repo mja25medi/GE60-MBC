@@ -69,7 +69,7 @@
 
 </head>
 <body>
-<iframe id='edutrackAPIFrame' name='edutrackAPIFrame'' style="height:0;width:0;border:0;border:none;visibility:hidden;;" src="<c:url value="/jsp/bookmark/study_edutrack_adapter.jsp"/>" onload="onloadApiFrame()"></iframe>
+<iframe id='edutrackAPIFrame' name='edutrackAPIFrame' style="height:0;width:0;border:0;border:none;visibility:hidden;display:block;" src="<c:url value="/jsp/bookmark/study_edutrack_adapter.jsp"/>" onload="onloadApiFrame()"></iframe>
 <c:if test="${not empty filePath}">
 
 <script type="text/javascript" defer="defer">

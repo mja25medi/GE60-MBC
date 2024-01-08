@@ -8,6 +8,7 @@ import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 
 import egovframework.edutrack.comm.util.web.ValidationUtils;
+import egovframework.edutrack.modules.student.student.service.StudentVO;
 import egovframework.edutrack.modules.user.info.service.UsrUserInfoVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
@@ -248,4 +249,22 @@ public interface UsrUserInfoMapper{
 	 * 소셜 로그인
 	 */
 	public UsrUserInfoVO oauthLogin(Map<String, Object> paramMap) throws Exception;
+	
+	/**
+	 * 강사 IDE 수정
+	 *
+	 * @reurn ProcessResultVO
+	 */
+	public abstract int updateTeacherIde(UsrUserInfoVO infoVO) throws Exception;
+	
+	/**
+	 * 아이디로 강사 번호 조회
+	 * @param request
+	 *
+	 * @return  ProcessResultVO
+	 */
+	public abstract UsrUserInfoVO selectUserNo(UsrUserInfoVO iStudentVO);
+	
+	public int addTeacherIdeUrl(UsrUserInfoVO vo);
+	
 }

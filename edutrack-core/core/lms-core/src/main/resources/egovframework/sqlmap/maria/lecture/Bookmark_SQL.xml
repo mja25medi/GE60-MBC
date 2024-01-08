@@ -48,6 +48,7 @@
 		        ,  B.STD_NO
 		        ,  A.ZOOM_URL
 		        ,  A.SCENE_ID
+		        ,  A.ROOM_ID
 		        ,  A.CNTS_TYPE_CD  
 		        ,  A.CLASS_START_TIME
 				,  (SELECT FN_GET_DATE_FORMAT(A.CLASS_START_TIME,'%H')) AS CLASS_START_HOUR
@@ -154,7 +155,9 @@
 		   	 ,	REG_NO													
 		   	 ,	REG_DTTM												
 		   	 ,	MOD_NO													
-		   	 ,	MOD_DTTM												
+		   	 ,	MOD_DTTM	
+		   	 ,  SCHL_STUDY_START_TM
+		   	 ,	SCHL_STUDY_END_TM										
 			     ,  (SELECT FN_GET_USER_NAME(MOD_NO)) AS MOD_NM	
 			     ,  (SELECT FN_GET_USER_NAME(REG_NO)) AS REG_NM	
 		        ,  'true' as RESULT										

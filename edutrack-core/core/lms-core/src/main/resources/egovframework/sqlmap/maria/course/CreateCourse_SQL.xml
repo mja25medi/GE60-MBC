@@ -55,6 +55,7 @@
 			   , (SELECT FN_GET_USER_NAME(A.MOD_NO) ) AS MOD_NM  
 			   , (SELECT FN_GET_USER_NAME(A.REG_NO) ) AS REG_NM  
 			   , A.CRE_DESC
+			   , A.QR_FILE_SN
 			   , A.SCORE_OPEN_DTTM
 			   , B.CRS_NM
 			   , B.THUMB_FILE_SN
@@ -751,6 +752,7 @@
 		       , A.OFLN_EDU_PLACE 
 		       , A.TRACSE_TME 
 		       , A.CRE_DESC
+		       , A.QR_FILE_SN
 		       , FN_GET_DATE_FORMAT( A.SCORE_OPEN_DTTM,'%Y.%m.%d') AS SCORE_OPEN_DTTM 
 		       , B.CRS_OPER_MTHD 
 		       , B.CRS_OPER_TYPE
@@ -874,6 +876,7 @@
 		       , ETC_NM_3
 		       , ETC_NM_4
 		       , ETC_NM_5
+		       , QR_FILE_SN
 		 ) VALUES (  
 		         #{crsCreCd}  
 		       , #{orgCd}  
@@ -928,7 +931,8 @@
 		       , #{etcNm2}
 		       , #{etcNm3}
 		       , #{etcNm4}
-		       , #{etcNm5} 
+		       , #{etcNm5}
+		       , #{qrFileSn} 
 		)  
     </insert>
 
@@ -1077,6 +1081,9 @@
 		       </if>
 		       <if test = "scoreOpenDttm != null and scoreOpenDttm != ''">
 		       , SCORE_OPEN_DTTM = #{scoreOpenDttm}
+		       </if>
+		       <if test = "qrFileSn != null and qrFileSn != ''">
+		       , QR_FILE_SN = #{qrFileSn}
 		       </if>
 		         
 		   WHERE CRS_CRE_CD = #{crsCreCd}

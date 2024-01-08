@@ -681,9 +681,8 @@ public class CourseCreateCourseManageController extends GenericController{
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		commonVOProcessing(vo, request);
 
-		request.setAttribute("qrfilePath", request.getParameter("qrfilePath"));
-		request.setAttribute("qrNo", request.getParameter("qrNo"));
-
+		request.setAttribute("createCourseVO", vo);
+		
 		return "mng/course/createcourse/view_course_qr_pop";
 	}
 

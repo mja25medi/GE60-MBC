@@ -246,6 +246,15 @@ public class MainLectureController
 		mainLectureVO.setClassUserType(classUserType);
 		mainLectureVO.setStdNo(UserBroker.getStudentNo(request));
 		
+		AttendanceVO avo = new AttendanceVO();
+		avo.setCrsCreCd(createCourseVO.getCrsCreCd());
+		avo.setUserNo(userInfoVO.getUserNo());
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+		String today = formatter.format(DateTimeUtil.getCurrentDate());
+		avo.setAttendDttm(today);
+		avo = attendanceService.viewAttend(avo).getReturnVO();
+		request.setAttribute("attendanceVO", avo);
+		
 		
 		if("STU".equals(classUserType)) {
 			mainLectureVO = mainLectureService.viewCreateCourseSchedule(mainLectureVO).getReturnVO();

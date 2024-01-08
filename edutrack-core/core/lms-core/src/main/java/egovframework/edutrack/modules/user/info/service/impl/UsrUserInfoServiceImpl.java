@@ -14,10 +14,12 @@ import java.util.regex.Pattern;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.poi.openxml4j.exceptions.NotOfficeXmlFileException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import egovframework.edutrack.Constants;
@@ -26,6 +28,7 @@ import egovframework.edutrack.comm.annotation.HrdApiUsrUserInfo.Type;
 import egovframework.edutrack.comm.exception.ServiceProcessException;
 import egovframework.edutrack.comm.service.AbstractResult;
 import egovframework.edutrack.comm.service.ProcessResultListVO;
+import egovframework.edutrack.comm.service.ProcessResultVO;
 import egovframework.edutrack.comm.util.web.DateTimeUtil;
 import egovframework.edutrack.comm.util.web.ExcelUtil;
 import egovframework.edutrack.comm.util.web.JsonUtil;
@@ -38,6 +41,8 @@ import egovframework.edutrack.modules.org.code.service.OrgCodeService;
 import egovframework.edutrack.modules.org.code.service.OrgCodeVO;
 import egovframework.edutrack.modules.org.config.service.OrgUserInfoCfgVO;
 import egovframework.edutrack.modules.org.config.service.impl.OrgUserInfoCfgMapper;
+import egovframework.edutrack.modules.student.student.service.StudentVO;
+import egovframework.edutrack.modules.student.student.service.impl.StudentMapper;
 import egovframework.edutrack.modules.system.code.service.SysCodeLangVO;
 import egovframework.edutrack.modules.system.code.service.SysCodeService;
 import egovframework.edutrack.modules.system.code.service.SysCodeVO;
@@ -101,6 +106,9 @@ public class UsrUserInfoServiceImpl
     
     @Resource(name="usrUserInfoService")
     private UsrUserInfoService		usrUserInfoService;
+    
+	@Resource(name="studentMapper")
+	private StudentMapper 		studentMapper;
     
 	private final class NestedFileHandler 
 		implements FileHandler<UsrUserInfoVO> {
@@ -2104,6 +2112,133 @@ public class UsrUserInfoServiceImpl
 	@Override
 	public UsrUserInfoVO oauthLogin(Map<String, Object> paramMap) throws Exception {
 		return usrUserInfoMapper.oauthLogin(paramMap);
+	}
+	
+	/**
+	 * 강사 ide 수정
+	 *
+	 * @return  ProcessResultVO
+	 */
+	public ProcessResultVO<UsrUserInfoVO> editTeacherUrl(UsrUserInfoVO vo) throws Exception {
+		ProcessResultVO<UsrUserInfoVO> resultVO = new ProcessResultVO<UsrUserInfoVO>();
+		int iResult = 0;
+		
+		try {
+			
+			if(vo.getUserNo() != null) {
+				for(int i=0; i < vo.getUserNos().length; i++) {
+					UsrUserInfoVO pUsrUserInfoVO = new UsrUserInfoVO();
+					
+					pUsrUserInfoVO.setUserNo(vo.getUserNos()[i]);
+					pUsrUserInfoVO.setIdeUrl(vo.getIdeUrls()[i]);
+					iResult += usrUserInfoMapper.updateTeacherIde(pUsrUserInfoVO);
+					
+				}
+			}
+			
+			if(iResult > 0) {
+				resultVO.setReturnVO(vo);
+				resultVO.setResultSuccess();
+			}
+			
+		} catch (Exception e){
+			e.printStackTrace();
+			resultVO.setResultFailed();
+			resultVO.setMessage(e.getMessage());
+		}
+		return resultVO;
+	}
+	
+	/**
+	 * [HRD] 강사 >IDE엑셀업로드
+	 * @throws InvocationTargetException
+	 * @throws IllegalAccessException
+	 */
+	@Override
+	@Transactional
+	public ProcessResultVO<UsrUserInfoVO> addTeacherIdeUrlExcel(UsrUserInfoVO vo, String fileName, String filePath) {
+
+		ProcessResultVO<UsrUserInfoVO> resultVO = new ProcessResultVO<>(new UsrUserInfoVO());
+		resultVO.setResultSuccess();
+		
+		XSSFWorkbook workbook	= null;
+		XSSFSheet sheet = null;
+		
+		FileInputStream fis = null;
+		
+		try {
+			fis = new FileInputStream(filePath + "/" + fileName);
+			workbook =  new XSSFWorkbook(fis);
+			sheet = workbook.getSheetAt(0);
+		} catch (NotOfficeXmlFileException noxfe) {
+			throw new ServiceProcessException("엑셀파일만 업로드 가능합니다.");
+		} catch (IOException ex2) {
+			throw new ServiceProcessException("엑셀파일 읽기 실패하였습니다.");
+		} finally{
+			try {
+				if (fis != null) {	fis.close(); }
+			} catch (Exception e) {
+				throw new ServiceProcessException("엑셀파일 읽기 실패하였습니다.");
+			}
+		}
+		
+		XSSFRow dfltRow = sheet.getRow(1);
+		int cellCount = dfltRow.getPhysicalNumberOfCells();
+		
+		int rowNum = 0;
+		int rows = sheet.getPhysicalNumberOfRows();//행 갯수
+		
+		if(rows == 2) {
+			throw new ServiceProcessException("3번째 줄부터 정보 입력 바랍니다.\n혹은 다른 엑셀파일을 업로드하는게 아닌지 확인바랍니다.");//1번째 줄 : 설명 , 2번째 줄 : 제목줄 , 3번째 줄부터 입력
+		}
+		
+		for(int rowIndex = 2; rowIndex < rows; rowIndex++) {
+			
+			XSSFRow row=sheet.getRow(rowIndex);
+			cellCount = row.getPhysicalNumberOfCells();
+			
+			if(cellCount < 2) {
+				throw new ServiceProcessException((rowIndex + 1) + "라인\n회원아이디, IDE URL은 필수 값입니다.");
+			} else if(cellCount > 2) {
+				throw new ServiceProcessException((rowIndex + 1) + "라인\n엑셀 업로드는 회원아이디, IDE URL만 입력가능합니다. 그 외 다른 내용, 공백을 입력했거나 다른 엑셀파일을 업로드하는게 아닌지 확인바랍니다.");
+			}
+			
+			String userId = StringUtil.nvl(POIExcelUtil.getCellValue(row.getCell(0)));
+			String ideUrl = StringUtil.nvl(POIExcelUtil.getCellValue(row.getCell(1)));
+
+			if("".equals(userId) || "".equals(ideUrl)) {
+				throw new ServiceProcessException((rowIndex + 1) + "라인\n회원 아이디, IDE URL은 필수 값입니다.");
+			}
+			
+			//아이디 체크
+			vo.setUserId(userId);
+			vo.setUserSts("U"); // 사용중인 사용자만 가져오기 (U, N)
+			vo.setSearchAuthGrp("TEACHER"); // 강사체크
+			UsrUserInfoVO resultInfoVO = usrUserInfoMapper.selectUserNo(vo);
+			
+			if(resultInfoVO == null) {
+				throw new ServiceProcessException((rowIndex + 1) + "라인(아이디 : " + userId + ")\n 사용중인 상태의 회원 정보가 없습니다. 회원 정보(회원 가입 여부, 상태 , 강사여부 등)를 확인바랍니다.");
+			}
+			
+			//IDE URL 유무체크
+			StudentVO sVo = new StudentVO();
+			sVo.setIdeUrl(ideUrl);
+			int result = studentMapper.selectCreIdeUrl(sVo);
+			
+			if(result == 0) {
+				throw new ServiceProcessException((rowIndex + 1) + "라인(아이디 : " + userId + ")\n 해당 IDE URL은 없는 주소입니다. 확인바랍니다.");
+			}
+
+			//IDE URL 업데이트
+			UsrUserInfoVO uVO = new UsrUserInfoVO();
+			uVO.setUserNo(resultInfoVO.getUserNo());
+			uVO.setIdeUrl(ideUrl);
+			
+			usrUserInfoMapper.addTeacherIdeUrl(uVO);
+			resultVO.getReturnVO();
+		}
+
+		return resultVO;
 	}
 
 }

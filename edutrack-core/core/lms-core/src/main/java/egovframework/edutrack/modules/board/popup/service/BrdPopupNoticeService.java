@@ -53,4 +53,6 @@ public interface BrdPopupNoticeService {
 	 */
 	public abstract int remove(BrdPopupNoticeVO vo) throws Exception;
 
+	public abstract int listPopupCnt(BrdPopupNoticeVO popupNoticeVO) throws Exception;
+
 }

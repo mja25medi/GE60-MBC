@@ -348,7 +348,7 @@
 		SELECT
 			 A.UNIT_CD
 			,A.UNIT_NM
-		FROM tb_crs_sbj_cnts A, tb_crs_cre_crs_onln_sbj B
+		FROM tb_crs_cre_sbj_cnts A, tb_crs_cre_crs_onln_sbj B
 		WHERE
 			 B.CRS_CRE_CD = #{crsCreCd}
 			AND A.SBJ_CD = B.SBJ_CD
@@ -380,7 +380,7 @@
 			    , A.REG_DTTM
 			    , A.MOD_NO
 			    , A.MOD_DTTM
-			 FROM tb_brd_qna_qstn A, tb_crs_sbj_cnts B 
+			 FROM tb_brd_qna_qstn A, tb_crs_cre_sbj_cnts B 
 			WHERE A.ORG_CD = #{orgCd}
 				AND A.UNIT_CD = B.UNIT_CD
 	</sql>

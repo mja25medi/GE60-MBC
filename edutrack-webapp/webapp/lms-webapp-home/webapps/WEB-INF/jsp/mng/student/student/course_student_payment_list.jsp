@@ -30,7 +30,7 @@
 			<tbody id="tbodyList">
 					<c:forEach items="${stdPayList}" var="item" varStatus="status">
 					<tr>
-						<td class="text-center"><input type="checkbox" name="sel" value="${item.stdNo }||${item.enrlSts}" /> </td>
+						<td class="text-center"><input type="checkbox" name="sel" value="${item.stdNo }" /> </td>
 						<td>${pageInfo.totalRecordCount - ((pageInfo.currentPageNo - 1 ) * pageInfo.recordCountPerPage + status.index)}</td>
 						<td>${item.userNm}</td>
 						<td>${item.userId }</td>

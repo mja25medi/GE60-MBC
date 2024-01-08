@@ -835,6 +835,100 @@ public class StudentExcelServiceImpl
 	}
 	
 	/**
+	 * [HRD] 회차>수강생관리>IDE엑셀업로드
+	 * @throws InvocationTargetException
+	 * @throws IllegalAccessException
+	 */
+	@Override
+	@Transactional
+	public ProcessResultVO<StudentVO> addStudentIdeUrlExcel(StudentVO vo, String fileName, String filePath) {
+
+		ProcessResultVO<StudentVO> resultVO = new ProcessResultVO<>(new StudentVO());
+		resultVO.setResultSuccess();
+		
+		XSSFWorkbook workbook	= null;
+		XSSFSheet sheet = null;
+		
+		FileInputStream fis = null;
+		
+		try {
+			fis = new FileInputStream(filePath + "/" + fileName);
+			workbook =  new XSSFWorkbook(fis);
+			sheet = workbook.getSheetAt(0);
+		} catch (NotOfficeXmlFileException noxfe) {
+			throw new ServiceProcessException("엑셀파일만 업로드 가능합니다.");
+		} catch (IOException ex2) {
+			throw new ServiceProcessException("엑셀파일 읽기 실패하였습니다.");
+		} finally{
+			try {
+				if (fis != null) {	fis.close(); }
+			} catch (Exception e) {
+				throw new ServiceProcessException("엑셀파일 읽기 실패하였습니다.");
+			}
+		}
+		
+		XSSFRow dfltRow = sheet.getRow(1);
+		int cellCount = dfltRow.getPhysicalNumberOfCells();
+		
+		int rowNum = 0;
+		int rows = sheet.getPhysicalNumberOfRows();//행 갯수
+		
+		if(rows == 2) {
+			throw new ServiceProcessException("3번째 줄부터 정보 입력 바랍니다.\n혹은 다른 엑셀파일을 업로드하는게 아닌지 확인바랍니다.");//1번째 줄 : 설명 , 2번째 줄 : 제목줄 , 3번째 줄부터 입력
+		}
+		
+		for(int rowIndex = 2; rowIndex < rows; rowIndex++) {
+			
+			XSSFRow row=sheet.getRow(rowIndex);
+			cellCount = row.getPhysicalNumberOfCells();
+			
+			if(cellCount < 2) {
+				throw new ServiceProcessException((rowIndex + 1) + "라인\n회원아이디, IDE URL은 필수 값입니다.");
+			} else if(cellCount > 2) {
+				throw new ServiceProcessException((rowIndex + 1) + "라인\n엑셀 업로드는 회원아이디, IDE URL만 입력가능합니다. 그 외 다른 내용, 공백을 입력했거나 다른 엑셀파일을 업로드하는게 아닌지 확인바랍니다.");
+			}
+			
+			String userId = StringUtil.nvl(POIExcelUtil.getCellValue(row.getCell(0)));
+			String ideUrl = StringUtil.nvl(POIExcelUtil.getCellValue(row.getCell(1)));
+			String crsCreCd = StringUtil.nvl(vo.getCrsCreCd());
+			
+			if("".equals(userId) || "".equals(ideUrl)) {
+				throw new ServiceProcessException((rowIndex + 1) + "라인\n회원 아이디, IDE URL은 필수 값입니다.");
+			}
+			
+			//userId로 stdNo조회
+			vo.setUserId(userId);
+			StudentVO resultInfoVO = studentMapper.selectStdNo(vo);
+			
+			if(resultInfoVO == null) {
+				throw new ServiceProcessException((rowIndex + 1) + "라인(아이디 : " + userId  + ", 개설과정코드 : " + crsCreCd + ")\n수강중인 회원 정보가 없습니다. 수강 정보(수강 여부, 상태 등)를 확인바랍니다.");
+			} else if(ValidationUtils.isEmpty(resultInfoVO.getStdNo())) {
+				throw new ServiceProcessException((rowIndex + 1) + "라인(아이디 : " + userId  + ", 개설과정코드 : " + crsCreCd + ")\n수강중인 회원 정보가 없습니다. 수강 정보(수강 여부, 상태 등)를 확인바랍니다.");
+			}
+			
+			//IDE URL 유무체크
+			vo.setIdeUrl(ideUrl);
+			int result = studentMapper.selectCreIdeUrl(vo);
+			
+			if(result == 0) {
+				throw new ServiceProcessException((rowIndex + 1) + "라인(아이디 : " + userId  + ", 개설과정코드 : " + crsCreCd + ")\n 해당 IDE URL은 없는 주소입니다. 확인바랍니다.");
+			}
+
+			//IDE URL 업데이트
+			StudentVO stuVO = new StudentVO();
+			stuVO.setStdNo(resultInfoVO.getStdNo());
+			stuVO.setCrsCreCd(crsCreCd);
+			stuVO.setIdeUrl(ideUrl);
+			stuVO.setModNo(vo.getModNo());
+			
+			studentService.addStudentIdeUrl(stuVO);
+			resultVO.getReturnVO();
+		}
+
+		return resultVO;
+	}
+	
+	/**
 	 * 자격증 응시생 샘플 엑셀파일 다운로드
 	 * @param (HashMap<String, String> titles
 	 * @param OutputStream os

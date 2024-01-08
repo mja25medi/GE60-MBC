@@ -5,7 +5,7 @@
 <c:set var="createOnlineSubjectVO" value="${createOnlineSubjectVO}"/>
 		<h5 class="text-left"><i class="fa fa-check" aria-hidden="true"></i>학습 목차 설정</h5>
 		 <div class="subject-list mt5" style=" padding:10px; border:1px solid #e9e9e9;">
-	                        <c:if test="${sbjType eq 'OFF'}">
+	                        <c:if test="${sbjType eq 'OF'}">
 	                        	<h5 class="text-left"><i class="fa fa-check" aria-hidden="true"></i>오프라인 일정 설정</h5>
 	                        </c:if>
 	                        <table class="table table-bordered wordbreak" style="margin-top: 5px;" id="stuSearchTable">
@@ -14,7 +14,7 @@
 	                                <col style="width:70%">
 	                            </colgroup>
 	                            <tbody>
-	                          <c:if test="${sbjType eq 'OFF'}">
+	                          <c:if test="${sbjType eq 'OF'}">
 	                            <tr>                           
 	                                <th scope="row"><span style="color:red;">* </span> 강사선택 ${createOnlineSubjectVO.sbjType}</th>
 	                                <td class="text-left">
@@ -83,7 +83,7 @@
                                 <colgroup>
                                     <col style="width:auto"/>
                                     <col style="width:auto"/>
-                                    <c:if test="${sbjType eq 'OFF'}">
+                                    <c:if test="${sbjType eq 'OF'}">
 	                                    <col style="width:auto;"/>
 	                                    <col style="width:360px;"/>
                                     </c:if>
@@ -93,7 +93,7 @@
                                 <tr>
                                     <th scope="col">목차</th>
                                     <th scope="col">목차명</th>
-                                    <c:if test="${sbjType eq 'OFF'}">
+                                    <c:if test="${sbjType eq 'OF'}">
                                     	<th scope="col">강사</th>
                                     	<th scope="col">시간표</th>
                                     </c:if>
@@ -114,7 +114,7 @@
                                         	<c:when test="${item.cntsTypeCd eq 'PRACTICE' }"><i class="fa fa-code ml5" title="코딩실습"></i></c:when>
                                         </c:choose>
                                     </td>
-                                    <c:if test="${sbjType eq 'OFF'}">
+                                    <c:if test="${sbjType eq 'OF'}">
 	                                    <td>
 	                                        <select class="form-control input-sm" name="subList[${status.index}].teacherNo" style="width:80%">
 	                                           <option value="">선택</option>

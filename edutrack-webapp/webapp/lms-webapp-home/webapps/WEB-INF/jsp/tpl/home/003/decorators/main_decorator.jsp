@@ -15,10 +15,11 @@
 	    <link rel="stylesheet" href="/tpl/003/css/hrd_common.css">
 	    <link rel="stylesheet" href="/tpl/003/css/webfonts.css">
 	    <link rel="stylesheet" href="/tpl/003/css/layout.css">    
+        <link rel="stylesheet" href="/tpl/003/css/main.css"><!-- main 페이지에서 사용 -->
 	    <link rel="stylesheet" href="/tpl/003/css/effect_slick.css">
 	
 	    <script src="/tpl/003/jquery/jquery-3.2.1.min.js"></script>
-	    <script async src="/tpl/003/jquery/slick.min.js"></script>
+	    <script defer src="/tpl/003/jquery/slick.min.js"></script>
 	    <script defer src="/tpl/003/js/func.min.js"></script>
 	    <script defer src="/tpl/003/js/common.js"></script>
 	    <script defer src="/tpl/003/js/main.js"></script>
@@ -27,7 +28,7 @@
 	    <meditag:js src="/app/js/Context.js"/>
 		<meditag:js src="/js/common_conf.js"/>
 	    
-	    <link rel="stylesheet" href="/tpl/003/css/main.css"><!-- main 페이지에서 사용 -->
+	 
 		<script src="/app/js/Context.js"></script>
 		<script src="/tpl/003/js/common_conf.js"></script>
 		<script src="/tpl/003/js/common_util.js"></script>
@@ -144,7 +145,7 @@
 	<script type="text/javascript">
 	
 	$(document).ready(function() {
-		popupNotice();
+		/* popupNotice(); */
 		chkGrpIdVerified();
 	})
 	//--------------- 팝업 공지사항 관련 처리 ------------------------------------------------------------------------------

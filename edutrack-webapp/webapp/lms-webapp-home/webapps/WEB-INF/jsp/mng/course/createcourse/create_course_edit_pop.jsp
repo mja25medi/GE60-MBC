@@ -11,6 +11,7 @@
 			<input type="hidden" name="crsCd" value="${vo.crsCd }" />
 			<input type="hidden" name="eduTeam" id="eduTeam" value="${vo.eduTeam }"/>
 			<input type="hidden" value="${vo.nopLimitYn }" />
+			<input type="hidden" name="qrFileSn" id="qrFileSn" value="${vo.qrFileSn }"/>
 			<table summary="<spring:message code="course.title.createcourse.manage"/>" class="table table-bordered wordbreak">
 				<colgroup>
 					<col style="width:17%"/>
@@ -34,6 +35,23 @@
 						</div>
 					</td>
 				</tr>
+				<c:if test="${vo.creTypeCd ne 'ON' }">
+					<tr id="qrInput">
+						<th scope="row"><label for="QR">QR 등록</label></th>
+						<td colspan="3">
+							<a href="javascript:uploderclick('QRuploader');" class="btn btn-primary btn-xs"><spring:message code="button.select.file"/></a>
+							<input type="file" name="QRuploader" id="QRuploader" title="QRuploader" multiple style="display:none" accept="image/*"  "/><%-- 첨부파일 버튼 --%>
+							<div class="upload">
+								<div class="upload_inbox">
+									<div id="QRprogress" class="progress">
+					    				<div class="progress-bar progress-bar-success"></div>
+									</div>
+								</div>
+								<div id="QRfiles" class="multi_inbox"></div>
+							</div>
+						</td>
+					</tr>
+				</c:if>
 				<tr>
 			<th scope="row"><span style="color:red;">* </span><spring:message code="course.title.createcourse.duration.aplc"/></th>
 			<td colspan="4">
@@ -146,11 +164,11 @@
 				<tr>
 					<th scope="row"><span style="color:red;">* </span><label for="cpltScore"><spring:message code="course.title.course.completescore"/></label></th>
 					<td>
-						<input type="text" style="width:50px;float:left;text-align:right;" maxlength="3" maxValue="100" name="cpltScore" id="cpltScore" class="inputNumber form-control input-sm" value="${courseVO.cpltScore}" onkeyup="isChkMaxNumber(this,100)"/>
+						<input type="text" style="width:50px;float:left;text-align:right;" maxlength="3" maxValue="100" name="cpltScore" id="cpltScore" class="inputNumber form-control input-sm" value="${vo.cpltScore}" onkeyup="isChkMaxNumber(this,100)"/>
 						<span style="float:left;margin-left:5px;line-height:30px;"><spring:message code="common.title.score"/></span>
 					</td>
 					<td colspan="3">
-						<input type="text" style="width:50px;float:left;text-align:right;" maxlength="3" name="onlnEduTm" id="onlnEduTm" class="inputNumber form-control input-sm" value="${courseVO.eduTm}" onkeyup="isChkNumber(this)"/>
+						<input type="text" style="width:50px;float:left;text-align:right;" maxlength="3" name="onlnEduTm" id="onlnEduTm" class="inputNumber form-control input-sm" value="${vo.onlnEduTm}" onkeyup="isChkNumber(this)"/>
 						<span style="float:left;margin-left:5px;line-height:30px;"><spring:message code="common.title.time"/></span>
 					</td>
 					<th scope="row" style="display: none"><span style="color:red;">* </span><spring:message code="course.title.createcourse.decls.cnt"/></th>
@@ -333,9 +351,12 @@
 			<input type="submit" value="submit" style="display:none" />
 			</form>
 
+<script type="text/JavaScript" src="/js/jquery/jquery-fileupload/jquery.fileupload.js"></script>
+<script type="text/JavaScript" src="/js/common_fileupload.js"></script>	
 <script type="text/javascript">
 	var ItemDTO = new Object();
-
+	var qrFile;
+	
 	$(document).ready(function() {
 		$('.inputNumber').inputNumber();	// 숫자만 입력되도록 설정.
 		$('.inputDate').inputDate();	// 날짜 형식만 입력되도록 설정.
@@ -352,6 +373,22 @@
 			$("#prgrRatio").attr("disabled", true);
 		}
 		sumTotal();
+		
+		qrFile = new $M.JqueryFileUpload({
+			"varName"			: "qrFile",
+			"files" 			: $.parseJSON('${vo.qrFileJson}'),
+			"uploaderId"		: "QRuploader",
+			"fileListId"		: "QRfiles",
+			"progressId"		: "QRprogress",
+			"maxcount"			: 1,
+			"previewImage"		: true,
+			"infoUse"		: true,
+			"uploadSetting"		: {
+				'formData'		: { 'repository': 'CRS_CRE_CRS_QR',
+	                                'organization' : "${USER_ORGCD}",
+									'type'		: 'QR' }
+			}
+		});
 	});
 
 	/**
@@ -538,6 +575,8 @@
 			alert('<spring:message code="course.message.createcourse.alert.totalscore"/>');
 			return;
 		}
+		var _qrFile = qrFile.getFileSnAll();
+		$('#qrFileSn').val(_qrFile);
 		process("editCreateCourse");
 	}
 
@@ -638,5 +677,9 @@
 
 		$("#totRatio").val(totRatio);
 
+	}
+	
+	function uploderclick(str) {
+		$("#"+str).click();
 	}
 </script>

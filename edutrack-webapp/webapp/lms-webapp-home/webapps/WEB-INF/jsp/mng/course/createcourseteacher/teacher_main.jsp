@@ -48,12 +48,12 @@
 		</table>
 	</div>
 
-	<%-- <div style="width:100%;">
+	<div style="width:100%;">
 		<div style="float:left;">
 			<h5><i class="glyphicon glyphicon-th-large"></i>부담임관리</h5>
 		</div>
-		<div style="float:right">
-			<c:if test="${MSG_SMS eq 'Y' }">
+	 	<div style="float:right">
+				<%--<c:if test="${MSG_SMS eq 'Y' }">
 			<button class="btn btn-default btn-sm" onclick="messageFormTutor('SMS')" ><spring:message code="button.sms"/></button>
 			</c:if>
 			<c:if test="${MSG_EMAIL eq 'Y' }">
@@ -61,11 +61,11 @@
 			</c:if>
 			<c:if test="${MSG_NOTE eq 'Y' }">
 			<button class="btn btn-default btn-sm" onclick="messageFormTutor('MSG')" ><spring:message code="button.note"/></button>
-			</c:if>
+			</c:if> --%>
 			<button class="btn btn-primary btn-sm" onclick="creCrsTchSearch('ASSTCHMGR')" >부담임 등록</button>
 		</div>
-	</div> --%>
-<%-- 	<div id="tutorList" style="width:100%;float:left;">
+	</div>
+ 	<div id="tutorList" style="width:100%;float:left;">
 		<table summary="<spring:message code="course.title.tutor.manage"/>" class="table table-bordered wordbreak">
 			<colgroup>
 				<col style="width:50px"/>
@@ -91,7 +91,7 @@
 				</tr>
 			</tbody>
 		</table>
-	</div> --%>
+	</div> 
 	<input type="submit" value="submit" style="display:none" />
 	</form>
 

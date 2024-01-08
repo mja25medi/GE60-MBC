@@ -226,5 +226,10 @@ public class BrdPopupNoticeServiceImpl
 	public int remove(BrdPopupNoticeVO vo) throws Exception {
 		return brdPopupNoticeMapper.delete(vo);
 	}
+	
+	@Override
+	public int listPopupCnt(BrdPopupNoticeVO vo) throws Exception {
+		return brdPopupNoticeMapper.listPopupCnt(vo);
+	}
 
 }

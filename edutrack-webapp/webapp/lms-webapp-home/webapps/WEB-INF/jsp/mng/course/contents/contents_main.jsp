@@ -434,7 +434,7 @@
 		if($("#unitNm").val() == ""){alert("페이지명을 입력해주세요."); return false;}
 		if($(':radio[name="cntsTypeCd"]:checked').length < 1){alert("콘텐츠 타입을 선택해주세요."); return false;}
 		if($(':radio[name="cntsTypeCd"]:checked').val() == "CODING_L" || $(':radio[name="cntsTypeCd"]:checked').val() == "CODING_T"){
-			if($("#zoomUrl").val() == ""){alert("Zoom URL을 입력해주세요."); return false;}		
+			//if($("#zoomUrl").val() == ""){alert("Zoom URL을 입력해주세요."); return false;}		
 		}
 		if($(':radio[name="cntsTypeCd"]:checked').val() == "META"){
 			if($(':radio[name="sceneId"]:checked').length < 1){

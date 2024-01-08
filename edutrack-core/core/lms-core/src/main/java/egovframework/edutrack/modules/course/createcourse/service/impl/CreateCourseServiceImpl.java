@@ -1,5 +1,6 @@
 package egovframework.edutrack.modules.course.createcourse.service.impl;
 
+import java.io.File;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,6 +18,7 @@ import egovframework.edutrack.comm.annotation.HrdApiCrsCreCrs.CreSyncType;
 import egovframework.edutrack.comm.service.ProcessResultListVO;
 import egovframework.edutrack.comm.service.ProcessResultVO;
 import egovframework.edutrack.comm.util.web.DateTimeUtil;
+import egovframework.edutrack.comm.util.web.FileUtil;
 import egovframework.edutrack.comm.util.web.QrUtil;
 import egovframework.edutrack.comm.util.web.StringUtil;
 import egovframework.edutrack.comm.util.web.ValidationUtils;
@@ -111,6 +113,34 @@ public class CreateCourseServiceImpl extends EgovAbstractServiceImpl implements 
 			return vo;
 		}
 	}
+	
+	private final class NestedQrFileHandler
+	implements FileHandler<CreateCourseVO> {
+
+	@Override
+	public String getPK(CreateCourseVO vo) {
+		return vo.getCrsCreCd().toString();
+	}
+
+	@Override
+	public String getRepoCd() {
+		return "CRS_CRE_CRS_QR";
+	}
+
+	@Override
+	public List<SysFileVO> getFiles(CreateCourseVO vo) {
+		List<SysFileVO> fileList = new ArrayList<SysFileVO>();
+		if(ValidationUtils.isNotZeroNull(vo.getQrFileSn()))
+			fileList.add(vo.getQrFile());
+		return fileList;
+	}
+
+	@Override
+	public CreateCourseVO setFiles(CreateCourseVO vo, FileListVO fileListVO) {
+		vo.setQrFile(fileListVO.getFile("QR"));
+		return vo;
+	}
+}
 
 	/** Mapper */
 	@Resource(name="createCourseMapper")
@@ -412,7 +442,7 @@ public class CreateCourseServiceImpl extends EgovAbstractServiceImpl implements 
 		ProcessResultVO<CreateCourseVO> resultVO = new ProcessResultVO<CreateCourseVO>();
 		try {
 			CreateCourseVO returnVO = createCourseMapper.selectCreateCourse(iCreateCourseVO);
-			//returnVO = sysFileService.getFile(returnVO, new NestedThumbFileHandler());
+			returnVO = sysFileService.getFile(returnVO, new NestedQrFileHandler());
 			//returnVO = sysFileService.getFile(returnVO, new NestedPlanFileHandler());
 			resultVO.setReturnVO(returnVO);
 			resultVO.setResultSuccess();
@@ -444,6 +474,11 @@ public class CreateCourseServiceImpl extends EgovAbstractServiceImpl implements 
 			setDateConvert(iCreateCourseVO);
 			//-- 개설 과정 생성
 			createCourseMapper.insertCreateCourse(iCreateCourseVO);
+			
+			//---- 회차 폴더 생성
+			String contentsDir =  Constants.CONTENTS_STORAGE_PATH + File.separator  + iCreateCourseVO.getOrgCd() + File.separator + iCreateCourseVO.getCrsCreCd();
+			FileUtil.createDirectory(contentsDir);
+			sysFileService.bindFile(iCreateCourseVO, new NestedQrFileHandler());
 
 			//-- 사이트 정보 검색
 			OrgOrgInfoVO orgInfoVO = new OrgOrgInfoVO();
@@ -638,6 +673,7 @@ public class CreateCourseServiceImpl extends EgovAbstractServiceImpl implements 
 		setDateConvert(iCreateCourseVO);
 		//--- 과정 정보 변경
 		createCourseMapper.updateCreateCourse(iCreateCourseVO);
+		sysFileService.bindFileUpdate(iCreateCourseVO, new NestedQrFileHandler());
 		resultVO.setReturnVO(iCreateCourseVO);
 		resultVO.setResultSuccess();
 
@@ -718,10 +754,10 @@ public class CreateCourseServiceImpl extends EgovAbstractServiceImpl implements 
 		creCrsDeclsVO.setCrsCreCd(iCreateCourseVO.getCrsCreCd());
 		creCrsDeclsMapper.deleteAll(creCrsDeclsVO);
 		
-		createCourseMapper.deleteCreateCourse(iCreateCourseVO);
-		
 		//-- 개설과정 QR 정보 삭제
 		createCourseMapper.deleteCreateCourseQr(iCreateCourseVO);
+		
+		createCourseMapper.deleteCreateCourse(iCreateCourseVO);
 		
 		resultVO.setResultSuccess();
 		

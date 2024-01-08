@@ -13,14 +13,14 @@
 	<c:set var="credit" value="no-credit"/>
 	<c:set var="cmiMode" value="browse"/>
 </c:if>
-	<iframe id='edutrackAPIFrame' name='edutrackAPIFrame'' style="height:0;width:0;border:0;border:none;visibility:hidden;;" src="<c:url value="/jsp/bookmark/study_edutrack_adapter.jsp"/>" onload="onloadApiFrame()"></iframe>
+	<iframe id='edutrackAPIFrame' name='edutrackAPIFrame' style="height:0;width:0;border:0;border:none;visibility:hidden; display: block;" src="<c:url value="/jsp/bookmark/study_edutrack_adapter.jsp"/>" onload="onloadApiFrame()"></iframe>
     <div class="coding_wrap">
         <div class="coding_header">
             <h1>${returnAssignmentVO.asmtTitle }</h1>
             <div class="right_util">
             	<c:if test="${sbjVO.sbjType ne 'ON'}">
-               		<div class="request">코딩 요청중입니다. 잠시만 기다려 주세요.<strong><i class="xi-alarm-clock-o" aria-hidden="true"></i>00:00</strong></div>
-                	<button type="button" class="btn type9">도움요청</button>
+               		<div id="request" class="request" style="display: none;">코딩 요청중입니다. 잠시만 기다려 주세요.<strong id="stopwatch"><i class="xi-alarm-clock-o" aria-hidden="true"></i>00:00</strong></div>
+                	<button type="button" id="reqBtn" class="btn type9" onclick="reqHelp()" >도움요청</button>
                 </c:if>
                 <button type="button" onclick="onunloadFunction();" class="btn">닫기</button>
             </div>
@@ -314,6 +314,65 @@
  	function modalBoxClose() {
  		modalBox.clear();
  		modalBox.close();
+ 	}
+ 	
+ 	//도움요청
+ 	function reqHelp() {
+		var asmtSubSn = $('#asmtSubSn').val();
+ 		$.getJSON(cUrl("/lec/bookmark/reqHelp"), 	// url
+				{ 
+				  "crsCreCd" : '${returnAssignmentVO.crsCreCd}',
+				  "stdNo" : '${studentVO.stdNo}',
+				  "sbjCd": '${bookmarkVO.sbjCd}',
+				  "unitCd": '${bookmarkVO.unitCd}',
+				  "asmtSubSn": asmtSubSn
+				}, function(data) { 
+					alert(data.message);
+					$("#request").show();
+					$("#reqBtn").hide();
+					startClock()
+				}
+			);
+ 	}
+ 
+ 	//스톱워치
+ 	let timerId;
+ 	let time = 0;
+ 	const stopwatch = document.getElementById("stopwatch");
+ 	let  hour, min, sec;
+ 	function printTime() {
+ 	    time++;
+ 	    stopwatch.innerText = getTimeFormatString();
+ 	}
+
+ 	//시계 시작 - 재귀호출로 반복실행
+ 	function startClock() {
+ 	    printTime();
+ 	    stopClock();
+ 	    timerId = setTimeout(startClock, 1000);
+ 	}
+
+ 	//시계 중지
+ 	function stopClock() {
+ 	    if (timerId != null) {
+ 	        clearTimeout(timerId);
+ 	    }
+ 	}
+
+ 	// 시계 초기화
+ 	function resetClock() {
+ 	    stopClock()
+ 	    stopwatch.innerText = "00:00";
+ 	    time = 0;
+ 	}
+
+ 	// 시간(int)을 시, 분, 초 문자열로 변환
+ 	function getTimeFormatString() {
+ 	    hour = parseInt(String(time / (60 * 60)));
+ 	    min = parseInt(String((time - (hour * 60 * 60)) / 60));
+ 	    sec = time % 60;
+
+ 	    return String(min).padStart(2, '0') + ":" + String(sec).padStart(2, '0');
  	}
     </script>
 

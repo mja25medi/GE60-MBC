@@ -52,19 +52,21 @@
 		</thead>
 		<tbody>
 			<c:forEach items="${createCourseList}" var="item" varStatus="status">
-			<tr>
-				<td class="text-center">${item.crsCd}</td>
-				<td>${item.crsCreNm}</td>
-				<td class="text-center">${item.creTerm}</td>
-				<td class="text-center">${item.cnfmCnt}</td>
-				<td>
-					<c:if test="${item.enrlStartDttm ne ''}"><meditag:dateformat type="1" delimeter="." property="${item.enrlStartDttm}"/>~<meditag:dateformat type="1" delimeter="." property="${item.enrlEndDttm}"/></c:if>
-				</td>
-				<td class="text-center">
-					<button class="btn btn-primary btn-sm" onclick="listAttend('${item.crsCreCd}')">출석부관리</button>
-					<button class="btn btn-info btn-sm" onclick="excelDownload('${item.crsCreCd}')">엑셀다운로드</button>
-				</td>
-			</tr>
+			<c:if test="${item.creTypeCd ne 'ON' }">
+				<tr>
+					<td class="text-center">${item.crsCd}</td>
+					<td>${item.crsCreNm}</td>
+					<td class="text-center">${item.creTerm}</td>
+					<td class="text-center">${item.cnfmCnt}</td>
+					<td>
+						<c:if test="${item.enrlStartDttm ne ''}"><meditag:dateformat type="1" delimeter="." property="${item.enrlStartDttm}"/>~<meditag:dateformat type="1" delimeter="." property="${item.enrlEndDttm}"/></c:if>
+					</td>
+					<td class="text-center">
+						<button class="btn btn-primary btn-sm" onclick="listAttend('${item.crsCreCd}')">출석부관리</button>
+						<button class="btn btn-info btn-sm" onclick="excelDownload('${item.crsCreCd}')">엑셀다운로드</button>
+					</td>
+				</tr>
+			</c:if>
 			</c:forEach>
 			<c:if test="${empty createCourseList}">
 			<tr>

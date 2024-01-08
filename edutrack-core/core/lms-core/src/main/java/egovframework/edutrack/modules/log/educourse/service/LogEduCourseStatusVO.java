@@ -26,6 +26,7 @@ public class LogEduCourseStatusVO extends DefaultVO {
 	private Integer planCreCnt;
 	private Integer planEnrlCnt;
 	private Integer creCnt;
+	private Integer creCrsCnt;
 	private Integer eduPrice;
 	private Double  creRatio;
 	private Double  eduRatio;
@@ -43,6 +44,13 @@ public class LogEduCourseStatusVO extends DefaultVO {
 	private String searchKey;
 	private String searchValue;
 
+	
+	public Integer getCreCrsCnt() {
+		return creCrsCnt;
+	}
+	public void setCreCrsCnt(Integer creCrsCnt) {
+		this.creCrsCnt = creCrsCnt;
+	}
 	public String getCrsCreCd() {
 		return crsCreCd;
 	}

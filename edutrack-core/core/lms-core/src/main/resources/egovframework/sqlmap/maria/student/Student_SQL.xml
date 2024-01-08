@@ -1659,6 +1659,16 @@
 			  	 WHERE  STD_NO 			= #{stdNo}	
 	</update>
 	
+	<update id="updateStudentIdeUrl" parameterType="studentVO">
+		UPDATE 	tb_std_std 													
+			     SET
+			      	   IDE_URL 		= #{ideUrl}			 						
+			        ,  MOD_NO 			= #{modNo}									
+			        ,  MOD_DTTM 		= DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')		
+			  	 WHERE  STD_NO 			= #{stdNo}
+			  	 AND CRS_CRE_CD = #{crsCreCd}	
+	</update>
+	
 	<update id="updateStudentEnrlStsCancel" parameterType="studentVO">
 		UPDATE 	tb_std_std 													
 			     SET
@@ -1981,6 +1991,19 @@
 		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
 		ORDER BY A.SEQ DESC
 		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	<select id="selectStdNo" parameterType="studentVO" resultType="studentVO">
+		SELECT S.STD_NO
+		FROM TB_STD_STD S
+			INNER JOIN TB_USR_LOGIN U
+			ON S.USER_NO = U.USER_NO
+		WHERE CRS_CRE_CD = #{crsCreCd}
+		AND U.USER_ID = #{userId}
+	</select>
+	
+	<select id="selectCreIdeUrl" parameterType="studentVO" resultType="int">
+		SELECT COUNT(*) FROM TB_ORG_IDE_INFO WHERE IDE_URL = #{ideUrl} 
 	</select>
 	
 </mapper>

@@ -41,7 +41,7 @@
 	                                        <li><span>수강기간</span><meditag:dateformat type="1" delimeter="." property="${item.enrlStartDttm}"/> ~ <meditag:dateformat type="1" delimeter="." property="${item.enrlEndDttm}"/> (${item.onlnEduTm }시간)</li>
 	                                        <li><span>교육비용</span>
                                                	<c:choose>
-                                                	<c:when test="${item.eduPrice eq 0}"><strong class="price">무료</strong></c:when>
+                                                	<c:when test="${item.eduPrice eq 0 or empty item.eduPrice}"><strong class="price">무료</strong></c:when>
                                                 	<c:otherwise>
                                                 		<strong class="price"><fmt:formatNumber value="${item.eduPrice}" pattern="#,#00" />원</strong>
                                                 		<c:set var="totEduPrice" value="${totEduPrice + item.eduPrice }"/>
@@ -57,16 +57,19 @@
                             <button class="btn gray2" onclick="location.href='javascript:addQna();' "><spring:message code="button.write.qna.nonMem"/></button>
                             <c:if test="${item.enrlAplcYn ne 'N' }">                            
 	                            <c:choose>
-	                                  <c:when test="${item.eduPrice eq 0}">
+	                                  <c:when test="${item.eduPrice eq 0 or empty item.eduPrice}">
 	                                  		<button class="btn type4" onclick="addCourse('${item.crsCtgrCd}','${item.crsCd}','${item.crsCreCd}');"><spring:message code="course.title.createcourse.enroll"/></button>
 	                                  </c:when>
 	                                  <c:otherwise>
 	                           				<button class="btn type4" onclick="javascript:addSingleBasket('${item.crsCreCd}');"><spring:message code="course.title.createcourse.enroll"/></button>
 	                            	  </c:otherwise>
 	                           </c:choose>
-	                           <c:if test="${item.eduPrice ne 0}">
-	                           	 	<a href="javascript:addBasket('${item.crsCreCd}');" title="<spring:message code="course.title.createcourse.enroll"/>" class="btn btn-warning btn-xs">장바구니에 담기</a>
-	                           </c:if>
+	                           <c:choose>
+	                           		<c:when test="${item.eduPrice eq 0 or empty item.eduPrice}"></c:when>
+	                           		<c:otherwise>
+	                           			<a href="javascript:addBasket('${item.crsCreCd}');" title="<spring:message code="course.title.createcourse.enroll"/>" class="btn btn-warning btn-xs">장바구니에 담기</a>
+	                           		</c:otherwise>
+	                           </c:choose>
                            </c:if>
                         </div>  
 
@@ -91,10 +94,10 @@ $(document).ready(function() {
 		"nomargin"	: true
 	});
 	
-	<c:if test="${not empty createCourseList}">
+/* 	<c:if test="${not empty createCourseList}">
 		loadCourseInfo('${createCourseList[0].crsCreCd }');
 	</c:if>
-	
+	 */
 });
 
 /**
@@ -157,21 +160,21 @@ function addBasket(crsCreCd) {
 }
 
 function addSingleBasket(crsCreCd) {
+
 	$.ajax({
 		url : '/home/student/addBasket'
 		,data : {
 			'crsCreCd' : crsCreCd
 		}
-		, method: "POST"
+		, method: "post"
 		, dataType: 'json'
 		, async: false
-		,success : function(resultVO) {
+		, success : function(resultVO) {
 			if(resultVO.result > 0){
 				location.href = "/home/student/enrollPayBasketMain?crsCreCd="+crsCreCd;//수강신청	
 				return;
 			}else{
-				alert(resultVO.message);
-				
+				alert(resultVO.message);	
 			}
 		}
 		,error : function(request,status,error) {

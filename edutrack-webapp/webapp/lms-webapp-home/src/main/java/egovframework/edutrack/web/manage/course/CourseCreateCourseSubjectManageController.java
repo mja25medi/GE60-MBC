@@ -203,7 +203,7 @@ public class CourseCreateCourseSubjectManageController extends GenericController
 		if(ccvo.getCreTypeCd().equals("ON")) {
 			vo.setSbjType("ON");
 		} else if (ccvo.getCreTypeCd().equals("OF")) {
-			vo.setSbjType("OFF");
+			vo.setSbjType("OF");
 		}
 		
 		//-- 학습방법 코드 목록
@@ -759,9 +759,11 @@ public class CourseCreateCourseSubjectManageController extends GenericController
 		createCourseTeacherService.deleteTeacherAll(vo);
 		List<TeacherVO> tchList = vo.getTeacherList();
 		for(int i=0; i<tchList.size(); i++) {
-			tchList.get(i).setRegNo(vo.getRegNo());
-			tchList.get(i).setModNo(vo.getModNo());
-			resultVO = createCourseTeacherService.addTeacher(tchList.get(i));
+			if(!tchList.get(i).getUserNo().equals("")) {
+				tchList.get(i).setRegNo(vo.getRegNo());
+				tchList.get(i).setModNo(vo.getModNo());
+				resultVO = createCourseTeacherService.addTeacher(tchList.get(i));
+			}
 		}
 		
 		//목차 강사 일괄 세팅

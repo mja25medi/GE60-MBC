@@ -59,6 +59,7 @@
 							<col style="width:auto;"/>
 							<col style="width:auto;"/>
 							<col style="width:auto;"/>
+							<col style="width:auto;"/>
 							<col style="width:66px;"/>
 						</colgroup>
 						<thead>
@@ -66,6 +67,7 @@
 								<th scope="col"><spring:message code="course.title.subject.category"/></th>
 								<th scope="col"><spring:message code="course.title.subject.name"/></th>
 								<th scope="col"><spring:message code="course.title.subject.studymthd"/></th>
+								<th scope="col"><spring:message code="course.title.subject.type"/></th>
 								<th scope="col"><spring:message code="course.title.subject.contents.cnt"/></th>
 								<th scope="col"><spring:message code="common.title.select"/></th>
 							</tr>

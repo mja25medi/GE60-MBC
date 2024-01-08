@@ -52,6 +52,7 @@
 									<input type="hidden" name="bookmarkCnt" value="${vo.bookmarkCnt}" />
 									<input type="hidden" name="subCnt" value="${vo.subCnt}" />
 									<input type="hidden" name="prgrChkYn" id="prgrChkYn" value="${vo.prgrChkYn}" />
+									<input type="hidden" name="roomId" id="roomId" value="${vo.roomId}" />
 									<table style="width:96%;margin-top:5px;margin-left:10px;font-size:14px; height: 250px;">
 										<tr>
 											<td style="width:22%;padding:2px;">
@@ -98,7 +99,7 @@
 												<label style="font-weight: normal;margin-right:20px;">
 													<input type="radio" name="cntsTypeCd" id="cntsTypeCd5" value="CODING_L" onclick="cntsTypeChk()" /> 코딩강의
 												</label>
-												<c:if test ="${createOnlineSubjectVO.sbjType eq 'OFF'}">
+												<c:if test ="${createOnlineSubjectVO.sbjType eq 'OF'}">
 													<label style="font-weight: normal;margin-right:20px;">
 														<input type="radio" name="cntsTypeCd" id="cntsTypeCd6" value="CODING_T" onclick="cntsTypeChk()" /> 코딩실습
 													</label>
@@ -458,7 +459,8 @@ function getMetaScenes(sceneId){
    			console.log(obj);
    			var data = JSON.parse(obj);
    			
-   			$("#unitFilePath").val(data.roomUrl.public.guest);
+   			$("#unitFilePath").val(data.roomUrl.private.guest);
+   			$("#roomId").val(data.id);
    			
    		})
    		.catch(error => {

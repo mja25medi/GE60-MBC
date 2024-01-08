@@ -24,7 +24,7 @@
 	    <script defer src="/tpl/003/js/common_util.js"></script>
 	    <script src="/tpl/003/js/common_conf.js"></script>
 	    <script src="/tpl/003/jquery/jquery-3.2.1.min.js"></script>
-	    <script async src="/tpl/003/jquery/slick.min.js"></script>
+	    <script defer src="/tpl/003/jquery/slick.min.js"></script>
 	    <script defer src="/tpl/003/js/func.min.js"></script>
 	    <script defer src="/tpl/003/js/common.js"></script>
 	    <script defer src="/tpl/003/js/main.js"></script>

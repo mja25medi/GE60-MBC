@@ -15,26 +15,25 @@
     <link rel="stylesheet" href="/tpl/003/css/hrd_common.css">
     <link rel="stylesheet" href="/tpl/003/css/webfonts.css">
     <link rel="stylesheet" href="/tpl/003/css/layout.css">    
+    <link rel="stylesheet" href="/tpl/003/css/sub.css">
     <link rel="stylesheet" href="/tpl/003/css/effect_slick.css">
     
+    <script src="/app/js/Context.js"></script>
     <script src="/tpl/003/jquery/jquery-3.2.1.min.js"></script>
-    <script async src="/tpl/003/jquery/slick.min.js"></script>
+    <script defer src="/tpl/003/jquery/slick.min.js"></script>
     <script defer src="/tpl/003/js/func.min.js"></script>
     <script defer src="/tpl/003/js/common.js"></script>
+    <script defer src="/js/common.js"></script>
+	<script src="/tpl/003/js/common_function.js"></script>
+	<script src="/tpl/003/js/common_util.js"></script>
+	<script src="/tpl/003/js/common_conf.js"></script>
+    <script src="/tpl/003/jquery/jquery.form.js"></script>
     <script defer src="/tpl/003/js/main.js"></script>
     <script src="/tpl/003/jquery/jquery.cycle2.js"></script>
     <script defer src="/tpl/003/js/sub.js"></script>
     <script src="/tpl/003/js/iframeResizer.min.js"></script>
 
-    <script src="/app/js/Context.js"></script>
-    <script defer src="/js/common.js"></script>
-    <script defer src="/js/common_util.js"></script>
-
-	<link rel="stylesheet" href="/tpl/003/css/sub.css">
-		<script src="/tpl/003/js/common_conf.js"></script>
-		<script src="/tpl/003/js/common_util.js"></script>
-		<script src="/tpl/003/js/common_function.js"></script>
-	
+    <!-- <script defer src="/js/common_util.js"></script> -->
     <script src="/js/nuguya/nice.nuguya.oivs.crypto.js"></script>
 	<script src="/js/nuguya/nice.nuguya.oivs.msg.js"></script>
 	<script src="/js/nuguya/nice.nuguya.oivs.util.js"></script>

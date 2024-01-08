@@ -64,7 +64,7 @@
 		</div>
 		<ul class="nav nav-tabs" id="tabMenuOper">
 			<meditag:tab pageCode="course_manage" tabCode="subject" className="active" authGroup="${MNGTYPE}" messageKey="course.title.course.manage.subject.tab" funcName="onclickTab(2)"/>
-			<meditag:tab pageCode="course_manage" tabCode="teacher" className="" authGroup="${MNGTYPE}" messageKey="담임 관리" funcName="onclickTab(4)"/>
+			<meditag:tab pageCode="course_manage" tabCode="teacher" className="" authGroup="${MNGTYPE}" messageKey="담임/부담임 관리" funcName="onclickTab(4)"/>
 			<%-- <li><a href="javascript:onclickTab(5)"><spring:message code="course.title.createcourse.manage.decls.tab"/></a></li> --%>
 			<meditag:tab pageCode="course_manage" tabCode="student" className="" authGroup="${MNGTYPE}" messageKey="student.title.student.manage" funcName="onclickTab(7)"/>
 			<meditag:tab pageCode="course_manage" tabCode="exam" className="" authGroup="${MNGTYPE}" messageKey="course.title.createcourse.manage.exam.tab" funcName="onclickTab(0)"/>

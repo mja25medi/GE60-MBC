@@ -37,13 +37,13 @@
 					<td><i class="glyphicon glyphicon-move" style="cursor:pointer"></i> ${item.sbjNm}</td>
 					<td class="text-center">
 						<c:if test="${item.sbjType eq 'ON' }">온라인</c:if>
-						<c:if test="${item.sbjType eq 'OFF' }">오프라인</c:if>
+						<c:if test="${item.sbjType eq 'OF' }">오프라인</c:if>
 					</td>
 					<td class="text-center">${item.contentsCnt}</td>
 					<td class="text-center">
 						<div>
 							<c:if test="${item.sbjType eq 'ON' }">온라인</c:if>
-							<c:if test="${item.sbjType eq 'OFF' }">
+							<c:if test="${item.sbjType eq 'OF' }">
 							<c:choose>
 								<c:when test='${createCourseVO.oflnEduPlace eq null || createCourseVO.oflnEduPlace eq ""}'>미등록</c:when>
 								<c:otherwise>${teacher.userNm }</c:otherwise>
@@ -69,7 +69,7 @@
 					<td class="text-center">${createCourseVO.enrlStartDttm} ~ ${createCourseVO.enrlEndDttm}</td>
 					<td class="text-center">
 						<c:if test="${item.sbjType eq 'ON' }">온라인</c:if>
-						<c:if test="${item.sbjType eq 'OFF' }">
+						<c:if test="${item.sbjType eq 'OF' }">
 							<c:choose>
 								<c:when test='${createCourseVO.oflnEduPlace eq null || createCourseVO.oflnEduPlace eq ""}'></c:when>
 								<c:otherwise>${createCourseVO.oflnEduPlace}</c:otherwise>

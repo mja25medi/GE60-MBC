@@ -59,6 +59,7 @@ public class UserAttendController extends GenericController {
 		CreateCourseVO ccvo = new CreateCourseVO();
 		ccvo.setCrsCreCd(crsCreCd);
 		ccvo = createCourseService.viewCreateCourse(ccvo).getReturnVO();
+		request.setAttribute("createCourseVO", ccvo);
 		
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 		String today = formatter.format(DateTimeUtil.getCurrentDate());
@@ -96,7 +97,7 @@ public class UserAttendController extends GenericController {
 			resultVO = attendanceService.enterClass(vo);
 		}
 		
-		return JsonUtil.responseJson(response, resultVO);
+		return "home/lecture/attend/view_qr_pop";
 	}
 	
 	/**
@@ -117,6 +118,7 @@ public class UserAttendController extends GenericController {
 		CreateCourseVO ccvo = new CreateCourseVO();
 		ccvo.setCrsCreCd(crsCreCd);
 		ccvo = createCourseService.viewCreateCourse(ccvo).getReturnVO();
+		request.setAttribute("createCourseVO", ccvo);
 		
 		ProcessResultVO<AttendanceVO> resultVO = new ProcessResultVO<AttendanceVO>();
 		
@@ -153,7 +155,7 @@ public class UserAttendController extends GenericController {
 			resultVO = attendanceService.enterClass(vo);
 		}
 		
-		return JsonUtil.responseJson(response, resultVO);
+		return "home/lecture/attend/view_qr_pop";
 	}
 	
 	/**
@@ -164,7 +166,7 @@ public class UserAttendController extends GenericController {
 	public String qrReader(@RequestParam(value="gubun") String gubun, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		request.setAttribute("gubun", gubun);
-		return "home/main/qr_reader";
+		return "home/lecture/attend/qr_reader";
 	}
 	
 	/**
@@ -180,7 +182,7 @@ public class UserAttendController extends GenericController {
 	public String classOutingCheck(Map commandMap, ModelMap model,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		return "home/main/class_outing_check_pop";
+		return "home/lecture/attend/class_outing_check_pop";
 	}
 	
 	/**
@@ -196,6 +198,11 @@ public class UserAttendController extends GenericController {
 		UsrUserInfoVO uuivo = new UsrUserInfoVO();
 		uuivo.setUserNo(userNo);
 		uuivo = usrUserInfoService.view(uuivo);
+		
+		CreateCourseVO ccvo = new CreateCourseVO();
+		ccvo.setCrsCreCd(crsCreCd);
+		ccvo = createCourseService.viewCreateCourse(ccvo).getReturnVO();
+		request.setAttribute("createCourseVO", ccvo);
 		
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 		String today = formatter.format(DateTimeUtil.getCurrentDate());
@@ -215,7 +222,7 @@ public class UserAttendController extends GenericController {
 		
 		resultVO = attendanceService.leftClass(vo, leftTime);
 		
-		return JsonUtil.responseJson(response, resultVO);
+		return "home/lecture/attend/view_qr_pop";
 	}
 	
 	/**
@@ -231,6 +238,11 @@ public class UserAttendController extends GenericController {
 		UsrUserInfoVO uuivo = new UsrUserInfoVO();
 		uuivo.setUserNo(userNo);
 		uuivo = usrUserInfoService.view(uuivo);
+		
+		CreateCourseVO ccvo = new CreateCourseVO();
+		ccvo.setCrsCreCd(crsCreCd);
+		ccvo = createCourseService.viewCreateCourse(ccvo).getReturnVO();
+		request.setAttribute("createCourseVO", ccvo);
 		
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 		String today = formatter.format(DateTimeUtil.getCurrentDate());
@@ -250,7 +262,7 @@ public class UserAttendController extends GenericController {
 		
 		attendanceService.outClass(vo, outTime, inTime);
 		
-		return JsonUtil.responseJson(response, resultVO);
+		return "home/lecture/attend/view_qr_pop";
 	}
 	
 }

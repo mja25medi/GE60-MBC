@@ -47,6 +47,9 @@
 	                                    </td>
 	                                </tr>
                                 </c:forEach>
+                                <c:if test="${empty stdScoreList }">
+                                	<tr><td colspan="9" data-title="noData">조회된 내용이 없습니다.</td></tr>
+                                </c:if>
                             </tbody>
                         </table>
                     </div>

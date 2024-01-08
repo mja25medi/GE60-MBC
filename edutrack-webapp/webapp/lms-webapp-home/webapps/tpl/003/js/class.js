@@ -129,7 +129,7 @@ $(document).ready(function () {
      });
 
      /********** Summernote Editor **********/
-     /*$('#editor').summernote({
+     $('#editor').summernote({
         height: 400,
         lang: 'ko-KR',
         placeholder: '내용을 입력하세요',
@@ -139,6 +139,6 @@ $(document).ready(function () {
             ['insert', ['link', 'picture', 'video', 'hr', 'emoji', 'math']],
             ['view', ['fullscreen', 'codeview']]
         ]
-    });*/
+    });
     
 });

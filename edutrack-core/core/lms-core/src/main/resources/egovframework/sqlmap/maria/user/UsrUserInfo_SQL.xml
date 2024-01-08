@@ -68,6 +68,7 @@
 		     , A.COST_COMP_NO as costCompNo
 		     , B.EXCEPT_YN as exceptYn
 		     , A.AVATAR
+		     , A.IDE_URL
           FROM tb_usr_user_info A, tb_usr_login B
          WHERE A.USER_NO = B.USER_NO
 		]]>
@@ -814,5 +815,29 @@
 			AND B.SNS_KEY = #{snsKey}
 			AND B.SNS_DIV = #{snsDiv}
 	</select>
+	
+	<update id="updateTeacherIde">
+		UPDATE tb_usr_user_info										
+	     SET IDE_URL = #{ideUrl} 							
+	     WHERE USER_NO = #{userNo} 	     		
+	</update>
+	
+	<select id="selectUserNo" parameterType="usrUserInfoVO" resultType="usrUserInfoVO">			                   
+		SELECT A.USER_NO
+		FROM TB_USR_USER_INFO A
+		INNER JOIN TB_USR_LOGIN B
+		ON A.USER_NO = B.USER_NO
+		WHERE USER_ID = #{userId}
+		AND EXISTS ( SELECT USER_NO FROM TB_USR_USER_AUTH_GRP
+			                 WHERE AUTH_GRP_CD = #{searchAuthGrp}
+			                   AND USER_NO = A.USER_NO )
+		AND B.USER_STS  = #{userSts}
+	</select>
+	
+	<update id="addTeacherIdeUrl" parameterType="usrUserInfoVO">
+		UPDATE 	TB_USR_USER_INFO SET 
+		IDE_URL = #{ideUrl}			 							
+		WHERE USER_NO = #{userNo}
+	</update>
 	
 </mapper>

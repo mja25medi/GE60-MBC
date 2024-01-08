@@ -48,6 +48,10 @@
 	        	<c:if test="${createCourseVO.examRatio ne 0}">
 	            	<li><span class="header">시험</span>${createCourseVO.examRatio }%</li>
 	            </c:if>
+	            <c:if test="${createCourseVO.semiExamRatio eq 0}"></c:if>
+	        	<c:if test="${createCourseVO.semiExamRatio ne 0}">
+	            	<li><span class="header">진행단계평가</span>${createCourseVO.semiExamRatio }%</li>
+	            </c:if>
 	            <c:if test="${createCourseVO.asmtRatio eq 0}"></c:if>
 	        	<c:if test="${createCourseVO.asmtRatio ne 0}">
 	            	<li><span class="header">과제</span>${createCourseVO.asmtRatio }%</li>

@@ -19,33 +19,19 @@
 									<col style="width: 40%" />
 								</colgroup>
 								<tr>
-									<th scope="row">기수</th>
-									<td>
-										<select name="crsCd" id="crsCd" class="form-control input-sm" style="float:left;" onchange="listStatus();">
-											<option value="">기수를 선택하세요</option>
-											<c:forEach items="${courseList }" var="courseItem">
-												<option value="${courseItem.crsCd }" <c:if test="${eduCourseStatusVO.crsCd eq courseItem.crsCd }">selected</c:if>>${courseItem.crsYear }년도 ${courseItem.crsTerm }기수</option>
-											</c:forEach>
-										</select>
-									</td>
-									<th scope="row">기업</th>
-									<td>
-										<select name="deptCd" id="deptCd" class="form-control input-sm" style="float:left;" onchange="listStatus();">
-											<option value="">기업을 선택하세요</option>
-											<c:forEach items="${deptList }" var="deptItem">
-												<option value="${deptItem.deptCd }" <c:if test="${eduCourseStatusVO.deptCd eq deptItem.deptCd }">selected</c:if>>${deptItem.deptNm }</option>
-											</c:forEach>
-										</select>
-									</td>
-								</tr>
-								<tr>
 									<th scope="row">과정</th>
-									<td colspan="3">
-										<select name="sbjCd" id="sbjCd" class="form-control input-sm" style="float:left;" onchange="listStatus();">
+									<td>
+										<select name="crsCd" id="crsCd" class="form-control input-sm" style="float:left;" onchange="changeCrsCd(this.value)">
 											<option value="">과정을 선택하세요</option>
-											<c:forEach items="${subjectList }" var="subjectItem">
-												<option value="${subjectItem.sbjCd }" <c:if test="${eduCourseStatusVO.sbjCd eq subjectItem.sbjCd }">selected</c:if>>${subjectItem.sbjNm }</option>
+											<c:forEach items="${courseList }" var="courseItem">
+												<option value="${courseItem.crsCd }" value2="${courseItem.creCrsCnt}" <c:if test="${eduCourseStatusVO.crsCd eq courseItem.crsCd }">selected</c:if>>${courseItem.crsNm }</option>
 											</c:forEach>
+										</select>
+									</td>
+									<th scope="row">회차</th>
+									<td>
+										<select name="creCrsCnt" id="creCrsCnt" class="form-control input-sm" style="float:left;" onchange="listStatus();">
+											<option value="">회차를 선택하세요</option>
 										</select>
 									</td>
 							  </tr>
@@ -92,9 +78,9 @@
 								<td colspan="3">
 									<select name="searchKey" id="searchKey" class="form-control" style="float:left;width:200px;margin-right:5px">
 										<!-- <option value="all">- 전체 -</option> -->
-										<option value="crsNm">기수명</option>
-										<option value="deptNm">기업명</option>
-										<option value="crsCreNm">과정명</option>
+									<!-- 	<option value="crsNm">기수명</option>
+										<option value="deptNm">기업명</option> -->
+										<option value="crsNm">과정명</option>
 									</select>
 									<input type="text" class="form-control" name="searchValue" id="searchValue" placeholder="" style="float:left;width:300px;margin-right:5px">
 									<a class="btn btn-default btn-sm" href="javascript:listStatus();">검색 </a>
@@ -158,8 +144,9 @@
 
 	function listStatus() {
 		var crsCd = $("#crsCd option:selected").val();
-		var deptCd = $("#deptCd option:selected").val();
-		var sbjCd = $("#sbjCd option:selected").val();
+		var creCrsCnt = $("#creCrsCnt option:selected").val();
+		/* var deptCd = $("#deptCd option:selected").val(); */
+		/* var sbjCd = $("#sbjCd option:selected").val(); */
 		var enrlStartDttmStart  = $('input[name=enrlStartDttmStart]').val();
 		var enrlStartDttmEnd  = $('input[name=enrlStartDttmEnd]').val();
 		var enrlEndDttmStart  = $('input[name=enrlEndDttmStart]').val();
@@ -171,9 +158,10 @@
 		.load(
 			cUrl("/mng/stats/eduCourse/listCourseStatus"), {
 			"logEduCourseStatusVO.crsCd":crsCd,
-			"logEduCourseStatusVO.deptCd":deptCd,
+			"logEduCourseStatusVO.creCrsCnt":creCrsCnt,
+			/* "logEduCourseStatusVO.deptCd":deptCd, */
 			"logEduCourseStatusVO.sortKey":ItemDTO.sortKey,
-			"logEduCourseStatusVO.sbjCd" : sbjCd,
+			/* "logEduCourseStatusVO.sbjCd" : sbjCd, */
 			"logEduCourseStatusVO.enrlStartDttmStart" : enrlStartDttmStart,
 			"logEduCourseStatusVO.enrlStartDttmEnd" : enrlStartDttmEnd,
 			"logEduCourseStatusVO.enrlEndDttmStart" : enrlEndDttmStart,
@@ -236,6 +224,23 @@
 		modalBox.setTitle("학습관리");
 		modalBox.show();
 	}
+	
+	 function changeCrsCd(value) {
+	        var creCrsCntVal= $("#crsCd > option:selected").attr("value2");
+	        
+	        creCrsCnt.innerHTML = '';
+	        var allOption = document.createElement('option');
+	        allOption.value = '';
+	        allOption.text = '전체';
+	        allOption.selected = true
+            creCrsCnt.add(allOption);
+	            for (var i = 1; i <= creCrsCntVal; i++) {
+	                var option = document.createElement('option');
+	                option.value = i;
+	                option.text = i;
+	                creCrsCnt.add(option);
+	            }
+	        }
 	
 </script>
 

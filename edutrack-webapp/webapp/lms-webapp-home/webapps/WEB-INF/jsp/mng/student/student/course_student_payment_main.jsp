@@ -40,6 +40,7 @@
 					<div class="col-lg-12">
 						<div style="float:right">
 							<a href="javascript:excelDownload()" class="btn btn-primary btn-sm"><i class="fa fa-file-excel-o fa-fw"></i>엑셀다운로드</a>
+							<a href="javascript:excelUpload()" class="btn btn-primary btn-sm"><i class="fa fa-file-excel-o fa-fw"></i>IDE 엑셀업로드</a>
 							<a href="javascript:uptIde()" class="btn btn-default btn-sm">IDE부여</a>
 							<button class="btn btn-success btn-sm" onclick="studentWrite()" ><spring:message code="button.write.student"/></button>
 						</div><br/>
@@ -180,13 +181,16 @@ function uptIde() {
 /* 메시지 입력 폼 호출 */
 function messageForm(msgDivCd) {
 	var userList = $("#stuPayForm input[name='sel']:checked").stringValues();
+
 	if(userList == "") {
 		alert("<spring:message code="common.message.nouser.message"/>");
 		return;
 	}
+	
 	var addContent  = "<iframe id='messageFrame' name='messageFrame' width='100%' height='100%' "
 		+ "frameborder='0' scrolling='auto' src='<c:url value="/mng/log/message/addMessagePop"/>"
 		+ "?msgDivCd="+msgDivCd+"&amp;logMsgTransLogVO.stdNoList="+userList+"'/>";
+		
 	parent.modalBox.clear();
 	parent.modalBox.addContents(addContent);
 	parent.modalBox.resize(720, 520);
@@ -216,6 +220,18 @@ function studentWrite() {
 	parent.modalBox.resize(800, 700);
 	parent.modalBox.setTitle("<spring:message code="student.title.student.manage"/>");
 	parent.modalBox.show();
+}
+
+/* IDE 엑셀 업로드 */
+function excelUpload(){
+	var addContent  = "<iframe id='addStuPayFrame' name='addStuPayFrame' width='100%' height='100%' "
+		+ "frameborder='0' scrolling='auto' src='/mng/std/student/addStdIdeExcelPop"
+		+ "?crsCreCd="+ItemDTO.crsCreCd+"'/>";
+		parent.modalBox.clear();
+		parent.modalBox.addContents(addContent);
+		parent.modalBox.resize(400, 300);
+		parent.modalBox.setTitle("수강생 IDE 엑셀업로드");
+		parent.modalBox.show();
 }
 
 /**

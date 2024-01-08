@@ -1,5 +1,7 @@
 package egovframework.edutrack.comm.util.web;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -379,4 +381,40 @@ public class DateTimeUtil {
 			return LocalDateTime.now();
 		}
 	}
+	
+	public static String getConvertedDate(String inputDate) {
+        inputDate = inputDate.replaceAll("[a-zA-Z]", " ");// time 구분자 제거
+        inputDate = inputDate.replace("\"", "");// 쌍따옴표 제거
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date parseDate = null;
+        String convertedDate = null;
+
+        try {
+            parseDate = format.parse(inputDate);// zoom 나간시간 String --> Date 로 생성
+            long zoomLeftTime = parseDate.getTime(); // zoom 나간 시간의 milliseconds 구하기
+            int korOffset = TimeZone.getTimeZone("Asia/Seoul").getRawOffset();  // offset
+
+            Long times = zoomLeftTime + korOffset;// 시간 계산
+
+            convertedDate = format.format(times);// 계산한 시간을 다시 날짜+시간 형식(String)으로 변경
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return convertedDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "");
+    }
+
+    public static String getLearnSec(String stDate, String edDate) throws ParseException {
+
+        DateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+
+        Date d1 = format.parse( edDate );
+        Date d2 = format.parse( stDate );
+
+        long sec = (d1.getTime() - d2.getTime()) / 1000; // 초
+
+        return Long.toString(sec);
+    }
 }

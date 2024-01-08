@@ -34,6 +34,7 @@ public class BrdPopupNoticeVO extends DefaultVO{
 	private String regNm;
 	private String modNm;
 	private String searchDate;
+	private String popupCnt;
 	
 	private List<SysFileVO>	attachImages;		// 첨부사진 목록 : 게시물 내용상의 이미지
 //	private List<SysFileVO>	attachFiles;		// 첨부파일 목록
@@ -199,7 +200,14 @@ public class BrdPopupNoticeVO extends DefaultVO{
 	public void setSearchDate(String searchDate) {
 		this.searchDate = searchDate;
 	}
+	public String getPopupCnt() {
+		return popupCnt;
+	}
+	public void setPopupCnt(String popupCnt) {
+		this.popupCnt = popupCnt;
+	}
 
+	
 //	//-- 첨부 파일 관련 처리
 //	public String getAttachFileSns() {
 //		return SysFileVOUtil.convertSysFileVOListToString(this.getAttachFiles());

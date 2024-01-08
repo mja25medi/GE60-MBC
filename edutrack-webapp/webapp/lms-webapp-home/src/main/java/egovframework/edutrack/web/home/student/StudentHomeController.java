@@ -521,7 +521,7 @@ public class StudentHomeController
 			Map<String, Object> argu = new HashMap<String, Object>();
 			argu.put("Name",userInfoVO.getUserNm());
 			argu.put("UserID", userInfoVO.getUserId());
-			argu.put("CourseName", createCourseVO.getCrsCreNm()+" ["+createCourseVO.getCreYear()+"/"+createCourseVO.getCreTerm()+"]");
+			argu.put("CourseName", createCourseVO.getCrsCreNm()+" ["+createCourseVO.getCreTerm()+"]");
 			argu.put("CourseDuration", createCourseVO.getEnrlStartDttm()+"~"+createCourseVO.getEnrlEndDttm());
 			argu.put("SendDate", DateTimeUtil.getCurrentString("yy.MM.dd"));
 			emailTplService.decorator(orgCd, emailTplCd, argu, message);
@@ -2645,12 +2645,6 @@ public class StudentHomeController
 		String crsCreCd = UserBroker.getCreCrsCd(request);
 		String stdNo = UserBroker.getStudentNo(request);
 		String userNo = UserBroker.getUserNo(request);
-		
-		//-- 개설 과정의 정보를 가져온다.
-		CreateCourseVO createCourseVO = new CreateCourseVO();
-		createCourseVO.setCrsCreCd(crsCreCd);
-		createCourseVO = createCourseService.viewCreateCourse(createCourseVO).getReturnVO();
-		request.setAttribute("createCourseVO", createCourseVO);
 
 		//학습자 정보조회
 		StudentVO studentVO = new StudentVO();

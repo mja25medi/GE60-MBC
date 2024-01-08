@@ -23,6 +23,7 @@ public class QrUtil {
 	public static String getCreateQrImage(String crsCreCd, String gubun, String orgCd) {
 		
 		String savePath = Constants.FILE_STORAGE_PATH  + "/" + orgCd + "/QR";
+		//String savePath = "D:/EDUTRACK_GE60/DevelWAS/hrd/sm_hrd/WebRepository/attachfiles";
 		String content = Constants.PRODUCT_DOMAIN;
         
         String fileName = "";

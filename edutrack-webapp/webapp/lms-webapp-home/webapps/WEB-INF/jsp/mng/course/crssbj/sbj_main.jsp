@@ -9,7 +9,7 @@
 
 <mhtml:frm_body cssTag="background-color:#ffffff;">
 	<br/>
-	<c:if test="${courseVO.crsOperMthd eq 'BL' || courseVO.crsOperMthd eq 'ON'}">
+	<%-- <c:if test="${courseVO.crsOperMthd eq 'BL' || courseVO.crsOperMthd eq 'ON'}"> --%>
 	<div style="width:100%;">
 		<div style="float:left;">
 			<h5><i class="glyphicon glyphicon-th-large"></i> <spring:message code="course.title.subject.manage"/></h5>
@@ -52,7 +52,7 @@
 		</table>
 	</div>
 	<div style="margin-bottom:30px;"></div>
-	</c:if>
+	<%-- </c:if> --%>
 	<%-- <c:if test="${courseVO.crsOperMthd eq 'BL' || courseVO.crsOperMthd eq 'OF'}">
 	<div style="width:100%;">
 		<div style="float:left;">
@@ -91,15 +91,9 @@ x		<table summary="<spring:message code="course.title.subject.manage.offline"/>"
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		<c:if test="${courseVO.crsOperMthd eq 'BL' || courseVO.crsOperMthd eq 'ON'}">
 		listOnline();
-		</c:if>
-		<c:if test="${courseVO.crsOperMthd eq 'BL' || courseVO.crsOperMthd eq 'OF'}">
-		listOffline();
-		</c:if>
 	});
 
-	<c:if test="${courseVO.crsOperMthd eq 'BL' || courseVO.crsOperMthd eq 'ON'}">
 	function listOnline() {
 		$('#onlineList').load(cUrl("/mng/course/courseSubject/listOnlnSbj"), {"crsCd": "${crsOnlnSbjVO.crsCd}"});
 	}
@@ -187,9 +181,8 @@ x		<table summary="<spring:message code="course.title.subject.manage.offline"/>"
 					);
 		} else return;
 	}
-	</c:if>
 
-	<c:if test="${courseVO.crsOperMthd eq 'BL' || courseVO.crsOperMthd eq 'OF'}">
+	/* <c:if test="${courseVO.crsOperMthd eq 'BL' || courseVO.crsOperMthd eq 'OF'}">
 	function listOffline() {
 		$('#offlineList').load(cUrl("/mng/course/courseSubject/listOflnSbj"), { "crsCd": "${crsOnlnSbjVO.crsCd}"});
 	}
@@ -257,9 +250,9 @@ x		<table summary="<spring:message code="course.title.subject.manage.offline"/>"
 				);
 	}
 
-	/**
-	 * 오프라인 과목 삭제
-	 */
+	
+	 // 오프라인 과목 삭제
+	 
 	function delOffline(sbjCd) {
 		if(confirm("<spring:message code="course.message.subject.confirm.delete"/>")) {
 			$.getJSON( cUrl( "/mng/course/courseSubject/delOflnSbj"),
@@ -278,7 +271,7 @@ x		<table summary="<spring:message code="course.title.subject.manage.offline"/>"
 		} else return;
 	}
 	</c:if>
-
+ */
 	function resizeForm() {
 		var iframeObj = parent.document.getElementById("subWorkFrame");
 		parent.resizeIframe3(iframeObj, $(document).height());

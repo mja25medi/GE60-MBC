@@ -60,6 +60,8 @@ public interface StudentExcelService {
 	
 	public abstract ProcessResultVO<StudentVO> addStudentPaymentExcel(StudentVO vo, String fileName, String filePath);
 	
+	public abstract ProcessResultVO<StudentVO> addStudentIdeUrlExcel(StudentVO vo, String fileName, String filePath);
+	
 	/**
 	 * 자격증 응시생 샘플 엑셀파일 다운로드
 	 * @param (HashMap<String, String> titles

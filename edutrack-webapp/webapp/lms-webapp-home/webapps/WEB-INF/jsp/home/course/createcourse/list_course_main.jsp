@@ -51,7 +51,7 @@
                                 <li><span>수강기간</span><meditag:dateformat type="1" delimeter="." property="${item.enrlStartDttm}"/> ~ <meditag:dateformat type="1" delimeter="." property="${item.enrlEndDttm}"/></li>
                                 <li><span>교육비용</span>
                                 	<c:choose>
-                                 	<c:when test="${item.eduPrice eq 0}"><strong class="price">무료</strong></c:when>
+                                 	<c:when test="${item.eduPrice eq 0 || item.eduPrice eq null}"><strong class="price">무료</strong></c:when>
                                  	<c:otherwise><strong class="price"><fmt:formatNumber value="${item.eduPrice}" pattern="#,###" />원</strong></c:otherwise>
                                  </c:choose>
                                 </li>

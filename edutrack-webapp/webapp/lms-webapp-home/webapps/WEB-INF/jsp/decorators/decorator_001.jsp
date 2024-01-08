@@ -44,7 +44,7 @@
     <script type="text/javascript" src="/home/001/js/iframe.js"></script>
     <script type="text/javascript" src="/home/001/js/chart.min.js"></script>
     <script type="text/javascript" src="/home/001/js/Chart.PieceLabel.min.js"></script>
-    <script type="text/javascript" src="/home/001/js/slick.min.js"></script>
+    <script defer  type="text/javascript" src="/home/001/js/slick.min.js"></script>
     <script type="text/javascript" src="/home/001/js/jquery.mCustomScrollbar.concat.min.js"></script>
     <script type="text/javascript" src="/home/001/js/modal.js"></script>
     <script type="text/javascript" src="/home/001/js/moment.min.js"></script>

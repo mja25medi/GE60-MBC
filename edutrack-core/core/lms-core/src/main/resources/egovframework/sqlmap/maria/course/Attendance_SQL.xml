@@ -248,7 +248,7 @@
 		  		#{crsCreCd},
 		  		#{attendDttm},
 		  		#{userNo},
-		  		#{userNm},
+		  		( SELECT FN_GET_USER_NAME(#{userNo}) FROM DUAL),
 		  		#{classStat1},
 		  		#{classStat2},
 		  		#{classStat3},

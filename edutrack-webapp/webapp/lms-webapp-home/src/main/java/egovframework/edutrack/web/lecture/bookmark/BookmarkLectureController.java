@@ -4,6 +4,7 @@ package egovframework.edutrack.web.lecture.bookmark;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +50,7 @@ import egovframework.edutrack.modules.course.subject.service.SubjectService;
 import egovframework.edutrack.modules.kollus.util.KollusMediaTokenUtil;
 import egovframework.edutrack.modules.lecture.assignment.service.AssignmentSendVO;
 import egovframework.edutrack.modules.lecture.assignment.service.AssignmentService;
+import egovframework.edutrack.modules.lecture.assignment.service.AssignmentSubConstVO;
 import egovframework.edutrack.modules.lecture.assignment.service.AssignmentSubVO;
 import egovframework.edutrack.modules.lecture.assignment.service.AssignmentVO;
 import egovframework.edutrack.modules.lecture.bookmark.service.BookmarkService;
@@ -191,10 +193,10 @@ public class BookmarkLectureController
 		createCourseVO.setStdNo(stdNo);	
 		createCourseVO = createCourseService.viewCreateCourse(createCourseVO).getReturnVO();
 		
-		if("OF".equals(createCourseVO.getCreTypeCd())) {
+		/*if("OF".equals(createCourseVO.getCreTypeCd())) {
 			setAlertMessage(request, "본 과정은 오프라인 과정입니다.");
 			return "redirect:/lec/main/goMenuPage?mcd=ML01000000";
-		}
+		}*/
 		
 		MainLectureVO mainLectureVO = new MainLectureVO();
 		mainLectureVO.setCrsCreCd(crsCreCd);
@@ -827,39 +829,51 @@ public class BookmarkLectureController
 	
 	
 	/**
-	 * 코딩실습
+	 * 페어코딩 (강사)
 	 * @param mapping
 	 * @param form
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value="/viewCodingPracticePop")
+	@RequestMapping(value="/viewPairCodingPop")
 	public String viewCodingPractice(BookmarkVO vo, Map commandMap, ModelMap model,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		commonVOProcessing(vo, request);
 		
-		String stdNo = UserBroker.getStudentNo(request);
+		String stdNo = vo.getStdNo();
+		
+		String crsCreCd = UserBroker.getCreCrsCd(request);
+		CreateCourseVO ccvo = new CreateCourseVO();
+		ccvo.setCrsCreCd(crsCreCd);
+		ccvo = createCourseService.viewCreateCourse(ccvo).getReturnVO();
 		
 		StudentVO studentVO = new StudentVO();
 		studentVO.setStdNo(stdNo);
 		studentVO = studentService.viewStudentInfo(studentVO).getReturnVO();
 		
 		AssignmentVO avo = new AssignmentVO();
-		avo.setCrsCreCd(vo.getCrsCreCd());
+		avo.setCrsCreCd(ccvo.getCrsCreCd());
 		avo.setAsmtSn(vo.getAsmtSn());
 		avo.setStdNo(stdNo);
 		avo = assignmentService.viewAssignment(avo).getReturnVO();
 		request.setAttribute("returnAssignmentVO", avo);
 		
-		//과제 문제 리스트
-		avo.setStdNo(stdNo);
-		List<AssignmentSubVO> asList =assignmentService.listCodeSub(avo).getReturnList();
-		request.setAttribute("assignmentSubList", asList);
+		AssignmentSubVO asvo = new AssignmentSubVO();
+		asvo.setCrsCreCd(crsCreCd);
+		asvo.setAsmtSn(vo.getAsmtSn());
+		asvo.setAsmtSubSn(vo.getAsmtSubSn());
+		request.setAttribute("assignmentSubVO", assignmentService.viewSub(asvo).getReturnVO());
+		
+		AssignmentSubConstVO ascvo = new AssignmentSubConstVO();
+		ascvo.setCrsCreCd(crsCreCd);
+		ascvo.setAsmtSn(vo.getAsmtSn());
+		ascvo.setAsmtSubSn(vo.getAsmtSubSn());
+		request.setAttribute("listSubConst", assignmentService.listSubConst(ascvo).getReturnList());
 		
 		request.setAttribute("studentVO", studentVO);
 		
-		return "home/lecture/bookmark/view_coding_practice_pop";
+		return "home/lecture/teacher/view_pair_coding_pop";
 	}
 
 
@@ -1901,5 +1915,187 @@ public class BookmarkLectureController
 		
 		
 		return "home/lecture/bookmark/coding_test_result";
+	}
+	
+	/**
+	 * 코딩 실습 도움요청(학생)
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value="/reqHelp")
+	public String reqHelp(BookmarkVO vo, Map commandMap, ModelMap model,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		String userId = UserBroker.getUserId(request);
+		
+		ProcessResultVO<BookmarkVO> resultVO = new ProcessResultVO<BookmarkVO>();
+		
+		StudentVO svo = new StudentVO();
+		svo.setStdNo(vo.getStdNo());
+		svo = studentService.viewStudentInfo(svo).getReturnVO();
+		
+		if (Constants.REDIS_CHECK_YN.equals("Y")) {
+			int expireTime = 60 * 60; // 1hour
+			RedisUtil.appendValue(Constants.REDIS_NAMESPACE+":SID:"+vo.getCrsCreCd(),
+					vo.getSbjCd() + "_" + vo.getUnitCd() + "_" +vo.getAsmtSubSn() + "_"  +vo.getStdNo() + "_" + DateTimeUtil.getDateTime() + ",", expireTime);
+		}
+		resultVO.setMessage("도움을 요청하였습니다.");
+		
+		return JsonUtil.responseJson(response, resultVO);
+	}
+	
+	/**
+	 * 도움요청 리스트(강사)
+	 * @return
+	 */
+	@RequestMapping(value="/helpListPop")
+	public String helpListPop(BookmarkVO vo, Map commandMap, ModelMap model,
+			HttpServletRequest request,	HttpServletResponse response) throws Exception {
+		commonVOProcessing(vo, request);
+		String crsCreCd = UserBroker.getCreCrsCd(request);
+		CreateCourseVO ccvo = new CreateCourseVO();
+		ccvo.setCrsCreCd(crsCreCd);
+		ccvo = createCourseService.viewCreateCourse(ccvo).getReturnVO();
+		request.setAttribute("createCourseVO", ccvo);
+		
+		vo.setCrsCreCd(crsCreCd);
+		StudentVO svo = new StudentVO();
+		List<Map<String, Object>> helpList = new ArrayList<Map<String, Object>>();
+		
+		if (Constants.REDIS_CHECK_YN.equals("Y")) {
+			String sid = RedisUtil.getValue(Constants.REDIS_NAMESPACE+":SID:"+crsCreCd);
+			if(sid != null) {
+				String[] idList = sid.split(",");
+				for (int i=0; i<idList.length; i++) {
+					String helpInfo = idList[i];
+					String[] hList = helpInfo.split("_");
+					ContentsVO cvo = contentsService.viewCreContents(hList[0], crsCreCd, hList[1]).getReturnVO();
+					svo.setStdNo(hList[3]);
+					svo = studentService.viewStudentInfo(svo).getReturnVO();
+					
+					Map<String, Object> reqHelp = new HashMap<String, Object>();
+					reqHelp.put("unitNm", cvo.getUnitNm());
+					reqHelp.put("asmtSn", cvo.getAsmtSn());
+					reqHelp.put("asmtSubSn", hList[2]);
+					reqHelp.put("userNm", svo.getUserNm());
+					reqHelp.put("userId", svo.getUserId());
+					reqHelp.put("stdNo", svo.getStdNo());
+					reqHelp.put("reqTime", hList[4]);
+					reqHelp.put("ideUrl", svo.getIdeUrl());
+					helpList.add(reqHelp);
+				}
+			}
+		}
+		request.setAttribute("helpList", helpList);
+		
+		return "home/lecture/teacher/paircoding_list_pop";
+	}
+	
+	/**
+	 * Redis 데이터 조회
+	 * @return
+	 */
+	@RequestMapping(value="/callRedis")
+	public String callRedis(CreateCourseVO vo, Map commandMap, ModelMap model,
+			HttpServletRequest request,	HttpServletResponse response) throws Exception {
+		commonVOProcessing(vo, request);
+			ProcessResultVO<CreateCourseVO> resultVO = new ProcessResultVO<CreateCourseVO>();
+		
+			String sid = RedisUtil.getValue(Constants.REDIS_NAMESPACE+":SID:"+vo.getCrsCreCd());
+			if(sid == null || sid == "") {
+				resultVO.setResult(-1);
+			} else {
+				resultVO.setResult(1);
+			}
+		
+		return JsonUtil.responseJson(response, resultVO);
+	}
+	
+	/**
+	 * xrcloudCallback 콘텐츠 북마크 콜백용.
+	 * @param mapping
+	 * @param form
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="/xrcloudCallback")
+	public String xrcloudCallback(Map commandMap, ModelMap model,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		//{"infraUserId":"EN0000000427_CE00000314_NSC0000056_CNT000000672","roomId":"4c435491-d13a-45ec-b8f1-3390657b2b44","roomAccessType":"join","roomAccessTime":"2023-12-28T03:41:03.000Z"}
+		//{"infraUserId":"EN0000000427_CE00000314_NSC0000056_CNT000000672","roomId":"4c435491-d13a-45ec-b8f1-3390657b2b44","roomAccessType":"exit","roomAccessTime":"2023-12-28T03:41:25.955Z"}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("infraUserId", "EN0000000427_CE00000314_NSC0000056_CNT000000672");
+		map.put("roomId", "4c435491-d13a-45ec-b8f1-3390657b2b44");
+		map.put("roomAccessType", "join");
+		map.put("roomAccessTime", "2023-12-28T03:41:03.000Z");
+		
+		System.out.println("map : "+map.toString());
+		
+		org.json.simple.JSONObject jsonObject = new org.json.simple.JSONObject(map);
+		
+		System.out.println("jsonObject : "+jsonObject.toString());
+        
+		String infraUserId = jsonObject.get("infraUserId").toString();
+		String roomId = jsonObject.get("roomId").toString();
+		String roomAccessType = jsonObject.get("roomAccessType").toString();
+		String roomAccessTime = jsonObject.get("roomAccessTime").toString();
+		
+		System.out.println("infraUserId : "+infraUserId);
+		System.out.println("roomId : "+roomId);
+		System.out.println("roomAccessType : "+roomAccessType);
+		System.out.println("roomAccessTime : "+roomAccessTime);
+		
+		String getConvertedDate = DateTimeUtil.getConvertedDate(roomAccessTime);
+		
+		System.out.println("========== getConvertedDate : "+getConvertedDate);
+		
+		String[] userKey = StringUtil.split(infraUserId,"_");
+		
+		String stdNo = userKey[0];
+		String crsCreCd = userKey[1];
+		String sbjCd = userKey[2];
+		String unitCd = userKey[3];
+		
+		
+		System.out.println("stdNo : "+stdNo);
+		System.out.println("crsCreCd : "+crsCreCd);
+		System.out.println("sbjCd : "+sbjCd);
+		System.out.println("unitCd : "+unitCd);
+		
+		BookmarkVO bookmarkVO = new BookmarkVO();
+		bookmarkVO.setStdNo(stdNo);
+		bookmarkVO.setSbjCd(sbjCd);
+		bookmarkVO.setUnitCd(unitCd);
+		
+		
+		// 1. bookmak 등록 확인
+		// 기존의 bookmark 정보를 가져온다.
+		bookmarkVO = bookmarkService.viewBookmark(bookmarkVO).getReturnVO();
+		
+		
+		bookmarkVO.setConnTotTm(0);
+		bookmarkVO.setPrgrRatio(0);
+		bookmarkVO.setSeekTime("0");
+		bookmarkVO.setModNo("xrcloud");
+		bookmarkVO.setConnTm(0);
+		bookmarkVO.setStudyBlockInfo(JsonUtil.getJsonString(map.toString()));
+		
+		// 2. bookmak 정보가 없을시에 저장
+		if(bookmarkVO == null){
+		//	bookmarkService.editBookmark(bookmarkVO);
+		}
+		
+		// 2. bookmak 등록
+		
+		// 
+		
+		//--- bookmark 정보 저장
+		bookmarkService.editBookmark(bookmarkVO);
+
+        response.setStatus(200);
+		return "home/lecture/bookmark/xrcloud_callback";
 	}
 }

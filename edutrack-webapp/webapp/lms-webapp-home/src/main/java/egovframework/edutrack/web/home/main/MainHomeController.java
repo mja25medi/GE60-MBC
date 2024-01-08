@@ -224,7 +224,9 @@ public class MainHomeController extends GenericController {
 		popupNoticeVO.setUseYnWww("Y");
 		popupNoticeVO.setSearchDate("Y");
 		List<BrdPopupNoticeVO> popupNoticeList = brdPopupNoticeService.listPopup(popupNoticeVO).getReturnList();
+		int popupCnt = brdPopupNoticeService.listPopupCnt(popupNoticeVO);
 		request.setAttribute("popupNoticeList", popupNoticeList);
+		request.setAttribute("popupCnt", popupCnt);
 
 		//-- 안읽은 쪽지수
 		LogMsgLogVO logMsgLogVO = new LogMsgLogVO();

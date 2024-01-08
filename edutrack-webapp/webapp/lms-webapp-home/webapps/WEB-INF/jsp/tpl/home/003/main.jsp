@@ -170,6 +170,27 @@
 
         </main>
         
+         <!-- 팝업 보기 -->
+    	<c:if test="${popupCnt > 0 }">
+	        <div class="popup-wrap on">
+	            <div class="inner-box">
+	                <ul id="slides-main">
+	                <c:forEach items="${popupNoticeList}" var="item" varStatus="status">
+	                    <li>
+	                        <iframe id="iframe1" src="/home/brd/popup/indexReadPop2?popupSn=${item.popupSn}"></iframe>
+	                    </li>
+                    </c:forEach>
+	                </ul>
+	            </div>
+	            <div class="popup-overlay"></div>
+	        </div>
+        </c:if>
+        <div class="popup-btn-box">
+            <a href="#0" class="popup-close"><i class="xi-close-min"></i></a>
+            <a href="#0" class="popup-open"><i class="xi-library-books-o"></i><label class="ui blue small circular label">${popupCnt}</label></a>
+        </div>
+        
+        
 <script type="text/javascript">
 	
 	var modalBox = null;
@@ -180,78 +201,100 @@
 		CountDownTimer(date);
 		courseEnrollList('');
 		
-		 /********** main popzone **********/
-		   $('.pop-latest').slick({
-		        infinite: true,
-		        arrows: true,
-		        dots: false,
-		        autoplay: true,
-		        autoplaySpeed: 4000,
-		        fade: false,
-		        slidesToShow: 1,
-		        responsive: [
-		            {
-		              breakpoint: 1217,
-		              settings: {
-		                fade: false,
-		                slidesToShow: 1
-		              }
-		            },
-		            {
-		              breakpoint: 786,
-		              settings: {
-		                fade: false,
-		                slidesToShow: 1
-		              }
-		            },
-		            {
-		              breakpoint: 480,
-		              settings: {
-		                slidesToShow: 1
-		              }
-		            }
-		        ]
-		    });
-
-
-		    /********** main hot news **********/
-		    $('.news_slider_list').slick({
-		      infinite: true,
-		      arrows: true,
-		      dots: false,
-		      // autoplay: true,
-		      autoplaySpeed: 5000,
-		      slidesToShow: 4,
-		      slidesToScroll: 1,
-		      responsive: [
-		          {
-		            breakpoint: 950,
-		            settings: {
-		              dots: true,
-		              slidesToShow: 3
-		            }
-		          },
-		          {
-		            breakpoint: 620,
-		            settings: {
-		              dots: true,
-		              slidesToShow: 2
-		            }
-		          },
-		          {
-		            breakpoint: 380,
-		            settings: {
-		              dots: true,
-		              slidesToShow: 1
-		            }
-		          }
-		      ]
-		  });
 	    modalBox = new $M.ModalDialog({
        		"modalid" : "modal1",
        		"nomargin"	: true
        	});  
-		    
+	    var slider = $('#slides-main').slick({
+            arrows: true,
+            autoplay: true,
+            slidesToShow: 2,
+            slidesToScroll: 1,
+            responsive: [
+                { 
+                    breakpoint: 950,
+                    settings: {
+                    slidesToShow: 1
+                    }
+                },
+                { 
+                    breakpoint: 480,
+                    settings: {
+                    slidesToShow: 1,
+                    arrows: true,
+                    dots: true
+                    }
+                }
+
+            ]
+        });  
+	    
+	    /********** main popzone **********/
+	    $('.pop-latest').slick({
+	         infinite: true,
+	         arrows: true,
+	         dots: false,
+	         autoplay: true,
+	         autoplaySpeed: 4000,
+	         fade: false,
+	         slidesToShow: 1,
+	         responsive: [
+	             {
+	               breakpoint: 1217,
+	               settings: {
+	                 fade: false,
+	                 slidesToShow: 1
+	               }
+	             },
+	             {
+	               breakpoint: 786,
+	               settings: {
+	                 fade: false,
+	                 slidesToShow: 1
+	               }
+	             },
+	             {
+	               breakpoint: 480,
+	               settings: {
+	                 slidesToShow: 1
+	               }
+	             }
+	         ]
+	     });
+	    
+	    /********** main hot news **********/
+	    $('.news_slider_list').slick({
+	      infinite: true,
+	      arrows: true,
+	      dots: false,
+	      // autoplay: true,
+	      autoplaySpeed: 5000,
+	      slidesToShow: 4,
+	      slidesToScroll: 1,
+	      responsive: [
+	          {
+	            breakpoint: 950,
+	            settings: {
+	              dots: true,
+	              slidesToShow: 3
+	            }
+	          },
+	          {
+	            breakpoint: 620,
+	            settings: {
+	              dots: true,
+	              slidesToShow: 2
+	            }
+	          },
+	          {
+	            breakpoint: 380,
+	            settings: {
+	              dots: true,
+	              slidesToShow: 1
+	            }
+	          }
+	      ]
+	  });
 	});
 		function timeFomatter(date) {
 			var year= date.slice(0, 4);

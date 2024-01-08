@@ -200,7 +200,32 @@ public class RedisUtil {
         }
 	}
 	
-	
+	/**
+	 * Append Value
+	 * @param key
+	 * @param value
+	 * @param expireTime(second)
+	 */
+	public static void appendValue(String key, String value, int expireTime) {
+		Jedis jedis = borrow();
+		
+        try {
+            jedis.append(key, value);
+
+            if (expireTime > 0) { 
+            	jedis.expire(key, expireTime);
+            }
+        } 
+        catch (Exception e) { 
+        	e.printStackTrace();
+        }
+        finally {
+        	if (jedis != null) {
+        		jedis.close();
+        		revert(jedis);
+        	}
+        }
+	}
 	
 	/**
 	 * Connect Server

@@ -21,8 +21,6 @@
 				</c:forEach>
 				<c:set var="totCpltPercent" value="${totCpltCnt / totEnrlCnt * 100}"/>
 				<tr>
-					<th>기업 수</th>
-					<td class="text-right">${deptList.size()}건</td>
 					<th>과정 수</th>
 					<td class="text-right">${eduCourseStatusList.size()}건</td>
 					<th>수료율</th>
@@ -41,8 +39,7 @@
 		<table summary="<spring:message code="log.title.course.status"/>" style="width:100%" class="table table-bordered wordbreak">
 			<colgroup>
 				<col style="width:auto">
-				<col style="width:auto">
-				<col style="width:auto">
+				<col style="width:90px">
 				<col style="width:200px;">
 				<col style="width:90px">
 				<col style="width:90px">
@@ -52,23 +49,7 @@
 			</colgroup>
 			<thead>
 				<tr>
-					<th scope="col">
-					<c:choose>
-						<c:when test="${fn:startsWith(eduCourseStatusVO.sortKey,'CRS_NM') == true}">
-							<c:if test="${eduCourseStatusVO.sortKey eq 'CRS_NM_ASC'}">
-						<a href="javascript:setSortKey('CRS_NM_DESC')"><spring:message code="course.title.createcourse.creterm"/> <i class="fa fa-sort-asc"></i></a>
-							</c:if>
-							<c:if test="${eduCourseStatusVO.sortKey eq 'CRS_NM_DESC'}">
-						<a href="javascript:setSortKey('CRS_NM_ASC')"><spring:message code="course.title.createcourse.creterm"/> <i class="fa fa-sort-desc"></i></a>
-							</c:if>
-						</c:when>
-						<c:otherwise>
-						<a href="javascript:setSortKey('CRS_NM_ASC')"><spring:message code="course.title.createcourse.creterm"/> <i class="fa fa-sort" style="color:#ddd"></i></a>
-						</c:otherwise>
-					</c:choose>
-					</th>
-					<th scope="col">기업명</th>
-					<th scope="col">
+										<th scope="col">
 					<c:choose>
 						<c:when test="${fn:startsWith(eduCourseStatusVO.sortKey,'CRS_CRE_NM') == true}">
 							<c:if test="${eduCourseStatusVO.sortKey eq 'CRS_CRE_NM_ASC'}">
@@ -83,6 +64,23 @@
 						</c:otherwise>
 					</c:choose>
 					</th>
+					<th scope="col">
+						<%-- <c:choose>
+							<c:when test="${fn:startsWith(eduCourseStatusVO.sortKey,'CRS_NM') == true}">
+								<c:if test="${eduCourseStatusVO.sortKey eq 'CRS_NM_ASC'}">
+							<a href="javascript:setSortKey('CRS_NM_DESC')"><spring:message code="course.title.createcourse.creterm"/> <i class="fa fa-sort-asc"></i></a>
+								</c:if>
+								<c:if test="${eduCourseStatusVO.sortKey eq 'CRS_NM_DESC'}">
+							<a href="javascript:setSortKey('CRS_NM_ASC')"><spring:message code="course.title.createcourse.creterm"/> <i class="fa fa-sort-desc"></i></a>
+								</c:if>
+							</c:when>
+							<c:otherwise>
+							<a href="javascript:setSortKey('CRS_NM_ASC')"><spring:message code="course.title.createcourse.creterm"/> <i class="fa fa-sort" style="color:#ddd"></i></a>
+							</c:otherwise>
+						</c:choose> --%>
+						<spring:message code="course.title.createcourse.creterm"/>
+					</th>
+					
 					<th scope="col"><spring:message code="course.title.createcourse.duration.edu"/></th>
 					<th scope="col"><spring:message code="log.title.course.status.enrollcnt"/></th>
 					<th scope="col"><spring:message code="log.title.course.status.completecnt"/></th>
@@ -100,9 +98,8 @@
 						<c:set var="cpltPercent" value="${item.cpltCnt / item.enrlCnt * 100}"/>
 					</c:if>
 				<tr>
-					<td class="text-center">${item.crsNm}</td>
-					<td class="text-center">${item.deptNm}</td>
 					<td class="wordbreak">${item.crsCreNm}</td>
+					<td class="text-center">${item.creTerm}</td>
 					<td class="text-center"><meditag:dateformat type="1" delimeter="." property="${item.enrlStartDttm}"/> ~ <meditag:dateformat type="1" delimeter="." property="${item.enrlEndDttm}"/></td>
 					<td class="text-right">${item.enrlCnt}<spring:message code="common.title.cnt.user"/></td>
 					<td class="text-right">${item.cpltCnt}<spring:message code="common.title.cnt.user"/></td>

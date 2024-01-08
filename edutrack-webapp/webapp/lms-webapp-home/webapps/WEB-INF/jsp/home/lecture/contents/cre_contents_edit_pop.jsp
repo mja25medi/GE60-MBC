@@ -76,7 +76,7 @@
 	                                                    <input type="radio"  name="cntsTypeCd" id="cntsTypeCd5" value="CODING_L" onclick="cntsTypeChk()" /> 
 	                                                    <label for="cntsTypeCd5">코딩강의</label>
 	                                                </span>
-	                                                <c:if test ="${createOnlineSubjectVO.sbjType eq 'OFF'}">
+	                                                <c:if test ="${createOnlineSubjectVO.sbjType eq 'OF'}">
 		                                                <span class="custom-input ml5">
 		                                                    <input type="radio" name="cntsTypeCd" id="cntsTypeCd6" value="CODING_T" onclick="cntsTypeChk()" /> 
 		                                                    <label for="cntsTypeCd6">코딩실습</label>

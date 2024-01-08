@@ -25,6 +25,8 @@
 					</div>
 					<div class="col-md-6 col-sm-6 text-right">
 						<div class="form-group">
+							<a href="javascript:excelUpload()" class="btn btn-primary btn-sm"><i class="fa fa-file-excel-o fa-fw"></i>IDE 엑셀업로드</a>
+							<a href="javascript:uptIde()" class="btn btn-default btn-sm">IDE부여</a>
 							<c:if test="${MSG_SMS eq 'Y' }">
 							<a href="javascript:messageForm('SMS')" class="btn btn-info btn-sm"><spring:message code="button.sms"/> </a>
 							</c:if>
@@ -195,4 +197,31 @@
 		modalBox.setTitle(getMessageTitle(msgDivCd));
 		modalBox.show();
 	}
+	
+	/* IDE 부여 */
+	function uptIde() {	
+		var addContent  = "<iframe id='addStudentFrame' name='addStudentFrame' width='100%' height='100%' "
+			+ "frameborder='0' scrolling='yes' src='<c:url value="/mng/tch/info/uptIdePop"/>"
+			+ "?crsCreCd="+ItemDTO.crsCreCd+"'/>";
+		
+			parent.modalBox.clear();
+			parent.modalBox.addContents(addContent);
+			parent.modalBox.resize(800, 700);
+			parent.modalBox.setTitle("IDE 부여");
+			parent.modalBox.show();
+	}
+	
+	/* IDE 엑셀 업로드 */
+	function excelUpload(){
+		var addContent  = "<iframe id='addStuPayFrame' name='addStuPayFrame' width='100%' height='100%' "
+			+ "frameborder='0' scrolling='auto' src='/mng/tch/info/addTeacherIdeExcelPop"
+			+ "'/>";
+			
+			parent.modalBox.clear();
+			parent.modalBox.addContents(addContent);
+			parent.modalBox.resize(400, 300);
+			parent.modalBox.setTitle("강사 IDE 엑셀업로드");
+			parent.modalBox.show();
+	}
+	
 </script>

@@ -48,7 +48,6 @@
 			<col style="width:auto"/>
 			<col style="width:85px"/>
 			<col style="width:85px"/>
-			<col style="width:85px"/>
 			<!-- <col style="width:95px"/> -->
 			<col style="width:85px"/>
 			<!-- <col style="width:80px"/> -->
@@ -99,8 +98,7 @@
 				<%-- <th scope="col"><spring:message code="course.title.course.stdcnt"/></th> --%>
 				<th scope="col"><spring:message code="course.title.createcourse.enrollcnt"/></th>
 				
-				<th scope="col">입실QR</th>
-				<th scope="col">퇴실QR</th>
+				<th scope="col">QR</th>
 				
 				<th scope="col"><spring:message code="common.title.useyn"/></th>
 				<%-- <th scope="col"><spring:message code="course.title.createcourse.info"/></th> --%>
@@ -138,7 +136,7 @@
 				</td> --%>
 				<td class="text-right">${item.cnfmCnt}</td>
 				
-				<td class="text-center">
+				<%-- <td class="text-center">
 					<c:choose>
 						<c:when test="${empty item.crsCreQrInFilePath}">-</c:when>
 						<c:otherwise><a href="javascript:readCourseQrPop('${item.crsCreQrInFilePath}','${item.crsCreQrInNo}')">보기</a></c:otherwise>
@@ -149,6 +147,12 @@
 					<c:choose>
 						<c:when test="${empty item.crsCreQrOutFilePath}">-</c:when>
 						<c:otherwise><a href="javascript:readCourseQrPop('${item.crsCreQrOutFilePath}','${item.crsCreQrOutNo}')">보기</a></c:otherwise>
+					</c:choose>
+				</td> --%>
+				<td class="text-center">
+					<c:choose>
+						<c:when test="${empty item.qrFileSn}">-</c:when>
+						<c:otherwise><a href="javascript:readCourseQrPop('${item.qrFileSn}')">보기</a></c:otherwise>
 					</c:choose>
 				</td>
 				

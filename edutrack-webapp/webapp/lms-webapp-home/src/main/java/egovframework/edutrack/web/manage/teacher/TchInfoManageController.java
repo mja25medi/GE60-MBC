@@ -10,12 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import egovframework.edutrack.comm.exception.MediopiaDefineException;
 import egovframework.edutrack.comm.service.ProcessResultListVO;
 import egovframework.edutrack.comm.service.ProcessResultVO;
 import egovframework.edutrack.comm.service.SysCodeMemService;
 import egovframework.edutrack.comm.util.web.JsonUtil;
+import egovframework.edutrack.comm.util.web.StringUtil;
 import egovframework.edutrack.comm.util.web.UserBroker;
 import egovframework.edutrack.comm.web.GenericController;
 import egovframework.edutrack.modules.board.bbs.service.BrdBbsAtclVO;
@@ -23,6 +26,8 @@ import egovframework.edutrack.modules.log.privateinfo.service.LogPrivateInfoInqL
 import egovframework.edutrack.modules.log.privateinfo.service.LogPrivateInfoService;
 import egovframework.edutrack.modules.org.config.service.OrgUserInfoCfgService;
 import egovframework.edutrack.modules.org.config.service.OrgUserInfoCfgVO;
+import egovframework.edutrack.modules.student.student.service.StudentService;
+import egovframework.edutrack.modules.student.student.service.StudentVO;
 import egovframework.edutrack.modules.system.code.service.SysCodeVO;
 import egovframework.edutrack.modules.teacher.info.service.TchInfoService;
 import egovframework.edutrack.modules.teacher.info.service.TchInfoVO;
@@ -55,6 +60,9 @@ public class TchInfoManageController extends GenericController{
 
 	@Autowired @Qualifier("sysCodeMemService")
 	private SysCodeMemService			sysCodeMemService;
+	
+	@Autowired @Qualifier("studentService")
+	private StudentService					studentService;
 
 	/**
 	 * 강사 관리 메인 화면
@@ -273,6 +281,119 @@ public class TchInfoManageController extends GenericController{
 		} catch (Exception e) {
 
 		}
+		return JsonUtil.responseJson(response, resultVO);
+	}
+	
+	/**
+	 * [HRD] 강사 POOL 관리 - IDE 부여
+	 * @param vo
+	 * @param commandMap
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/uptIdePop")
+	public String uptIde( UsrUserInfoVO vo, Map commandMap, ModelMap model,
+			HttpServletRequest request,	HttpServletResponse response) throws Exception {
+		commonVOProcessing(vo, request);
+		
+		//강사리스트
+		String orgCd = UserBroker.getUserOrgCd(request);
+		vo.setOrgCd(orgCd);
+		vo.setUserSts("U"); //-- 사용중인 사용자만 가져오기 (U, N)
+		vo.setSearchAuthGrp("TEACHER");
+		request.setAttribute("vo", vo);
+		
+		ProcessResultListVO<UsrUserInfoVO> resultList = usrUserInfoService.list(vo);
+		request.setAttribute("userInfoList", resultList.getReturnList());
+		
+		//IDE 리스트
+		StudentVO VO = new StudentVO();
+		ProcessResultListVO<StudentVO> ideList = studentService.listIdeManage(VO);
+		model.addAttribute("ideList", ideList.getReturnList());
+		
+		return "mng/teacher/info/teacher_ide_pop";
+	}
+	
+	/**
+	 * 강사의 IDE 정보를 수정한다.
+	 * @param mapping
+	 * @param form
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="/editTeacherUrl")
+	public String editTeacherUrl( UsrUserInfoVO vo, Map commandMap, ModelMap model,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		commonVOProcessing(vo, request);
+		
+		ProcessResultVO<UsrUserInfoVO> resultVO = usrUserInfoService.editTeacherUrl(vo);
+		
+		if(resultVO.getResult() > 0) {
+			resultVO.setMessage("강사 정보를 수정하였습니다.");
+		} else {
+			resultVO.setMessage("강사 정보를 수정하지 못했습니다.");
+		}
+		return JsonUtil.responseJson(response, resultVO);
+	}
+	
+	/**
+	 * [HRD] 강사>IDE URL>엑셀업로드 폼
+	 * @param vo
+	 * @param commandMap
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/addTeacherIdeExcelPop")
+	public String addTeacherIdeExcelPop( UsrUserInfoVO vo, Map commandMap, ModelMap model,
+			HttpServletRequest request,	HttpServletResponse response) throws Exception {
+		commonVOProcessing(vo, request);
+		
+		request.setAttribute("fileupload", "Y");
+		
+		return "mng/teacher/info/teacher_ide_write_excel_pop";
+	}
+	
+	/**
+	 * [HRD] 강사>IDE URL>엑셀업로드 - 수강생 등록
+	 * @param vo
+	 * @param commandMap
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @throws Exception
+	 */
+	@PostMapping(value="/uploadExcelTeacherIde")
+	public String uploadExcelTeacherIde ( UsrUserInfoVO vo, Map commandMap, ModelMap model,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		commonVOProcessing(vo, request);
+		
+		String fileName = StringUtil.nvl(request.getParameter("fileName"));
+		
+		String type =  StringUtil.nvl(request.getParameter("type"));
+		String filePath = StringUtil.nvl(request.getParameter("filePath"));
+
+		
+		ProcessResultVO<UsrUserInfoVO> resultVO = new ProcessResultVO<>();
+		try {
+			usrUserInfoService.addTeacherIdeUrlExcel(vo, fileName, filePath);
+			resultVO.setResultSuccess();
+			resultVO.setMessage("IDE URL 등록에 성공하였습니다.");
+		} catch(MediopiaDefineException e1) {
+			resultVO.setResultFailed();
+			resultVO.setMessage(e1.getMessage());
+		} catch (Exception e) {
+			resultVO.setResultFailed();
+			log.error(e.getMessage());
+			resultVO.setMessage("IDE URL 등록에 실패하였습니다. 반복될 경우, 담당자에게 문의바랍니다.");
+		}
+		
 		return JsonUtil.responseJson(response, resultVO);
 	}
 }

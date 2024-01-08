@@ -58,14 +58,16 @@
                 });
                 
                 function viewData(resCd) {
-                	var url = '<c:url value="/home/org/fac/viewResInfoPop2"/>' + "?resCd=" + resCd;
+                	var url = '<c:url value="/home/org/fac/viewResInfoPop"/>' + "?resCd=" + resCd;
                 	viewPopup(url);
                 }
                 
                 function viewPopup(url) {
+                	var addContent = "<iframe id='facResInfoForm' name='facResInfoForm' width='100%' height='100%' "
+            			+ "frameborder='0' scrolling='auto' src='"+url+"'/>";
                 	modalBox.clear();
-                	modalBox.addContents(url);
-                	modalBox.resize(700, 600);
+                	modalBox.addContents(addContent);
+                	modalBox.resize(850, 600);
                 	modalBox.setTitle("시설 예약 상세");
                 	modalBox.show();
                 }

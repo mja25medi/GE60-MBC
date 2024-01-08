@@ -510,6 +510,7 @@
 		       , A.CRS_CTGR_CD 												
 		       , A.CRS_OPER_MTHD 												
 		       , A.CRS_OPER_TYPE 												
+		       , A.CRS_SVC_TYPE 												
 		       , A.USE_YN 														
 		       , A.REG_NO 														
 			    , (SELECT FN_GET_USER_NAME(A.REG_NO) ) AS REG_NM		
@@ -540,7 +541,7 @@
 		  FROM TB_CRS_CRS A, TB_CRS_CRS_CTGR B							
 		  WHERE A.ORG_CD = B.ORG_CD		
 		     AND A.CRS_CTGR_CD = B.CRS_CTGR_CD  
-		     AND A.CRS_OPER_TYPE = 'R'
+		     AND A.CRS_SVC_TYPE = 'R'
 		     <if test = "crsCtgrCd != null and crsCtgrCd != ''">
 			AND B.CRS_CTGR_PATH LIKE CONCAT('%/', #{crsCtgrCd}, '%' )
 		</if>
