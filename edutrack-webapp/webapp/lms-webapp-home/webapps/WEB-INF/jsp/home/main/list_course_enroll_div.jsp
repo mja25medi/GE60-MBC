@@ -1,31 +1,29 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@include file="/WEB-INF/jsp/common/page_init.jsp" %>
-	   
-						<ul class="slider_list"  >       
-                             <c:forEach items="${courseList}" var="item" varStatus="status">
-							            <li>
-			                              	<a href="javascript:readCourse('${item.crsCreCd}','${item.crsCd}')">
-			                                    <div class="card_item">
-			                                        <div class="image_area">
-			                                            <div class="img_area">
-			                                               <c:if test="${not empty item.thumbFileSn}">
-			                                               	<img src="/app/file/thumb/${item.thumbFileSn }" alt="${item.crsNm}">
-			                                               </c:if>
-			                                            </div>
-			                                        </div>
-			                                        <div class="des">
-			                                            <div class="card_labels"> 
-				                                            <c:forEach items="${item.metaTagArr}" var="tag" varStatus="status">
-				                                            		<span>${tag}</span>
-				                                            </c:forEach>
-			                                            </div> 
-			                                            <p class="des1">${item.crsNm} </p>
-			                                        </div>
-			                                    </div>
-			                                </a>
-			                            </li>                   
-							</c:forEach>
-						</ul>          
+                            <c:forEach items="${courseList}" var="item" varStatus="status">
+                            <li>
+                                <a href="javascript:readCourse('${item.crsCreCd}','${item.crsCd}')">
+                                    <div class="card_item">
+                                        <div class="image_area">
+                                            <div class="img_area">
+                                                <c:if test="${not empty item.thumbFileSn}">
+			                                      	<img src="/app/file/thumb/${item.thumbFileSn }" alt="${item.crsNm}">
+			                                    </c:if>
+                                            </div>
+                                        </div>
+                                        <div class="des">
+                                            <p class="des1">${item.crsNm}</p>
+                                            <div class="card_labels">
+                                                 <c:forEach items="${item.metaTagArr}" var="tag" varStatus="status">
+				                                 	<span>${tag}</span>
+				                                 </c:forEach>
+                                            </div>                                                                              
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            </c:forEach>
+
 						                   
 <script type="text/javascript">
 $(document).ready(function () { 

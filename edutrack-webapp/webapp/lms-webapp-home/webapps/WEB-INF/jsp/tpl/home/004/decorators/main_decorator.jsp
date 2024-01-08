@@ -26,6 +26,21 @@
 	    <script src="/tpl/${COLOR_TPL}/jquery/jquery.cycle2.js"></script>
     	<script src="/tpl/${COLOR_TPL}/js/iframeResizer.min.js"></script>
 
+    <!-- Summernote Editor -->
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/summernote-lite.css" />
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/plugin/math/katex.min.css" />
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/css/emoji.css" />
+
+	<!-- Summernote Editor -->
+    <script src="/tpl/${COLOR_TPL}/js/summernote/summernote-lite.js"></script>
+    <script src="/tpl/${COLOR_TPL}/js/summernote/lang/summernote-ko-KR.js"></script>
+    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/math/katex.min.js"></script>
+    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/math/summernote-math.js"></script>
+    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/js/config.js"></script>
+    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/js/tam-emoji.js"></script>
+	<script src="/tpl/${COLOR_TPL}/js/summernote/plugin/uploadcare.js"></script>
+
+
 
 	    <meditag:js src="/app/js/Context.js"/>
 		<meditag:js src="/js/common_conf.js"/>
@@ -46,20 +61,6 @@
 	<meditag:js src="/libs/daumeditor/js/editor.js"/>
 	<script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
 	<meditag:js src="/js/common_daumeditor.js"/>
-</c:if><c:if test="${not empty summernote}">
-    <!-- Summernote Editor -->
-    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/summernote-lite.css" />
-    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/plugin/math/katex.min.css" />
-    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/css/emoji.css" />
-
-	<!-- Summernote Editor -->
-    <script src="/tpl/${COLOR_TPL}/js/summernote/summernote-lite.js"></script>
-    <script src="/tpl/${COLOR_TPL}/js/summernote/lang/summernote-ko-KR.js"></script>
-    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/math/katex.min.js"></script>
-    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/math/summernote-math.js"></script>
-    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/js/config.js"></script>
-    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/js/tam-emoji.js"></script>
-	<script src="/tpl/${COLOR_TPL}/js/summernote/plugin/uploadcare.js"></script>
 </c:if><c:if test="${not empty uploadify}">
 	<meditag:css href="css/uploadify.css"/>
 	<meditag:js src="/js/jquery/jquery.uploadify.v2.1.4.min.js"/>
