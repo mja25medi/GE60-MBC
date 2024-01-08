@@ -55,6 +55,7 @@
 									<input type="hidden" name="olcYn" value="${vo.olcYn}" />
 									<input type="hidden" name="bookmarkCnt" value="${vo.bookmarkCnt}" />
 									<input type="hidden" name="subCnt" value="${vo.subCnt}" />
+									<input type="hidden" name="roomId" id="roomId" value="${vo.roomId}" />
 									<table style="width:96%;margin-top:5px;margin-left:10px;font-size:14px;">
 										<tr>
 											<td style="width:22%;padding:2px;">
@@ -413,7 +414,8 @@
    			console.log(obj);
    			var data = JSON.parse(obj);
    			
-   			$("#unitFilePath").val(data.roomUrl.public.guest);
+   			$("#unitFilePath").val(data.roomUrl.private.guest);
+   			$("#roomId").val(data.id);
    			
    		})
    		.catch(error => {

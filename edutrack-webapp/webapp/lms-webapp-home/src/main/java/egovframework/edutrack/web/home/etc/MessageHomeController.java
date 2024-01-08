@@ -46,7 +46,7 @@ public class MessageHomeController extends GenericController {
 	 * @return
 	 */
 	@RequestMapping(value="/listRecvMain")
-	public String listRecvPop2(LogMsgLogVO vo, Map commandMap, ModelMap model,
+	public String listRecvMain(LogMsgLogVO vo, Map commandMap, ModelMap model,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		commonVOProcessing(vo, request);
 		request.setAttribute("vo", vo);

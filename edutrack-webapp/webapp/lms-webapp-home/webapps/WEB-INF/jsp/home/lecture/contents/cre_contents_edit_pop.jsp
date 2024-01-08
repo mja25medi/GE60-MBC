@@ -42,6 +42,7 @@
 						<input type="hidden" name="olcYn" value="${vo.olcYn}" />
 						<input type="hidden" name="bookmarkCnt" value="${vo.bookmarkCnt}" />
 						<input type="hidden" name="subCnt" value="${vo.subCnt}" />
+						<input type="hidden" name="roomId" id="roomId" value="${vo.roomId}" />
 	                    <div class="tstyle">
 	                        <ul class="dbody">                            
 	                            <li>
@@ -442,7 +443,8 @@ function getMetaScenes(sceneId){
    			console.log(obj);
    			var data = JSON.parse(obj);
    			
-   			$("#unitFilePath").val(data.roomUrl.public.guest);
+   			$("#unitFilePath").val(data.roomUrl.private.guest);
+   			$("#roomId").val(data.id);
    			
    		})
    		.catch(error => {

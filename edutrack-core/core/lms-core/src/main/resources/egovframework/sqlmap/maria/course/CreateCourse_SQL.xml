@@ -2048,6 +2048,9 @@
 	<select id="selectCreateCourseForEnroll" parameterType="createCourseVO" resultType="createCourseVO">
 		 select A.CRS_CD
 			, A.CRS_YEAR
+			, A.CRS_SVC_TYPE
+			, A.CRS_DESC
+			, A.EDU_PRPS
 			, D.CRE_TERM
 			, D.ENRL_APLC_START_DTTM
 			, D.ENRL_APLC_END_DTTM
@@ -2074,10 +2077,12 @@
 			, D.ENRL_NOP 
 			, D.REFUND_YN 
 			, D.DEPT_CD
-		FROM tb_crs_crs A, tb_crs_sbj_ctgr B, tb_crs_onln_sbj C, tb_crs_cre_crs D
+			, (SELECT COUNT(*) FROM tb_crs_cre_crs_onln_sbj A where A.CRS_CRE_CD = D.CRS_CRE_CD) AS sbjCnt
+		FROM tb_crs_crs A, tb_crs_sbj_ctgr B, tb_crs_onln_sbj C, tb_crs_cre_crs D, tb_crs_cre_crs_onln_sbj E
 		where A.CRS_CD = D.CRS_CD 
 		and B.SBJ_CTGR_CD = C.SBJ_CTGR_CD 
-		and C.SBJ_CD = D.SBJ_CD 
+		and C.SBJ_CD = E.SBJ_CD 
+        and D.CRS_CRE_CD = E.CRS_CRE_CD 
 		AND D.CRS_CRE_CD =  #{crsCreCd} 
 		<!-- 
 		SELECT A.CRS_CD

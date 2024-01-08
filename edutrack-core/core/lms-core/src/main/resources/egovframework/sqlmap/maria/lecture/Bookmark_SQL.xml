@@ -44,7 +44,7 @@
 		        ,  IFNULL(FN_GET_NULL(B.STUDY_DIV),'PER') AS STUDY_DIV																		
 		        ,  IFNULL(FN_GET_NULL(B.SEEK_TIME),'0') AS SEEK_TIME																		
 		        ,  IFNULL(FN_GET_NULL(B.MOBILE_TM),'0') AS MOBILE_TM		
-		        ,  IFNULL(FN_GET_NULL(B.STUDY_BLOCK_INFO),'') AS STUDY_BLOCK_INFO
+		        ,  IFNULL(B.STUDY_BLOCK_INFO,'') AS STUDY_BLOCK_INFO
 		        ,  B.STD_NO
 		        ,  A.ZOOM_URL
 		        ,  A.SCENE_ID
@@ -327,8 +327,15 @@
 		        ,  A.MOBILE_TM			= #{mobileTm}								
 		        ,  A.APRV_USER_NO		= #{aprvUserNo}							
 		   	 	,  A.STUDY_BLOCK_INFO	= #{studyBlockInfo}						
-		        ,  A.MOD_NO          	=  #{modNo}								
-		        ,  A.MOD_DTTM        	=  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+		        ,  A.MOD_NO          	=  #{modNo}	
+		        <choose>
+					<when test = "modDttm != null and modDttm != ''">		
+		        		,  A.MOD_DTTM        	=  #{modDttm}	
+		        	</when>
+		       	 	<otherwise>
+					   ,  A.MOD_DTTM        	=  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+					</otherwise>
+				</choose>
 		    WHERE  A.STD_NO  			=  #{stdNo}								
 		      AND  A.SBJ_CD  			=  #{sbjCd}								
 		      AND  A.UNIT_CD 			=  #{unitCd}

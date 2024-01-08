@@ -496,11 +496,11 @@
 			<id>production</id>
 			<properties>
 				<!--  기본 도메인 및 프로덕트 설정 -->
-				<edutrack.product>https://hrd.edutrack.kr</edutrack.product>
-				<edutrack.product.domain>hrd.edurack.kr</edutrack.product.domain>
+				<edutrack.product>https://openwise.dongguk.ac.kr</edutrack.product>
+				<edutrack.product.domain>openwise.dongguk.ac.kr</edutrack.product.domain>
 <!-- 				<edutrack.product.domain>kedm.kr</edutrack.product.domain> -->
-				<edutrack.product.sub.domain.tutor>hrdtutor.edutrack.kr</edutrack.product.sub.domain.tutor>
-				<edutrack.product.sub.domain.admin>hrdadmin.edutrack.kr</edutrack.product.sub.domain.admin>
+				<edutrack.product.sub.domain.tutor>opentutor.dongguk.ac.kr</edutrack.product.sub.domain.tutor>
+				<edutrack.product.sub.domain.admin>openadmin.dongguk.ac.kr</edutrack.product.sub.domain.admin>
 				<!--  서브도메인 서비스 : domain, 가상디렉토리 서비스 : context -->
 				<edutrack.product.service_type>domain</edutrack.product.service_type>
 				
@@ -541,8 +541,8 @@
 				<edutrack.server_type>unix</edutrack.server_type><!-- windows, unix -->
 				<edutrack.url></edutrack.url>
 				<edutrack.fileserver.url></edutrack.fileserver.url>
-				<edutrack.path.attachfiles>/data/web/smhrd/WebRepository/attachfiles</edutrack.path.attachfiles>
-				<edutrack.path.contents>/data/web/smhrd/WebRepository/contents</edutrack.path.contents>
+				<edutrack.path.attachfiles>E:/data/web/openCampus/WebRepository/attachfiles</edutrack.path.attachfiles>
+				<edutrack.path.contents>E:/data/web/openCampus/WebRepository/contents</edutrack.path.contents>
 
 				<!-- 메일 서버 정보 -->
 				<edutrack.mail.agent>JavaMail</edutrack.mail.agent> <!-- JavaMail,  ThunderMail-->
@@ -572,7 +572,7 @@
 				<edutrack.mail.thundermail.massmail.usercode>7f70404cec14c2cd2b52d23620968768</edutrack.mail.thundermail.massmail.usercode>
 
 				<!-- KISA Keyfile Path -->
-				<kisa.keyfile.path>/web/lms-webapp-home</kisa.keyfile.path>
+				<kisa.keyfile.path>E:/data/web/openCampus/key</kisa.keyfile.path>
 
 				<!--  Exception DB LOG USE  -->
 				<edutrack.dblog.exception>use</edutrack.dblog.exception>
@@ -648,12 +648,12 @@
 				<!-- SNS kakao  -->
 				<edutrack.key.sns.kakao>33aad6b1f2806577d4d8368382c9d8fe</edutrack.key.sns.kakao>
 				<edutrack.secret.sns.kakao>gjil3epBgyejuLKASJra4maloipRxUrW</edutrack.secret.sns.kakao>
-				<edutrack.callback.sns.kakao>https://lms.smhrd.or.kr/home/user/kakaoLoginCallback</edutrack.callback.sns.kakao>
+				<edutrack.callback.sns.kakao>https://openwise.dongguk.ac.kr/home/user/kakaoLoginCallback</edutrack.callback.sns.kakao>
 
 				<!-- SNS naver  -->
 				<edutrack.key.sns.naver>VxUqJjF5yKzZkc61nb8I</edutrack.key.sns.naver>
 				<edutrack.secret.sns.naver>DD6WW2Tp3u</edutrack.secret.sns.naver>
-				<edutrack.callback.sns.naver>https://lms.smhrd.or.kr/home/user/naverLoginCallback</edutrack.callback.sns.naver>
+				<edutrack.callback.sns.naver>https://openwise.dongguk.ac.kr/home/user/naverLoginCallback</edutrack.callback.sns.naver>
 
 				<!-- 메타버스(빌리버) 모듈 연동 정보  -->
 				<edutrack.xrcloud.apiKey>06bd820b9dd3b95c3cc266f0370263ce0a0a49357cd6993bbfbc40e547c1769d</edutrack.xrcloud.apiKey>
@@ -661,7 +661,7 @@
 
 				
 				<!-- 아바타 편집 URL  -->
-				<edutrack.avatar.edit.url>https://avatar.smhrd.or.kr</edutrack.avatar.edit.url>
+				<edutrack.avatar.edit.url></edutrack.avatar.edit.url>
 
 
 				

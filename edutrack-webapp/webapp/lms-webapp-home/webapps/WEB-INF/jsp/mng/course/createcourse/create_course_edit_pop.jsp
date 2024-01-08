@@ -148,7 +148,7 @@
 				 
 				 <tr>
 					<th scope="row"><span style="color:red;">* </span><label for="scoreOpenDttm"><spring:message code="course.title.createterm.score.date"/></label></th>
-					<td colspan="4">
+					<td>
 						<div style="float:left">
 							<div class="input-group" style="float:left;width:128px;">
 								<input type="text" maxlength="10" name="scoreOpenDttm" id="scoreOpenDttm" class="inputDate form-control input-sm" value="${vo.scoreOpenDttm}"/>
@@ -157,6 +157,18 @@
 								</span>
 							</div>
 							<meditag:datepicker name1="scoreOpenDttm" />
+						</div>
+					</td>
+					<th scope="row"><label for="eduPrice"><spring:message code="course.title.course.edufee"/></label></th>
+					<td>
+						<div class="input-group">
+						<c:if test="${sessionScope.MNTRYPOS eq 'PR'}">
+							<span style="float:left;line-height:30px;padding-left:5px;">${sessionScope.MNTRYUNIT}</span>
+						</c:if>
+							<input type="text" style="width:120px;text-align:right;" dispName="<spring:message code="course.title.createcourse.edufee"/>" maxlength="10" dataType="number" isNull="N" lenCheck="10" name="eduPrice" value="${vo.eduPrice }" onfocus="this.select()" class="inputNumber form-control input-sm" id="eduPrice" onkeyup="isChkNumber(this)"/>
+						<c:if test="${sessionScope.MNTRYPOS eq 'PO'}">
+							<span style="float:left;line-height:30px;padding-left:5px;">${sessionScope.MNTRYUNIT}</span>
+						</c:if>
 						</div>
 					</td>
 				</tr>

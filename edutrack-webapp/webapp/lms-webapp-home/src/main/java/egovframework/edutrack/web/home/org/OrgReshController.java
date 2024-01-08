@@ -69,7 +69,7 @@ public class OrgReshController extends GenericController {
 		String userNo = UserBroker.getUserNo(request);
 		String joinYn = request.getParameter("joinYn");
 		vo.setUseYn("Y");
-		vo.setRegYn("Y"); //-- 등록 완료된 설문 목록 셋팅
+		//vo.setRegYn("Y"); //-- 등록 완료된 설문 목록 셋팅
 
 		vo.setUserNo(userNo);
 		vo.setReshTypeCd("G"); // 퇴교 설문 (D) 가 아닌 일반 설문만 조회 한다.
@@ -100,7 +100,7 @@ public class OrgReshController extends GenericController {
 		String userNo = UserBroker.getUserNo(request);
 		String joinYn = request.getParameter("joinYn");
 		vo.setUseYn("Y");
-		vo.setRegYn("Y"); //-- 등록 완료된 설문 목록 셋팅
+		//vo.setRegYn("Y"); //-- 등록 완료된 설문 목록 셋팅
 
 		vo.setUserNo(userNo);
 		vo.setReshTypeCd("G"); // 퇴교 설문 (D) 가 아닌 일반 설문만 조회 한다.

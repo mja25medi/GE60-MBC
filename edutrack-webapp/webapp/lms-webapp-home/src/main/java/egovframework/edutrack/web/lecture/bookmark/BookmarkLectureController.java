@@ -17,7 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.edutrack.Constants;
 import egovframework.edutrack.comm.service.JsTreeVO;
@@ -2019,38 +2022,22 @@ public class BookmarkLectureController
 	 * @param response
 	 * @return
 	 */
+	@ResponseBody
 	@RequestMapping(value="/xrcloudCallback")
-	public String xrcloudCallback(Map commandMap, ModelMap model,
+	public String xrcloudCallback(@RequestBody HashMap<String, Object> map, ModelMap model,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		//{"infraUserId":"EN0000000427_CE00000314_NSC0000056_CNT000000672","roomId":"4c435491-d13a-45ec-b8f1-3390657b2b44","roomAccessType":"join","roomAccessTime":"2023-12-28T03:41:03.000Z"}
 		//{"infraUserId":"EN0000000427_CE00000314_NSC0000056_CNT000000672","roomId":"4c435491-d13a-45ec-b8f1-3390657b2b44","roomAccessType":"exit","roomAccessTime":"2023-12-28T03:41:25.955Z"}
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("infraUserId", "EN0000000427_CE00000314_NSC0000056_CNT000000672");
-		map.put("roomId", "4c435491-d13a-45ec-b8f1-3390657b2b44");
-		map.put("roomAccessType", "join");
-		map.put("roomAccessTime", "2023-12-28T03:41:03.000Z");
-		
-		System.out.println("map : "+map.toString());
-		
 		org.json.simple.JSONObject jsonObject = new org.json.simple.JSONObject(map);
-		
-		System.out.println("jsonObject : "+jsonObject.toString());
         
 		String infraUserId = jsonObject.get("infraUserId").toString();
 		String roomId = jsonObject.get("roomId").toString();
 		String roomAccessType = jsonObject.get("roomAccessType").toString();
 		String roomAccessTime = jsonObject.get("roomAccessTime").toString();
 		
-		System.out.println("infraUserId : "+infraUserId);
-		System.out.println("roomId : "+roomId);
-		System.out.println("roomAccessType : "+roomAccessType);
-		System.out.println("roomAccessTime : "+roomAccessTime);
-		
 		String getConvertedDate = DateTimeUtil.getConvertedDate(roomAccessTime);
-		
-		System.out.println("========== getConvertedDate : "+getConvertedDate);
 		
 		String[] userKey = StringUtil.split(infraUserId,"_");
 		
@@ -2059,43 +2046,72 @@ public class BookmarkLectureController
 		String sbjCd = userKey[2];
 		String unitCd = userKey[3];
 		
+		BookmarkVO iBookmarkVO = new BookmarkVO();
+		iBookmarkVO.setCrsCreCd(crsCreCd);
+		iBookmarkVO.setStdNo(stdNo);
+		iBookmarkVO.setSbjCd(sbjCd);
+		iBookmarkVO.setUnitCd(unitCd);
 		
-		System.out.println("stdNo : "+stdNo);
-		System.out.println("crsCreCd : "+crsCreCd);
-		System.out.println("sbjCd : "+sbjCd);
-		System.out.println("unitCd : "+unitCd);
+		int totalConnTime = 0;
 		
-		BookmarkVO bookmarkVO = new BookmarkVO();
-		bookmarkVO.setStdNo(stdNo);
-		bookmarkVO.setSbjCd(sbjCd);
-		bookmarkVO.setUnitCd(unitCd);
+		// 1. 기존의 bookmark 정보를 가져온다.
+		BookmarkVO bookmarkVO = bookmarkService.viewBookmark(iBookmarkVO).getReturnVO();
 		
-		
-		// 1. bookmak 등록 확인
-		// 기존의 bookmark 정보를 가져온다.
-		bookmarkVO = bookmarkService.viewBookmark(bookmarkVO).getReturnVO();
+		// 2. 콘텐츠 정보를 가져온다.
+		ContentsVO contentsVO = contentsService.viewCreContents(iBookmarkVO.getSbjCd(), iBookmarkVO.getCrsCreCd(),iBookmarkVO.getUnitCd()).getReturnVO();
 		
 		
-		bookmarkVO.setConnTotTm(0);
-		bookmarkVO.setPrgrRatio(0);
-		bookmarkVO.setSeekTime("0");
-		bookmarkVO.setModNo("xrcloud");
-		bookmarkVO.setConnTm(0);
-		bookmarkVO.setStudyBlockInfo(JsonUtil.getJsonString(map.toString()));
-		
-		// 2. bookmak 정보가 없을시에 저장
-		if(bookmarkVO == null){
-		//	bookmarkService.editBookmark(bookmarkVO);
-		}
-		
-		// 2. bookmak 등록
-		
-		// 
-		
-		//--- bookmark 정보 저장
-		bookmarkService.editBookmark(bookmarkVO);
+		// 3 bookmark 정보체크 후 등록
+		if(bookmarkVO == null){ 
+			
+			// 3.1 콘텐츠 기준 진도시간을 가져온다.
+			if(contentsVO.getCritTm() == 0){
+				iBookmarkVO.setPrgrRatio(100);
+			} else {
+				iBookmarkVO.setPrgrRatio(0);
+			}
+			
+			iBookmarkVO.setConnTotTm(0);
+			iBookmarkVO.setSeekTime("0");
+			iBookmarkVO.setRegNo("xrcloud");
+			iBookmarkVO.setModNo("xrcloud");
+			iBookmarkVO.setConnTm(0);
+			iBookmarkVO.setRegDttm(getConvertedDate);
+			iBookmarkVO.setModDttm(getConvertedDate);
+			iBookmarkVO.setStudyBlockInfo(map.toString());
+			iBookmarkVO.setConnCnt(1);
+			
+			bookmarkService.addBookmark(iBookmarkVO);
+		} else { // 4. bookmark 정보체크 후 수정
 
+			// 4.1 출석시간 계산
+			int learnSec = Integer.parseInt(DateTimeUtil.getLearnSec(bookmarkVO.getRegDttm(),getConvertedDate));
+			
+			// 4.2 기준시간 세팅
+			int critTm = contentsVO.getCritTm() * 60;
+			
+			// 4.3 진도율 계산 및 세팅
+			double dPrgrRatio = (learnSec / (double) critTm) * 100;
+			int prgrRatio = (int) dPrgrRatio;
+			if(prgrRatio > 100) prgrRatio = 100;
+			iBookmarkVO.setPrgrRatio(prgrRatio);
+			
+			// 4.4 학습시간 세팅
+			iBookmarkVO.setConnTm(learnSec);
+			
+			// 4.5 총학습시간 세팅
+			totalConnTime = bookmarkVO.getConnTotTm() + learnSec;
+			iBookmarkVO.setConnTotTm(totalConnTime);
+			
+			iBookmarkVO.setRegNo("xrcloud");
+			iBookmarkVO.setModNo("xrcloud");
+			iBookmarkVO.setModDttm(getConvertedDate);
+			iBookmarkVO.setStudyBlockInfo(map.toString());
+			iBookmarkVO.setConnCnt(bookmarkVO.getConnCnt() + 1);
+	
+			bookmarkService.editBookmark(iBookmarkVO);
+		}
         response.setStatus(200);
-		return "home/lecture/bookmark/xrcloud_callback";
+		return "ok";
 	}
 }

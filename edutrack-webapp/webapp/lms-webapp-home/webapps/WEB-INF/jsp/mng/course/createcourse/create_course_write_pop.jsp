@@ -156,7 +156,7 @@
 		
 		<tr>
 			<th scope="row"><span style="color:red;">* </span><label for="scoreOpenDttm"><spring:message code="course.title.createterm.score.date"/></label></th>
-			<td colspan="4">
+			<td>
 				<div style="float:left">
 					<div class="input-group" style="float:left;width:128px;">
 						<input type="text" maxlength="10" name="scoreOpenDttm_0" id="scoreOpenDttm_0" class="inputDate form-control input-sm" autocomplete="off"/>
@@ -165,6 +165,18 @@
 						</span>
 					</div>
 					<meditag:datepicker name1="scoreOpenDttm_0" />
+				</div>
+			</td>
+				<th scope="row" ><span style="color:red;">* </span><label for="eduPrice"><spring:message code="course.title.course.edufee"/></label></th>
+			<td>
+				<div class="input-group">
+				<c:if test="${sessionScope.MNTRYPOS eq 'PR'}">
+					<span style="float:left;line-height:30px;padding-left:5px;">${sessionScope.MNTRYUNIT}</span>
+				</c:if>
+					<input type="text" style="width:120px;text-align:right;" maxlength="10" name="eduPrice_0" id="eduPrice_0"  class="inputNumber form-control input-sm"  value="${courseVO.eduPrice }" onkeyup="isChkNumber(this)"/>
+				<c:if test="${sessionScope.MNTRYPOS eq 'PO'}">
+					<span style="float:left;line-height:30px;padding-left:5px;">${sessionScope.MNTRYUNIT}</span>
+				</c:if>
 				</div>
 			</td>
 		</tr>
@@ -206,18 +218,7 @@
 					</c:forEach>
 				</select>
 			</td>
-			<th scope="row" style="display: none"><span style="color:red;">* </span><label for="eduPrice"><spring:message code="course.title.course.edufee"/></label></th>
-			<td style="display: none">
-				<div class="input-group">
-				<c:if test="${sessionScope.MNTRYPOS eq 'PR'}">
-					<span style="float:left;line-height:30px;padding-left:5px;">${sessionScope.MNTRYUNIT}</span>
-				</c:if>
-					<input type="text" style="width:120px;text-align:right;" maxlength="10" name="eduPrice_0" id="eduPrice_0"  class="inputNumber form-control input-sm"  value="${courseVO.eduPrice }" onkeyup="isChkNumber(this)" disabled/>
-				<c:if test="${sessionScope.MNTRYPOS eq 'PO'}">
-					<span style="float:left;line-height:30px;padding-left:5px;">${sessionScope.MNTRYUNIT}</span>
-				</c:if>
-				</div>
-			</td>
+		
 		</tr>
 
 		<tr>

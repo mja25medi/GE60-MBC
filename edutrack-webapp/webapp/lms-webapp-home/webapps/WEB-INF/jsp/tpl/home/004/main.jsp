@@ -32,12 +32,16 @@
                         data-cycle-pager="#adv-custom-pager"
                         data-cycle-pager-template="<a href='#'></a>"
                     >
-                        <div href="#" class="slide vm01" style="background: #1F1F1F url(/tpl/004/img/main/visual_01.jpg) center top no-repeat;">
-                            <div class="txt-box">
-                                <p class="tit">DONGGUK UNIVERSITY WISE</p>
-                                <p class="content">OPEN CAMPUS</p>
-                            </div>
-                        </div>
+                        <c:forEach var="mainImg" items="${orgImgList }">
+	                    <c:set var="target" value="_blank"/>
+						<c:if test="${not empty mainImg.connTrgt}"><c:set var="target" value="${mainImg.connTrgt}"/></c:if>
+							<div href="${mainImg.connUrl}" target="${target}" class="slide" style="background: #1F1F1F url('<c:url value="/app/file/view2/${mainImg.bkgrFileSn}"/>') center top no-repeat;">
+							 	<div class="txt-box">
+	                                <p class="tit">${mainImg.bkgrImgNm}</p>
+	                                <p class="content">${mainImg.descImgNm}</p>
+	                            </div>
+							</div>
+	                  </c:forEach>
                         
                     </div>
                     <div class="cont-box">
@@ -72,38 +76,22 @@
                         <div class="boardList">
                             <div class="title">
                                 <h2>공지사항</h2>
-                                <a href="#" class="more"><span class="sr_only">더보기</span><i class="xi-plus" aria-hidden="true"></i></a> 
+                                <a href="<c:url value="/home/main/goMenuPage"/>?mcd=${noticeMcd}" class="more"><span class="sr_only">더보기</span><i class="xi-plus" aria-hidden="true"></i></a> 
                             </div>
                             <ul class="board-latest">
-                                <li><a href="#">
-                                    <span class="boardTxt">
-                                        <span class="notice">[특강]</span>
-                                        집콕클라쓰 멘토썸머특강
-                                    </span>
-                                    <span class="boardDate">2023.12.23</span>
-                                </a></li>
-                                <li><a href="#">
-                                    <span class="boardTxt">
-                                        <span class="notice">[공지]</span>
-                                        맞춤형멘토링 우수팀 인터뷰 1편
-                                    </span>
-                                    <span class="boardDate">2023.10.05</span>
-                                </a></li>
-                                <li><a href="#">
-                                    <span class="boardTxt">
-                                        <span class="notice">[특강]</span>
-                                        학습법특강(선배라떼 질의응답 특강)
-                                    </span>
-                                    <span class="boardDate">2023.08.16</span>
-                                </a></li>
-                                <li><a href="#">
-                                    <span class="boardTxt">
-                                        <span class="notice">[공지]</span>
-                                        2023-1학기 원격강좌 수강 안내
-                                    </span>
-                                    <span class="boardDate">2023.08.16</span>
-                                </a></li>
-                                
+                            	<c:forEach var="item" items="${noticeList}">
+								<c:url var="noticeUrl" value="/home/main/goMenuPage?mcd=${noticeMcd}&subParam=read@$bbsCd=NOTICE@$atclSn=${item.atclSn}"/>
+								<li><a href="${noticeUrl}" title="${item.atclTitle}">
+									<span class="boardTxt">
+										<span class="notice">[공지]</span>
+											${fn:substring(item.atclTitle,0, 13)}<c:if test="${fn:length(item.atclTitle) > 15 }">...</c:if><c:if test="${item.recently eq 'NEW' }"><img src="/img/common/new.png" /></c:if>
+									</span>	
+									<span class="boardDate"><meditag:dateformat type="1" delimeter="." property="${item.regDttm}"/></span>
+								</a></li>
+								</c:forEach>
+								<c:if test="${empty noticeList}">
+								<li><span style="width:100%"><spring:message code="board.message.bbs.atcl.nodata"/></span></li>
+								</c:if>
                             </ul>                            
                         </div>  
                         
@@ -172,156 +160,17 @@
                             <a href="#" class="more"><span class="sr_only">더보기</span><i class="xi-angle-right" aria-hidden="true"></i></a>
                         
                             <div class="sort">
-                                <button type="button" class="active">전체</button>
-                                <button type="button">자격증과정</button>
-                                <button type="button">전문교육과정</button>
-                                <button type="button">교양교육과정</button>
-                                <button type="button">WISE 아카데미</button>
-                                <button type="button">위탁교육과정</button>
+                                <button type="button" onclick="courseEnrollList('')" class="active">전체</button>
+                            	<c:forEach var="item" items="${courseCategoryList}" varStatus="status">
+	        						<c:if test="${item.crsCtgrLvl == 1 && item.useYn == 'Y'}">
+	        							<button type="button" onclick="courseEnrollList('${item.crsCtgrCd}')">${item.crsCtgrNm}</button>
+	        						</c:if>
+	        					</c:forEach>
                             </div>
                                                              
                         </div>
-                        <ul class="lecture_list">
-                            <li>
-                                <a href="#0">
-                                    <div class="card_item">
-                                        <div class="image_area">
-                                            <div class="img_area">
-                                                <img src="/tpl/004/img/contents/thumb_01.png" alt="실무에 바로 적용하는 엑셀 2023">
-                                            </div>
-                                        </div>
-                                        <div class="des">
-                                            <p class="des1">실무에 바로 적용하는 엑셀 2023</p>
-                                            <div class="card_labels">
-                                                <span>OA</span>
-                                            </div>                                                                              
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#0">
-                                    <div class="card_item">
-                                        <div class="image_area">
-                                            <div class="img_area">
-                                                <img src="/tpl/004/img/contents/thumb_02.png" alt="[공공특화] 공공데이터 분석에서 보고서 작성까지 All in One">
-                                            </div>
-                                        </div>
-                                        <div class="des">
-                                            <p class="des1">[공공특화] 공공데이터 분석에서 보고서 작성까지 All in One</p> 
-                                            <div class="card_labels">
-                                                <span>데이터분석</span>
-                                            </div>                                                                              
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>                                                        
-                            <li>
-                                <a href="#0">
-                                    <div class="card_item">
-                                        <div class="image_area">
-                                            <div class="img_area">
-                                                <img src="/tpl/004/img/contents/thumb_03.png" alt="(신규)MBTI 심리상담지도자 2급과정">
-                                            </div>
-                                        </div>
-                                        <div class="des">
-                                            <p class="des1">(신규)MBTI 심리상담지도자 2급과정</p>
-                                            <div class="card_labels">
-                                                <span>심리상담</span>
-                                            </div>                                                                               
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#0">
-                                    <div class="card_item">
-                                        <div class="image_area">
-                                            <div class="img_area">
-                                                <img src="/tpl/004/img/contents/thumb_04.png" alt="사회지도자 전문교육과정">
-                                            </div>
-                                        </div>
-                                        <div class="des">
-                                            <p class="des1">사회지도자 전문교육과정</p>  
-                                            <div class="card_labels">
-                                                <span>인문</span>
-                                                <span>자격증</span>
-                                            </div>                                                                   
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>                        
-                            <li>
-                                <a href="#0">
-                                    <div class="card_item">
-                                        <div class="image_area">
-                                            <div class="img_area">
-                                                <img src="/tpl/004/img/contents/thumb_05.png" alt="테마로 보는 서양미술의 흐름">
-                                            </div>
-                                        </div>
-                                        <div class="des">
-                                            <p class="des1">테마로 보는 서양미술의 흐름</p> 
-                                            <div class="card_labels">
-                                                <span>미술</span>
-                                                <span>교양교육</span>
-                                            </div>                                                                        
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#0">
-                                    <div class="card_item">
-                                        <div class="image_area">
-                                            <div class="img_area">
-                                                <img src="/tpl/004/img/contents/thumb_01.png" alt="실무에 바로 적용하는 엑셀 2023">
-                                            </div>
-                                        </div>
-                                        <div class="des">
-                                            <p class="des1">실무에 바로 적용하는 엑셀 2023</p>
-                                            <div class="card_labels">
-                                                <span>OA</span>
-                                            </div>                                                                              
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#0">
-                                    <div class="card_item">
-                                        <div class="image_area">
-                                            <div class="img_area">
-                                                <img src="/tpl/004/img/contents/thumb_02.png" alt="[공공특화] 공공데이터 분석에서 보고서 작성까지 All in One">
-                                            </div>
-                                        </div>
-                                        <div class="des">
-                                            <p class="des1">[공공특화] 공공데이터 분석에서 보고서 작성까지 All in One</p> 
-                                            <div class="card_labels">
-                                                <span>데이터분석</span>
-                                            </div>                                                                              
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>                                                        
-                            <li>
-                                <a href="#0">
-                                    <div class="card_item">
-                                        <div class="image_area">
-                                            <div class="img_area">
-                                                <img src="/tpl/004/img/contents/thumb_03.png" alt="(신규)MBTI 심리상담지도자 2급과정">
-                                            </div>
-                                        </div>
-                                        <div class="des">
-                                            <p class="des1">(신규)MBTI 심리상담지도자 2급과정</p>
-                                            <div class="card_labels">
-                                                <span>심리상담</span>
-                                            </div>                                                                               
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                           
-                        </ul>                           
+                        
+                        <ul class="lecture_list" id="courseEnrollListArea"></ul>                           
 
                     </div>
                 </div>                   
@@ -329,62 +178,164 @@
 
             <!-- Best 강의-->     
             <div class="section section03">
-                <div class="container">  
-                    <div class="title_info">
-                        <h2>인기 강의</h2>                            
-                        <div class="desc">가장 많이 찾아본 콘텐츠</div>
-                        <div class="tags">
-                            <a href="#0" class="tag">#인공지능</a>
-                            <a href="#0" class="tag">#메타버스</a>
-                            <a href="#0" class="tag">#4차산업혁명</a>
-                            <a href="#0" class="tag">#경제</a>
-                            <a href="#0" class="tag">#중국어</a>
-                        </div>
-                    </div>
-                    
-                    <ul class="best_list">
-                        <li>
-                            <a href="#0">
-                                <div class="card_item">                                    
-                                    <div class="img_area">
-                                        <img src="/tpl/004/img/main/best_01.png" alt="인공지능 융합 서비스개발자과정">
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#0">
-                                <div class="card_item">                                    
-                                    <div class="img_area">
-                                        <img src="/tpl/004/img/main/best_02.png" alt="빅데이터 분석서비스 개발자과정">
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#0">
-                                <div class="card_item">                                    
-                                    <div class="img_area">
-                                        <img src="/tpl/004/img/main/best_03.png" alt="지능형 Full-Stack IoT 전문가과정">
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#0">
-                                <div class="card_item">                                    
-                                    <div class="img_area">
-                                        <img src="/tpl/004/img/main/best_04.png" alt="빅데이터">
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                           
-                    </ul>
-                </div>
+            	${bastPageVO.pageCts }
             </div>
 
            
            
         </main>
+
+<script type="text/javascript">
 	
+	var modalBox = null;
+
+	 $(document).ready(function(){
+		$('.depth1').removeClass('on');
+		var date = timeFomatter("${cntCourseVO.enrlAplcEndDttm}");
+		CountDownTimer(date);
+		courseEnrollList('');
+		
+	    modalBox = new $M.ModalDialog({
+       		"modalid" : "modal1",
+       		"nomargin"	: true
+       	});  
+	    var slider = $('#slides-main').slick({
+            arrows: true,
+            autoplay: true,
+            slidesToShow: 2,
+            slidesToScroll: 1,
+            responsive: [
+                { 
+                    breakpoint: 950,
+                    settings: {
+                    slidesToShow: 1
+                    }
+                },
+                { 
+                    breakpoint: 480,
+                    settings: {
+                    slidesToShow: 1,
+                    arrows: true,
+                    dots: true
+                    }
+                }
+
+            ]
+        });  
+	    
+	    /********** main popzone **********/
+	    $('.pop-latest').slick({
+	         infinite: true,
+	         arrows: true,
+	         dots: false,
+	         autoplay: true,
+	         autoplaySpeed: 4000,
+	         fade: false,
+	         slidesToShow: 1,
+	         responsive: [
+	             {
+	               breakpoint: 1217,
+	               settings: {
+	                 fade: false,
+	                 slidesToShow: 1
+	               }
+	             },
+	             {
+	               breakpoint: 786,
+	               settings: {
+	                 fade: false,
+	                 slidesToShow: 1
+	               }
+	             },
+	             {
+	               breakpoint: 480,
+	               settings: {
+	                 slidesToShow: 1
+	               }
+	             }
+	         ]
+	     });
+	    
+	    /********** main hot news **********/
+	    $('.news_slider_list').slick({
+	      infinite: true,
+	      arrows: true,
+	      dots: false,
+	      // autoplay: true,
+	      autoplaySpeed: 5000,
+	      slidesToShow: 4,
+	      slidesToScroll: 1,
+	      responsive: [
+	          {
+	            breakpoint: 950,
+	            settings: {
+	              dots: true,
+	              slidesToShow: 3
+	            }
+	          },
+	          {
+	            breakpoint: 620,
+	            settings: {
+	              dots: true,
+	              slidesToShow: 2
+	            }
+	          },
+	          {
+	            breakpoint: 380,
+	            settings: {
+	              dots: true,
+	              slidesToShow: 1
+	            }
+	          }
+	      ]
+	  });
+	});
+		function timeFomatter(date) {
+			var year= date.slice(0, 4);
+			var month= date.slice(4, 6);
+			var day= date.slice(6, 8);
+			var hours= date.slice(8, 10);
+			var minutes= date.slice(10, 12);
+			var seconds= date.slice(12, 14);
+		return year+'/'+month+'/'+day+' '+hours+':'+minutes+':'+seconds;
+		}	
+		
+     function CountDownTimer(dday) {
+    	 var md = dday.slice(5, 10);
+         var countDownDate = new Date(dday).getTime();
+         var x = setInterval(function() {
+             var now = new Date().getTime();
+             var distance = countDownDate - now;
+             var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+             var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+             var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+             var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+             function showRemaining() {
+                 if (days < 0) {
+                     days = 0;
+                     hours = 0;
+                     minutes = 0;
+                     seconds = 0;
+                     clearInterval(x);
+                 }
+          		 $('.info').find('#time_ym').html(md);
+                 $('.time_area').find('#time_d').html(days+'일');
+                 $('.time_area').find('#time_tms').html(hours+':'+minutes+":"+seconds);
+             }
+             showRemaining();
+         }, 1000);
+     }
+    	
+	function courseEnrollList(crsCtgrCd){
+		$('#courseEnrollListArea').load(cUrl("/home/main/listCourseEnroll"),{'crsCtgrCd' : crsCtgrCd});
+	}
+	
+	function topCourseSearch() {
+		var searchValue = $("#searchValue").val();
+		document.location.href = cUrl("/home/course/listSearchCourseFullMain")+"?mcd=${searchFullMcd}${AMPERSAND}searchValue="+searchValue;
+	}
+
+   
+	
+</script>	

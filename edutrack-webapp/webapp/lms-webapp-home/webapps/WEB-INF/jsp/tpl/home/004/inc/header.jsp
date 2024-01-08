@@ -129,27 +129,38 @@ page import="java.util.Map"%>
         <div class="container">
             <h1 class="logo">
                 <a href="#0" class="link">
-                    <span class="sr-only">동국대학교WISE캠퍼스 OpenCampus</span>
+                    <span class="sr-only">${USER_ORGNM }</span>
                 </a>
             </h1>
          
             <div class="gnb_util">
                 
                 <div class="member_area">
-                    <div class="login">
+					<c:if test="${empty sessionScope.USERNO}">
+                   <div class="login">
                         <ul class="nav"> 
-                            <li><a href="" class=""><span>로그인</span></a></li>
-                            <li><a href="" class=""><span>회원가입</span></a></li>
+                            <li><a href="<c:url value="/home/main/goMenuPage?mcd=${loginMcd}"/>" class=""><span><spring:message code="common.title.link.login"/></span></a></li>
+                            <c:if test="${MBR_APLC_USE eq 'Y' }">
+                            <li><a href="<c:url value="/home/main/goMenuPage?mcd=${joininMcd}"/>" class=""><span><spring:message code="user.title.login.joinin"/></span></a></li>
+                            </c:if>
                             
                         </ul>
                     </div>
-                    <!-- <div class="logout">
-                        <span class="welcome"><span class="text"><strong>홍길동</strong>님</span> <em class="badge">3</em></span>
+					</c:if>
+					<c:if test="${not empty sessionScope.USERNO}">
+                    <div class="logout">
+                        <span class="welcome"><span class="text"><strong>${USERNAME}</strong>님</span> <em class="badge">3</em></span>
                         <ul class="nav">
-                            <li><a href="" class=""><span>로그아웃</span></a></li>
-                            <li><a href="" class=""><span>개인정보수정</span></a></li>
+                            <li><a href="<c:url value="/home/user/logout" />" class=""><span><spring:message code="common.title.link.logout"/></span></a></li>
+                            <li><a href="<c:url value="/home/main/goMenuPage?mcd=${editMyinfoMcd}"/>" class=""><span><spring:message code="common.title.link.myinfo"/></span></a></li>
+							<c:if test="${fn:length(MNGTYPE) > 1}">
+							<li><a href="/mindex.jsp" class=""><span><spring:message code="common.title.go.manage"/></span></a></li>
+							</c:if>
                         </ul>
-                    </div> -->
+                    </div>
+
+					</c:if>
+
                 </div>
                 <!-- //member_area -->
                                   
@@ -166,62 +177,58 @@ page import="java.util.Map"%>
             <h2 class="pop_title">전체메뉴</h2>
             
             <ul id="head_menu" class="topmenu">
-                <li class="depth1">
-                    <a href="#0"><span>서비스 소개</span></a>
-                    <div class="submenu">                    
-                        <ul class="depth2">             
-                            <li><a href="#0">서비스 소개</a></li>
-                        </ul>
-                    </div>
-                </li>                
-                <li class="depth1">
-                    <a href="#0"><span>과정안내/신청</span></a>
-                    <div class="submenu">                       
-                        <ul class="depth2">    
-                            <li><a href="#0">훈련과정</a></li>         
-                            <li><a href="#0">고용보험 환급제도</a></li>
-                            <li><a href="#0">훈련비 환급방법</a></li>
-                            <li><a href="#0">훈련 진행절차</a></li>
-                            <li><a href="#0">훈련진행 유의사항</a></li>
-                            <li><a href="#0">모사답안 처리기준</a></li>
-                        </ul>
-                    </div>
-                </li>                                                     
-                <li class="depth1">
-                    <a href="#0"><span>나의 강의실</span></a>
-                    <div class="submenu">                        
-                        <ul class="depth2">
-                            <li><a href="#0">나의 학습</a></li>
-                            <li><a href="#0">종료과정 성적조회</a></li>
-                            <li><a href="#0">수료증</a></li>
-                            <li><a href="#0">설문</a></li>
-                            <li><a href="#0">과정별 학습 문의</a></li>
-                        </ul>
-                    </div>
-                </li> 
-                <li class="depth1">
-                    <a href="#0"><span>마이 페이지</span></a>
-                    <div class="submenu">                        
-                        <ul class="depth2">
-                            <li><a href="#0">장바구니</a></li>
-                            <li><a href="#0">결제내역</a></li>
-                            <li><a href="#0">문의내역</a></li>
-                            <li><a href="#0">받은쪽지</a></li>
-                            <li><a href="#0">개인정보 수정</a></li>
-                        </ul>
-                    </div>
-                </li> 
-                <li class="depth1">
-                    <a href="#0"><span>알림마당</span></a>
-                    <div class="submenu">                        
-                        <ul class="depth2">
-                            <li><a href="#0">공지사항</a></li>
-                            <li><a href="#0">학습자료실</a></li>
-                            <li><a href="#0">1:1문의하기</a></li>
-                            <li><a href="#0">FAQ</a></li>
-                        </ul>
-                    </div>
-                </li>                                                                                  
+  							<c:forEach items="${menuVO.subList}" var="item" varStatus="mstatus">
+								<c:if test="${item.topMenuYn eq 'Y'}">
+									<c:set var="menuName1" value="${item.menuNm}"/>
+									<c:forEach var="lang" items="${item.menuLangList}">
+										<c:if test="${LOCALEKEY eq lang.langCd}"><c:set var="menuName1" value="${lang.menuNm}"/></c:if>
+									</c:forEach>
+									<c:set var="linkUrl" value="#" />
+									<c:if test="${not empty item.menuUrl}">
+										<c:url var="linkUrl" value="/home/main/goMenuPage?mcd=${item.menuCd}" />
+									</c:if>
+									<c:if test="${not empty item.subList}">
+					                <li class="depth1 <c:if test="${chkedmenu eq item.menuCd}">on</c:if>">
+					                    <a href="#0"><span>${menuName1}</span></a>
+					                    <div class="submenu">                    
+					                        <ul class="depth2">             
+															<c:forEach items="${item.subList}" var="item1">
+																<c:set var="menuName2" value="${item1.menuNm}"/>
+																<c:forEach var="lang2" items="${item1.menuLangList}">
+																	<c:if test="${LOCALEKEY eq lang2.langCd}"><c:set var="menuName2" value="${lang2.menuNm}"/></c:if>
+																</c:forEach>
+																<c:set var="linkUrl2" value="#" />
+																<c:if test="${not empty item1.menuUrl}">
+																	<c:url var="linkUrl2" value="/home/main/goMenuPage?mcd=${item1.menuCd}" />
+																</c:if>
+					
+																<c:choose>
+																	<c:when test="${item1.menuCd eq 'HM04002000' }">
+																		<c:if test="${MBR_APLC_USE eq 'Y' }">
+															<li><a href="${linkUrl2}">${menuName2}</a></li>
+																		</c:if>
+																	</c:when>
+																	<c:otherwise>
+																		<c:if test="${item1.menuViewYn eq 'Y'}">
+															<li><a href="${linkUrl2}">${menuName2}</a></li>
+																		</c:if>
+																	</c:otherwise>
+																</c:choose>
+					
+															</c:forEach>                    
+					                        </ul>
+					                    </div>
+					                </li>
+									</c:if>
+									<c:if test="${empty item.subList}">
+									<li>
+										<a href="${linkUrl}">${menuName1}</a>
+									</li>
+									</c:if>
+								</c:if>
+							</c:forEach>            
+                  
+                                                                              
             </ul>
             <button type="button" class="pop_close"><i class="xi-close"></i><span class="sr-only">전체메뉴 레이어
                     닫기</span></button>
@@ -229,11 +236,6 @@ page import="java.util.Map"%>
     </div>
     <!-- //gnb_area -->
 </header>
-<script type="text/javascript">
-function topCourseSearch() {
-	var searchValue = $("#searchValue").val();
-	document.location.href = cUrl("/home/course/listSearchCourseFullMain")+"?mcd=${searchFullMcd}${AMPERSAND}searchValue="+searchValue;
-}
-</script>
+
 
 	

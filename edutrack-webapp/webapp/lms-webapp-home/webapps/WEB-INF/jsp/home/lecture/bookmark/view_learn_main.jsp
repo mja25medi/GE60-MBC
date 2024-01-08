@@ -115,7 +115,8 @@
 				                            					<button type="button" class="primary ${btnDisabled}" onclick="checkDayLimit('${contentsItem.sbjCd}','${contentsItem.unitCd}','${contentsItem.prgrRatio}','${contentsItem.cntsTypeCd}','','Y')">복습하기</button>
 				                            				</c:when>
 				                            				<c:otherwise><!-- 강의시간이 아닐때 -->
-					                            				<button type="button" class="primary ${btnDisabled} disabled">학습하기</button>
+				                            					<c:set var="btnDisabled" value="disabled"/>	
+					                            				<button type="button" class="primary ${btnDisabled}">학습하기</button>
 				                            				</c:otherwise>
 				                            			</c:choose>
 				                            		</c:when>
@@ -131,7 +132,10 @@
  			                            			</c:when>
  			                            			<c:when test="${nowTime < contentsItem.classStartTime}"> <!-- 강의시간 이전 -->
  			                            			</c:when>
- 			                            			<c:otherwise><button type="button" class="primary ${btnDisabled} disabled" >학습종료</button></c:otherwise>
+ 			                            			<c:otherwise>
+ 			                            				<c:set var="btnDisabled" value="disabled"/>	
+ 			                            				<button type="button" class="primary ${btnDisabled}" >학습종료</button>
+ 			                            			</c:otherwise>
  			                            		</c:choose>			                            		
 			                            	</c:when>
  			                            	<c:when test="${contentsItem.cntsTypeCd eq 'META'}">
@@ -144,7 +148,10 @@
  			                            					<button type="button" class="primary ${btnDisabled}" onclick="goMeta('${contentsItem.unitFilePath}','${contentsItem.sceneId}','${productDomain}','${userVo.avatar}','${userVo.userNm}','${contentsItem.sbjCd}','${contentsItem.unitCd}','${contentsItem.roomId}');">학습하기</button>
  			                            				</c:if>
  			                            			</c:when>
- 			                            			<c:otherwise><button type="button" class="primary ${btnDisabled} disabled" >학습종료</button></c:otherwise>
+ 			                            			<c:otherwise>
+ 			                            				<c:set var="btnDisabled" value="disabled"/>	
+ 			                            				<button type="button" class="primary ${btnDisabled}" >학습종료</button>
+ 			                            			</c:otherwise>
  			                            		</c:choose>
 			                            	</c:when>
 											<c:otherwise>
@@ -254,7 +261,7 @@
    			var obj = JSON.stringify(json);
    			var data = JSON.parse(obj);
    			console.log(data);
-   			var roomUrl = data.roomUrl.public.guest;
+   			var roomUrl = data.roomUrl.private.guest;
    			
    			if(roomUrl == "") {
    				alert("api 연동에 실패했습니다.");
