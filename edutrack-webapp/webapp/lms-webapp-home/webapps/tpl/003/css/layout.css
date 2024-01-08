@@ -255,7 +255,8 @@ footer
 .modal_popup_wrap .modal_popup.m_large { width: 90rem; }
 .modal_popup_wrap .modal_popup .modal_title { border-bottom: 1px solid #DDD; padding-bottom: 2rem; font-size: 2rem; font-weight: 600; color: #333; }
 .modal_popup_wrap .modal_popup .modal_close { position: absolute; right: 4rem; top: 4rem; font-size: 2.4rem; }
-.modal_cont { flex: 1; padding: 2rem 0; overflow: hidden; overflow-y: auto; scrollbar-width: none; }
+/* .modal_cont { flex: 1; padding: 2rem 0; overflow: hidden; overflow-y: auto; scrollbar-width: none; } */
+.modal_cont { flex: 1; padding: 2rem 0; overflow: hidden;  }
 .modal_cont .xi-warning { font-size: 5.6rem; color: #ACAFB8; display: block; margin-bottom: 3rem; }
 .modal_cont .ctl::before { display: none; }
 .scroll_custom {height: auto;}
