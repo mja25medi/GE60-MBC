@@ -9,7 +9,6 @@
 								<col style="width:auto;"/>
 								<col style="width:110px"/>
 								<col style="width:auto"/>
-								<col style="width:auto"/>
 								<col style="width:auto;min-width:90px;"/>
 								<col style="width:auto;min-width:110px;"/>
 								<col style="width:auto;min-width:110px;"/>
