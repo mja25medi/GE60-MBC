@@ -29,8 +29,8 @@
         <div class="inner-wrap">
             <div class="footer_logo"><img src="/tpl/${COLOR_TPL}/img/common/logo_w.svg"></div>
             <ol>
-                <li><a href="#">이용약관</a></li>
-                <li><a href="#">개인보호처리방침</a></li>
+                <li><a href="/home/main/goMenuPage?mcd=HM06001000">이용약관</a></li>
+                <li><a href="/home/main/goMenuPage?mcd=HM06002000">개인보호처리방침</a></li>
             </ol>
             <ul>
                 <li>TEL : 054-770-2043, 2981(행정), 2969(교수지원), 2983, 2959(학습지원), 2982,2960(매체지원)</li>
