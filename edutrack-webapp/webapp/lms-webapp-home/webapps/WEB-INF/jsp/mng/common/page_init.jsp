@@ -25,6 +25,7 @@
 	request.setAttribute("MSG_EMAIL", Constants.MSG_EMAIL);
 	request.setAttribute("MSG_NOTE", Constants.MSG_NOTE);
 	request.setAttribute("USER_ORGNM",UserBroker.getUserOrgNm((HttpServletRequest)pageContext.getRequest()));
+	request.setAttribute("USER_DOMAINNM",UserBroker.getUserDomainNm((HttpServletRequest)pageContext.getRequest()));
 	request.setAttribute("USER_ORGCD",UserBroker.getUserOrgCd((HttpServletRequest)pageContext.getRequest()));
 	request.setAttribute("TOP_LOGOSN",UserBroker.getUserTopLogo((HttpServletRequest)pageContext.getRequest()));
 	request.setAttribute("SUB_LOGO1SN",UserBroker.getUserSubLogo1((HttpServletRequest)pageContext.getRequest()));

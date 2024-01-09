@@ -23,7 +23,7 @@
     		</a>
   		</div>
   		<div class="login-box-body">
-    		<p class="login-box-msg" style="font-size:20px;">K-디지털플랫폼</p>
+    		<p class="login-box-msg" style="font-size:20px;">${USER_DOMAINNM}</p>
 			<form name="mainForm" id="mainForm" method="POST">
 			<input type="hidden" name="certKey" id="certKey" />
 			<input type="hidden" name="encryptData" id="encryptData" />

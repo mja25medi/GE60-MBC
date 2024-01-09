@@ -150,7 +150,7 @@ public class UserBroker {
 	}
 
 	/**
-	 * 회원의 사이트명을 반환한다.
+	 * 회원의 기관명을 반환한다.
 	 * @param request
 	 * @return
 	 */
@@ -158,6 +158,16 @@ public class UserBroker {
 		return getSessionValue(request, Constants.SAAS_ORGNM);
 	}
 
+	/**
+	 * 회원의 사이트명을 반환한다.
+	 * @param request
+	 * @return
+	 */
+	public static final String getUserDomainNm(HttpServletRequest request){
+		return getSessionValue(request, Constants.SAAS_DOMAINNM);
+	}
+	
+	
 	/**
 	 * 회원의 사이트 메인 로고를 반환한다.
 	 * @param request

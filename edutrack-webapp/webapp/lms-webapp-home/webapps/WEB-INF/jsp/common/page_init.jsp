@@ -42,6 +42,7 @@ request.setAttribute("MSG_EMAIL", Constants.MSG_EMAIL);
 request.setAttribute("MSG_NOTE", Constants.MSG_NOTE);
 
 request.setAttribute("USER_ORGNM",UserBroker.getUserOrgNm((HttpServletRequest)pageContext.getRequest()));
+request.setAttribute("USER_DOMAINNM",UserBroker.getUserDomainNm((HttpServletRequest)pageContext.getRequest()));
 request.setAttribute("USER_ORGCD",UserBroker.getUserOrgCd((HttpServletRequest)pageContext.getRequest()));
 request.setAttribute("LAYOUT_TPL",(String)session.getAttribute("LAYOUTTPL"));
 request.setAttribute("COLOR_TPL",(String)session.getAttribute("COLORTPL"));

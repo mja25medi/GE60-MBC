@@ -170,6 +170,7 @@ public class Constants {
 
 	// ASP 관련 설정
 	public static final String  SAAS_ORGNM				= "ORGNM";
+	public static final String  SAAS_DOMAINNM			= "DOMAINNM";
 	public static final String  SAAS_ORGCD				= "ORGCD";
 	public static final String  SAAS_LAYOUT_TPL			= "LAYOUTTPL";
 	public static final String  SAAS_LAYOUT_TPL_TYPE	= "TYLTYPE";
