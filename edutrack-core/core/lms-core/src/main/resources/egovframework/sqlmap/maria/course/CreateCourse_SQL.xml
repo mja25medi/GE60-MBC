@@ -900,7 +900,7 @@
 		       , #{enrlNop}  
 		       , #{onlnEduTm}  
 		       , #{oflnEduTm}  
-		       , #{eduPrice}  
+		       , IFNULL(#{eduPrice}, 0)  
 		       , #{scoreHandlCd}  
 		       , #{cpltScore}
 		       , #{cpltPrgrRate}  
@@ -993,7 +993,7 @@
 		       , OFLN_EDU_TM = #{oflnEduTm}
 		       </if>  
 		       <if test = "eduPrice != null and eduPrice >= 0">
-		       , EDU_PRICE = #{eduPrice}
+		       , EDU_PRICE = IFNULL(#{eduPrice}, 0)
 		       </if>  
 		       <if test = "refundYn != null and refundYn != ''">
 		       , REFUND_YN = #{refundYn}

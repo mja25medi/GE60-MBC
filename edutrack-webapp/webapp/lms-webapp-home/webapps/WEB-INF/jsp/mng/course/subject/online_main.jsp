@@ -52,6 +52,7 @@
 								<col style="width:auto"/>
 								<col style="width:70px"/>
 								<col style="width:80px"/>
+								<col style="width:70px"/>
 								<col style="width:100px"/>
 							</colgroup>
 							<thead>
@@ -59,8 +60,9 @@
 									<th scope="col"><spring:message code="course.title.subject.code"/></th>
 									<th scope="col"><spring:message code="course.title.subject.category"/></th>
 									<th scope="col"><spring:message code="course.title.subject.name"/></th>
-									<th scope="col"><spring:message code="course.title.subject.contents.cnt"/></th>
-									<th scope="col"><spring:message code="common.title.stats"/></th>
+									<th scope="col">과목구분</th>
+									<th scope="col">사용여부</th>
+									<th scope="col">목차수</th>
 									<th scope="col"><spring:message code="course.title.subject.contents.manage"/></th>
 								</tr>
 							</thead>

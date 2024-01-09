@@ -10,16 +10,17 @@
                     
                     <!-- search -->
                     <div class="sch_layer">                            
-                        <form class="sch_form" name="sch_form" id="schForm">                               
-                            <label for="allKeyWord" class="title">통합검색</label>
-                            <input type="text" name="allKeyWord" id="allKeyWord" placeholder="강좌명을 검색하세요">
-                            <button id="btnSch" class="btn_sch">
-                                <i class="xi-search" aria-hidden="true"></i><span class="sr-only">검색버튼</span>
-                            </button>
-                        </form>
-                        <button type="button" class="btn_sch_close">
-                            <i class="xi-close-thin" aria-hidden="true"></i><span class="sr-only">검색 닫기</span>
-                        </button>                            
+		                <form class="search" name="courseSearch" id="courseSearch" onsubmit="return false;">                      
+		                    <label For="searchValue" class="title"><spring:message code="common.title.search"/></label>
+		                    <input type="text" id="searchValue" name="searchValue"  maxlength="100"  placeholder="<spring:message code="common.title.input.coursename"/>">
+		                    <button id="btnSch" class="btn_sch" onClick="topCourseSearch()">
+		                        <i class="xi-search" aria-hidden="true"></i><span class="sr-only">검색버튼</span>
+		                    </button>
+		                </form>
+		                <button type="button" class="btn_sch_close">
+		                    <i class="xi-close-thin" aria-hidden="true"></i><span class="sr-only">검색 닫기</span>
+		                </button>                            
+                          
                     </div>
 
                     <div class="cycle-slideshow"

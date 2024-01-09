@@ -773,24 +773,27 @@ public class StudentExcelServiceImpl
 			//crsCreCd로 개설과정 및 기수 기간 조회
 			CreateCourseVO createCourseVO = new CreateCourseVO();
 			createCourseVO.setCrsCreCd(crsCreCd);
-			createCourseVO = createCourseMapper.selectCreateCourseForEnroll(createCourseVO);
+			createCourseVO = createCourseMapper.selectCreateCourse(createCourseVO);
 			
 			if(createCourseVO  == null) {
 				throw new ServiceProcessException((rowIndex + 1) + "라인(아이디 : " + userId  + ", 개설과정코드 : " + crsCreCd + ")\n개설과정이 조회되지 않습니다. 유효한 개설과정 코드인지 확인바랍니다");
 			} else if(ValidationUtils.isEmpty(createCourseVO.getCrsCreCd())) {
 				throw new ServiceProcessException((rowIndex + 1) + "라인(아이디 : " + userId  + ", 개설과정코드 : " + crsCreCd + ")\n개설과정이 조회되지 않습니다. 유효한 개설과정 코드인지 확인바랍니다");
-			} else if(!resultInfoVO.getDeptCd().equals(createCourseVO.getDeptCd())){
-				throw new ServiceProcessException((rowIndex + 1) + "라인(아이디 : " + userId  + ", 개설과정코드 : " + crsCreCd + ")\n개설과정의 기업과 회원의 기업이 일치하지 않습니다. 개설과정과 회원정보를 확인바랍니다.");
-			} else if(ValidationUtils.isEmpty(createCourseVO.getEnrlAplcStartDttm()) 
+			} 
+			//else if(!resultInfoVO.getDeptCd().equals(createCourseVO.getDeptCd())){ throw new ServiceProcessException((rowIndex + 1) + "라인(아이디 : " + userId  + ", 개설과정코드 : " + crsCreCd + ")\n개설과정의 기업과 회원의 기업이 일치하지 않습니다. 개설과정과 회원정보를 확인바랍니다.");} 
+			else if(ValidationUtils.isEmpty(createCourseVO.getEnrlAplcStartDttm()) 
 					|| (ValidationUtils.isEmpty(createCourseVO.getEnrlAplcEndDttm()))
 					|| (ValidationUtils.isEmpty(createCourseVO.getEnrlStartDttm()))
 					|| (ValidationUtils.isEmpty(createCourseVO.getEnrlEndDttm()))
-					|| (ValidationUtils.isEmpty(createCourseVO.getTermEndDttm()))
+					//|| (ValidationUtils.isEmpty(createCourseVO.getTermEndDttm()))
 					) {
 				throw new ServiceProcessException((rowIndex + 1) + "라인(아이디 : " + userId  + ", 개설과정코드 : " + crsCreCd + ")\n개설과정의 기수 등록기간, 수강기간, 종강일 입력을 확인바랍니다.");
-			} else if(createCourseVO.getEduPrice() == null || createCourseVO.getEduPrice() == 0) {
-				throw new ServiceProcessException((rowIndex + 1) + "라인(아이디 : " + userId  + ", 개설과정코드 : " + crsCreCd + ")\n개설과정의 가격 정보는 0 보다 커야 합니다. 개설과정 정보를 확인바랍니다.");
-			}
+			} /*
+				 * else if(createCourseVO.getEduPrice() == null || createCourseVO.getEduPrice()
+				 * == 0) { throw new ServiceProcessException((rowIndex + 1) + "라인(아이디 : " +
+				 * userId + ", 개설과정코드 : " + crsCreCd +
+				 * ")\n개설과정의 가격 정보는 0 보다 커야 합니다. 개설과정 정보를 확인바랍니다."); }
+				 */
 			
 			//userNo와 crsCreCd로 수강중인 강의 확인
 			StudentVO stuVO = new StudentVO();

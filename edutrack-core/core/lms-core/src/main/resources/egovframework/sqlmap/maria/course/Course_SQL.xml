@@ -341,7 +341,7 @@
 	       , #{eduNop} 								
 	       , #{stayDaycnt} 							
 	       , #{eduTarget} 							
-	       , #{eduPrice} 							
+	       , IF(#{eduPrice}='', 0 , IFNULL(#{eduPrice}, 0)) 							
 	       , #{eduMthd} 								
 	       , #{eduPrps} 								
 	       , #{crsDesc} 								
@@ -389,7 +389,7 @@
 		       , EDU_NOP = #{eduNop}								
 		       , STAY_DAYCNT = #{stayDaycnt} 						
 		       , EDU_TARGET = #{eduTarget} 							
-		       , EDU_PRICE = #{eduPrice} 							
+		       , EDU_PRICE =  IFNULL(#{eduPrice}, 0)			
 		       , EDU_MTHD = #{eduMthd} 								
 		       , EDU_PRPS = #{eduPrps} 								
 		       , CRS_DESC = #{crsDesc} 								

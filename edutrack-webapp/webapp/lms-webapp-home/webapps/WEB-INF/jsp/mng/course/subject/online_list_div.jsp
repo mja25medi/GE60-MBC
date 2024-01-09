@@ -9,7 +9,7 @@
 												<col style="width:110px"/>
 												<col style="width:250px"/>
 												<col style="width:auto"/>
-												<col style="width:70px"/>
+												<col style="width:100px"/>
 												<col style="width:70px"/>
 												<col style="width:80px"/>
 												<col style="width:100px"/>

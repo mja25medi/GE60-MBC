@@ -384,6 +384,10 @@
 	 * 과목 등록
 	 */
 	function addSubject() {
+		if($('#sbjType').val() == '') {
+			alert('과목 구분을 선택하세요');
+			return false;
+		}
 		process("addOnline");	// cmd
 	}
 

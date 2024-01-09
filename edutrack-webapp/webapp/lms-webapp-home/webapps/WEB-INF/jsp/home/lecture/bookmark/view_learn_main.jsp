@@ -229,6 +229,11 @@
 			"modalid" : "modal1",
 			"nomargin"	: true
 		});
+		
+		otpModalBox = new $M.ModalDialog({
+			"modalid" : "otpModalBox",
+			"nomargin"	: true
+		});
 	});	
 	
 	

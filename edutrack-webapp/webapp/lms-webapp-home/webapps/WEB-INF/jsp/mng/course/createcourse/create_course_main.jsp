@@ -23,7 +23,7 @@
 								<input type="text" name="crsCtgrNm" id="crsCtgrNm" class="form-control input-sm" readonly="readonly" style="background-color:#ffffff;width:140px;" value="<spring:message code="common.title.all"/>" onclick="clickDropdown()"/>
 								<input type="hidden" name="crsCtgrCd" id="crsCtgrCd"/>
 							</div>
-							<div class="input-group">
+							<%-- <div class="input-group">
 								<select name="creYear" id="creYear" onchange="listCourse(1)" class="form-control input-sm">
 								<c:forEach items="${yearList}" var="year">
 									<c:if test="${year == curYear}">
@@ -34,7 +34,7 @@
 									</c:if>
 								</c:forEach>
 								</select>
-							</div>
+							</div> --%>
 							<div class="input-group" style="width:160px;">
 								<input type="text" name="searchKey" id="searchKey" class="_enterBind form-control input-sm" maxlength="20" title="<spring:message code="common.message.input.search"/>" placeholder="<spring:message code="common.title.all"/>"/>
 								<span class="input-group-addon" onclick="listCourse()" style="cursor:pointer">
@@ -62,25 +62,29 @@
 							<div id="courseList">
 								<table summary="<spring:message code="course.title.createcourse.manage"/>" class="table table-bordered wordbreak">
 									<colgroup>
-										<col style="width:auto;min-width:90px;"/>
 										<col style="width:auto"/>
-										<col style="width:auto;min-width:90px;"/>
-										<col style="width:auto;min-width:110px;"/>
+										<col style="width:auto"/>
+										<col style="width:60px"/>
 										<col style="width:80px"/>
-										<col style="width:80px"/>
-										<col style="width:80px"/>
-										<col style="width:75px"/>
+										<col style="width:195px"/>
+										<col style="width:195px"/>
+										<col style="width:auto"/>
+										<col style="width:85px"/>
+										<col style="width:85px"/>
+										<col style="width:85px"/>
 									</colgroup>
 									<thead>
 										<tr>
-											<th scope="col"><spring:message code="course.title.course.category"/></th>
+											<th scope="col">과정코드</th>
 											<th scope="col"><spring:message code="course.title.course.name"/></th>
-											<th scope="col"><spring:message code="course.title.course.edumthd"/></th>
+											<th scope="col">회차</th>
 											<th scope="col"><spring:message code="course.title.course.crstype"/></th>
-											<th scope="col"><spring:message code="common.title.useyn"/></th>
-											<th scope="col"><spring:message code="course.title.createcourse.create.cnt"/></th>
-											<th scope="col"><spring:message code="course.title.createcourse.creterm"/></th>
-											<th scope="col"><spring:message code="common.title.manage"/></th>
+											<th scope="col">교육신청기간</th>
+											<th scope="col">교육기간</th>
+											<th scope="col">수강인원</th>
+											<th scope="col">QR</th>
+											<th scope="col">사용여부</th>
+											<th scope="col">과정운영</th>
 										</tr>
 									</thead>
 									<tbody>

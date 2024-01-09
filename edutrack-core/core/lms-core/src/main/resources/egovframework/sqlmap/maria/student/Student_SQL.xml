@@ -1999,6 +1999,7 @@
 			INNER JOIN TB_USR_LOGIN U
 			ON S.USER_NO = U.USER_NO
 		WHERE CRS_CRE_CD = #{crsCreCd}
+		AND S.ENRL_STS = 'S'
 		AND U.USER_ID = #{userId}
 	</select>
 	
