@@ -128,7 +128,7 @@ page import="java.util.Map"%>
     <div class="logo_search">
         <div class="container">
             <h1 class="logo">
-                <a href="#0" class="link">
+                <a href="/" class="link">
                     <span class="sr-only">${USER_ORGNM }</span>
                 </a>
             </h1>
