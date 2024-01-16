@@ -434,7 +434,7 @@ function getMetaScenes(sceneId){
 		   			sceneId: id,
 		   			name: "${osVO.sbjNm}_"+$("#unitNm").val(),
 		   			size:1000,
-		   			returnUrl:"${product_host_url}"
+		   			returnUrl:"${product_host_url}/lec/bookmark/listStdPrgrRatioDetailMain?sbjCd=${vo.sbjCd}"
    		        })
    		})
    		.then(resp => resp.json())

@@ -58,7 +58,7 @@
 					,success : function(resultVO) {
 						alert(resultVO.message);
 						if(resultVO.result > 0){
-							parent.listStuPayInfo();
+							parent.subWorkFrame.listStuPayInfo('1');
 							parent.modalBoxClose();
 						}else{//실패인 경우 창 닫지 않음
 							parent.listStuPayInfo();

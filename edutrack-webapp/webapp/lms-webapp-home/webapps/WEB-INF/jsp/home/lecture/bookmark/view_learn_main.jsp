@@ -287,6 +287,10 @@
 		document.location.href =  "/lec/bookmark/listBookmarkMain";
 	}
 	
+	function listContents(){
+		document.location.href =  "/lec/bookmark/listStdPrgrRatioDetailMain?sbjCd=${sbjVO.sbjCd}";
+	}
+	
 	//코딩강의
 	function viewCodingA() {
 		document.location.href =  "/lec/bookmark/viewCodingLessons";

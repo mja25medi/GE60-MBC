@@ -111,7 +111,7 @@ page import="java.util.Map"%>
 			<c:if test="${item.menuCd eq MENUCODE}"><c:set var="chkedmenu" value="${item.menuCd}"/></c:if>
 		</c:forEach>
 		<header>
-		    <h1 class="logo"><a href="/lec/main/goMenuPage?mcd=ML01000000"><span class="sr-only">스마트인재개발원 온라인강의실</span></a></h1>
+		    <h1 class="logo"><a href="/lec/main/goMenuPage?mcd=ML01000000"><span class="sr-only">${USER_ORGNM } 온라인강의실</span></a></h1>
 		    <div class="util">
 		        <select class="form-select" id="crsCreCd" onchange="goLecture();">
 		        	<c:forEach items="${creList}" var="creitem" varStatus="creStatus">

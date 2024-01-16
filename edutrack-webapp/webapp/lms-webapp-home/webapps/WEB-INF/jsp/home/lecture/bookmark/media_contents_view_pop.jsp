@@ -384,11 +384,18 @@ function addQstn() {
 }
 
 /* 차시 이동 */
-function goUnitCd(unitCd,type) {
+function goUnitCd(unitCd,type,prgrRatio) {
+	var studyMthd = '${sbjVO.studyMthd}'; 
+	
 	if(unitCd == ''){
 		if(type == 'p'){alert("첫번째 차시입니다.")};
 		if(type == 'n'){alert("마지막 차시입니다.")};
 		return false;	
+	}
+	
+	if(type == 'n' && prgrRatio < 100 && studyMthd == 'SE'){
+		alert("해당 차시를 완료해야 다음 학습이 가능합니다.");
+		return false;
 	}
 	
 	var sbjCd = '${contentsVO.sbjCd}';
@@ -404,7 +411,7 @@ function goUnitCd(unitCd,type) {
                 <div class="title">
 	                <button type="button" onclick="goUnitCd('${contentsVO.preUnitCd}','p')"><i class="xi-angle-left" aria-hidden="true"></i></button>
 	                ${contentsVO.unitNm }
-	                <button type="button" onclick="goUnitCd('${contentsVO.nextUnitCd}','n')"><i class="xi-angle-right" aria-hidden="true"></i></button>
+	                <button type="button" onclick="goUnitCd('${contentsVO.nextUnitCd}','n','${contentsVO.prgrRatio}')"><i class="xi-angle-right" aria-hidden="true"></i></button>
                 </div>
                 <div class="group_btn">
                     <button type="button" class="btn-line inquiry-button">문의하기</button>

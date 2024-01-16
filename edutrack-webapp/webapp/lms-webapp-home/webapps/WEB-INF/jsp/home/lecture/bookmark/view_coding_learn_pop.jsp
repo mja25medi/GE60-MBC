@@ -221,7 +221,8 @@ $(document).on("click","#qnaSave",function(){
 		edutrackAPI.SetValue("prgrRatio", prgrRatio);
 		edutrackAPI.SetSeekTime(sessionSeekTime); //--seek 시간 설정
 		result = edutrackAPI.Terminate("");
-		//opener.listContents();
+		opener.listContents();
+		self.close();
 	}
 	
 	function setShowControl() {
@@ -353,6 +354,9 @@ function process(cmd) {
     <div class="coding_wrap">
         <div class="coding_header">
             <h1>${contentsVO.unitNm }</h1>
+            <div class="right_util">
+            	<button type="button" onclick="onunloadFunction();" class="btn">학습종료</button>
+            </div>
         </div>
         <div class="panel-container">
             <div class="panel-left">

@@ -244,6 +244,31 @@ public class ContentsServiceImpl
 	}
 
 	/**
+	 * 교재 정보 조회 (회차)
+	 *
+	 * @return  ProcessResultVO
+	 */
+	@Override
+	public ProcessResultVO<ContentsVO> viewCreContents(String sbjCd,String crsCreCd, String unitCd, String stdNo)  throws Exception {
+		ContentsVO ctsVO = new ContentsVO();
+		ctsVO.setSbjCd(sbjCd);
+		ctsVO.setUnitCd(unitCd);
+		ctsVO.setCrsCreCd(crsCreCd);
+		ctsVO.setStdNo(stdNo);
+
+		ProcessResultVO<ContentsVO> resultVO = new ProcessResultVO<ContentsVO>();
+		try {
+			resultVO.setReturnVO(contentsMapper.selectCreContents(ctsVO));
+			resultVO.setResultSuccess();
+		} catch (Exception e){
+			e.printStackTrace();
+			resultVO.setResultFailed();
+			resultVO.setMessage(e.getMessage());
+		}			
+		return resultVO;
+	}
+	
+	/**
 	 * 교재 등록
 	 *
 	 * @return  ProcessResultVO

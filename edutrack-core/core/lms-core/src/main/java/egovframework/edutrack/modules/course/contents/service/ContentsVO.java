@@ -61,7 +61,21 @@ public class ContentsVO extends DefaultVO {
 	
 	private String preUnitCd; /* 이전차시 */
 	private String nextUnitCd; /* 이후차시 */
+
+	private String prgrRatio;
 	
+	private String stdNo;
+	
+	
+	
+	public String getPrgrRatio() {
+		return prgrRatio;
+	}
+
+	public void setPrgrRatio(String prgrRatio) {
+		this.prgrRatio = prgrRatio;
+	}
+
 	public String getRoomId() {
 		return roomId;
 	}
@@ -411,6 +425,14 @@ public class ContentsVO extends DefaultVO {
 
 	public void setZoomUrl(String zoomUrl) {
 		this.zoomUrl = zoomUrl;
+	}
+
+	public String getStdNo() {
+		return stdNo;
+	}
+
+	public void setStdNo(String stdNo) {
+		this.stdNo = stdNo;
 	}
 
 

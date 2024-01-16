@@ -376,6 +376,9 @@ extends EgovAbstractServiceImpl implements CourseService  {
 		ProcessResultVO<CourseVO> resultVO = new ProcessResultVO<CourseVO>();
 		setDateConvert(vo);
 		courseMapper.update(vo);
+		sysFileService.bindFile(vo, new NestedThumbFileHandler());
+		sysFileService.bindFile(vo, new NestedPlanFileHandler());
+		sysFileService.bindFile(vo, new NestedImagesFileHandler());
 		resultVO.setReturnVO(vo);
 		resultVO.setResultSuccess();
 		return resultVO;

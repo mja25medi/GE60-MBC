@@ -534,7 +534,7 @@ public class BookmarkLectureController
 		request.setAttribute("review", review);
 
 		//-- 콘텐츠 정보를 가져온다.
-		ContentsVO contentsVO = contentsService.viewCreContents(vo.getSbjCd(), vo.getCrsCreCd(),vo.getUnitCd()).getReturnVO();
+		ContentsVO contentsVO = contentsService.viewCreContents(vo.getSbjCd(), vo.getCrsCreCd(),vo.getUnitCd(), stdNo).getReturnVO();
 		request.setAttribute("contentsVO", contentsVO);
 		
 		CreateOnlineSubjectVO coVO = new CreateOnlineSubjectVO();

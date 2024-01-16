@@ -51,7 +51,8 @@
 			    , (SELECT FN_GET_USER_NAME(A.MOD_NO) ) AS MOD_NM		
 		       , A.MOD_DTTM
 		       , A.THUMB_FILE_SN 	
-  		       , A.META_TAG 												
+  		       , A.META_TAG 	
+  		       , A.CRS_SVC_TYPE											
 		       , B.CRS_CTGR_NM													
 		       , B.CRS_CTGR_PATH												
 		       , B.CRS_CTGR_PATH_NM	
@@ -341,7 +342,7 @@
 	       , #{eduNop} 								
 	       , #{stayDaycnt} 							
 	       , #{eduTarget} 							
-	       , IF(#{eduPrice}='', 0 , IFNULL(#{eduPrice}, 0)) 							
+	       , IF(CAST(#{eduPrice} AS CHAR(100))='', 0 , IFNULL(#{eduPrice}, 0)) 							
 	       , #{eduMthd} 								
 	       , #{eduPrps} 								
 	       , #{crsDesc} 								

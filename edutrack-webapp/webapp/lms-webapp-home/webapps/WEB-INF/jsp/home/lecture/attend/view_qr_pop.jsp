@@ -31,14 +31,19 @@ input[type="password"], input[type="text"], input[type="number"], select, textar
 </mhtml:mng_head>
 <mhtml:frm_body cssTag="background-color:#fff;">
 	<div class="modal_cont">
-	 	<div class="course_img" style="text-align: center;">
-            <img src="/app/file/view/${createCourseVO.qrFileSn }" alt="이미지" aria-hidden="true" onerror="this.style.display='none'">     
+        <div class="dummy_box">
+            <img id="qrImg" src="/app/file/view/${createCourseVO.qrFileSn }" alt="이미지" aria-hidden="true" onerror="noFile()">    
         </div>
-       
-        <div style="text-align: center; margin-top: 50px;">
-			<a href="#none" onclick="parent.modalBoxClose();" class="btn btn-sm btn-default"><spring:message code="button.close"/></a>
-		</div>
+        <div class="enter_box">
+            <div class="disc fcBlack">출석 확인을 위해 HRD 어플로 QR 코드를 찍어주세요</div>            
+        </div>
     </div>
-    
+<script>
+function noFile() {
+	alert("파일이 존재하지 않습니다.");
+	$("#qrImg").css('display', 'none');
+}
+
+</script>
 </mhtml:frm_body>
 </mhtml:mng_html>

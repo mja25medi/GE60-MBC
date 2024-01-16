@@ -97,6 +97,7 @@
 				result = api.Initialize("");
 				seekTime = api.GetSeekTime();
 				prgrRatio = api.GetValue("prgrRatio");
+				
 			} catch (e) {
 				alert("<spring:message code="lecture.message.bookmark.alert.isnot.initialized.edutrackadaptor"/>");
 			}
@@ -116,26 +117,11 @@
 		return prgrRatio;
 	}
 
-	function initAPI() {}
-
-	function evtOnUnload() {
-		
-	}
-	
-	function onloadApiFrame() {
-		initAPI();
-		initEdutrackAPI();
-	}
-	
-	window.onunload = onunloadFunction;
-	window.onbeforeunload = onunloadFunction;
-
-	function onunloadFunction() {
-		
+	function initPrgr() {
+		var critTm =  parseInt("${bookmarkVO.critTm}");
 		var firstSeekTime = parseInt("${bookmarkVO.critTm}")*60;
 		var learnSeekTime = parseInt(edutrackAPI.GetSeekTime());
 		var seekTime;
-		
 		
 		if(firstSeekTime <= learnSeekTime){
 			seekTime = "0";
@@ -146,7 +132,23 @@
 		edutrackAPI.SetValue("prgrRatio", "100");
 		edutrackAPI.SetSeekTime(seekTime); //--seek 시간 설정
 		result = edutrackAPI.Terminate("");
-		opener.reload();
+		
+	}
+
+	function evtOnUnload() {
+		
+	}
+	
+	function onloadApiFrame() {
+		initEdutrackAPI();
+		initPrgr();
+	}
+	
+	window.onunload = onunloadFunction;
+	window.onbeforeunload = onunloadFunction;
+
+	function onunloadFunction() {
+		opener.listContents();
 		self.close();
 	}
 	

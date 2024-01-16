@@ -178,7 +178,11 @@ function addSingleBasket(crsCreCd) {
 			}
 		}
 		,error : function(request,status,error) {
-			alert("수강신청 항목 담기에 실패하였습니다. 새로고침 후 다시 이용바랍니다.");
+			if(confirm("로그인 후 이용 가능합니다. 로그인 페이지로 이동하시겠습니까?") == true) {
+				location.href = "/home/main/goMenuPage?mcd=HM04001000"
+			} else {
+				
+			};
 		}
 	});
 }

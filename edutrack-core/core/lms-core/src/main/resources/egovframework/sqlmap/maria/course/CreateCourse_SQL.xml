@@ -2046,7 +2046,137 @@
 	</select>
 
 	<select id="selectCreateCourseForEnroll" parameterType="createCourseVO" resultType="createCourseVO">
-		 select A.CRS_CD
+		SELECT  A.CRS_CRE_CD 
+		       , A.CRS_CD
+		       , A.CRE_TYPE_CD 
+		       , A.CRE_YEAR 
+		       , A.CRE_TERM 
+		       , A.CRS_CRE_NM 
+		       , A.SBJ_CD 
+		       , (select MAX(SBJ_CTGR_NM) from tb_crs_onln_sbj C, tb_crs_sbj_ctgr D where A.SBJ_CD = C.SBJ_CD AND C.SBJ_CTGR_CD = D.SBJ_CTGR_CD) as SBJ_CTGR_NM
+		       , A.ENRL_APLC_START_DTTM 
+		       , A.ENRL_APLC_END_DTTM 
+		       , A.ENRL_START_DTTM 
+		       , A.ENRL_END_DTTM 
+		       , A.AUDIT_END_DTTM 
+		       , CASE WHEN DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') BETWEEN A.ENRL_APLC_START_DTTM
+		                   AND A.ENRL_APLC_END_DTTM THEN 'Y' ELSE 'N' END AS ENRL_APLC_YN 
+		       , CASE WHEN B.CRS_OPER_TYPE = 'R' THEN FN_GET_GAP_DATE(A.ENRL_START_DTTM, A.ENRL_END_DTTM,'DAY') + 1	
+		              ELSE IFNULL(FN_GET_NULL(A.ENRL_DAYCNT),0) END AS ENRL_GAP_DATE 
+		       , IFNULL(FN_GET_NULL(A.ENRL_DAYCNT),0) AS ENRL_DAYCNT
+		       , CASE WHEN SUBSTR(A.OFLN_START_DTTM,1,8) = SUBSTR(OFLN_END_DTTM,1,8) 
+		              THEN DATE_FORMAT(STR_TO_DATE(A.OFLN_START_DTTM,'%Y%m%d%H%i%s'),'%m%d') 
+		              ELSE CONCAT(DATE_FORMAT(STR_TO_DATE(A.OFLN_START_DTTM,'%Y%m%d%H%i%s'),'%m%d'),'~' 
+		                   ,DATE_FORMAT(STR_TO_DATE(A.OFLN_END_DTTM,'%Y%m%d%H%i%s'),'%m%d')) END AS OFLN_DURATION 		              		              
+		        
+		       , IFNULL(FN_GET_NULL(A.NOP_LIMIT_YN),'N') AS NOP_LIMIT_YN
+		       , A.ENRL_NOP 
+		       , A.ONLN_EDU_TM 
+		       , A.OFLN_EDU_TM 
+		       , A.REFUND_YN 
+		       , A.REFUND_PRICE 
+		        , IFNULL(FN_GET_NULL(A.EDU_PRICE),0) AS EDU_PRICE
+		       , A.SCORE_HANDL_CD 
+		       , A.CPLT_SCORE
+		       , A.CPLT_PRGR_RATE 
+		       , IFNULL(FN_GET_NULL(A.PRGR_RATIO),0) AS PRGR_RATIO 
+		       , IFNULL(FN_GET_NULL(A.ATTD_RATIO),0) AS ATTD_RATIO 
+		       , IFNULL(FN_GET_NULL(A.EXAM_RATIO),0) AS EXAM_RATIO 
+		       , IFNULL(FN_GET_NULL(A.SEMI_EXAM_RATIO),0) AS SEMI_EXAM_RATIO 
+		       , IFNULL(FN_GET_NULL(A.FORUM_RATIO),0) AS FORUM_RATIO 
+		       , IFNULL(FN_GET_NULL(A.ASMT_RATIO),0) AS ASMT_RATIO 
+		       , IFNULL(FN_GET_NULL(A.PRJT_RATIO),0) AS PRJT_RATIO 
+		       , IFNULL(FN_GET_NULL(A.JOIN_RATIO),0) AS JOIN_RATIO 
+		       , IFNULL(FN_GET_NULL(A.ETC_RATIO),0) AS ETC_RATIO
+		       , IFNULL(FN_GET_NULL(A.ETC_RATIO_2),0) AS ETC_RATIO_2
+		       , IFNULL(FN_GET_NULL(A.ETC_RATIO_3),0) AS ETC_RATIO_3
+		       , IFNULL(FN_GET_NULL(A.ETC_RATIO_4),0) AS ETC_RATIO_4
+		       , IFNULL(FN_GET_NULL(A.ETC_RATIO_5),0) AS ETC_RATIO_5
+		       , ETC_NM
+		       , ETC_NM_2
+		       , ETC_NM_3
+		       , ETC_NM_4
+		       , ETC_NM_5
+		       , A.DAY_STUDY_LIMIT 
+		 	   , (SELECT COUNT(*)  
+		 	      FROM tb_crs_cre_crs_decls  
+		 	      WHERE CRS_CRE_CD = A.CRS_CRE_CD ) AS DECLS_CNT 
+		 	   , A.REG_NO 
+		 	   , (SELECT FN_GET_USER_NAME(A.REG_NO) ) AS REG_NM 
+		 	   , A.REG_DTTM 
+		       , A.MOD_NO 
+			   , (SELECT FN_GET_USER_NAME(A.MOD_NO) ) AS MOD_NM 
+		       , A.MOD_DTTM 
+		       , A.OFLN_EDU_PLACE 
+		       , A.TRACSE_TME 
+		       , A.CRE_DESC
+		       , A.QR_FILE_SN
+		       , FN_GET_DATE_FORMAT( A.SCORE_OPEN_DTTM,'%Y.%m.%d') AS SCORE_OPEN_DTTM 
+		       , B.CRS_OPER_MTHD 
+		       , B.CRS_OPER_TYPE
+		       , B.CRS_YEAR
+		       , B.CRS_TERM
+		       , B.CRS_NM
+		       , B.THUMB_FILE_SN
+		       , B.EDU_NOP
+		       , ( SELECT COUNT(*) 
+		             FROM tb_std_std 
+		            WHERE CRS_CRE_CD = A.CRS_CRE_CD 
+		              AND ENRL_STS IN ('S','C','F')) AS CNFM_CNT  
+		       , ( SELECT COUNT(*) 
+		             FROM tb_std_std 
+		            WHERE CRS_CRE_CD = A.CRS_CRE_CD 
+		              AND ENRL_STS IN ('E','S','C','F')) AS STU_CNT  
+		       , ( SELECT COUNT(T.CRS_CRE_CD) 
+		             FROM ( SELECT CRS_CRE_CD 
+		         	           FROM tb_crs_cre_crs_onln_sbj 
+		              		  UNION ALL 
+		              	     SELECT CRS_CRE_CD 
+		              		   FROM tb_crs_cre_crs_ofln_sbj 
+		           	   ) T 
+		            WHERE T.CRS_CRE_CD = A.CRS_CRE_CD ) AS SBJ_CNT 
+		       , ( SELECT COUNT(*) 
+		             FROM tb_crs_cre_crs_tch 
+		         	WHERE CRS_CRE_CD = A.CRS_CRE_CD ) AS TCH_CNT 
+			   , (SELECT SUM(A.UNIT_COMPLET_CNT) 
+			         FROM 
+			              (SELECT AA.SBJ_CD, 
+			                     AA.UNIT_CD, 
+			                     IF(COUNT(AA.UNIT_CD)*100 = SUM(BB.PRGR_RATIO),1,0) AS UNIT_COMPLET_CNT 
+			                FROM TB_CRS_CRE_SBJ_CNTS AA 
+			                   LEFT OUTER JOIN TB_LEC_BOOKMARK BB 
+			                       ON AA.SBJ_CD = BB.SBJ_CD 
+			                     AND AA.UNIT_CD = BB.UNIT_CD
+			                     AND BB.STD_NO = #{stdNo} 
+			               WHERE AA.SBJ_CD IN 
+			                     (SELECT SBJ_CD 
+			                       FROM TB_LEC_BOOKMARK 
+			                      WHERE SBJ_CD IN 
+			                            (SELECT SBJ_CD 
+			                              FROM TB_CRS_CRE_CRS_ONLN_SBJ 
+			                             WHERE CRS_CRE_CD = #{crsCreCd} 
+			                            ) 
+			                            AND STD_NO = #{stdNo} 
+			                     ) 
+			                     AND AA.CRS_CRE_CD = #{crsCreCd} 
+			                 GROUP BY AA.SBJ_CD 
+			              ) A 
+			       ) AS SBJ_CNTS
+		       , C.CRS_CRE_QR_IN_FILE_PATH
+			   , C.CRS_CRE_QR_IN_NO
+			   , C.CRS_CRE_QR_OUT_FILE_PATH
+			   , C.CRS_CRE_QR_OUT_NO 
+		    FROM tb_crs_cre_crs A
+		    INNER JOIN tb_crs_crs B ON A.CRS_CD = B.CRS_CD
+		    LEFT OUTER JOIN tb_crs_cre_crs_qr C ON C.CRS_CRE_CD = A.CRS_CRE_CD
+		   WHERE A.CRS_CRE_CD	= #{crsCreCd} 
+		    <if test = 'creOperTypeCd != null and creOperTypeCd == "E"'>
+		       	AND A.CRE_OPER_TYPE_CD = #{creOperTypeCd}  
+		   	</if>
+		  	<if test = 'creOperTypeCd == null or creOperTypeCd == "" '>
+		       		AND A.CRE_OPER_TYPE_CD IS NULL
+		   	</if>
+		<!-- select A.CRS_CD
 			, A.CRS_YEAR
 			, A.CRS_SVC_TYPE
 			, A.CRS_DESC
@@ -2084,7 +2214,6 @@
 		and C.SBJ_CD = E.SBJ_CD 
         and D.CRS_CRE_CD = E.CRS_CRE_CD 
 		AND D.CRS_CRE_CD =  #{crsCreCd} 
-		<!-- 
 		SELECT A.CRS_CD
 				   , A.CRS_CRE_CD
 				   , A.CRS_CRE_NM

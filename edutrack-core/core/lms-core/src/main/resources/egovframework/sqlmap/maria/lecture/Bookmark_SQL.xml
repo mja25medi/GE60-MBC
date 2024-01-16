@@ -252,7 +252,7 @@
 		        ,  #{finalConnPage}											
 		        ,  #{accmConnPage}											
 		        ,  #{connPageCnt}											
-		        ,  (SELECT COUNT(*) FROM tb_crs_sbj_cnts TCSC  WHERE SBJ_CD = #{sbjCd} AND PAR_UNIT_CD = #{unitCd}) 									
+		        ,  (SELECT COUNT(*) FROM tb_crs_cre_sbj_cnts TCSC  WHERE SBJ_CD = #{sbjCd} AND PAR_UNIT_CD = #{unitCd}) 									
 		        ,  #{prgrRatio}												
 		        ,  #{connCnt}												
 		        ,  IFNULL(FN_GET_NULL(#{studyDiv}),'PER') 						

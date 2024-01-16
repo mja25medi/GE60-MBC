@@ -773,7 +773,7 @@ public class StudentExcelServiceImpl
 			//crsCreCd로 개설과정 및 기수 기간 조회
 			CreateCourseVO createCourseVO = new CreateCourseVO();
 			createCourseVO.setCrsCreCd(crsCreCd);
-			createCourseVO = createCourseMapper.selectCreateCourse(createCourseVO);
+			createCourseVO = createCourseMapper.selectCreateCourseForEnroll(createCourseVO);
 			
 			if(createCourseVO  == null) {
 				throw new ServiceProcessException((rowIndex + 1) + "라인(아이디 : " + userId  + ", 개설과정코드 : " + crsCreCd + ")\n개설과정이 조회되지 않습니다. 유효한 개설과정 코드인지 확인바랍니다");
@@ -823,7 +823,7 @@ public class StudentExcelServiceImpl
 			stuVO.setUserNo(resultInfoVO.getUserNo());
 			stuVO.setEnrlSts("S");
 			stuVO.setEnrlStartDttm(createCourseVO.getEnrlStartDttm());
-			stuVO.setEnrlEndDttm(createCourseVO.getTermEndDttm());
+			stuVO.setEnrlEndDttm(createCourseVO.getEnrlEndDttm());
 			stuVO.setAuditEndDttm(createCourseVO.getTermEndDttm());
 			//stuVO.setEnrlAplcDttm("");
 			stuVO.setPaymNo(paymNo);

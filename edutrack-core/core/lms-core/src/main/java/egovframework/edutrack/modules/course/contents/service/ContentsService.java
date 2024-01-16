@@ -238,5 +238,13 @@ public interface ContentsService {
 	 * @return
 	 */
 	public ProcessResultVO<?> CreateContentsSort(ContentsVO vo) throws Exception;
+
+	/**
+	 * 교재 정보 조회 (회차)
+	 *
+	 * @return  ProcessResultVO
+	 */
+	ProcessResultVO<ContentsVO> viewCreContents(String sbjCd, String crsCreCd, String unitCd, String stdNo)
+			throws Exception;
 	
 }

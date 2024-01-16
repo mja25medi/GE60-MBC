@@ -99,7 +99,7 @@
 	}
 
 	function listSubject() {
-		var sbjCtgrCd = $("#sbjCtgrCd option:selected").val();
+		var sbjCtgrCd = $("#sbjCtgrCd").val();
 		var sbjNm = $("#searchValue").val();
 
 		$('#sbjList')

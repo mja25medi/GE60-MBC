@@ -329,7 +329,7 @@
 							<li style="float:left;margin-right:20px;">
 								<div class="input-group">
 									<span style="float:left;margin-right:5px;padding-top:5px;"><label for="etcRatio">진행단계</label></span>
-									<input type="text" dispName="<spring:message code="course.title.course.ratio.semiExam"/>" style="text-align:right;width:50px;" maxlength="3" maxValue="100" isNull="Y" name="semiExamRatio" value="${vo.semiExamRatio }" class="inputNumber form-control input-sm" id="etcRatio" onkeyup="isChkMaxNumber(this,100);sumTotal();"/>
+									<input type="text" dispName="<spring:message code="course.title.course.ratio.semiExam"/>" style="text-align:right;width:50px;" maxlength="3" maxValue="100" isNull="Y" name="semiExamRatio" value="${vo.semiExamRatio }" class="inputNumber form-control input-sm" id="semiExamRatio" onkeyup="isChkMaxNumber(this,100);sumTotal();"/>
 								</div>
 							</li>
 							<li style="float:left;margin-right:20px;height:35px;">

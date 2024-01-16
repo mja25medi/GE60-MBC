@@ -593,6 +593,9 @@
 		}
 	}
 
+	function changeCrsNm(){
+		$("#chkDup").val("N");
+	}
 
 	function checkCrsNm() {
 		var crsNm = $("#crsNm").val();

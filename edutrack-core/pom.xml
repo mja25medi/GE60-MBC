@@ -328,8 +328,8 @@
 				<!--  Database 관련 설정 -->		
 				<edutrack.database.db_type>maria</edutrack.database.db_type>
 				<edutrack.database.driver_class_name>org.mariadb.jdbc.Driver</edutrack.database.driver_class_name>
-				<edutrack.database.url>jdbc:mariadb://203.247.226.1:3306/oc_hrd?autoReconnect=true&amp;allowMultiQueries=true</edutrack.database.url>
-				<edutrack.database.user_name>oc_user</edutrack.database.user_name>
+				<edutrack.database.url>jdbc:mariadb://182.252.182.15:3306/ge60_lms?autoReconnect=true&amp;allowMultiQueries=true</edutrack.database.url>
+				<edutrack.database.user_name>ge60_user</edutrack.database.user_name>
 				<edutrack.database.password>lmspass</edutrack.database.password>	
 				
 			
@@ -675,18 +675,18 @@
 			<id>devel</id>
 			<properties>
 				<!--  기본 도메인 및 프로덕트 설정 -->
-				<edutrack.product>http://smhrd.edutrack.kr</edutrack.product>
-				<edutrack.product.domain>smhrd.edutrack.kr</edutrack.product.domain>
-				<edutrack.product.sub.domain.tutor>smhrdtutor.edutrack.kr</edutrack.product.sub.domain.tutor>
-				<edutrack.product.sub.domain.admin>smhrdadmin.edutrack.co.kr</edutrack.product.sub.domain.admin>
+				<edutrack.product>http://ge60.edutrack.kr</edutrack.product>
+				<edutrack.product.domain>ge60.edutrack.kr</edutrack.product.domain>
+				<edutrack.product.sub.domain.tutor>ge60tutor.edutrack.kr</edutrack.product.sub.domain.tutor>
+				<edutrack.product.sub.domain.admin>ge60admin.edutrack.co.kr</edutrack.product.sub.domain.admin>
 				<!--  서브도메인 서비스 : domain, 가상디렉토리 서비스 : context -->
 				<edutrack.product.service_type>domain</edutrack.product.service_type>
 				
-				<!--  Database 관련 설정 -->
+				<!--  Database 관련 설정 -->		
 				<edutrack.database.db_type>maria</edutrack.database.db_type>
 				<edutrack.database.driver_class_name>org.mariadb.jdbc.Driver</edutrack.database.driver_class_name>
-				<edutrack.database.url>jdbc:mariadb://203.247.226.1:3306/oc_hrd?autoReconnect=true&amp;allowMultiQueries=true</edutrack.database.url>
-				<edutrack.database.user_name>oc_user</edutrack.database.user_name>
+				<edutrack.database.url>jdbc:mariadb://182.252.182.15:3306/ge60_lms?autoReconnect=true&amp;allowMultiQueries=true</edutrack.database.url>
+				<edutrack.database.user_name>ge60_user</edutrack.database.user_name>
 				<edutrack.database.password>lmspass</edutrack.database.password>	
 
 				<!--  언어 관련 설정 -->
@@ -719,8 +719,8 @@
 				<edutrack.server_type>windows</edutrack.server_type><!-- windows, unix -->
 				<edutrack.url>http://hrd.edutrack.kr</edutrack.url>
 				<edutrack.fileserver.url></edutrack.fileserver.url>
-				<edutrack.path.attachfiles>/data/web/smhrd/WebRepository/attachfiles</edutrack.path.attachfiles>
-				<edutrack.path.contents>/data/web/smhrd/WebRepository/contents</edutrack.path.contents>
+				<edutrack.path.attachfiles>/data/web/ge60/demo/WebRepository/attachfiles</edutrack.path.attachfiles>
+				<edutrack.path.contents>/data/web/ge60/demo/WebRepository/contents</edutrack.path.contents>
 
 				<!-- 메일 서버 정보 -->
 				<edutrack.mail.agent>JavaMail</edutrack.mail.agent> <!-- JavaMail,  ThunderMail-->
@@ -745,7 +745,7 @@
 				<edutrack.mail.thundermail.massmail.usercode>74a1501762eadb9cc8063196836f0f4d</edutrack.mail.thundermail.massmail.usercode>
 
 				<!-- KISA Keyfile Path -->
-				<kisa.keyfile.path>/data/web/smhrd</kisa.keyfile.path>
+				<kisa.keyfile.path>/data/web/ge60</kisa.keyfile.path>
 
 				<!--  Exception DB LOG USE  -->
 				<edutrack.dblog.exception>use</edutrack.dblog.exception>
