@@ -32,6 +32,11 @@
 		     , A.CRE_YEAR 
 		     , A.CRE_TERM 
 		     , A.CRS_CRE_NM
+		     , A.ETC_NM
+		     , A.ETC_NM_2
+		     , A.ETC_NM_3
+		     , A.ETC_NM_4
+		     , A.ETC_NM_5
 		     , F.ENRL_APLC_START_DTTM
 		     , F.ENRL_APLC_END_DTTM
 		     , F.ENRL_START_DTTM
@@ -75,13 +80,18 @@
 		     , IFNULL(FN_GET_NULL(E.PRJT_SCORE),0) as PRJT_SCORE
 		     , IFNULL(FN_GET_NULL(E.JOIN_SCORE),0) as JOIN_SCORE
 		     , IFNULL(FN_GET_NULL(E.ETC_SCORE),0)  as ETC_SCORE
+		     , IFNULL(FN_GET_NULL(E.ETC_SCORE_2),0)  as ETC_SCORE_2
+		     , IFNULL(FN_GET_NULL(E.ETC_SCORE_3),0)  as ETC_SCORE_3
+		     , IFNULL(FN_GET_NULL(E.ETC_SCORE_4),0)  as ETC_SCORE_4
+		     , IFNULL(FN_GET_NULL(E.ETC_SCORE_5),0)  as ETC_SCORE_5
 		     , IFNULL(FN_GET_NULL(E.TOT_SCORE),0)  as TOT_SCORE
 		     , IFNULL(FN_GET_NULL(E.CONV_SCORE),0) as CONV_SCORE
    		     , IFNULL(FN_GET_NULL(E.PRGR_RATE),0) as PRGR_RATE
 		     , E.SCORE_LVL
 		     , F.CRS_NM
 		     , F.SCORE_OPEN_START_DTTM 
-		     , F.SCORE_OPEN_END_DTTM 
+		     , F.SCORE_OPEN_END_DTTM
+		     , F.META_TAG 
 	</sql>
 	
 	<select id="listCreStd" parameterType="stdScoreVO" resultType="egovMap">

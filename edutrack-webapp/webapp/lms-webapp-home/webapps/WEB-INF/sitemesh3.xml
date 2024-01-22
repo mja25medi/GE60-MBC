@@ -84,6 +84,7 @@
 	<mapping path="/lec/main/goMenuPage" exclue="true" />
 	<mapping path="/lec/main/goLecture" exclue="true" />
 	<mapping path="/lec/main/courseInfo" exclue="true" />
+	<mapping path="/lec/bookmark/callRedis" exclue="true" />
 
 	
 

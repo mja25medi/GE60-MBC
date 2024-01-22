@@ -25,111 +25,111 @@ public interface SysMenuMapper{
 	 * 시스템 메뉴의 전체 목록을 조회한다. 
 	 * @param  SysMenuVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<SysMenuVO> list(SysMenuVO vo) throws Exception;
+	
+	public List<SysMenuVO> list(SysMenuVO vo) ;
 
     /**
 	 * 시스템 메뉴의 상세 정보를 조회한다. 
 	 * @param  SysMenuVO 
 	 * @return SysMenuVO
-	 * @throws Exception
+	 * @
 	 */
-	public SysMenuVO select(SysMenuVO vo) throws Exception;
+	public SysMenuVO select(SysMenuVO vo) ;
 	
     /**
 	 * 권한별 메뉴의 목록을 조회한다. 
 	 * @param  SysMenuVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<SysMenuVO> listByAuth(SysMenuVO vo) throws Exception;
+	
+	public List<SysMenuVO> listByAuth(SysMenuVO vo) ;
 	
     /**
 	 * 권한별 메뉴의 상세 정보를 조회한다. 
 	 * @param  SysMenuVO 
 	 * @return SysMenuVO
-	 * @throws Exception
+	 * @
 	 */
-	public SysMenuVO selectByAuth(SysMenuVO vo) throws Exception;
+	public SysMenuVO selectByAuth(SysMenuVO vo) ;
 	
     /**
 	 * 시스템 메뉴의 코드를 생성한다. 
 	 * @param  SysMenuVO 
 	 * @return SysMenuVO
-	 * @throws Exception
+	 * @
 	 */
-	public String selectCd() throws Exception;
+	public String selectCd() ;
 	
     /**
      * 시스템 메뉴의 상세 정보를 등록한다.  
      * @param  SysMenuVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(SysMenuVO vo) throws Exception;
+    public int insert(SysMenuVO vo) ;
     
     /**
      * 시스템 메뉴의 상세 정보를 수정한다. 
      * @param  SysMenuVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int update(SysMenuVO vo) throws Exception ;
+    public int update(SysMenuVO vo)  ;
     
     /**
      * 시스템 메뉴의 상세 정보를 삭제한다.  
      * @param  SysMenuVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int delete(SysMenuVO vo) throws Exception ;
+    public int delete(SysMenuVO vo)  ;
     
     /**
      * 권한별 메뉴의 사용 권한을 등록한다.  
      * @param  SysMenuVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int insertAuthGrpMenu(SysAuthGrpMenuVO vo) throws Exception ;
+    public int insertAuthGrpMenu(SysAuthGrpMenuVO vo)  ;
     
     /**
      * 권한별 메뉴의 사용 권한을 수정한다.  
      * @param  SysMenuVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int updateAuthGrpMenu(SysAuthGrpMenuVO vo) throws Exception ;
+    public int updateAuthGrpMenu(SysAuthGrpMenuVO vo)  ;
     
     /**
      * 권한 그룹에 부여된 권한 메뉴를 삭제한다.  
      * @param  SysAuthGrpMenuVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int deleteAuthGrpMenuByAuthGrp(SysAuthGrpMenuVO vo) throws Exception ;
+    public int deleteAuthGrpMenuByAuthGrp(SysAuthGrpMenuVO vo)  ;
     
     /**
      * 메뉴에 연결된 권한 메뉴를 삭제한다.  
      * @param  SysAuthGrpMenuVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int deleteAuthGrpMenuByMenuCd(SysAuthGrpMenuVO vo) throws Exception ;
+    public int deleteAuthGrpMenuByMenuCd(SysAuthGrpMenuVO vo)  ;
     
     /**
 	 * 설정 테이블에 메뉴의 버전 값을 조회 한다.
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int selectVersion() throws Exception;
+	public int selectVersion() ;
     
     /**
 	 * 설정 테이블에 메뉴의 버전 값을 증가 시킨다.
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int updateVersion() throws Exception;
+	public int updateVersion() ;
 }

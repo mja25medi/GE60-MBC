@@ -20,116 +20,116 @@ public interface LogSysLoginLogMapper {
 	 * 월별 시스템 로그인 로그 목록을 조회한다. 
 	 * @param  LogSysLoginLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysLoginLogVO> listMonth(LogSysLoginLogVO vo) throws Exception;
+	
+	public List<LogSysLoginLogVO> listMonth(LogSysLoginLogVO vo) ;
 	
     /**
 	 * 주별 시스템 로그인 로그 목록을 조회한다. 
 	 * @param  LogSysLoginLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysLoginLogVO> listWeek(LogSysLoginLogVO vo) throws Exception;
+	
+	public List<LogSysLoginLogVO> listWeek(LogSysLoginLogVO vo) ;
 	
     /**
 	 * 일별 시스템 로그인 로그 목록을 조회한다. 
 	 * @param  LogSysLoginLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysLoginLogVO> listDay(LogSysLoginLogVO vo) throws Exception;
+	
+	public List<LogSysLoginLogVO> listDay(LogSysLoginLogVO vo) ;
 	
     /**
 	 * 시간별 시스템 로그인 로그 목록을 조회한다. 
 	 * @param  LogSysLoginLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysLoginLogVO> listHour(LogSysLoginLogVO vo) throws Exception;
+	
+	public List<LogSysLoginLogVO> listHour(LogSysLoginLogVO vo) ;
 	
 	/**
 	 * 월별 모든 시스템 로그인 로그 목록을 조회한다. 
 	 * @param  LogSysLoginLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysLoginLogVO> AllListMonth(LogSysLoginLogVO vo) throws Exception;
+	
+	public List<LogSysLoginLogVO> AllListMonth(LogSysLoginLogVO vo) ;
 	
     /**
 	 * 주별 모든 시스템 로그인 로그 목록을 조회한다. 
 	 * @param  LogSysLoginLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysLoginLogVO> AllListWeek(LogSysLoginLogVO vo) throws Exception;
+	
+	public List<LogSysLoginLogVO> AllListWeek(LogSysLoginLogVO vo) ;
 	
     /**
 	 * 일별 모든 시스템 로그인 로그 목록을 조회한다. 
 	 * @param  LogSysLoginLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysLoginLogVO> AllListDay(LogSysLoginLogVO vo) throws Exception;
+	
+	public List<LogSysLoginLogVO> AllListDay(LogSysLoginLogVO vo) ;
 	
     /**
 	 * 시간별 모든 시스템 로그인 로그 목록을 조회한다. 
 	 * @param  LogSysLoginLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysLoginLogVO> AllListHour(LogSysLoginLogVO vo) throws Exception;
+	
+	public List<LogSysLoginLogVO> AllListHour(LogSysLoginLogVO vo) ;
 	
     /**
 	 * 자동 날짜 조회. 
 	 * @param  LogSysLoginLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public LogSysLoginLogVO selectAutoDate(LogSysLoginLogVO vo) throws Exception;
+	
+	public LogSysLoginLogVO selectAutoDate(LogSysLoginLogVO vo) ;
 	
     /**
 	 * 시간별 시스템 로그인 로그 목록을 조회한다. 
 	 * @param  LogSysLoginLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysLoginLogVO> listHourByDay(LogSysLoginLogVO vo) throws Exception;
+	
+	public List<LogSysLoginLogVO> listHourByDay(LogSysLoginLogVO vo) ;
 	
     /**
 	 * 요일별 시스템 로그인 로그 목록을 조회한다. 
 	 * @param  LogSysLoginLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysLoginLogVO> listDayByWeek(LogSysLoginLogVO vo) throws Exception;
+	
+	public List<LogSysLoginLogVO> listDayByWeek(LogSysLoginLogVO vo) ;
 	
     /**
 	 * 일자별 시스템 로그인 로그 목록을 조회한다. 
 	 * @param  LogSysLoginLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysLoginLogVO> listDayByMonth(LogSysLoginLogVO vo) throws Exception;
+	
+	public List<LogSysLoginLogVO> listDayByMonth(LogSysLoginLogVO vo) ;
 	
 
     /**
      * 시스템 로그인 로그의 상세 정보를 등록한다.  
      * @param  LogSysLoginLogVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(LogSysLoginLogVO vo) throws Exception;
+    public int insert(LogSysLoginLogVO vo) ;
 }

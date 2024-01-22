@@ -405,15 +405,16 @@ public class ExamServiceImpl extends EgovAbstractServiceImpl implements ExamServ
 					vo.setRsltCfrmMin("0"+vo.getRsltCfrmMin());
 				}
 				//-- 시간 관련 처리
-				String examStartDttm = StringUtil.ReplaceAll(vo.getExamStartDttm(),"-","");
+				String examStartDttm = StringUtil.ReplaceAll(vo.getExamStartDttm(),".","");
 				if(examStartDttm.length() <= 8) examStartDttm = examStartDttm+vo.getExamStartHour()+vo.getExamStartMin()+"01";
-				String examEndDttm = StringUtil.ReplaceAll(vo.getExamEndDttm(),"-","");
+				String examEndDttm = StringUtil.ReplaceAll(vo.getExamEndDttm(),".","");
 				if(examEndDttm.length() <=8) examEndDttm = examEndDttm+vo.getExamEndHour()+vo.getExamEndMin()+"59";
 				String rsltCfrmDttm = "";
 				if(StringUtil.isNotNull(vo.getRsltCfrmDttm())) {
-					rsltCfrmDttm = StringUtil.ReplaceAll(vo.getRsltCfrmDttm(),"-","");
+					rsltCfrmDttm = StringUtil.ReplaceAll(vo.getRsltCfrmDttm(),".","");
 					if(rsltCfrmDttm.length() <=8 ) rsltCfrmDttm = rsltCfrmDttm+vo.getRsltCfrmHour()+vo.getRsltCfrmMin()+"59";
 				}
+				
 				vo.setExamStartDttm(examStartDttm);
 				vo.setExamEndDttm(examEndDttm);
 				vo.setRsltCfrmDttm(rsltCfrmDttm);

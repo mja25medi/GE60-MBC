@@ -2,61 +2,81 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ include file="/WEB-INF/jsp/common/page_init.jsp" %>
 			
-			<div class="res_tbl_wrap">
-                        <table>
-                            <caption>성적조회 목록</caption>
-                            <thead>
-                                <tr>
-                                    <th scope="col" width="7%">번호</th>
-                                    <th scope="col">과정명</th>
-                                    <th scope="col" width="7%">진도</th>
-                                    <th scope="col" width="7%">시험</th>
-                                    <th scope="col" width="7%">과제</th>
-                                    <th scope="col" width="7%">기타1</th>
-                                    <th scope="col" width="7%">총점</th>
-                                    <th scope="col" width="8%">수료여부</th>
-                                    <th scope="col" width="9%">수료증</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            	<c:forEach items="${stdScoreList}" var="item" varStatus="status">
-                            		<fmt:formatNumber type="number"  value = "${item.examScore}" pattern = "0.0" var = "examScore"/>
-									<fmt:formatNumber type="number"  value = "${item.semiExamScore}" pattern = "0.0" var = "semiExamScore"/>
-									<fmt:formatNumber type="number"  value = "${item.asmtScore}" pattern = "0.0" var = "asmtScore"/>
-									<fmt:formatNumber type="number"  value = "${item.prgrScore}" pattern = "0.0" var = "prgrScore"/>
-									<fmt:formatNumber type="number"  value = "${item.etcScore}" pattern = "0.0" var = "etcScore"/>
-	                                <tr>
-	                                    <td scope="row" data-label="번호">${status.count }</td>
-	                                    <td class="title" data-label="과정명">${item.crsCreNm }</td>
-	                                    <td data-label="진도">${prgrScore} %</td>
-	                                    <td data-label="시험">${examScore} 점</td>
-	                                    <td data-label="과제">${asmtScore}</td>
-	                                    <td data-label="기타1">${etcScore}</td>
-	                                    <td data-label="총점">${item.totScore }</td>
-	                                    <td data-label="수료여부">
-	                                    	<c:if test="${item.enrlSts eq 'C'}">수료</c:if>
-											<c:if test="${item.enrlSts ne 'C'}">미수료</c:if>
-	                                    </td>
-	                                    <td data-label="수료증">
-			                                <c:choose>
-												<c:when test="${item.enrlSts eq 'C'}">
-													<button type="button" class="btn type6" onclick="javascript:printCerti('${item.crsCreCd}','${item.stdNo}');">발급</button>
-												</c:when>
-												<c:otherwise>-</c:otherwise>
-											</c:choose>
-	                                    </td>
-	                                </tr>
-                                </c:forEach>
-                                <c:if test="${empty stdScoreList }">
-                                	<tr><td colspan="9" data-title="noData">조회된 내용이 없습니다.</td></tr>
-                                </c:if>
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <div class="board_pager">
-                        <span class="inner">
-                            <meditag:paging pageInfo="${pageInfo}" funcName="listEndScore" name="front"/>
-                        </span>
-                    </div>
+<div id="content" class="content">
+        <div class="myCourseList col4 finish">
+            <ul class="list_ul">
+            	<c:forEach items="${stdScoreList}" var="item" varStatus="status">
+            		<fmt:formatNumber type="number"  value = "${item.examScore}" pattern = "0" var = "examScore"/>
+					<fmt:formatNumber type="number"  value = "${item.semiExamScore}" pattern = "0" var = "semiExamScore"/>
+					<fmt:formatNumber type="number"  value = "${item.asmtScore}" pattern = "0" var = "asmtScore"/>
+					<fmt:formatNumber type="number"  value = "${item.prgrScore}" pattern = "0" var = "prgrScore"/>
+					<fmt:formatNumber type="number"  value = "${item.etcScore}" pattern = "0" var = "etcScore"/>
+					<fmt:formatNumber type="number"  value = "${item.etcScore2}" pattern = "0" var = "etcScore2"/>
+					<fmt:formatNumber type="number"  value = "${item.etcScore3}" pattern = "0" var = "etcScore3"/>
+					<fmt:formatNumber type="number"  value = "${item.etcScore4}" pattern = "0" var = "etcScore4"/>
+					<fmt:formatNumber type="number"  value = "${item.etcScore5}" pattern = "0" var = "etcScore5"/>
+	                <li class="list_li">
+	                    <div class="item">
+	                        <div class="item_txt">  
+	                            <div class="card_label">
+	                            	<c:if test="${item.metaTag ne ''}">
+	                                    <c:forEach items="${fn:split(item.metaTag, '|')}" var="tag" varStatus="status">
+				                              <span class="label basic bcBlue">${tag}</span>
+				                         </c:forEach>
+			                         </c:if>
+                                </div> 
+	                            <div class="title">${item.crsCreNm }</div> 
+	                            <ul class="grade_info">
+	                                <li><span>진도</span>${prgrScore}%</li>
+	                                <li><span>시험</span>${examScore}점</li>
+	                                <li><span>과제</span>${asmtScore}점</li>
+	                                <c:if test="${item.etcNm ne ''}">
+	                                	<li><span>${item.etcNm }</span>${etcScore}점</li>
+	                                </c:if>
+	                                 <c:if test="${item.etcNm2 ne ''}">
+	                                	<li><span>${item.etcNm2 }</span>${etcScore2}점</li>
+	                                </c:if>
+	                                 <c:if test="${item.etcNm3 ne ''}">
+	                                	<li><span>${item.etcNm3 }</span>${etcScore3}점</li>
+	                                </c:if>
+	                                 <c:if test="${item.etcNm4 ne ''}">
+	                                	<li><span>${item.etcNm4 }</span>${etcScore4}점</li>
+	                                </c:if>
+	                                 <c:if test="${item.etcNm5 ne ''}">
+	                                	<li><span>${item.etcNm5 }</span>${etcScore5}점</li>
+	                                </c:if>
+	                                
+	                                <li class="total"><span>총점</span>${item.totScore }점</li>
+	                                <li class="cer_info">
+	                                	<span>수료여부</span>
+                                		<c:if test="${item.enrlSts eq 'C'}">수료</c:if>
+										<c:if test="${item.enrlSts ne 'C'}">미수료</c:if>
+	                                </li>
+	                            </ul>
+	                        </div>
+	                        <div class="bottom_button">
+										<button type="button" class="go<c:if test="${item.enrlSts ne 'C'}"> disabled</c:if>" onclick="javascript:printCerti('${item.crsCreCd}','${item.stdNo}');">수료증 보기</button>
+	                        </div>                                        
+	                    </div>
+	                </li>
+	             </c:forEach>
+            </ul>
+        </div><!--//myCourseList-->
+
+        <div class="board_pager">
+            <span class="inner">
+                <a href="" class="page_first" title="첫페이지"><i class="xi-angle-left-min"></i><span class="sr_only">첫페이지</span></a>
+                <a href="" class="page_prev" title="이전페이지"><i class="xi-angle-left-min"></i><span class="sr_only">이전페이지</span></a>
+                <a href="" class="page_now" title="1페이지"><strong>1</strong></a>
+                <a href="" class="page_none" title="2페이지">2</a>
+                <a href="" class="page_none" title="3페이지">3</a>
+                <a href="" class="page_next" title="다음페이지"><i class="xi-angle-right-min"></i><span class="sr_only">다음페이지</span></a>
+                <a href="" class="page_last" title="마지막페이지"><i class="xi-angle-right-min"></i><span class="sr_only">마지막페이지</span></a>
+            </span>
+        </div>
+        <!-- //board_pager -->
+           
+
+    </div>
+    <!-- //content -->			
 

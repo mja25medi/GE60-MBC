@@ -145,7 +145,7 @@
  			                            					<button type="button" class="primary ${btnDisabled}" onclick="editAvatar();">학습하기</button>
  			                            				</c:if>
  			                            				<c:if test="${not empty userVo.avatar}">
- 			                            					<button type="button" class="primary ${btnDisabled}" onclick="goMeta('${contentsItem.unitFilePath}','${contentsItem.sceneId}','${productDomain}','${userVo.avatar}','${userVo.userNm}','${contentsItem.sbjCd}','${contentsItem.unitCd}','${contentsItem.roomId}');">학습하기</button>
+ 			                            					<button type="button" class="primary ${btnDisabled}" onclick="checkLimit('${userVo.avatar}','${userVo.userNm}','${contentsItem.sbjCd}','${contentsItem.unitCd}','${contentsItem.roomId}','${contentsItem.prgrRatio}');">학습하기</button>
  			                            				</c:if>
  			                            			</c:when>
  			                            			<c:otherwise>
@@ -225,6 +225,7 @@
 	
 	
 	$(document).ready(function() {
+		ItemVO1.returnMethod 	= 'viewContents';
 		modalBox = new $M.ModalDialog({
 			"modalid" : "modal1",
 			"nomargin"	: true
@@ -252,7 +253,7 @@
 	}
 	
 	
-	function goMeta(unitFilePath,sceneId,productDomain,avatar,userNm,sbjCd,unitCd,roomId){
+	function goMeta(avatar,userNm,sbjCd,unitCd,roomId){
 		
 		//alert(unitFilePath);
 		//alert(roomId);
@@ -302,7 +303,7 @@
 		window.open("/lec/bookmark/viewCodingPracticePop?asmtSn="+asmtSn+"&crsCreCd="+crsCreCd);
 	}
 	
-	function viewContents(sbjCd, unitCd, review) {
+	function viewContents(sbjCd, unitCd, review, cntsTypeCd, asmtSn) {
 		var deviceType = "PC";
 		if(isMobile()){
 			deviceType = "MOBILE";
@@ -310,7 +311,11 @@
 		
 		if(sbjCd == '' || sbjCd == undefined) sbjCd = ItemVO1.sbjCd;
 		if(unitCd == '' || unitCd == undefined) unitCd = ItemVO1.unitCd;
-		var url = cUrl("/lec/bookmark/viewContents")+"?sbjCd="+sbjCd+"&unitCd="+unitCd+"&deviceType="+deviceType+"&browserType="+browserType+"&review="+review;
+		if(cntsTypeCd == 'CODING_T'){
+			var url = cUrl("/lec/bookmark/viewContents")+"?sbjCd="+sbjCd+"&unitCd="+unitCd+"&deviceType="+deviceType+"&browserType="+browserType + "&asmtSn="+asmtSn;
+		} else {
+			var url = cUrl("/lec/bookmark/viewContents")+"?sbjCd="+sbjCd+"&unitCd="+unitCd+"&deviceType="+deviceType+"&browserType="+browserType + "&review="+review;
+		}
 		var winOption = "fullscreen=yes,left=0,top=0,toolbar=0,location=0,directories=0,status=yes,menubar=0,scrollbars=no,resizable=yes";
 		var contentsWin = window.open(url, "contentsWin");
 		if(contentsWin != null){
@@ -319,29 +324,45 @@
 		pop_motp_close();
 	}
 	
-	function checkDayLimit(sbjCd, unitCd, prgrRatio, cntsTypeCd, asmtSn , review) {
-
-		// 코딩강의 / 코딩실습일경우
-		if(cntsTypeCd == 'CODING_L' || cntsTypeCd == 'CODING_T') {
-			var deviceType = "PC";
-			if(isMobile()){
-				deviceType = "MOBILE";
-			}
-			
-			if(sbjCd == '' || sbjCd == undefined) sbjCd = ItemVO1.sbjCd;
-			if(unitCd == '' || unitCd == undefined) unitCd = ItemVO1.unitCd;
-			if(cntsTypeCd == 'CODING_T'){
-				var url = cUrl("/lec/bookmark/viewContents")+"?sbjCd="+sbjCd+"&unitCd="+unitCd+"&deviceType="+deviceType+"&browserType="+browserType + "&asmtSn="+asmtSn;
-			} else {
-				var url = cUrl("/lec/bookmark/viewContents")+"?sbjCd="+sbjCd+"&unitCd="+unitCd+"&deviceType="+deviceType+"&browserType="+browserType + "&review="+review;
-			}
-			var winOption = "fullscreen=yes,left=0,top=0,toolbar=0,location=0,directories=0,status=yes,menubar=0,scrollbars=no,resizable=yes";
-			var contentsWin = window.open(url, "contentsWin");
-			if(contentsWin != null){
-				contentsWin.focus();
-			}
+	function checkLimit(avatar,userNm,sbjCd,unitCd,roomId, prgrRatio){
+		if(prgrRatio == 100){	
+			goMeta(avatar,userNm,sbjCd,unitCd,roomId);
+		}else{
+			$.ajax({
+				url : '/lec/bookmark/getTotalBookmarkInfo'
+				,data : {
+					'stdNo' : "${STUDENTNO}"
+					,'sbjCd' : sbjCd
+					,'unitCd' : unitCd
+					,'crsCreCd' : "${createCourseVO.crsCreCd}"
+				}
+				,success : function(resultVO) {
+					ItemVO1.returnMethod 	= 'goMeta';
+					ItemVO1.avatar = avatar;
+					ItemVO1.userNm = userNm;
+					ItemVO1.sbjCd = sbjCd;
+					ItemVO1.unitCd = unitCd;
+					ItemVO1.roomId = roomId;
+					
+					if(resultVO.returnValueCheck == "000"){
+						pop_motp('00',sbjCd, unitCd)
+					}else if(resultVO.returnValueCheck == "001"){
+						pop_motp('01',sbjCd, unitCd)
+					}else if(resultVO.returnValueCheck == "002"){
+						goMeta(avatar,userNm,sbjCd,unitCd,roomId);
+					}else if(resultVO.returnValueCheck == "003"){
+						alert("일일 차시 제한을 초과하였습니다.");
+					}else{
+						alert("진행단계 평가 응시 후 수강 가능합니다.");
+					}
+				}
+				,error : function(request,status,error) {	}
+			});
 		}
-		else if(prgrRatio == 100){	
+	}
+	
+	function checkDayLimit(sbjCd, unitCd, prgrRatio, cntsTypeCd, asmtSn , review) {
+		if(prgrRatio == 100){	
 			viewContents(sbjCd, unitCd);
 		}else{
 			$.ajax({
@@ -355,12 +376,16 @@
 				,success : function(resultVO) {
 					ItemVO1.sbjCd = sbjCd;
 					ItemVO1.unitCd = unitCd;
+					ItemVO1.review = review;
+					ItemVO1.cntsTypeCd = cntsTypeCd;
+					ItemVO1.asmtSn = asmtSn;
+					
 					if(resultVO.returnValueCheck == "000"){
 						pop_motp('00',sbjCd, unitCd)
 					}else if(resultVO.returnValueCheck == "001"){
 						pop_motp('01',sbjCd, unitCd)
 					}else if(resultVO.returnValueCheck == "002"){
-						viewContents(sbjCd, unitCd, review);
+						viewContents(sbjCd, unitCd, review, cntsTypeCd, asmtSn);
 					}else if(resultVO.returnValueCheck == "003"){
 						alert("일일 차시 제한을 초과하였습니다.");
 					}else{
@@ -371,6 +396,7 @@
 			});
 		}
 	}
+	
 	
 	function pop_motp(evalCd,sbjCd, unitCd){
 		var url = generateUrl("/mng/etc/HrdApi/viewMotp",{ "evalCd": evalCd ,"sbjCd":sbjCd, "unitCd":unitCd, "crsCreCd":"${createCourseVO.crsCreCd}"});

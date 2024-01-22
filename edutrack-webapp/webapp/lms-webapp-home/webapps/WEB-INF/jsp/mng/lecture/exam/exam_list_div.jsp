@@ -7,7 +7,8 @@
 		<colgroup>
 				<col style="width:50px"/>
 				<col style="width:auto"/>
-				<col style="width:170px;"/>
+				<col style="width:250px"/>
+				<col style="width:250px"/>
 				<col style="width:80px"/>
 				<col style="width:80px"/>
 				<col style="width:80px"/>
@@ -19,6 +20,7 @@
 				<th scope="col"><spring:message code="common.title.no"/></th>
 				<th scope="col"><spring:message code="lecture.title.exam.name"/></th>
 				<th scope="col"><spring:message code="lecture.title.exam.duration"/></th>
+				<th scope="col"><spring:message code="lecture.title.exam.answer.ratio"/></th>
 				<th scope="col"><spring:message code="lecture.title.exam.examtype"/></th>
 				<th scope="col"><spring:message code="lecture.title.exam.ansrtype"/></th>
 				<th scope="col"><spring:message code="lecture.title.exam.timelimit"/></th>
@@ -34,10 +36,20 @@
 					${item.examTitle}
 					<a onclick="javascript:examEdit('${item.examSn}');" style="cursor: pointer;"><i class="fa fa-cog"></i></a>
 				</td>
-				<td>
+				<td style="text-align: center;">
 					<c:choose>
 						<c:when test="${item.examStareTypeCd eq 'R'}">
 							<meditag:dateformat type="1" delimeter="." property="${item.examStartDttm}"/> <meditag:dateformat type="7" delimeter="." property="${item.examStartDttm}"/> ~ <meditag:dateformat type="1" delimeter="." property="${item.examEndDttm}"/> <meditag:dateformat type="7" delimeter="." property="${item.examEndDttm}"/>
+						</c:when>
+						<c:otherwise>
+						<span>-</span>
+						</c:otherwise>
+					</c:choose>
+				</td>
+				<td style="text-align: center;">
+					<c:choose>
+						<c:when test="${item.examStareTypeCd eq 'R'}">
+								<span>-</span>
 						</c:when>
 						<c:otherwise>
 							<spring:message code="lecture.message.exam.progress.ratio"/> ${item.stareCritPrgrRatio}% <spring:message code="lecture.message.exam.over"/>

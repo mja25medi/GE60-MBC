@@ -2,8 +2,6 @@ package egovframework.edutrack.modules.course.coursesubject.service.impl;
 
 import java.util.List;
 
-import org.springframework.dao.DataAccessException;
-
 import egovframework.edutrack.modules.course.coursesubject.service.CrsOflnSbjVO;
 import egovframework.edutrack.modules.course.subject.service.OfflineSubjectVO;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
@@ -29,8 +27,7 @@ public interface  CrsOflnSbjMapper {
 	 * @param pageScale
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CrsOflnSbjVO> list(CrsOflnSbjVO VO)   throws DataAccessException ;
+	public List<CrsOflnSbjVO> list(CrsOflnSbjVO VO)    ;
 
 	/**
 	 * 과정 온라인 과목 목록을 조회하여 반환한다.
@@ -40,11 +37,9 @@ public interface  CrsOflnSbjMapper {
 	 * @param listScale
 	 * @param pageScale
 	 * @return
-	 * @throws DataAccessException
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CrsOflnSbjVO> listPageing(CrsOflnSbjVO VO)
-			throws DataAccessException ;
+	public List<CrsOflnSbjVO> listPageing(CrsOflnSbjVO VO);
 
 	/**
 	 * 과정 온라인 과목 목록수를 반환
@@ -54,11 +49,9 @@ public interface  CrsOflnSbjMapper {
 	 * @param listScale
 	 * @param pageScale
 	 * @return
-	 * @throws DataAccessException
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public int listPageingCount(CrsOflnSbjVO VO)
-			throws DataAccessException ;
+	public int listPageingCount(CrsOflnSbjVO VO);
 	
 	/**
 	 * 과정 온라인 과목 정보의 단일행 정보를 검색하여 반환한다.
@@ -66,26 +59,26 @@ public interface  CrsOflnSbjMapper {
 	 * @param CrsOflnSbjVO
 	 * @return
 	 */
-	public CrsOflnSbjVO select(CrsOflnSbjVO VO)   throws DataAccessException ;
+	public CrsOflnSbjVO select(CrsOflnSbjVO VO)    ;
 
 	/**
 	 * 과정 온라인 과목 정보를 Insert하고 결과를 반환한다.
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int insert(CrsOflnSbjVO VO)   throws DataAccessException ;
+	public int insert(CrsOflnSbjVO VO)    ;
 	/**
 	 * 과정 온라인 과목 정보의 단일 레코드를 Update하고 결과를 반환한다.
 	 * @param CrsOflnSbjVO
 	 * @reurn ProcessResultVO
 	 */
-	public int update(CrsOflnSbjVO VO)  throws DataAccessException ;
+	public int update(CrsOflnSbjVO VO)   ;
 
     /**
      * 과정 온라인 과목 정보의 복수의 레코드를 Update하고 결과를 반환한다.
      * @param List<WordDictCtgrVO>
      */
-	public int updateBatch(List<CrsOflnSbjVO> itemArray)  throws DataAccessException ;
+	public int updateBatch(List<CrsOflnSbjVO> itemArray)   ;
 
 
 
@@ -94,14 +87,14 @@ public interface  CrsOflnSbjMapper {
 	 * @param CrsOflnSbjVO
 	 * @reurn ProcessResultVO
 	 */
-	public int delete(CrsOflnSbjVO VO)  throws DataAccessException ;
+	public int delete(CrsOflnSbjVO VO)   ;
 
 	/**
 	 * 과정의 모든 온프라인 과목 정보를 삭제하고 결과를 반환한다.
 	 * @param CrsOflnSbjVO
 	 * @reurn ProcessResultVO
 	 */
-	public int deleteAll(CrsOflnSbjVO VO)  throws DataAccessException ;
+	public int deleteAll(CrsOflnSbjVO VO)   ;
 
 	/**
 	 * 오프라인 과목 목록을 조회하여 반환한다.
@@ -112,8 +105,7 @@ public interface  CrsOflnSbjMapper {
 	 * @param pageScale
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OfflineSubjectVO> listSearch(CrsOflnSbjVO VO)  throws DataAccessException ;
+	public List<OfflineSubjectVO> listSearch(CrsOflnSbjVO VO)   ;
 
 	/**
 	 * 오프라인 과목 목록을 조회하여 반환한다.
@@ -123,11 +115,9 @@ public interface  CrsOflnSbjMapper {
 	 * @param listScale
 	 * @param pageScale
 	 * @return
-	 * @throws DataAccessException
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OfflineSubjectVO> listSearchPageing(CrsOflnSbjVO VO)
-			throws DataAccessException;
+	public List<OfflineSubjectVO> listSearchPageing(CrsOflnSbjVO VO);
 
 	/**
 	 * 오프라인 과목 목록수 반환
@@ -137,11 +127,9 @@ public interface  CrsOflnSbjMapper {
 	 * @param listScale
 	 * @param pageScale
 	 * @return
-	 * @throws DataAccessException
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public int listSearchPageingCount(CrsOflnSbjVO VO)
-			throws DataAccessException;
+	public int listSearchPageingCount(CrsOflnSbjVO VO);
 
 
 

@@ -24,89 +24,89 @@ public interface OrgCodeMapper{
 	 * 코드 정보의 전체 목록을 조회한다. 
 	 * @param  OrgCodeVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OrgCodeVO> list(OrgCodeVO vo) throws Exception;
+	
+	public List<OrgCodeVO> list(OrgCodeVO vo) ;
 	
     /**
 	 * 코드 정보의 검색된 수를 카운트 한다. 
 	 * @param  OrgCodeVO 
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int count(OrgCodeVO vo) throws Exception;
+	public int count(OrgCodeVO vo) ;
 	
     /**
 	 * 코드 정보의 전체 목록을 조회한다. 
 	 * @param  OrgCodeVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OrgCodeVO> listPageing(OrgCodeVO vo) throws Exception;
+	
+	public List<OrgCodeVO> listPageing(OrgCodeVO vo) ;
 	
     /**
 	 * 코드 정보의 상세 정보를 조회한다. 
 	 * @param  OrgCodeVO 
 	 * @return OrgCodeVO
-	 * @throws Exception
+	 * @
 	 */
-	public OrgCodeVO select(OrgCodeVO vo) throws Exception;
+	public OrgCodeVO select(OrgCodeVO vo) ;
 
     /**
      * 코드 정보의 상세 정보를 등록한다.  
      * @param  OrgCodeVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(OrgCodeVO vo) throws Exception;
+    public int insert(OrgCodeVO vo) ;
     
     /**
      * 코드 정보의 상세 정보를 수정한다. 
      * @param  OrgCodeVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int update(OrgCodeVO vo) throws Exception;
+    public int update(OrgCodeVO vo) ;
     
     /**
      * 코드 정보의 상세 정보를 일괄 수정한다. 
      * @param  OrgCodeVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int updateBatch(List<OrgCodeVO> codeArray) throws Exception;    
+    public int updateBatch(List<OrgCodeVO> codeArray) ;    
     
     /**
      * 코드 정보의 상세 정보를 삭제한다.  
      * @param  OrgCodeVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int delete(OrgCodeVO vo) throws Exception;
+    public int delete(OrgCodeVO vo) ;
 
     /**
      * 코드 분류 하위의 코드 정보 전체를 상세 정보를 삭제한다.  
      * @param  OrgCodeVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int deleteAll(OrgCodeVO vo) throws Exception;
+    public int deleteAll(OrgCodeVO vo) ;
     
     /**
 	 * 설정 테이블에 코드의 버전 값을 조회 한다.
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int selectVersion() throws Exception;
+	public int selectVersion() ;
     
     /**
 	 * 설정 테이블에 코드의 버전 값을 증가 시킨다.
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int updateVersion() throws Exception;	
+	public int updateVersion() ;	
 	
-	public String selectKey(OrgCodeVO vo) throws Exception;
+	public String selectKey(OrgCodeVO vo) ;
 }

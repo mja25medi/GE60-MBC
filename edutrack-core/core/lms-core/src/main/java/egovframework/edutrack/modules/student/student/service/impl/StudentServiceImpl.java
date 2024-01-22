@@ -40,6 +40,7 @@ import egovframework.edutrack.modules.student.student.service.ValidateStudentExc
 import egovframework.edutrack.modules.user.info.service.UsrLoginVO;
 import egovframework.edutrack.modules.user.info.service.UsrUserInfoVO;
 import egovframework.edutrack.modules.user.info.service.impl.UsrLoginMapper;
+import egovframework.edutrack.modules.user.info.service.impl.UsrUserInfoMapper;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
@@ -71,6 +72,9 @@ public class StudentServiceImpl extends EgovAbstractServiceImpl implements Stude
 	
 	@Resource(name="studentService")
 	private StudentService 	 studentService;
+	
+	@Resource
+	private UsrUserInfoMapper usrUserInfoMapper;
 	
 	/**
 	 * 수강 신청 목록 조회
@@ -176,14 +180,42 @@ public class StudentServiceImpl extends EgovAbstractServiceImpl implements Stude
 	 *
 	 * @return  ProcessResultVO
 	 */
-	public ProcessResultVO<StudentVO> addStudent(StudentVO iStudentVO)throws Exception{
+	public ProcessResultVO<StudentVO> addStudent(StudentVO studentVO)throws Exception{
 		
 		/*
 		 *  23.12.19 메디
 		 *  관리자 > 수강생등록 시 유/무료 상관없이 전부 무료수강처리
 		 */
-		studentMapper.insertStudentSp(iStudentVO);
-		return ProcessResultVO.success();
+		//studentMapper.insertStudentSp(iStudentVO);
+		
+		//개설과정 조회
+		CreateCourseVO createCourseVO = new CreateCourseVO();
+		createCourseVO.setCrsCreCd(studentVO.getCrsCreCd());
+		CreateCourseVO viewCreateCourse = createCourseMapper.selectCreateCourseForEnroll(createCourseVO);
+		
+		if(ValidationUtils.isNull(viewCreateCourse)) {
+			throw new ServiceProcessException("개설과정 조회 오류");
+		}
+
+		UsrUserInfoVO viewUserInfo = usrUserInfoMapper.select(new UsrUserInfoVO(studentVO.getUserNo()));
+		if(viewUserInfo == null) {
+			throw new ServiceProcessException("회원 조회 오류");
+		}
+		
+		StudentVO isEnroll = studentMapper.isEnroll(studentVO);
+		if("Y".equals(isEnroll.getStdYn())) {
+			throw new ServiceProcessException("중복 신청 불가능합니다.");
+		}
+		
+		studentVO.setDeclsNo(1);
+		studentVO.setEnrlSts("S");
+		studentVO.setEnrlStartDttm(viewCreateCourse.getEnrlStartDttm());
+		studentVO.setEnrlEndDttm(viewCreateCourse.getEnrlEndDttm());
+		studentVO.setAuditEndDttm(viewCreateCourse.getAuditEndDttm());
+		studentVO.setStdNo(studentMapper.selectKey());
+		studentVO.setOrgCd(viewUserInfo.getOrgCd());
+		studentVO.setDeptNm(viewUserInfo.getDeptNm());
+		return new ProcessResultVO<>(studentService.addStudentForHrdApi(studentVO));
 		
 		/*ProcessResultVO<StudentVO> resultVO = new ProcessResultVO<>();
 		

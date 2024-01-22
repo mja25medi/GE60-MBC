@@ -10,23 +10,23 @@ public interface ParticipateMapper {
 	/**
 	 * 학습참여현황 목록 조회
 	 */
-	@SuppressWarnings("unchecked")
-	public List<ParticipateVO> listPageing(ParticipateVO vo) throws Exception;
+	
+	public List<ParticipateVO> listPageing(ParticipateVO vo) ;
 	
 	/**
 	 * 학습참여현황 목록수 반환
 	 */
-	@SuppressWarnings("unchecked")
-	public int count(ParticipateVO vo) throws Exception;
+	
+	public int count(ParticipateVO vo) ;
 	
 
 	/**
 	 * 점수저장
 	 */
-	public int insertScore(ParticipateVO vo) throws Exception;
+	public int insertScore(ParticipateVO vo) ;
 
 	/**
 	 * 점수저장
 	 */
-	public int updateScore(ParticipateVO vo) throws Exception;
+	public int updateScore(ParticipateVO vo) ;
 }

@@ -165,6 +165,10 @@ public class UsrUserInfoVO extends UsrLoginVO {
 		tchInfoVO = new TchInfoVO();
 	}
 	
+	public UsrUserInfoVO(String userNo) {
+		this.userNo = userNo;
+	}
+	
 	public void encryptJuminNo() {
 		if(this.juminNo != null && this.juminNo != "")
 		this.juminNo = KISASeed.seedEncryption(this.juminNo);

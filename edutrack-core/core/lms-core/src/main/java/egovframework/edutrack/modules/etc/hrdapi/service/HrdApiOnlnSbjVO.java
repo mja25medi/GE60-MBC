@@ -45,6 +45,20 @@ public class HrdApiOnlnSbjVO extends DefaultVO {
 		this.tracseId = target.callHrdTracseId();
 		this.syncStatus = "W";
 	}
+	
+	// INSERT 생성자
+	public static HrdApiOnlnSbjVO CreateHrdApiOnlnSbjVO(String courseAgentPk, String name, String simsaCode, String tracseId, String changeState) {
+		HrdApiOnlnSbjVO hrdApiOnlnSbjVO = new HrdApiOnlnSbjVO();
+		hrdApiOnlnSbjVO.setAgentPk("edulife");
+		hrdApiOnlnSbjVO.setCourseAgentPk(courseAgentPk);
+		hrdApiOnlnSbjVO.setName(name);
+		hrdApiOnlnSbjVO.setSimsaCode(simsaCode);
+		hrdApiOnlnSbjVO.setPostCourseFlag("0");
+		hrdApiOnlnSbjVO.setTracseId(tracseId);
+		hrdApiOnlnSbjVO.setSyncStatus("W");
+		hrdApiOnlnSbjVO.setChangeState(changeState);
+		return hrdApiOnlnSbjVO;
+	}
 
 	public int getNum() {
 		return num;

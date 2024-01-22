@@ -20,25 +20,25 @@ public interface SiteStatMapper  {
 	 * 사이트 운영 현황 목록 조회
 	 * @param  SiteStatVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<SiteStatVO> list(SiteStatVO vo) throws Exception;
+	
+	public List<SiteStatVO> list(SiteStatVO vo) ;
 	
 	/**
 	 * 사이트 운영 현황 수
 	 * @param  SiteStatVO 
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int count(SiteStatVO vo) throws Exception;
+	public int count(SiteStatVO vo) ;
 	
     /**
 	 * 사이트 운영 현황 목록 페이징
 	 * @param  SiteStatVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<SiteStatVO> listPageing(SiteStatVO vo) throws Exception;
+	
+	public List<SiteStatVO> listPageing(SiteStatVO vo) ;
 }

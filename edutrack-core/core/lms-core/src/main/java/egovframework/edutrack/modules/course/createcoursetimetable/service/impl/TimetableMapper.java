@@ -21,8 +21,8 @@ public interface TimetableMapper {
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<TimetableVO> listTimetable(TimetableVO iTimetableVO)  throws DataAccessException ;
+	
+	public List<TimetableVO> listTimetable(TimetableVO iTimetableVO)   ;
 
 
 	/**
@@ -30,49 +30,49 @@ public interface TimetableMapper {
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<TimetableVO> listTimetableDay(TimetableVO iTimetableVO)  throws DataAccessException ;
+	
+	public List<TimetableVO> listTimetableDay(TimetableVO iTimetableVO)   ;
 
 	/**
 	 * 시간표 정보 조회
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	public TimetableVO selectTimetable(TimetableVO iTimetableVO)  throws DataAccessException ;
+	public TimetableVO selectTimetable(TimetableVO iTimetableVO)   ;
 
 	/**
 	 * 시간표 고유 번호 조회
 	 *
 	 * @return ProcessResultVO
 	 */
-	public TimetableVO selectTmtabSn()  throws DataAccessException ;
+	public TimetableVO selectTmtabSn()   ;
 
 	/**
 	 * 시간표 등록
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int insertTimetable(TimetableVO iTimetableVO)  throws DataAccessException ;
+	public int insertTimetable(TimetableVO iTimetableVO)   ;
 
 	/**
 	 * 시간표 수정
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int updateTimetable(TimetableVO iTimetableVO)  throws DataAccessException ;
+	public int updateTimetable(TimetableVO iTimetableVO)   ;
 	/**
 	 * 시간표 수정 (배치)
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int updateTimetableBatch(List<TimetableVO> tmArray)  throws DataAccessException ;
+	public int updateTimetableBatch(List<TimetableVO> tmArray)   ;
 
 	/**
 	 * 시간표 삭제
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int deleteTimetable(TimetableVO iTimetableVO)  throws DataAccessException ;
+	public int deleteTimetable(TimetableVO iTimetableVO)   ;
 
 
 

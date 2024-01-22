@@ -12,36 +12,36 @@ public interface CertPrintMapper {
 	 * @param int
 	 * @return
 	 */
-	public int selectKey()  throws Exception;
+	public int selectKey()  ;
 
 	/**
 	 * 출력 로그 목록 조회 (전체)
 	 * 
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CertPrintVO> listPrint(CertPrintVO iCertPrintVO) throws Exception;
+	
+	public List<CertPrintVO> listPrint(CertPrintVO iCertPrintVO) ;
 
 	/**
 	 * 출력 로그 목록 조회 (페이징)
 	 * 
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public List<CertPrintVO> listPrint(CertPrintVO iCertPrintVO, int curPage,
-			int listScale, int pageScale) throws Exception;
+			int listScale, int pageScale) ;
 
 	/**
 	 * 학습결과 등록
 	 *  
 	 * @reurn 
 	 */
-	public int insertPrint(CertPrintVO iCertPrintVO) throws Exception;
+	public int insertPrint(CertPrintVO iCertPrintVO) ;
 
 	/**
 	 * 교부 번호 구하여 반환
 	 *  
 	 * @return 
 	 */
-	public CertPrintVO selectPrintNo() throws Exception;
+	public CertPrintVO selectPrintNo() ;
 }

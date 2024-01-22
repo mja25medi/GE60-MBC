@@ -16,8 +16,8 @@ public interface AssignmentSubMapper{
 	/**
 	 * 과제 후보 목록 조회
 	 */
-	@SuppressWarnings("unchecked")
-	public List<AssignmentSubVO> list(AssignmentVO vo)  throws Exception;
+	
+	public List<AssignmentSubVO> list(AssignmentVO vo)  ;
 
 
 	/**
@@ -25,50 +25,50 @@ public interface AssignmentSubMapper{
 	 * @param iSubAssignmentVO
 	 * @return
 	 */
-	public AssignmentSubVO select(AssignmentSubVO vo)  throws Exception;
+	public AssignmentSubVO select(AssignmentSubVO vo)  ;
 	/**
 	 * Select Key 조회
 	 * @param int
 	 * @return
 	 */
-	public int selectKey()  throws Exception;
+	public int selectKey()  ;
 
 	/**
 	 * 과제 후보 정보 등록
 	 * @param iSubAssignmentVO
 	 * @return
 	 */
-	public int insert(AssignmentSubVO vo)  throws Exception;
+	public int insert(AssignmentSubVO vo)  ;
 
 	/**
 	 * 과제 후보 정보 수정
 	 * @param iSubAssignmentVO
 	 * @return
 	 */
-	public int update(AssignmentSubVO vo)  throws Exception;
+	public int update(AssignmentSubVO vo)  ;
 
 	/**
 	 * 과제 후보 정보 삭제(all)
 	 * @param iAssignmentVO
 	 * @return
 	 */
-	public int deleteAll(AssignmentVO vo)  throws Exception;
+	public int deleteAll(AssignmentVO vo)  ;
 	/**
 	 * 과제 후보 정보 삭제
 	 * @param iSubAssignmentVO
 	 * @return
 	 */
-	public int delete(AssignmentSubVO vo)  throws Exception;
+	public int delete(AssignmentSubVO vo)  ;
 
 	/**
 	 * 과제 후보 목록 조회(제출 여부 포함)
 	 */
-	public List<AssignmentSubVO> listCodeSub(AssignmentVO avo) throws Exception;
+	public List<AssignmentSubVO> listCodeSub(AssignmentVO avo) ;
 
 	/**
 	 * 코딩과제 문제별 점수 저장
 	 */
-	public int saveAsmtSubScore(AssignmentSendVO vo) throws Exception;
+	public int saveAsmtSubScore(AssignmentSendVO vo) ;
 
 
 

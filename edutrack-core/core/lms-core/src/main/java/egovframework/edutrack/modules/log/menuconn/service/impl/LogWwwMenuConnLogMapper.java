@@ -18,7 +18,7 @@ public interface LogWwwMenuConnLogMapper {
      * 오류 로그의 상세 정보를 등록한다.  
      * @param  LogWwwMenuConnLogVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public void insert(LogWwwMenuConnLogVO vo) throws Exception ;
+    public void insert(LogWwwMenuConnLogVO vo)  ;
 }

@@ -19,51 +19,51 @@ public interface OrgUserInfoCfgMapper{
 	 * 설정 정보의 전체 목록을 조회한다. 
 	 * @param  OrgUserInfoCfgVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OrgUserInfoCfgVO> list(OrgUserInfoCfgVO vo) throws Exception;
+	
+	public List<OrgUserInfoCfgVO> list(OrgUserInfoCfgVO vo) ;
 	
     /**
 	 * 설정 정보의 상세 정보를 조회한다. 
 	 * @param  OrgUserInfoCfgVO 
 	 * @return OrgUserInfoCfgVO
-	 * @throws Exception
+	 * @
 	 */
-	public OrgUserInfoCfgVO select(OrgUserInfoCfgVO vo) throws Exception;
+	public OrgUserInfoCfgVO select(OrgUserInfoCfgVO vo) ;
 
     /**
      * 설정 정보의 상세 정보를 등록한다.  
      * @param  OrgUserInfoCfgVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(OrgUserInfoCfgVO vo) throws Exception;
+    public int insert(OrgUserInfoCfgVO vo) ;
     
     /**
      * 설정 정보의 상세 정보를 수정한다. 
      * @param  OrgUserInfoCfgVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int update(OrgUserInfoCfgVO vo) throws Exception;
+    public int update(OrgUserInfoCfgVO vo) ;
     
     /**
      * 설정 정보의 상세 정보를 삭제한다.  
      * @param  OrgUserInfoCfgVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int delete(OrgUserInfoCfgVO vo) throws Exception;
+    public int delete(OrgUserInfoCfgVO vo) ;
     
     /**
      * 설정 정보의 상세 정보 전체를 삭제한다.  
      * @param  OrgUserInfoCfgVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int deleteAll(OrgUserInfoCfgVO vo) throws Exception;
+    public int deleteAll(OrgUserInfoCfgVO vo) ;
     
-	@SuppressWarnings("unchecked")
-	public List<OrgUserInfoCfgVO> listForJoin(OrgUserInfoCfgVO vo) throws Exception;
+	
+	public List<OrgUserInfoCfgVO> listForJoin(OrgUserInfoCfgVO vo) ;
 }

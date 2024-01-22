@@ -32,7 +32,7 @@
 	            </c:if>
 				<c:if test="${authGrpCd ne 'TCH'}">
 	            	<c:if test="${createCourseVO.creTypeCd eq 'OF' or createCourseVO.creTypeCd eq 'BL' }">
-		                 <c:if test="${attendanceVO.enterFlag ne 'E'}">
+		                 <c:if test="${attendanceVO.enterFlag ne 'E' && nowDate >= enrlStartDttm && nowDate <=enrlEndDttm}">
                          	<button type="button" class="btn type3" onclick="enterClass()">출석하기</button>
                          </c:if>
                          <c:if test="${attendanceVO.enterFlag eq 'E'}">
@@ -60,6 +60,9 @@
 	                <span class="meta">
 	                	<c:choose>
 							<c:when test="${termDayCnt < 0 }">
+								0%
+							</c:when>
+							<c:when test="${createCourseVO.enrlStartDttm > nowDate }"> <!-- 교육기간 시작 이전 -->
 								0%
 							</c:when>
 							<c:otherwise>

@@ -23,72 +23,72 @@ public interface EtcRelatedSiteMapper {
 	 * 관련사이트의 전체 목록을 조회한다. 
 	 * @param  EtcRelatedSiteVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<EtcRelatedSiteVO> list(EtcRelatedSiteVO vo) throws Exception ;
+	
+	public List<EtcRelatedSiteVO> list(EtcRelatedSiteVO vo)  ;
 	
     /**
 	 * 관련사이트의 검색된 수를 카운트 한다. 
 	 * @param  EtcRelatedSiteVO 
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int count(EtcRelatedSiteVO vo) throws Exception ;
+	public int count(EtcRelatedSiteVO vo)  ;
 	
     /**
 	 * 관련사이트의 전체 목록을 조회한다. 
 	 * @param  EtcRelatedSiteVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<EtcRelatedSiteVO> listPageing(EtcRelatedSiteVO vo) throws Exception ;
+	
+	public List<EtcRelatedSiteVO> listPageing(EtcRelatedSiteVO vo)  ;
 	
     /**
 	 * 관련사이트의 상세 정보를 조회한다. 
 	 * @param  EtcRelatedSiteVO 
 	 * @return EtcRelatedSiteVO
-	 * @throws Exception
+	 * @
 	 */
-	public EtcRelatedSiteVO select(EtcRelatedSiteVO vo) throws Exception ;
+	public EtcRelatedSiteVO select(EtcRelatedSiteVO vo)  ;
 	
     /**
 	 * 관련사이트의 키를 생성 한다. 
 	 * @return Integer
-	 * @throws Exception
+	 * @
 	 */
-	public int selectKey() throws Exception ;
+	public int selectKey()  ;
 
     /**
      * 관련사이트의 상세 정보를 등록한다.  
      * @param  EtcRelatedSiteVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(EtcRelatedSiteVO vo) throws Exception ;
+    public int insert(EtcRelatedSiteVO vo)  ;
     
     /**
      * 관련사이트의 상세 정보를 수정한다. 
      * @param  EtcRelatedSiteVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int update(EtcRelatedSiteVO vo) throws Exception ;
+    public int update(EtcRelatedSiteVO vo)  ;
     
     /**
      * 관련사이트의 상세 정보를 삭제한다.  
      * @param  EtcRelatedSiteVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int delete(EtcRelatedSiteVO vo) throws Exception ;
+    public int delete(EtcRelatedSiteVO vo)  ;
 
     /**
      * 관련사이트의 전체 정보를 삭제한다.  
      * @param  EtcRelatedSiteVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int deleteAll(EtcRelatedSiteVO vo) throws Exception ;
+    public int deleteAll(EtcRelatedSiteVO vo)  ;
 }

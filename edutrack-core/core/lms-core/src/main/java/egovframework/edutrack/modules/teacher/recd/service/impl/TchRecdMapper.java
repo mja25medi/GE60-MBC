@@ -21,14 +21,14 @@ public interface TchRecdMapper {
 	 * @param int
 	 * @return
 	 */
-	public int selectKey()  throws Exception;
+	public int selectKey()  ;
 	/**
 	 * 강사 학력 목록
 	 * 
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<TchRecdVO> listRecd(TchRecdVO teacherRecdVO) throws Exception;
+	
+	public List<TchRecdVO> listRecd(TchRecdVO teacherRecdVO) ;
 
 	/**
 	 * 강사 강의 기록 상세 정보
@@ -36,21 +36,21 @@ public interface TchRecdMapper {
 	 * @param teacherRecdVO
 	 * @return ProcessReslutListVO
 	 */
-	public TchRecdVO selectRecd(TchRecdVO teacherRecdVO) throws Exception;
+	public TchRecdVO selectRecd(TchRecdVO teacherRecdVO) ;
 
 	/**
 	 * 강사 강의 기록 입력
 	 * 
 	 * @reurn 
 	 */
-	public int insertRecd(TchRecdVO teacherRecdVO) throws Exception;
+	public int insertRecd(TchRecdVO teacherRecdVO) ;
 
 	/**
 	 * 강사 강의 기록 수정
 	 * 
 	 * @reurn 
 	 */
-	public int updateRecd(TchRecdVO teacherRecdVO) throws Exception;
+	public int updateRecd(TchRecdVO teacherRecdVO) ;
 
 	/**
 	 * 강사 삭제
@@ -58,6 +58,6 @@ public interface TchRecdMapper {
 	 * @reurn 
 	 * @param teacherRecdVO
 	 */
-	public int deleteRecd(TchRecdVO teacherRecdVO) throws Exception;
+	public int deleteRecd(TchRecdVO teacherRecdVO) ;
 
 }

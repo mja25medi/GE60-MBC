@@ -20,8 +20,6 @@ import egovframework.edutrack.modules.system.file.service.impl.SysFileVOUtil;
  */
 public class CourseVO extends DefaultVO {
 
-	private static final long serialVersionUID = 8341765422572750860L;
-
 	private String  orgCd;
 	private String  crsCd;
 	private String  crsNm;
@@ -155,6 +153,8 @@ public class CourseVO extends DefaultVO {
 	private String metaTag;
 	private String[] metaTagArr;
 	
+	private String simsaCode;
+	private String tracseId;
 	
 	public Integer getSemiExamRatio() {
 		return semiExamRatio;
@@ -871,6 +871,18 @@ public class CourseVO extends DefaultVO {
 	/* 에디터 첨부파일 Json 정보 getter용 */
 	public String getAttachImagesJson() {
 		return SysFileVOUtil.getJson(this.getAttachImages(), true);
+	}
+	public String getSimsaCode() {
+		return simsaCode;
+	}
+	public void setSimsaCode(String simsaCode) {
+		this.simsaCode = simsaCode;
+	}
+	public String getTracseId() {
+		return tracseId;
+	}
+	public void setTracseId(String tracseId) {
+		this.tracseId = tracseId;
 	}
 	
 }

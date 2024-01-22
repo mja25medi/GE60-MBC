@@ -17,15 +17,15 @@ public interface CreateCourseOnlineSubjectMapper {
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CreateOnlineSubjectVO> list(CreateOnlineSubjectVO iOnlineSubjectVO)   throws DataAccessException ;
+	
+	public List<CreateOnlineSubjectVO> list(CreateOnlineSubjectVO iOnlineSubjectVO)    ;
 
 	/**
 	 * 개설 과정 온라인 과목 정보 조회
 	 *
 	 * @return ProcessResultVO
 	 */
-	public CreateOnlineSubjectVO select(CreateOnlineSubjectVO iOnlineSubjectVO)   throws DataAccessException ;
+	public CreateOnlineSubjectVO select(CreateOnlineSubjectVO iOnlineSubjectVO)    ;
 
 
 
@@ -34,26 +34,26 @@ public interface CreateCourseOnlineSubjectMapper {
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int insert(CreateOnlineSubjectVO iOnlineSubjectVO)   throws DataAccessException ;
+	public int insert(CreateOnlineSubjectVO iOnlineSubjectVO)    ;
 	/**
 	 * 개설 과정 온라인 과목 삭제 삭제
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int delete(CreateOnlineSubjectVO iOnlineSubjectVO)   throws DataAccessException ;
+	public int delete(CreateOnlineSubjectVO iOnlineSubjectVO)    ;
 
     /**
      * 개설과정 온라인 과목 일괄 수정
      * @param codeArray
      */
-	public int updateBatch(List<CreateOnlineSubjectVO> subjectArray)  throws DataAccessException ;
+	public int updateBatch(List<CreateOnlineSubjectVO> subjectArray)   ;
 
 	/**
 	 * 개설 과정 온라인 과목 변경
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int update(CreateOnlineSubjectVO iOnlineSubjectVO)   throws DataAccessException ;
+	public int update(CreateOnlineSubjectVO iOnlineSubjectVO)    ;
 
 
 	/**
@@ -62,7 +62,7 @@ public interface CreateCourseOnlineSubjectMapper {
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int insertCopy(CreateOnlineSubjectVO iOnlineSubjectVO)   throws DataAccessException ;
+	public int insertCopy(CreateOnlineSubjectVO iOnlineSubjectVO)    ;
 	/**
 	 * 온라인 과목 목록을 조회하여 반환한다.
 	 * : 전체 목록 조회, 과정에 등록된 과목 제외
@@ -72,8 +72,8 @@ public interface CreateCourseOnlineSubjectMapper {
 	 * @param pageScale
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OnlineSubjectVO> listSearch(CreateOnlineSubjectVO VO)  throws DataAccessException ;
+	
+	public List<OnlineSubjectVO> listSearch(CreateOnlineSubjectVO VO)   ;
 
 	/**
 	 * 온라인 과목 목록을 조회하여 반환한다.
@@ -83,11 +83,11 @@ public interface CreateCourseOnlineSubjectMapper {
 	 * @param listScale
 	 * @param pageScale
 	 * @return
-	 * @throws DataAccessException
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public List<OnlineSubjectVO> listSearchPageing(CreateOnlineSubjectVO VO)
-			throws DataAccessException ;
+			 ;
 
 	/**
 	 * 온라인 과목 목록을 조회하여 반환한다.
@@ -97,11 +97,11 @@ public interface CreateCourseOnlineSubjectMapper {
 	 * @param listScale
 	 * @param pageScale
 	 * @return
-	 * @throws DataAccessException
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public int count(CreateOnlineSubjectVO VO)
-			throws DataAccessException ;
+			 ;
 	
 	/**
 	 * 2015.11.06 김현욱 추가
@@ -109,6 +109,6 @@ public interface CreateCourseOnlineSubjectMapper {
 	 *
 	 * @return ProcessResultVO
 	 */
-	public CreateOnlineSubjectVO selectMaster(CreateOnlineSubjectVO iOnlineSubjectVO)   throws DataAccessException ;
+	public CreateOnlineSubjectVO selectMaster(CreateOnlineSubjectVO iOnlineSubjectVO)    ;
 
 }

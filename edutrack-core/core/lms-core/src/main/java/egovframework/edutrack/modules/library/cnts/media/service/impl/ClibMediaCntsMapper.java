@@ -17,8 +17,8 @@ public interface ClibMediaCntsMapper{
 	 * @param ClibMediaCntsVO.ctgrCd
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<ClibMediaCntsVO> list(ClibMediaCntsVO vo) throws Exception;
+	
+	public List<ClibMediaCntsVO> list(ClibMediaCntsVO vo) ;
 
 	/**
 	 * 콘텐츠 라리브러리 : 미디어 콘텐츠 페이징 목록을 가져온다.
@@ -30,8 +30,8 @@ public interface ClibMediaCntsMapper{
 	 * @param pageScale
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<ClibMediaCntsVO> listPageing(ClibMediaCntsVO vo) throws Exception;
+	
+	public List<ClibMediaCntsVO> listPageing(ClibMediaCntsVO vo) ;
 
 	/**
 	 * 콘텐츠 라리브러리 : 미디어 콘텐츠 페이징 목록을 가져온다.
@@ -43,8 +43,8 @@ public interface ClibMediaCntsMapper{
 	 * @param pageScale
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public int count(ClibMediaCntsVO vo) throws Exception;
+	
+	public int count(ClibMediaCntsVO vo) ;
 	
 	/**
 	 * 콘텐츠 라리브러리 : 미디어 콘텐츠 단일 항목 정보를 가져온다.
@@ -53,7 +53,7 @@ public interface ClibMediaCntsMapper{
 	 * @param ClibMediaCntsVO.ctgrCd
 	 * @return ProcessResultVO
 	 */
-	public ClibMediaCntsVO select(ClibMediaCntsVO vo) throws Exception;
+	public ClibMediaCntsVO select(ClibMediaCntsVO vo) ;
 
 	/**
 	 * 콘텐츠 라리브러리 : 미디어 콘텐츠 OLC제작용 콘텐츠를 가져온다
@@ -62,8 +62,8 @@ public interface ClibMediaCntsMapper{
 	 * @param ClibMediaCntsVO.ctgrCd
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<ClibMediaCntsVO> listOlc(ClibMediaCntsVO vo) throws Exception;
+	
+	public List<ClibMediaCntsVO> listOlc(ClibMediaCntsVO vo) ;
 
 	/**
 	 * 콘텐츠 라리브러리 : 업로드 파일키를 이용하여 미디어 콘텐츠 단일 항목 정보를 가져온다.
@@ -72,34 +72,34 @@ public interface ClibMediaCntsMapper{
 	 * @param ClibMediaCntsVO.ctgrCd
 	 * @return ProcessResultVO
 	 */
-	public ClibMediaCntsVO selectByUploadFileKey(ClibMediaCntsVO vo) throws Exception;
+	public ClibMediaCntsVO selectByUploadFileKey(ClibMediaCntsVO vo) ;
 
 	/**
 	 * 콘텐츠 라리브러리 : 미디어 콘텐츠 단일 항목 정보를 등록하고 결과를 반환한다.
 	 * @param ClibMediaCntsVO
 	 * @reurn ProcessResultVO
 	 */
-	public int insert(ClibMediaCntsVO vo) throws Exception;
+	public int insert(ClibMediaCntsVO vo) ;
 
 	/**
 	 * 콘텐츠 라리브러리 : 미디어 콘텐츠의 콘텐츠키를 생성하여 반환한다.
 	 * @param ClibMediaCntsVO.orgCd
 	 * @return ProcessResultVO
 	 */
-	public ClibMediaCntsVO selectCntsCd() throws Exception;
+	public ClibMediaCntsVO selectCntsCd() ;
 	/**
 	 * 콘텐츠 라리브러리 : 미디어 콘텐츠 단일 항목 정보를 수정하고 결과를 반환한다.
 	 * @param ClibMediaCntsVO
 	 * @reurn ProcessResultVO
 	 */
-	public int update(ClibMediaCntsVO vo) throws Exception;
+	public int update(ClibMediaCntsVO vo) ;
 
 	/**
 	 * 콘텐츠 라리브러리 : 미디어 콘텐츠 다중 항목 정보를 수정하고 결과를 반환한다.
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int updateBatch(List<ClibMediaCntsVO> itemArray) throws Exception;
+	public int updateBatch(List<ClibMediaCntsVO> itemArray) ;
 
 	/**
 	 * 콘텐츠 라리브러리 : 미디어 콘텐츠 항목 정보를 삭제하고 결과를 반환한다.
@@ -108,7 +108,7 @@ public interface ClibMediaCntsMapper{
 	 * @param ClibMediaCntsVO.ctgrCd
 	 * @reurn ProcessResultVO
 	 */
-	public int delete(ClibMediaCntsVO vo) throws Exception;
+	public int delete(ClibMediaCntsVO vo) ;
 
 
 	/**
@@ -116,6 +116,6 @@ public interface ClibMediaCntsMapper{
 	 * @param ClibMediaCntsVO
 	 * @reurn ProcessResultVO
 	 */
-	public int insertShare(ClibMediaCntsVO vo) throws Exception;
+	public int insertShare(ClibMediaCntsVO vo) ;
 
 }

@@ -17,8 +17,8 @@ public interface CrsReshResultMapper {
 	 * @param CrsReshAnsrVO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CrsReshResultVO> list(CrsReshResultVO VO)  throws DataAccessException ;
+	
+	public List<CrsReshResultVO> list(CrsReshResultVO VO)   ;
 
 
 

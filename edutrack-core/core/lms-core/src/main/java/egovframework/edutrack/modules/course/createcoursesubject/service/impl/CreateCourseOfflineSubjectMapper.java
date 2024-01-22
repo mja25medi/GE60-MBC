@@ -2,8 +2,6 @@ package egovframework.edutrack.modules.course.createcoursesubject.service.impl;
 
 import java.util.List;
 
-import org.springframework.dao.DataAccessException;
-
 import egovframework.edutrack.modules.course.createcoursesubject.service.CreateOfflineSubjectVO;
 import egovframework.edutrack.modules.course.subject.service.OfflineSubjectVO;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
@@ -17,8 +15,8 @@ public interface CreateCourseOfflineSubjectMapper {
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CreateOfflineSubjectVO> list(CreateOfflineSubjectVO iOfflineSubjectVO)  throws DataAccessException ;
+	
+	public List<CreateOfflineSubjectVO> list(CreateOfflineSubjectVO iOfflineSubjectVO)   ;
 
 
 
@@ -27,7 +25,7 @@ public interface CreateCourseOfflineSubjectMapper {
 	 *
 	 * @return ProcessResultVO
 	 */
-	public CreateOfflineSubjectVO select(CreateOfflineSubjectVO iOfflineSubjectVO)  throws DataAccessException ;
+	public CreateOfflineSubjectVO select(CreateOfflineSubjectVO iOfflineSubjectVO)   ;
 
 
 	/**
@@ -35,7 +33,7 @@ public interface CreateCourseOfflineSubjectMapper {
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int insert(CreateOfflineSubjectVO iOfflineSubjectVO)   throws DataAccessException ;
+	public int insert(CreateOfflineSubjectVO iOfflineSubjectVO)    ;
 
 
 	/**
@@ -43,20 +41,20 @@ public interface CreateCourseOfflineSubjectMapper {
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int delete(CreateOfflineSubjectVO iOfflineSubjectVO)  throws DataAccessException ;
+	public int delete(CreateOfflineSubjectVO iOfflineSubjectVO)   ;
 
 	/**
      * 개설 과정 오프라인 과목 일괄 수정
      * @param codeArray
      */
-	public int updateBatch(List<CreateOfflineSubjectVO> subjectArray)  throws DataAccessException ;
+	public int updateBatch(List<CreateOfflineSubjectVO> subjectArray)   ;
 
 	/**
 	 * 개설 과정 오프라인 과목 변경
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int update(CreateOfflineSubjectVO iOfflineSubjectVO)  throws DataAccessException ;
+	public int update(CreateOfflineSubjectVO iOfflineSubjectVO)   ;
 
 
 	/**
@@ -65,7 +63,7 @@ public interface CreateCourseOfflineSubjectMapper {
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int insertCopy(CreateOfflineSubjectVO iOfflineSubjectVO)  throws DataAccessException ;
+	public int insertCopy(CreateOfflineSubjectVO iOfflineSubjectVO)   ;
 
 	/**
 	 * 오프라인 과목 목록을 조회하여 반환한다.
@@ -76,8 +74,8 @@ public interface CreateCourseOfflineSubjectMapper {
 	 * @param pageScale
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OfflineSubjectVO> listSearch(CreateOfflineSubjectVO VO)  throws DataAccessException ;
+	
+	public List<OfflineSubjectVO> listSearch(CreateOfflineSubjectVO VO)   ;
 
 	/**
 	 * 오프라인 과목 목록을 조회하여 반환한다.
@@ -87,11 +85,11 @@ public interface CreateCourseOfflineSubjectMapper {
 	 * @param listScale
 	 * @param pageScale
 	 * @return
-	 * @throws DataAccessException
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public List<OfflineSubjectVO> listSearchPageing(CreateOfflineSubjectVO VO)
-			throws DataAccessException;
+			;
 
 	/**
 	 * 오프라인 과목 목록수 반환
@@ -101,11 +99,11 @@ public interface CreateCourseOfflineSubjectMapper {
 	 * @param listScale
 	 * @param pageScale
 	 * @return
-	 * @throws DataAccessException
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public int count(CreateOfflineSubjectVO VO)
-			throws DataAccessException;
+			;
 
 
 

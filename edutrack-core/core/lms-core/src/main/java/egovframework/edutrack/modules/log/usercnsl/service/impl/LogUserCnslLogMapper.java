@@ -16,7 +16,7 @@ public interface LogUserCnslLogMapper  {
 	 * 사용자 상담 내역 전체 카운트
 	 * @param  LogUserCnslLogVO 
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
 	public int count(LogUserCnslLogVO vo);
 	
@@ -24,7 +24,7 @@ public interface LogUserCnslLogMapper  {
 	 * 사용자 상담 내역 페이징
 	 * @param  LogUserCnslLogVO 
 	 * @return List<LogUserCnslLogVO>
-	 * @throws Exception
+	 * @
 	 */
 	public List<LogUserCnslLogVO> listPageing(LogUserCnslLogVO vo);
 	
@@ -32,7 +32,7 @@ public interface LogUserCnslLogMapper  {
 	 * 사용자 상담 내역 1대1문의 답변 조회
 	 * @param  LogUserCnslLogVO 
 	 * @return List<LogUserCnslLogVO>
-	 * @throws Exception
+	 * @
 	 */
 	public List<LogUserCnslLogVO> selectQnaAnsr(LogUserCnslLogVO vo);
 	
@@ -40,7 +40,7 @@ public interface LogUserCnslLogMapper  {
 	 * 사용자 상담 내역 이의제기 답변 조회
 	 * @param  LogUserCnslLogVO 
 	 * @return List<LogUserCnslLogVO>
-	 * @throws Exception
+	 * @
 	 */
 	public List<LogUserCnslLogVO> listObjtAnsr(LogUserCnslLogVO vo);
 	
@@ -48,7 +48,7 @@ public interface LogUserCnslLogMapper  {
 	 * 사용자 상담 내역 질의응답 답변 조회
 	 * @param  LogUserCnslLogVO 
 	 * @return List<LogUserCnslLogVO>
-	 * @throws Exception
+	 * @
 	 */
 	public List<LogUserCnslLogVO> listLecQnaAnsr(LogUserCnslLogVO vo);
 }

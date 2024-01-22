@@ -22,42 +22,42 @@ public interface UsrUserInfoChgHstyMapper{
 	 * 사용자 정보 변경 로그의 전체 목록을 조회한다. 
 	 * @param  UsrUserInfoChgHstyVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<UsrUserInfoChgHstyVO> list(UsrUserInfoChgHstyVO vo) throws Exception;
+	
+	public List<UsrUserInfoChgHstyVO> list(UsrUserInfoChgHstyVO vo) ;
 	
     /**
 	 * 사용자 정보 변경 로그의 검색된 수를 카운트 한다. 
 	 * @param  UsrUserInfoChgHstyVO 
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int count(UsrUserInfoChgHstyVO vo) throws Exception;
+	public int count(UsrUserInfoChgHstyVO vo) ;
 	
     /**
 	 * 사용자 정보 변경 로그의 전체 목록을 조회한다. 
 	 * @param  UsrUserInfoChgHstyVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<UsrUserInfoChgHstyVO> listPageing(UsrUserInfoChgHstyVO vo) throws Exception ;
+	
+	public List<UsrUserInfoChgHstyVO> listPageing(UsrUserInfoChgHstyVO vo)  ;
 	
     /**
 	 * 사용자 정보 변경 로그의 상세 정보를 조회한다. 
 	 * @param  UsrUserInfoChgHstyVO 
 	 * @return UsrUserInfoChgHstyVO
-	 * @throws Exception
+	 * @
 	 */
-	public UsrUserInfoChgHstyVO select(UsrUserInfoChgHstyVO vo) throws Exception;
+	public UsrUserInfoChgHstyVO select(UsrUserInfoChgHstyVO vo) ;
 
     /**
      * 사용자 정보 변경 로그의 상세 정보를 등록한다.  
      * @param  UsrUserInfoChgHstyVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(UsrUserInfoChgHstyVO vo) throws Exception;
+    public int insert(UsrUserInfoChgHstyVO vo) ;
 	
 }

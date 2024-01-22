@@ -48,7 +48,7 @@
 	        			+"${AMPERSAND}filePath="+file.filePath
 	        			; */
 	        	$.ajax({
-					url : '/mng/std/student/uploadExcelStdIde'
+					url : '/mng/course/std/uploadExcelStdIde'
 					,data : {
 						'fileName' : file.fileSaveNm,
 						'filePath' : file.filePath,
@@ -91,7 +91,7 @@
 			iframeHtml = '<iframe id="_m_download_iframe" name="_m_download_iframe" style="visibility: none; display: none;"></iframe>';
 			$("body").append(iframeHtml);
 		}
-		var url = cUrl("/mng/std/student/sampleExcelStdIde");
+		var url = cUrl("/mng/course/std/sampleExcelStdIde");
 		$("#_m_download_iframe").attr("src",url);
 	}
 

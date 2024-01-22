@@ -344,7 +344,7 @@
 				<tr>
 					<th scope="row"><spring:message code="course.title.createcourse.info"/></th>
 					<td colspan="3">
-						<textarea style="height:50px" dispName="<spring:message code="course.title.createcourse.info"/>" isNull="N" lenCheck="2000" name="creDesc_0" class="form-control input-sm" id="creDesc_0">${vo.creDesc }</textarea>
+						<textarea style="height:50px" dispName="<spring:message code="course.title.createcourse.info"/>" isNull="N" lenCheck="2000" name="creDesc" class="form-control input-sm" id="creDesc_0">${vo.creDesc }</textarea>
 					</td>
 				</tr>
 			</table>

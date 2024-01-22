@@ -26,42 +26,42 @@ public interface ScheduleMapper {
 	 * @param int
 	 * @return
 	 */
-	public int selectSchSnKey()  throws Exception;
+	public int selectSchSnKey()  ;
 	/**
 	 * schDetlSn Key 조회
 	 * @param int
 	 * @return
 	 */
-	public int selectSchDetlSnKey()  throws Exception;
+	public int selectSchDetlSnKey()  ;
 
 	/**
 	 * 원내교수 일정 관리
 	 * 
 	 * @reurn 
 	 */
-	public ScheduleVO insertSchedule(ScheduleVO iSchduleVO) throws Exception;
+	public ScheduleVO insertSchedule(ScheduleVO iSchduleVO) ;
 	
-	public ScheduleDetailVO insertScheduleDetail(ScheduleDetailVO iSchduleDetailVO) throws Exception;
+	public ScheduleDetailVO insertScheduleDetail(ScheduleDetailVO iSchduleDetailVO) ;
 	
-	public List<ScheduleProfVO> profList() throws Exception;
+	public List<ScheduleProfVO> profList() ;
 	
-	public List<ScheduleDetailVO> scheduleListContents(ScheduleDetailVO iSchduleDetailVO) throws Exception;
+	public List<ScheduleDetailVO> scheduleListContents(ScheduleDetailVO iSchduleDetailVO) ;
 	
-	public int updateScheduleBatch(List<ScheduleDetailVO> contentsArray) throws Exception;
-	@SuppressWarnings("unchecked")
-	public List<CalendarVO> listSchedule(CalendarVO iSchduleVO) throws Exception;
-	@SuppressWarnings("unchecked")
-	public List<CalendarVO> listScheduleMy(CalendarVO iSchduleVO) throws Exception;
+	public int updateScheduleBatch(List<ScheduleDetailVO> contentsArray) ;
 	
-	public ScheduleVO selectSchedule(ScheduleVO scheduleVO) throws Exception;
+	public List<CalendarVO> listSchedule(CalendarVO iSchduleVO) ;
 	
-	public int editSchedule(ScheduleVO scheduleVO) throws Exception;
+	public List<CalendarVO> listScheduleMy(CalendarVO iSchduleVO) ;
 	
-	public int deleteSchedule(ScheduleVO scheduleVO) throws Exception;
+	public ScheduleVO selectSchedule(ScheduleVO scheduleVO) ;
 	
-	public int deleteAllSchedule(ScheduleVO scheduleVO) throws Exception;
+	public int editSchedule(ScheduleVO scheduleVO) ;
 	
-	public List<ScheduleVO> listScheduleResult(ScheduleVO scheduleVO) throws Exception;
+	public int deleteSchedule(ScheduleVO scheduleVO) ;
+	
+	public int deleteAllSchedule(ScheduleVO scheduleVO) ;
+	
+	public List<ScheduleVO> listScheduleResult(ScheduleVO scheduleVO) ;
 	
 	
 }

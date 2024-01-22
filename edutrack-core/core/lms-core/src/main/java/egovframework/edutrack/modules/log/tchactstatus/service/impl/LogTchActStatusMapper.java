@@ -18,7 +18,7 @@ public interface LogTchActStatusMapper{
 	 * @param UserInfoDTO dto
 	 * @return ProcessResultListDTO<UserInfoDTO>
 	 */
-	public List<LogTchActStatusVO> list(LogTchActStatusVO vo) throws Exception;
+	public List<LogTchActStatusVO> list(LogTchActStatusVO vo) ;
 
 	/**
 	 * 교수자/투터의 목록 수을 가져온다.
@@ -26,14 +26,14 @@ public interface LogTchActStatusMapper{
 	 * @param UserInfoDTO dto
 	 * @return int
 	 */
-	public int count(LogTchActStatusVO vo)  throws Exception;
+	public int count(LogTchActStatusVO vo)  ;
 	/**
 	 * 교수자/투터의 목록을 가져온다.
 	 * 교수자의 과정 연결 수 내역을 포함.
 	 * @param UserInfoDTO dto
 	 * @return ProcessResultListDTO<UserInfoDTO>
 	 */
-	public List<LogTchActStatusVO> listPageing(LogTchActStatusVO vo)  throws Exception;
+	public List<LogTchActStatusVO> listPageing(LogTchActStatusVO vo)  ;
 
 	/**
 	 * 해당 기간에 속하는 과정의 목록을 가져온다.
@@ -41,7 +41,7 @@ public interface LogTchActStatusMapper{
 	 * @param UserInfoDTO dto
 	 * @return ProcessResultListDTO<UserInfoDTO>
 	 */
-	public List<LogTchActStatusDetailVO> listCourse(LogTchActStatusDetailVO vo) throws Exception;
+	public List<LogTchActStatusDetailVO> listCourse(LogTchActStatusDetailVO vo) ;
 
 	/**
 	 * 해당 기간에 속하는 과정의 목록 수을 가져온다.
@@ -49,25 +49,25 @@ public interface LogTchActStatusMapper{
 	 * @param UserInfoDTO dto
 	 * @return int
 	 */
-	public int courseCount(LogTchActStatusDetailVO vo) throws Exception;
+	public int courseCount(LogTchActStatusDetailVO vo) ;
 	/**
 	 * 해당 기간에 속하는 과정의 목록을 가져온다.
 	 * 선택된 교수자의 과정만.
 	 * @param UserInfoDTO dto
 	 * @return ProcessResultListDTO<UserInfoDTO>
 	 */
-	public List<LogTchActStatusDetailVO> listCoursePageing(LogTchActStatusDetailVO vo) throws Exception;
+	public List<LogTchActStatusDetailVO> listCoursePageing(LogTchActStatusDetailVO vo) ;
 
 
-	public LogTchActStatusVO select(LogTchActStatusVO dto) throws Exception;
+	public LogTchActStatusVO select(LogTchActStatusVO dto) ;
 
 
 	public List<LogTchActStatusDetailVO> listMonth(
-			LogTchActStatusDetailVO dto)  throws Exception;
+			LogTchActStatusDetailVO dto)  ;
 
 	public List<LogTchActStatusDetailVO> listWeek(
-			LogTchActStatusDetailVO dto)  throws Exception;
+			LogTchActStatusDetailVO dto)  ;
 
 	public List<LogTchActStatusDetailVO> listDay(
-			LogTchActStatusDetailVO dto)  throws Exception;
+			LogTchActStatusDetailVO dto)  ;
 }

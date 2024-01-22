@@ -11,12 +11,9 @@
 	if(agent.indexOf("Mac") > -1) osMac = "Mac";
 	request.setAttribute("osMac", osMac);
 
-	request.setAttribute("wowzaUse", Constants.WOWZA_USE);
-	request.setAttribute("wowzaUrlStmp", Constants.WOWZA_URL_RTMP);
-	request.setAttribute("wowzaUrlStsp", Constants.WOWZA_URL_RTSP);
-	request.setAttribute("wowzaUrlHttp", Constants.WOWZA_URL_HTTP);
-	request.setAttribute("mediaUse", Constants.MEDIA_USE);
-	request.setAttribute("mediaUrl", Constants.MEDIA_URL);
+	request.setAttribute("mediaStreamUse", Constants.MEDIA_STREAM_USE);
+	request.setAttribute("mediaStreamUrl", Constants.MEDIA_STREAM_URL);
+	request.setAttribute("mediaStreamHls", Constants.MEDIA_STREAM_HLS);
 %>
 <mhtml:class_html>
 <mhtml:class_head>

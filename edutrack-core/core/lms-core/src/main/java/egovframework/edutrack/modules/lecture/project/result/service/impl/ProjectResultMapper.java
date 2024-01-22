@@ -11,43 +11,43 @@ public interface ProjectResultMapper {
 	/**
 	 * 평가 관리 목록 조회
 	 */
-	@SuppressWarnings("unchecked")
-	public List<ProjectResultVO> list(ProjectResultVO vo) throws Exception;
+	
+	public List<ProjectResultVO> list(ProjectResultVO vo) ;
 
 	/**
 	 * 팀 점수저장
 	 */
-	public int updateScoreAll(ProjectResultVO vo) throws Exception;
+	public int updateScoreAll(ProjectResultVO vo) ;
 	
 	/**
 	 * 팀 점수저장시 회원 점수 수정
 	 */
-	public int updateMbrScoreAll(ProjectResultVO vo) throws Exception;
+	public int updateMbrScoreAll(ProjectResultVO vo) ;
 
 	/**
 	 *  팀원 보기
 	 */
-	public ProjectResultVO select(ProjectResultVO vo) throws Exception;
+	public ProjectResultVO select(ProjectResultVO vo) ;
 
 	/**
 	 * 팀원 목록
 	 */
-	public List<ProjectResultVO> teamList (ProjectResultVO vo) throws Exception;
+	public List<ProjectResultVO> teamList (ProjectResultVO vo) ;
 	
 	/**
 	 * 팀 회원 점수저장
 	 */
-	public int editMbScoreAll(ProjectResultVO vo) throws Exception;
+	public int editMbScoreAll(ProjectResultVO vo) ;
 	
 	/**
 	 *  과제 정보
 	 */
-	public ProjectResultVO siInfoSelect(ProjectResultVO vo) throws Exception;
+	public ProjectResultVO siInfoSelect(ProjectResultVO vo) ;
 	
 	/**
 	 *  제출 정보
 	 */
-	public PrjAssignmentSendVO submitInfoSelect(PrjAssignmentSendVO vo) throws Exception;
+	public PrjAssignmentSendVO submitInfoSelect(PrjAssignmentSendVO vo) ;
 	
 
 }

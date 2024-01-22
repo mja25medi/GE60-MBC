@@ -23,64 +23,64 @@ public interface EtcBnnrMapper{
 	 * 베너의 전체 목록을 조회한다. 
 	 * @param  EtcBnnrVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<EtcBnnrVO> list(EtcBnnrVO vo) throws Exception;
+	
+	public List<EtcBnnrVO> list(EtcBnnrVO vo) ;
 	
     /**
 	 * 베너의 검색된 수를 카운트 한다. 
 	 * @param  EtcBnnrVO 
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int count(EtcBnnrVO vo) throws Exception ;
+	public int count(EtcBnnrVO vo)  ;
 	
     /**
 	 * 베너의 전체 목록을 조회한다. 
 	 * @param  EtcBnnrVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<EtcBnnrVO> listPageing(EtcBnnrVO vo) throws Exception;
+	
+	public List<EtcBnnrVO> listPageing(EtcBnnrVO vo) ;
 	
     /**
 	 * 베너의 상세 정보를 조회한다. 
 	 * @param  EtcBnnrVO 
 	 * @return EtcBnnrVO
-	 * @throws Exception
+	 * @
 	 */
-	public EtcBnnrVO select(EtcBnnrVO vo) throws Exception;
+	public EtcBnnrVO select(EtcBnnrVO vo) ;
 	
     /**
 	 * 베너의 키를 생성 한다. 
 	 * @return Integer
-	 * @throws Exception
+	 * @
 	 */
-	public int selectKey() throws Exception;
+	public int selectKey() ;
 
     /**
      * 베너의 상세 정보를 등록한다.  
      * @param  EtcBnnrVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(EtcBnnrVO vo) throws Exception;
+    public int insert(EtcBnnrVO vo) ;
     
     /**
      * 베너의 상세 정보를 수정한다. 
      * @param  EtcBnnrVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int update(EtcBnnrVO vo) throws Exception;
+    public int update(EtcBnnrVO vo) ;
     
     /**
      * 베너의 상세 정보를 삭제한다.  
      * @param  EtcBnnrVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int delete(EtcBnnrVO vo) throws Exception; 
+    public int delete(EtcBnnrVO vo) ; 
 }

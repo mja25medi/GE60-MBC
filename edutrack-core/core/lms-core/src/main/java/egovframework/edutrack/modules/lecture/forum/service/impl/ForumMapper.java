@@ -19,8 +19,8 @@ public interface ForumMapper{
 	 * @param vo
 	 * @return List<ForumVO>
 	 */
-	@SuppressWarnings("unchecked")
-	public List<ForumVO> list(ForumVO vo) throws DataAccessException;
+	
+	public List<ForumVO> list(ForumVO vo) ;
 
 	/**
 	 * 토론 정보 조회
@@ -29,16 +29,16 @@ public interface ForumMapper{
 	 * @param vo
 	 * @return ProcessResultVO<ForumVO>
 	 */
-	public ForumVO select(ForumVO vo) throws Exception;
+	public ForumVO select(ForumVO vo) ;
 	/**
 	 * Select Key 조회
 	 * @param int
 	 * @return
 	 */
-	public int selectKey()  throws Exception;
+	public int selectKey()  ;
 
-	@SuppressWarnings("unchecked")
-	public List<ForumVO> listStd(ForumVO vo) throws Exception;
+	
+	public List<ForumVO> listStd(ForumVO vo) ;
 
 	/**
 	 * 토론 정보 등록
@@ -47,7 +47,7 @@ public interface ForumMapper{
 	 * @param iForumVO
 	 * @return ProcessResultVO<ForumVO>
 	 */
-	public int insert(ForumVO vo) throws Exception;
+	public int insert(ForumVO vo) ;
 
 	/**
 	 * 토론 정보 수정
@@ -56,7 +56,7 @@ public interface ForumMapper{
 	 * @param iForumVO
 	 * @return ProcessResultVO<ForumVO>
 	 */
-	public int update(ForumVO vo) throws Exception;
+	public int update(ForumVO vo) ;
 	
 	/**
 	 * 토론 정보 삭제
@@ -65,13 +65,13 @@ public interface ForumMapper{
 	 * @param iForumVO
 	 * @return ProcessResultVO<ForumVO>
 	 */
-	public int delete(ForumVO vo ) throws Exception;
+	public int delete(ForumVO vo ) ;
 	
 	/**
 	 * 토론 관련 정보 현황
 	 * @param vo
 	 * @return
 	 */
-	public EgovMap selectForumStatus(ForumVO vo) throws Exception;
+	public EgovMap selectForumStatus(ForumVO vo) ;
 
 }

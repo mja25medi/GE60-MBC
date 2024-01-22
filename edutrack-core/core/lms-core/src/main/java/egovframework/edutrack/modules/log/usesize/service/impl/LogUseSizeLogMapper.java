@@ -17,23 +17,23 @@ public interface LogUseSizeLogMapper  {
 	 * 사용량 로그를 조회한다. 
 	 * @param  LogUseSizeLogVO 
 	 * @return LogUseSizeLogVO
-	 * @throws Exception
+	 * @
 	 */
-	public LogUseSizeLogVO select(LogUseSizeLogVO vo) throws Exception;
+	public LogUseSizeLogVO select(LogUseSizeLogVO vo) ;
 	
     /**
 	 * 파일 사용량 로그를 조회한다. 
 	 * @param  LogUseSizeLogVO 
 	 * @return LogUseSizeLogVO
-	 * @throws Exception
+	 * @
 	 */
-	public LogUseSizeLogVO selectAtchSize(LogUseSizeLogVO vo) throws Exception;
+	public LogUseSizeLogVO selectAtchSize(LogUseSizeLogVO vo) ;
 	
     /**
      * 사용량 로그 정보를 등록한다.  
      * @param  LogUseSizeLogVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(LogUseSizeLogVO vo) throws Exception;
+    public int insert(LogUseSizeLogVO vo) ;
 }

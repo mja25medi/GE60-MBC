@@ -152,5 +152,15 @@ public interface CourseService {
 	 * @return ProcessResultListVO<CourseVO>
 	 */
 	public abstract ProcessResultListVO<CourseVO> listCourse(CourseVO VO) throws Exception;
-
+	
+	
+	/**
+	 * 개설과정 서비스 타입 조회(R:국비지원 / S:개발원 자체)
+	 * @param CourseVO vo
+	 * @param String
+	 * @return  ProcessResultVO
+	 */
+	public abstract ProcessResultVO<CourseVO> selectCrsSvcTypeCre(CourseVO vo) throws Exception;
+	
+	
 }

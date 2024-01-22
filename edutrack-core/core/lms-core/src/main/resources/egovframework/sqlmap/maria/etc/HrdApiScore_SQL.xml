@@ -287,7 +287,7 @@
 		select 	
 				<!-- API 전송용  -->
 				A.USER_NO AS USER_AGENT_PK
-				, E.SBJ_CD AS COURSE_AGENT_PK
+				, E.CRS_CD AS COURSE_AGENT_PK
 				, A.CRS_CRE_CD AS CLASS_AGENT_PK
 				, C.TOT_GET_SCORE AS SCORE
 				, (SELECT COUNT(1) FROM tb_lec_exam
@@ -352,7 +352,7 @@
 	
 	<select id="selectScoreAsmt" resultType="hrdApiScoreVO" parameterType="AssignmentSendVO">
 		select A.USER_NO AS USER_AGENT_PK
-				, C.SBJ_CD AS COURSE_AGENT_PK
+				, C.CRS_CD AS COURSE_AGENT_PK
 				, A.CRS_CRE_CD AS CLASS_AGENT_PK
 				, D.SCORE AS SCORE
 				, (SELECT COUNT(1) FROM tb_lec_asmt
@@ -404,7 +404,7 @@
 	
 	<select id="selectScoreBookmark" resultType="hrdApiScoreVO" parameterType="BookmarkVO">
 		select A.USER_NO AS USER_AGENT_PK
-				, F.SBJ_CD AS COURSE_AGENT_PK
+				, E.CRS_CD AS COURSE_AGENT_PK
 				, A.CRS_CRE_CD AS CLASS_AGENT_PK
 				, B.PRGR_RATE as SCORE
 				, (	SELECT EVAL_TYPE 

@@ -2,8 +2,6 @@ package egovframework.edutrack.modules.board.qna.service.impl;
 
 import java.util.List;
 
-import org.springframework.dao.DataAccessException;
-
 import egovframework.edutrack.modules.board.qna.service.NonMemQnaVO;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 
@@ -22,28 +20,28 @@ public interface NonMemQnaMapper {
 	 *
 	 * @return 
 	 */
-	public int insertNonMemQna(NonMemQnaVO vo) throws DataAccessException;
+	public int insertNonMemQna(NonMemQnaVO vo) ;
 	
 	/**
 	 * 비회원 상담 신청 - 답변 등록
 	 *
 	 * @return 
 	 */
-	public int addNonMemAns(NonMemQnaVO vo) throws DataAccessException;
+	public int addNonMemAns(NonMemQnaVO vo) ;
 	
 	/**
 	 * 비회원 상담 신청 - 답변 수정
 	 *
 	 * @return 
 	 */
-	public int updateNonMemAns(NonMemQnaVO vo) throws DataAccessException;
+	public int updateNonMemAns(NonMemQnaVO vo) ;
 	
 	/**
 	 * 비회원 상담 신청 - 상담 삭제
 	 *
 	 * @return 
 	 */
-	public int deleteNonMemQna(NonMemQnaVO vo) throws DataAccessException;
+	public int deleteNonMemQna(NonMemQnaVO vo) ;
 
 	/**
 	 * 비회원 상담 신청 - 상담 개수 카운트
@@ -64,5 +62,5 @@ public interface NonMemQnaMapper {
 	 *
 	 * @return 
 	 */
-	public NonMemQnaVO selectNonMemQna(NonMemQnaVO vo) throws DataAccessException;
+	public NonMemQnaVO selectNonMemQna(NonMemQnaVO vo) ;
 }

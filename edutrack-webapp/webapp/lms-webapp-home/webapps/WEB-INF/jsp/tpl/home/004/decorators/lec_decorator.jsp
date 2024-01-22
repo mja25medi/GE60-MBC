@@ -50,16 +50,7 @@
 	<meditag:js src="/libs/daumeditor/js/editor.js"/>
 	<script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
 	<meditag:js src="/js/common_daumeditor.js"/>
-</c:if><c:if test="${not empty summernote}">
- 	<%--    <link href="/libs/bootstrap-3.3.5/css/bootstrap.css" rel="stylesheet">
-       <script src="/libs/bootstrap-3.3.5/js/bootstrap.js"></script>
-	<!-- include summernote css/js-->
-	<meditag:css href="libs/summernote/summernote.css"/>
-	<meditag:css href="css/summernote_custom.css"/>
-	<meditag:js src="/libs/summernote/summernote.js"/>
-	<meditag:js src="/libs/summernote/lang/summernote-ko-KR.js"/>
-	<meditag:js src="/libs/summernote/lang/summernote-ja-JP.js"/>
-	 --%> 
+</c:if>
 	<meditag:js src="/js/common_summernote.js"/>
 	<!-- Summernote Editor -->
     <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/summernote-lite.css" />
@@ -74,7 +65,7 @@
     <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/js/config.js"></script>
     <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/js/tam-emoji.js"></script>
 	<script src="/tpl/${COLOR_TPL}/js/summernote/plugin/uploadcare.js"></script>
-</c:if><c:if test="${not empty commonPaging}">
+<c:if test="${not empty commonPaging}">
 	<meditag:js src="/js/common_paging.js"/>
 </c:if><c:if test="${not empty pageInfo or not empty paging}">
 	<meditag:css href="css/paginator3000.css"/>

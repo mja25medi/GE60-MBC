@@ -337,6 +337,10 @@ public class StudentVO
 		this.stdNo = target.callHrdStdNo();
 	}
 	
+	public StudentVO(String stdNo) {
+		this.stdNo = stdNo;
+	}
+
 	public void setAddRefund(String stdNo, String enrlSts, Integer repayPrice, String repayStsCd, String repayBankNm,
 			String repayUserNm, String repayAcntNo, String repayReason) {
 		this.stdNo = stdNo;
@@ -2884,7 +2888,7 @@ public class StudentVO
 
 	@Override
 	public String callHrdCourseAgentPk() {
-		return this.sbjCd;
+		return this.crsCd;
 	}
 
 	@Override

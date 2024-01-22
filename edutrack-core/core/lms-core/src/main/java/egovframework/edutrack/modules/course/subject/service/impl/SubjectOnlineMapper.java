@@ -19,61 +19,61 @@ public interface SubjectOnlineMapper {
 	 *
 	 * @return ProcessResultVO
 	 */
-	public String selectKey()  throws DataAccessException ;
+	public String selectKey()   ;
 	
 	/**
 	 * Select Key 정보 조회2
 	 *
 	 * @return ProcessResultVO
 	 */
-	public String selectLecRoomKey()  throws DataAccessException ;
+	public String selectLecRoomKey()   ;
 	
 	/**
 	 * 온라인 과목 목록 조회
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OnlineSubjectVO> list(OnlineSubjectVO iOnlineSubjectVO)   throws DataAccessException ;
+	
+	public List<OnlineSubjectVO> list(OnlineSubjectVO iOnlineSubjectVO)    ;
 
 	/**
 	 * 온라인 과목 목록 조회
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OnlineSubjectVO> listPageing(OnlineSubjectVO iOnlineSubjectVO)  throws DataAccessException ;
+	
+	public List<OnlineSubjectVO> listPageing(OnlineSubjectVO iOnlineSubjectVO)   ;
 
 	/**
 	 * 온라인 과목 목록 조회수 반환
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public int count(OnlineSubjectVO iOnlineSubjectVO)  throws DataAccessException ;
+	
+	public int count(OnlineSubjectVO iOnlineSubjectVO)   ;
 	
 	/**
 	 * 온라인 과목 정보 조회
 	 *
 	 * @return ProcessResultVO
 	 */
-	public OnlineSubjectVO select(OnlineSubjectVO iOnlineSubjectVO)  throws DataAccessException ;
+	public OnlineSubjectVO select(OnlineSubjectVO iOnlineSubjectVO)   ;
 
 	/**
 	 * 온라인 과목 목록 조회 (개설과정에 속하지 않은 과목만 검색 함)
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OnlineSubjectVO> listSearch(OnlineSubjectVO iOnlineSubjectVO)  throws DataAccessException ;
+	
+	public List<OnlineSubjectVO> listSearch(OnlineSubjectVO iOnlineSubjectVO)   ;
 
 	/**
 	 * 온라인 과목 목록 조회 (공개과정 용)
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OnlineSubjectVO> listSearchOpen(OnlineSubjectVO iOnlineSubjectVO)   throws DataAccessException ;
+	
+	public List<OnlineSubjectVO> listSearchOpen(OnlineSubjectVO iOnlineSubjectVO)    ;
 
 
 	/**
@@ -81,14 +81,14 @@ public interface SubjectOnlineMapper {
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int insert(OnlineSubjectVO iOnlineSubjectVO)  throws DataAccessException ;
+	public int insert(OnlineSubjectVO iOnlineSubjectVO)   ;
 
 	/**
 	 * 온라인 과목 수정
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int update(OnlineSubjectVO iOnlineSubjectVO)  throws DataAccessException ;
+	public int update(OnlineSubjectVO iOnlineSubjectVO)   ;
 
 
 	/**
@@ -96,50 +96,50 @@ public interface SubjectOnlineMapper {
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int delete(OnlineSubjectVO iOnlineSubjectVO)   throws DataAccessException ;
+	public int delete(OnlineSubjectVO iOnlineSubjectVO)    ;
 	
 	/**
 	 * 강의실 등록
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int lecRoomInsert(LecRoomVO lecRoomVO)  throws DataAccessException ;
+	public int lecRoomInsert(LecRoomVO lecRoomVO)   ;
 	
 	/**
 	 * 강의실 목록 조회수 반환
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public int lecRoomCount(LecRoomVO lecRoomVO)  throws DataAccessException ;
+	
+	public int lecRoomCount(LecRoomVO lecRoomVO)   ;
 	
 	/**
 	 * 강의실 목록 조회
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LecRoomVO> lecListPageing(LecRoomVO lecRoomVO)  throws DataAccessException ;
+	
+	public List<LecRoomVO> lecListPageing(LecRoomVO lecRoomVO)   ;
 	
 	/**
 	 * 강의실 정보 조회
 	 *
 	 * @return ProcessResultVO
 	 */
-	public LecRoomVO getLecRoom(LecRoomVO lecRoomVO)  throws DataAccessException ;
+	public LecRoomVO getLecRoom(LecRoomVO lecRoomVO)   ;
 	
 	/**
 	 * 강의실 과목 수정
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int updateLecRoom(LecRoomVO lecRoomVO)  throws DataAccessException ;
+	public int updateLecRoom(LecRoomVO lecRoomVO)   ;
 	
 	/**
 	 * 강의실 과목 삭제
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int deleteLecRoom(LecRoomVO lecRoomVO) throws DataAccessException ;
+	public int deleteLecRoom(LecRoomVO lecRoomVO)  ;
 
 }

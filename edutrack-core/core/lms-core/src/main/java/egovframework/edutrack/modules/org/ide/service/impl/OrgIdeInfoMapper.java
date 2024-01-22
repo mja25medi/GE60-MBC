@@ -14,9 +14,9 @@ public interface OrgIdeInfoMapper {
 
 	public int insert(OrgIdeInfoVO vo);
 
-	public int delete(OrgIdeInfoVO vo) throws Exception;
+	public int delete(OrgIdeInfoVO vo) ;
 
-	public int updateUseYn(OrgIdeInfoVO vo) throws Exception;
+	public int updateUseYn(OrgIdeInfoVO vo) ;
 
 	public String selectIdeUrlCheck(OrgIdeInfoVO vo);
 

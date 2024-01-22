@@ -1556,18 +1556,14 @@
 				, E.REFUND_YN
 				, F.CRS_CD
 				, F.CRS_YEAR
-				, F.CRS_TERM
-				, G.SBJ_CD
-				, G.SBJ_NM
 	</sql>
 	<sql id="fromStudentInfoCreQuery">
-		FROM tb_std_std A , tb_usr_user_info C, tb_usr_login D, tb_crs_cre_crs E, tb_crs_crs F, tb_crs_onln_sbj G
+		FROM tb_std_std A , tb_usr_user_info C, tb_usr_login D, tb_crs_cre_crs E, tb_crs_crs F
 		WHERE 1=1 
 			AND A.USER_NO = C.USER_NO 
 			AND C.USER_NO = D.USER_NO 
 			AND A.CRS_CRE_CD = E.CRS_CRE_CD
 			AND E.CRS_CD = F.CRS_CD 
-			AND E.SBJ_CD = G.SBJ_CD 
 	</sql>
 	<sql id="whereStudentInfoCreQuery">
 		AND A.ENRL_STS != 'D'

@@ -23,91 +23,91 @@ public interface OrgDomainMapper{
 	 * 기관 도메인의 전체 목록을 조회한다. 
 	 * @param  OrgDomainVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OrgDomainVO> list(OrgDomainVO vo) throws Exception;
+	
+	public List<OrgDomainVO> list(OrgDomainVO vo) ;
 	
     /**
 	 * 기관 도메인의 검색된 수를 카운트 한다. 
 	 * @param  OrgDomainVO 
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int count(OrgDomainVO vo) throws Exception;
+	public int count(OrgDomainVO vo) ;
 	
     /**
 	 * 기관 도메인의 전체 목록을 조회한다. 
 	 * @param  OrgDomainVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OrgDomainVO> listPageing(OrgDomainVO vo) throws Exception;
+	
+	public List<OrgDomainVO> listPageing(OrgDomainVO vo) ;
 	
     /**
 	 * 기관 도메인의 상세 정보를 조회한다. 
 	 * @param  OrgDomainVO 
 	 * @return OrgDomainVO
-	 * @throws Exception
+	 * @
 	 */
-	public OrgDomainVO select(OrgDomainVO vo) throws Exception;
+	public OrgDomainVO select(OrgDomainVO vo) ;
 	
 	 /**
 	 * 기관 도메인의 상세 정보를 조회한다. 
 	 * @param  OrgDomainVO 
 	 * @return OrgDomainVO
-	 * @throws Exception
+	 * @
 	 */
-	public OrgDomainVO selectByTypeCd(OrgDomainVO vo) throws Exception;
+	public OrgDomainVO selectByTypeCd(OrgDomainVO vo) ;
 	
 	
 	 /**
 	 * 기관 도메인의 상세 정보를 조회한다. 
 	 * @param  OrgDomainVO 
 	 * @return OrgDomainVO
-	 * @throws Exception
+	 * @
 	 */
-	public OrgDomainVO selectByServiceTypeCd(OrgDomainVO vo) throws Exception;
+	public OrgDomainVO selectByServiceTypeCd(OrgDomainVO vo) ;
 
     /**
      * 기관 도메인의 상세 정보를 등록한다.  
      * @param  OrgDomainVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(OrgDomainVO vo) throws Exception;
+    public int insert(OrgDomainVO vo) ;
     
     /**
      * 기관 도메인의 상세 정보를 수정한다. 
      * @param  OrgDomainVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int update(OrgDomainVO vo) throws Exception;
+    public int update(OrgDomainVO vo) ;
     
     /**
      * 기관 도메인의 상세 정보를 삭제한다.  
      * @param  OrgDomainVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int delete(OrgDomainVO vo) throws Exception;
+    public int delete(OrgDomainVO vo) ;
     
     /**
      * 기관의 대표 도메인 지정을 해지 한다. 
      * @param  OrgDomainVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int updateRprstN(OrgDomainVO vo) throws Exception;
+    public int updateRprstN(OrgDomainVO vo) ;
 
     /**
      * 기관의 대표 도메인 지정을 한다. 
      * @param  OrgDomainVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int updateRprstY(OrgDomainVO vo) throws Exception;    
+    public int updateRprstY(OrgDomainVO vo) ;    
     
 }

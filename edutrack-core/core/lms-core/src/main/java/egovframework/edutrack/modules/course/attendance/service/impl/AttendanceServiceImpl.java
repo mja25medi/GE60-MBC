@@ -450,8 +450,7 @@ public class AttendanceServiceImpl extends EgovAbstractServiceImpl implements At
 					resultVO.setResult(1);
 					resultVO.setMessage("조퇴 처리되었습니다");
 				} break;
-				default:{
-					System.out.println("조퇴안함");
+				default:{//조퇴X
 					resultVO.setResult(-1);
 					resultVO.setMessage("처리할 수 없습니다. 관리자에 문의 바랍니다");
 				} break;

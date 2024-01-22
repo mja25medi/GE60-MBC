@@ -16,8 +16,8 @@ public interface LogClassConnMapper {
 	 * @param VO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public int merge(LogClassConnVO VO) throws Exception;
+	
+	public int merge(LogClassConnVO VO) ;
 
 	/**
 	 * 종료일을 기준으로 시작일을 검색한다.
@@ -25,6 +25,6 @@ public interface LogClassConnMapper {
 	 * @param VO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public LogClassConnVO selectAutoDate(LogClassConnVO VO)  throws Exception;
+	
+	public LogClassConnVO selectAutoDate(LogClassConnVO VO)  ;
 }

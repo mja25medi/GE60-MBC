@@ -20,8 +20,8 @@ public interface ForumJoinUserMapper {
 	 * @param pageScale
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<ForumJoinUserVO> listPageing(ForumJoinUserVO vo) throws Exception;
+	
+	public List<ForumJoinUserVO> listPageing(ForumJoinUserVO vo) ;
 	
 	/**
 	 * 학습자 목록
@@ -33,8 +33,8 @@ public interface ForumJoinUserMapper {
 	 * @param pageScale
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public int count(ForumJoinUserVO vo) throws Exception;
+	
+	public int count(ForumJoinUserVO vo) ;
 	
 	/**
 	 * 학습자 목록
@@ -46,8 +46,8 @@ public interface ForumJoinUserMapper {
 	 * @param pageScale
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<ForumJoinUserVO> list(ForumJoinUserVO vo) throws Exception;
+	
+	public List<ForumJoinUserVO> list(ForumJoinUserVO vo) ;
 
 	/**
 	 * 토론 개별 점수 저장
@@ -56,7 +56,7 @@ public interface ForumJoinUserMapper {
 	 * @param vo
 	 * @return ProcessResultVO<ForumJoinUserVO>
 	 */
-	public int insert(ForumJoinUserVO vo) throws Exception;
+	public int insert(ForumJoinUserVO vo) ;
 
 	/**
 	 * 토론 개별 점수 수정
@@ -65,7 +65,7 @@ public interface ForumJoinUserMapper {
 	 * @param vo
 	 * @return ProcessResultVO<ForumJoinUserVO>
 	 */
-	public int update(ForumJoinUserVO vo) throws Exception;
+	public int update(ForumJoinUserVO vo) ;
 
 	/**
 	 * 토론 점수 정보 삭제
@@ -74,6 +74,6 @@ public interface ForumJoinUserMapper {
 	 * @param vo
 	 * @return ProcessResultVO<ForumJoinUserVO>
 	 */
-	public int delete(ForumJoinUserVO vo)  throws Exception;
+	public int delete(ForumJoinUserVO vo)  ;
 
 }

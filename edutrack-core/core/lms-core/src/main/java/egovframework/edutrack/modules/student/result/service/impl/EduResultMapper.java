@@ -14,24 +14,24 @@ public interface EduResultMapper {
 	 * 
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<EduResultVO> listResult(EduResultVO iEduResultVO) throws Exception;
+	
+	public List<EduResultVO> listResult(EduResultVO iEduResultVO) ;
 
 	/**
 	 * 학습결과 목록 조회 (페이징)
 	 * 
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<EduResultVO> listResultPaging(EduResultVO iEduResultVO) throws Exception;
+	
+	public List<EduResultVO> listResultPaging(EduResultVO iEduResultVO) ;
 	
 	/**
 	 * 학습결과 목록수 반환
 	 * 
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public int count(EduResultVO iEduResultVO) throws Exception;
+	
+	public int count(EduResultVO iEduResultVO) ;
 	
 
 	/**
@@ -39,23 +39,23 @@ public interface EduResultMapper {
 	 *  
 	 * @return 
 	 */
-	public EduResultVO selectResult(EduResultVO iEduResultVO) throws Exception;
+	public EduResultVO selectResult(EduResultVO iEduResultVO) ;
 	
 	/**
 	 * crm 학습성적 정보 조회(페이징)
 	 *  
 	 * @return 
 	 */
-	@SuppressWarnings("unchecked")
-	public List<EduResultVO> listCrmEduResultPaging(EduResultVO iEduResultVO) throws Exception;
+	
+	public List<EduResultVO> listCrmEduResultPaging(EduResultVO iEduResultVO) ;
 	
 	/**
 	 * crm 학습성적 정보 수 반환
 	 * 
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public int countCrmEduResult(EduResultVO iEduResultVO) throws Exception;
+	
+	public int countCrmEduResult(EduResultVO iEduResultVO) ;
 	
 
 	/**
@@ -63,21 +63,21 @@ public interface EduResultMapper {
 	 *  
 	 * @reurn 
 	 */
-	public int insertResult(EduResultVO iEduResultVO) throws Exception;
+	public int insertResult(EduResultVO iEduResultVO) ;
 	
 
 	/**
 	 * 학습결과 수정
 	 */
-	public int updateResult(EduResultVO iEduResultVO) throws Exception;
+	public int updateResult(EduResultVO iEduResultVO) ;
 	
 	/**
 	 * 수강생 수료 처리를 위한 수강생 목록 조회
 	 * 수강생의 성적 및 나이순으로 오더를 해온다.
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<EduResultVO> listStudentScore(EduResultVO iEduResultVO) throws Exception;
+	
+	public List<EduResultVO> listStudentScore(EduResultVO iEduResultVO) ;
 	
 	/**
 	 * 프로시저를 이용한 자동 점수 등록
@@ -95,7 +95,7 @@ public interface EduResultMapper {
 	 * @param EduResultVO 
 	 * @reurn 
 	 */
-	public int insertEduResultCrsSp(EduResultVO iEduResultVO) throws Exception;
+	public int insertEduResultCrsSp(EduResultVO iEduResultVO) ;
 	
 	
 	/**
@@ -103,7 +103,7 @@ public interface EduResultMapper {
      *
      * @reurn 
      */
-	public int autoInserteduRslt(EduResultVO dto) throws Exception;
+	public int autoInserteduRslt(EduResultVO dto) ;
 
 	
 }

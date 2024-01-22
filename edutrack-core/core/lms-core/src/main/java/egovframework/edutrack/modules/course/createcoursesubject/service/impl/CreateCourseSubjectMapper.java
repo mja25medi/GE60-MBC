@@ -18,8 +18,8 @@ public interface CreateCourseSubjectMapper {
 	 * 
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CreateCourseSubjectVO> list(CreateCourseSubjectVO VO)  throws DataAccessException ;
+	
+	public List<CreateCourseSubjectVO> list(CreateCourseSubjectVO VO)   ;
 	
 
 }

@@ -17,9 +17,9 @@ public interface StudentResultMapper {
 	 * @param studentResultVO.endDate yyyymmddhh24miss 형태 수강신청일 기준 검색
 	 * @return ProcessReslutListVO(StudentResultVO)
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public abstract List<StudentResultVO> list(
-			StudentResultVO iStudentResultVO) throws Exception;
+			StudentResultVO iStudentResultVO) ;
 
 	/**
 	 * 학습자 목록 조회 (페이징)
@@ -33,15 +33,15 @@ public interface StudentResultMapper {
 	 * @param pageScale 페이지 갯수
 	 * @return ProcessReslutListVO(StudentResultVO)
 	 */
-	@SuppressWarnings("unchecked")
-	public abstract List<StudentResultVO> listPageing(StudentResultVO iStudentResultVO) throws Exception;
+	
+	public abstract List<StudentResultVO> listPageing(StudentResultVO iStudentResultVO) ;
 	
 	/**
 	 * 학습자 목록수 반환
 	 * @return int
 	 */
-	@SuppressWarnings("unchecked")
-	public int count(StudentResultVO iStudentResultVO) throws Exception;
+	
+	public int count(StudentResultVO iStudentResultVO) ;
 
 
 }

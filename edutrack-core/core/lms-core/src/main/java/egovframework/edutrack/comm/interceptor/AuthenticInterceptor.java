@@ -4,9 +4,12 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.mobile.device.Device;
+import org.springframework.mobile.device.DeviceUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import egovframework.edutrack.Constants;
 import egovframework.edutrack.comm.util.security.OrganizationUtil;
 import egovframework.edutrack.comm.util.security.SecurityUtil;
 import egovframework.edutrack.comm.util.web.StringUtil;
@@ -80,19 +83,32 @@ public class AuthenticInterceptor extends HandlerInterceptorAdapter {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Invalid access.");
 			return false;
 		}
-		//--기관 정보 관련 셋팅
-		/*
-		 * String Action = StringUtil.split(request.getRequestURI(), ";jsessionid=")[0];
-		 * // /adm/user/userinfo.do 형태로 들어온다. if(needOrganizationSet(Action)) {
-		 * OrganizationUtil.organiztionCheckRunner(request, response); }
-		 */		
-		OrganizationUtil.organiztionCheckRunner(request, response);
-
-		
-		
-		//--권한 검사 하여 Exception 발생 시킴.
-		SecurityUtil.authorizationCheck(request, response);
-
+		Device device = DeviceUtils.getCurrentDevice(request);    
+		if(device != null) {
+		    if (device.isMobile()) {
+		          UserBroker.setUserDevice(request, Constants.DEVICE_MOBILE);
+		    } else if (device.isTablet()) {
+		          UserBroker.setUserDevice(request, Constants.DEVICE_MOBILE);
+		    } else {
+		          UserBroker.setUserDevice(request, Constants.DEVICE_PC);
+		    }
+		}
+		String Action = StringUtil.split(request.getRequestURI(), ";jsessionid=")[0]; // /adm/user/userinfo.do 형태로 들어온다.
+		// 도움요청 조회 기능은 강의실 접속 후 요청을 기관, 권한 처리가 불필요하여 로직 추가.
+		if(Action.matches(".*/lec/bookmark/callRedis") ==false ) {
+			//--기관 정보 관련 셋팅
+			/*
+			 * String Action = StringUtil.split(request.getRequestURI(), ";jsessionid=")[0];
+			 * // /adm/user/userinfo.do 형태로 들어온다. if(needOrganizationSet(Action)) {
+			 * OrganizationUtil.organiztionCheckRunner(request, response); }
+			 */		
+			OrganizationUtil.organiztionCheckRunner(request, response);
+	
+			
+			
+			//--권한 검사 하여 Exception 발생 시킴.
+			SecurityUtil.authorizationCheck(request, response);
+		}
 		return true;
 	}
 	

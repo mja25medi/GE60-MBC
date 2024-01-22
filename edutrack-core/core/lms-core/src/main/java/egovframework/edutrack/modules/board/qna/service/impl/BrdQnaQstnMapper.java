@@ -16,17 +16,17 @@ public interface BrdQnaQstnMapper {
 	
 	public int count(BrdQnaQstnVO vo);
 	
-	public BrdQnaQstnVO select(BrdQnaQstnVO vo) throws Exception;
+	public BrdQnaQstnVO select(BrdQnaQstnVO vo) ;
 	
 	public BrdQnaQstnVO lecSelect(BrdQnaQstnVO vo);
 	
-	public int insert(BrdQnaQstnVO vo) throws Exception;
+	public int insert(BrdQnaQstnVO vo) ;
 	
-	public int update(BrdQnaQstnVO vo) throws Exception;
+	public int update(BrdQnaQstnVO vo) ;
 	
-	public int updateQnaSts(BrdQnaQstnVO vo) throws Exception;
+	public int updateQnaSts(BrdQnaQstnVO vo) ;
 	
-	public int delete(BrdQnaQstnVO vo) throws Exception;
+	public int delete(BrdQnaQstnVO vo) ;
 	
 	public int manageCount(BrdQnaQstnVO vo);
 	

@@ -16,48 +16,48 @@ public interface PrjTeamMapper {
 	 * @param vo
 	 * @return ProcessResultListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<PrjTeamVO> list(PrjTeamVO vo) throws Exception;
+	
+	public List<PrjTeamVO> list(PrjTeamVO vo) ;
 
 	/**
 	 * 팀관리 정보 등록
 	 * @param vo
 	 * @return ProcessResultVO
 	 */
-	public int insert(PrjTeamVO vo) throws Exception;
+	public int insert(PrjTeamVO vo) ;
 
 	/**
 	 * 이전 프로젝트 팀 복사 
 	 * @param vo
 	 * @return ProcessResultVO
 	 */
-	public int insertTeam(PrjTeamVO vo) throws Exception;
+	public int insertTeam(PrjTeamVO vo) ;
 
 	/**
 	 * 팀관리 정보 수정
 	 * @param vo
 	 * @return ProcessResultVO
 	 */
-	public int update(PrjTeamVO vo) throws Exception;
+	public int update(PrjTeamVO vo) ;
 
 	/**
 	 * 팀관리 정보 조회
 	 * @param vo
 	 * @return ProcessResultVO
 	 */
-	public PrjTeamVO select(PrjTeamVO vo) throws Exception;
+	public PrjTeamVO select(PrjTeamVO vo) ;
 	
 	/**
 	 * 팀관리 정보 삭제
 	 * @param teamArray
 	 * @return ProcessResultListVO
 	 */
-	public int delete(List<PrjTeamVO> teamArray) throws Exception;
+	public int delete(List<PrjTeamVO> teamArray) ;
 
 	/**
 	 * 팀 전체 삭제
 	 * @param teamArray
 	 * @return ProcessResultListVO
 	 */
-	public int deleteAll(PrjTeamVO vo) throws Exception;
+	public int deleteAll(PrjTeamVO vo) ;
 }

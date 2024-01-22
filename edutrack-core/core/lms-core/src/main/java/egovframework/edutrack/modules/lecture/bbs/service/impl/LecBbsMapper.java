@@ -13,21 +13,21 @@ public interface LecBbsMapper {
 	 * @parma BbsVO
 	 *
 	 */
-	public LecBbsVO select(LecBbsVO vo) throws Exception;
+	public LecBbsVO select(LecBbsVO vo) ;
 
 	/**
 	 * 게시판 정보를 등록한다.
 	 */
-	public int insert(LecBbsVO vo) throws Exception;
+	public int insert(LecBbsVO vo) ;
 
 	/**
 	 * 개설 과정 게시판 정보를 삭제한다.
 	 */
-	public int delete(LecBbsVO vo) throws Exception;
+	public int delete(LecBbsVO vo) ;
 
 	/**
 	 * 개설 과정의 모든 게시판 정보를 삭제한다.
 	 */
-	public int deleteAll(LecBbsVO vo)  throws Exception;
+	public int deleteAll(LecBbsVO vo)  ;
 
 }

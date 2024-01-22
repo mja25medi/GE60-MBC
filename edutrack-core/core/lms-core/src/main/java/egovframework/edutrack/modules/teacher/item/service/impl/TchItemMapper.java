@@ -22,7 +22,7 @@ public interface TchItemMapper {
 	 * @param int
 	 * @return
 	 */
-	public int selectKey()  throws Exception;
+	public int selectKey()  ;
 
 
 	/**
@@ -30,15 +30,15 @@ public interface TchItemMapper {
 	 * 
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<TchItemVO> listItem(TchItemVO teacherItemVO) throws Exception;
+	
+	public List<TchItemVO> listItem(TchItemVO teacherItemVO) ;
 	
 	/**
 	 * 강사 강의안 상세 정보
 	 * 
 	 * @return ProcessReslutListVO
 	 */
-	public TchItemVO selectItem(TchItemVO teacherItemVO) throws Exception;
+	public TchItemVO selectItem(TchItemVO teacherItemVO) ;
 	
 		
 	/**
@@ -46,14 +46,14 @@ public interface TchItemMapper {
 	 *  
 	 * @reurn 
 	 */
-	public int insertItem(TchItemVO teacherItemVO) throws Exception;
+	public int insertItem(TchItemVO teacherItemVO) ;
 	
 	/**
 	 * 강사강의안 수정
 	 *  
 	 * @reurn 
 	 */
-	public int updateItem(TchItemVO teacherItemVO) throws Exception;
+	public int updateItem(TchItemVO teacherItemVO) ;
 	
 	
 	/**
@@ -61,6 +61,6 @@ public interface TchItemMapper {
 	 *  
 	 * @reurn 
 	 */
-	public int deleteItem(TchItemVO teacherItemVO) throws Exception;
+	public int deleteItem(TchItemVO teacherItemVO) ;
 	
 }

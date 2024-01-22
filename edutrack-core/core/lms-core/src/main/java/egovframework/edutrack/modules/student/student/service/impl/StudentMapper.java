@@ -23,22 +23,22 @@ public interface StudentMapper {
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public abstract List<StudentVO> listStudent(StudentVO iStudentVO) throws Exception;
+	
+	public abstract List<StudentVO> listStudent(StudentVO iStudentVO) ;
 
 	/**
 	 * 학습자 목록 수 조회
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public abstract int count(StudentVO iStudentVO) throws Exception;
+	public abstract int count(StudentVO iStudentVO) ;
 	/**
 	 * 학습자 목록 조회 (페이징)
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public abstract List<StudentVO> listStudentPageing(StudentVO iStudentVO) throws Exception;
+	
+	public abstract List<StudentVO> listStudentPageing(StudentVO iStudentVO) ;
 
 	/**
 	 * 학습자 정보 조회
@@ -65,26 +65,26 @@ public interface StudentMapper {
      * 수강생 일괄등록
      * @param codeArray
      */
-	public abstract int insertStudentBatch(List<StudentVO> studentArray) throws Exception;
+	public abstract int insertStudentBatch(List<StudentVO> studentArray) ;
 
     /**
      * 수료 처리 일괄 취소
      * @param studentArray(StudentVO)
      */
-	public abstract int cancelComplete(List<StudentVO> studentArray) throws Exception;
+	public abstract int cancelComplete(List<StudentVO> studentArray) ;
 
 	/**
 	 * 수료 처리 일괄 취소
 	 * @param studentArray(StudentVO)
 	 */
-	public abstract int cancelRsltComplete(List<StudentVO> studentArray) throws Exception;
+	public abstract int cancelRsltComplete(List<StudentVO> studentArray) ;
 
 	/**
 	 * 수강생 등록 (프로시저 이용)
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public abstract int insertStudentSp(StudentVO iStudentVO) throws Exception;
+	public abstract int insertStudentSp(StudentVO iStudentVO) ;
 
 
 	/**
@@ -92,45 +92,45 @@ public interface StudentMapper {
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public abstract int updateStudent(StudentVO iStudentVO) throws Exception;
+	public abstract int updateStudent(StudentVO iStudentVO) ;
 	
 	/**
 	 * 수강 신청 정보 수정
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public abstract int updateStudentIde(StudentVO iStudentVO) throws Exception;
+	public abstract int updateStudentIde(StudentVO iStudentVO) ;
 
     /**
      * 수강 신청 일괄 인증
      * @param codeArray
      */
-	public abstract int confirmStudentBatch(Map<String, Object> studentInfo) throws Exception;
+	public abstract int confirmStudentBatch(Map<String, Object> studentInfo) ;
 
     /**
      * 수강 신청 일괄 인증
      * @param codeArray
      */
-	public abstract int confirmStudent(StudentVO iStudentVO) throws Exception;
+	public abstract int confirmStudent(StudentVO iStudentVO) ;
 
 	/**
      * 수강 신청 일괄 취소
      * @param codeArray
      */
-	public abstract int cancelStudent(List<StudentVO> studentArray) throws Exception;
+	public abstract int cancelStudent(List<StudentVO> studentArray) ;
 
     /**
      * 수강 신청 일괄 삭제
      * @param codeArray
      */
-	public abstract int deleteStudent(List<StudentVO> studentArray) throws Exception;
+	public abstract int deleteStudent(List<StudentVO> studentArray) ;
 
 	/**
 	 * 사용자 목록 조회 (전체) - 수강생 검색용
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	public abstract List<StudentVO> listUser(StudentVO iStudentVO) throws Exception;
+	public abstract List<StudentVO> listUser(StudentVO iStudentVO) ;
 
 
 	/**
@@ -160,7 +160,7 @@ public interface StudentMapper {
 	 * @param studentVO.crsCreCd
 	 * @reurn ProcessResultVO(StudentVO) : studentVO.stdYn
 	 */
-	public abstract StudentVO enrollCnt(StudentVO iStudentVO) throws Exception;
+	public abstract StudentVO enrollCnt(StudentVO iStudentVO) ;
 	
 	/**
 	 * 수강신청자수 검색
@@ -168,20 +168,20 @@ public interface StudentMapper {
 	 * @param studentVO.crsCreCd
 	 * @reurn ProcessResultVO(StudentVO) : studentVO.stdYn
 	 */
-	public abstract StudentVO selectMyStdNo(StudentVO iStudentVO) throws Exception;
+	public abstract StudentVO selectMyStdNo(StudentVO iStudentVO) ;
 
 	/**
 	 * 학습자의 학습정보를 검색한다.
 	 *
 	 * @return ProcessResultVO
 	 */
-	public abstract StudentVO selectStudentInfo(StudentVO iStudentVO) throws Exception;
+	public abstract StudentVO selectStudentInfo(StudentVO iStudentVO) ;
 
 	/**
      * 교번 일괄 저장
      * @param studentArray(StudentVO)
      */
-	public abstract int updateEduNo(List<StudentVO> studentArray) throws Exception;
+	public abstract int updateEduNo(List<StudentVO> studentArray) ;
 
 	/**
 	 * 수강생 자동 수료 처리 (프로시저 이용)
@@ -190,7 +190,7 @@ public interface StudentMapper {
 	 * @param StudentVO
 	 * @reurn ProcessResultVO
 	 */
-	public abstract int autoCompleteSp(StudentVO iStudentVO) throws Exception;
+	public abstract int autoCompleteSp(StudentVO iStudentVO) ;
 
 	/**
 	 * 수강생 수료 처리 (프로시저 이용)
@@ -198,7 +198,7 @@ public interface StudentMapper {
 	 * @param StudentVO
 	 * @reurn ProcessResultVO
 	 */
-	public abstract int reshAutoCompleteSp(StudentVO iStudentVO) throws Exception;
+	public abstract int reshAutoCompleteSp(StudentVO iStudentVO) ;
 
 	/**
 	 * 수강생 수료 처리 (프로시저 이용)
@@ -206,29 +206,29 @@ public interface StudentMapper {
 	 * @param StudentVO
 	 * @reurn ProcessResultVO
 	 */
-	public abstract int checkCompleteSp(StudentVO iStudentVO) throws Exception;
+	public abstract int checkCompleteSp(StudentVO iStudentVO) ;
 
 	/**
      * 수강신청 마이그래에선용 업데이트 쿼리
      * @param studentArray(StudentVO)
      */
-	public abstract int updateDateForMigration(List<StudentVO> studentArray) throws Exception;
+	public abstract int updateDateForMigration(List<StudentVO> studentArray) ;
 
 	/**
 	 * 개설 과정 정보 수정시
 	 * 해당 과정의 학습자 수강일자, 청강일자 조정
 	 * @reurn ProcessResultVO
 	 */
-	public abstract int updateEnrlDuration(StudentVO iStudentVO) throws Exception;
+	public abstract int updateEnrlDuration(StudentVO iStudentVO) ;
 
-	public abstract int addMergeStudent(StudentVO newStudentVO) throws Exception;
+	public abstract int addMergeStudent(StudentVO newStudentVO) ;
 
 
 	/**
 	 * 수강생의 분반 정보를 수정한다.
 	 * @reurn ProcessResultVO
 	 */
-	public abstract int updateDecls(StudentVO iStudentVO) throws Exception;
+	public abstract int updateDecls(StudentVO iStudentVO) ;
 
 	/**
 	 * 성적 우수자 선정/해제
@@ -237,13 +237,13 @@ public interface StudentMapper {
 	 * @param iStudentVO
 	 * @return ProcessResultVO<StudentVO>
 	 */
-	public abstract int updateScoreEclt(StudentVO iStudentVO) throws Exception;
+	public abstract int updateScoreEclt(StudentVO iStudentVO) ;
 
     /**
      * 수강 신청 일괄 인증
      * @param codeArray
      */
-	public abstract int confirmDepositStudent(List<StudentVO> studentArray) throws Exception;
+	public abstract int confirmDepositStudent(List<StudentVO> studentArray) ;
 
 
 	/**
@@ -251,14 +251,14 @@ public interface StudentMapper {
 	 *
 	 * @return  ProcessResultVO
 	 */
-	public abstract StudentVO selectCrsRatio(StudentVO iStudentVO) throws Exception;
+	public abstract StudentVO selectCrsRatio(StudentVO iStudentVO) ;
 
 	/**
 	 * 뒤3자리 수료번호 최고값 + 1 을 구해온다.
 	 * @param dto
 	 * @return
 	 */
-	public abstract StudentVO getCompleteNo(StudentVO iStudentVO) throws Exception;
+	public abstract StudentVO getCompleteNo(StudentVO iStudentVO) ;
 
 	/**
 	 * 수료 처리
@@ -267,7 +267,7 @@ public interface StudentMapper {
 	 * @param iStudentVO
 	 * @return ProcessResultVO<StudentVO>
 	 */
-	public abstract int completeSuccess(StudentVO iStudentVO) throws Exception;
+	public abstract int completeSuccess(StudentVO iStudentVO) ;
 
 	/**
 	 * 미수료 처리
@@ -276,9 +276,9 @@ public interface StudentMapper {
 	 * @param iStudentVO
 	 * @return ProcessResultVO<StudentVO>
 	 */
-	public abstract int completeFailed(StudentVO iStudentVO) throws Exception;
+	public abstract int completeFailed(StudentVO iStudentVO) ;
 	
-	public abstract int countForStdManage(StudentVO vo) throws Exception;
+	public abstract int countForStdManage(StudentVO vo) ;
 	
 	public abstract StudentVO selectStdForAttend(StudentVO vo);
 	
@@ -286,7 +286,7 @@ public interface StudentMapper {
 	
 	public abstract List<BookmarkVO> stdBookmarkListForAttend(StudentVO vo);
 
-	public abstract List<StudentVO> listStudentPageingForStdManage(StudentVO vo) throws Exception;
+	public abstract List<StudentVO> listStudentPageingForStdManage(StudentVO vo) ;
 
 	/**
 	 * [HRD] 결제번호로 수강대기(E)인 수강생, 수강중(S) 상태로 변경
@@ -459,14 +459,14 @@ public interface StudentMapper {
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	public abstract List<StudentVO> listStdCertCourse(CourseVO courseVO) throws Exception;
+	public abstract List<StudentVO> listStdCertCourse(CourseVO courseVO) ;
 	
 	/**
 	 * 자격증 과정 학습자 목록 조회 (개인)
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	public abstract StudentVO stdCertCourse(StudentVO iStudentVO) throws Exception;
+	public abstract StudentVO stdCertCourse(StudentVO iStudentVO) ;
 	
 	
 	/**
@@ -474,28 +474,28 @@ public interface StudentMapper {
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	public abstract int updateCertStudent(StudentVO iStudentVO) throws Exception;
+	public abstract int updateCertStudent(StudentVO iStudentVO) ;
 	
 	/**
 	 * 자격증 승인(관리자)
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	public abstract int updateCertStudentByadmin(StudentVO iStudentVO) throws Exception;
+	public abstract int updateCertStudentByadmin(StudentVO iStudentVO) ;
 
 	/**
 	 * 자격증 과정 합격처리
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	public abstract int updateStudentCertPass(StudentVO iStudentVO) throws Exception;
+	public abstract int updateStudentCertPass(StudentVO iStudentVO) ;
 	
 	/**
 	 * 자격증 과정 삭제 시 수강생 삭제
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	public abstract int deleteCreateCourseStd(StudentVO iStudentVO) throws Exception;
+	public abstract int deleteCreateCourseStd(StudentVO iStudentVO) ;
 
 	/**
 	 * 아이디로 수강생 번호 조회

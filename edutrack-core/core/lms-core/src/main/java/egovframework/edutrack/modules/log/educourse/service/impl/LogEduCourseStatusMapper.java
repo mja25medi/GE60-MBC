@@ -22,84 +22,84 @@ public interface LogEduCourseStatusMapper {
 	 * 팀별 /년도 월에 대한 과정 운영 현황 목록 
 	 * @param  LogEduTeamStatusVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogEduTeamStatusVO> listTeamStatus(LogEduTeamStatusVO vo) throws Exception;
+	
+	public List<LogEduTeamStatusVO> listTeamStatus(LogEduTeamStatusVO vo) ;
 
     /**
 	 * 팀별, 년,월별 개설과정 목록 
 	 * @param  LogEduCourseStatusVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogEduCourseStatusVO> listTeamStatus(LogEduCourseStatusVO vo) throws Exception;
+	
+	public List<LogEduCourseStatusVO> listTeamStatus(LogEduCourseStatusVO vo) ;
 	
 	/**
 	 * 팀별 과정 운영 현황 - 개설 과정 목록을 반환한다.
 	 * @param iQuizStareDTO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogEduCourseStatusVO> listCourseStatus(LogEduCourseStatusVO vo) throws Exception;
+	
+	public List<LogEduCourseStatusVO> listCourseStatus(LogEduCourseStatusVO vo) ;
 	
 	/**
 	 * 팀별 과정 운영 현황 - 개설 과정 목록을 반환한다.
 	 * @param iQuizStareDTO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogEduCourseStatusVO> deptStatusList(LogEduCourseStatusVO vo) throws Exception;
+	
+	public List<LogEduCourseStatusVO> deptStatusList(LogEduCourseStatusVO vo) ;
 	
 	/**
 	 * 팀별 과정 운영 현황 - 개설 과정 목록을 반환한다.
 	 * @param iQuizStareDTO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public int count(LogEduCourseStatusVO VO) throws DataAccessException ;
+	
+	public int count(LogEduCourseStatusVO VO)  ;
 	
 	/**
 	 * 팀별 과정 운영 현황 - 개설 과정 목록을 반환한다. (페이징)
 	 * @param iQuizStareDTO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogEduCourseStatusVO> listCourseStatusPageing(LogEduCourseStatusVO VO) throws DataAccessException ;
+	
+	public List<LogEduCourseStatusVO> listCourseStatusPageing(LogEduCourseStatusVO VO)  ;
 	
 	
     /**
 	 * 교육 총괄 실적표용 과정 결과 목록 
 	 * @param  LogEduCourseStatusVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogEduCourseStatusVO> listCourseResult(LogEduCourseStatusVO vo) throws Exception;
+	
+	public List<LogEduCourseStatusVO> listCourseResult(LogEduCourseStatusVO vo) ;
 	
 	/**
 	 * 학습관리- 상세정보 엑셀 조회
 	 * 수강생의 성적 및 나이순으로 오더를 해온다.
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<EduResultVO> listStdEduResultExcel(LogEduCourseStatusVO vo) throws Exception;
+	
+	public List<EduResultVO> listStdEduResultExcel(LogEduCourseStatusVO vo) ;
 
     /**
 	 * 교육 총괄 실적표용 과정 결과 목록 
 	 * @param  LogEduCourseStatusVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogEduCourseStatusVO> listCourseResultDash(LogEduCourseStatusVO vo) throws Exception;
+	
+	public List<LogEduCourseStatusVO> listCourseResultDash(LogEduCourseStatusVO vo) ;
 	
     /**
 	 * 교육 총괄 실적표용 과정 결과 목록 
 	 * @param  LogEduOrgStatusVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	public LogEduOrgStatusVO selectResult(LogEduOrgStatusVO vo) throws Exception;
+	public LogEduOrgStatusVO selectResult(LogEduOrgStatusVO vo) ;
 }

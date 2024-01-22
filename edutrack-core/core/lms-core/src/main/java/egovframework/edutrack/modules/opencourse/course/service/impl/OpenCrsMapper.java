@@ -13,31 +13,31 @@ public interface OpenCrsMapper {
 	 * @param int
 	 * @return
 	 */
-	public String selectKey()  throws Exception;
+	public String selectKey()  ;
 
 	/**
 	 * 공개강좌 목록
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OpenCrsVO> list(OpenCrsVO vo) throws Exception;
+	
+	public List<OpenCrsVO> list(OpenCrsVO vo) ;
 
 	/**
      * 공개강좌 페이징 목록
      *
      * @return ProcessReslutListVO
      */
-	@SuppressWarnings("unchecked")
-	public List<OpenCrsVO> listPageing(OpenCrsVO vo) throws Exception;
+	
+	public List<OpenCrsVO> listPageing(OpenCrsVO vo) ;
 	
 	/**
      * 공개강좌 페이징 목록수를 반환
      *
      * @return ProcessReslutListVO
      */
-	@SuppressWarnings("unchecked")
-	public int count(OpenCrsVO vo) throws Exception;
+	
+	public int count(OpenCrsVO vo) ;
 	
 
 	/**
@@ -45,66 +45,66 @@ public interface OpenCrsMapper {
 	 *
 	 * @return ProcessResultVO
 	 */
-	public OpenCrsVO select(OpenCrsVO vo) throws Exception;
+	public OpenCrsVO select(OpenCrsVO vo) ;
 
 	/**
 	 * 공개강좌 정보 등록
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int insert(OpenCrsVO vo) throws Exception;
+	public int insert(OpenCrsVO vo) ;
 
 	/**
 	 * 공개강좌 정보 수정
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int update(OpenCrsVO vo) throws Exception;
+	public int update(OpenCrsVO vo) ;
 
     /**
      * 공개강좌 정보 일괄 수정
      * @param codeArray
      */
-	public int updateBatch(List<OpenCrsVO> itemArray) throws Exception;
+	public int updateBatch(List<OpenCrsVO> itemArray) ;
 
 	/**
 	 * 공개강좌 정보 삭제
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int delete(OpenCrsVO vo) throws Exception;
+	public int delete(OpenCrsVO vo) ;
 
 	/**
 	 * 홈페이지 공개강좌 목록
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OpenCrsVO> listCourse(OpenCrsVO vo) throws Exception;
+	
+	public List<OpenCrsVO> listCourse(OpenCrsVO vo) ;
 
 	/**
      * 홈페이지 공개강좌 페이징 목록
      *
      * @return ProcessReslutListVO
      */
-	@SuppressWarnings("unchecked")
-	public List<OpenCrsVO> listCoursePageing(OpenCrsVO vo) throws Exception;
+	
+	public List<OpenCrsVO> listCoursePageing(OpenCrsVO vo) ;
 
 	/**
      * 홈페이지 공개강좌 페이징 목록수 반환
      *
      * @return ProcessReslutListVO
      */
-	@SuppressWarnings("unchecked")
-	public int listCoursePageingCount(OpenCrsVO vo) throws Exception;
+	
+	public int listCoursePageingCount(OpenCrsVO vo) ;
 	
 	/**
 	 * 과목 사용중인 공개강좌 목록
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OpenCrsVO> listSubInfo(OpenCrsVO vo) throws Exception;
+	
+	public List<OpenCrsVO> listSubInfo(OpenCrsVO vo) ;
 
 
 

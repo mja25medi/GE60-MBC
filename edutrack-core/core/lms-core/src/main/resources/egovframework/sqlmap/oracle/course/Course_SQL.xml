@@ -49,7 +49,12 @@
 		       , A.REG_DTTM 													
 		       , A.MOD_NO 														
 			    , (SELECT FN_GET_USER_NAME(A.MOD_NO) FROM DUAL) AS MOD_NM		
-		       , A.MOD_DTTM 													
+		       , A.MOD_DTTM
+		       , A.THUMB_FILE_SN 	
+  		       , A.META_TAG 	
+  		       , A.CRS_SVC_TYPE							
+  		       , A.SIMSA_CODE
+  		       , A.TRACSE_ID	 													
 		       , B.CRS_CTGR_NM													
 		       , B.CRS_CTGR_PATH												
 		       , B.CRS_CTGR_PATH_NM											
@@ -270,7 +275,8 @@
 	       , PRSN_CERT_YN 							
 	       , CPLT_HANDL_TYPE 						
 	       , SCORE_HANDL_MTHD 						
-	       , CERT_ISSUE_YN 						
+	       , CERT_ISSUE_YN
+	       , CRS_SVC_TYPE 						
 	       , EDU_DIV_CD 							
 	       , CRS_TYPE_CD 							
 	       , CRS_LVL_CD 							
@@ -302,7 +308,11 @@
 	       , MOD_NO 								
 	       , MOD_DTTM 								
 	       , NOP_LIMIT_YN 						
-	       , OFLN_EDU_PLACE 				
+	       , OFLN_EDU_PLACE
+	       , THUMB_FILE_SN 		
+	       , META_TAG		
+	       , SIMSA_CODE
+	       , TRACSE_ID				
 	 ) VALUES (									
 	         #{crsCd} 								
 	       , #{orgCd} 								
@@ -314,7 +324,8 @@
 	       , #{prsnCertYn} 							
 	       , #{cpltHandlType} 						
 	       , #{scoreHandlMthd} 						
-	       , #{certIssueYn} 							
+	       , #{certIssueYn} 
+	       , #{crsSvcType}								
 	       , #{eduDivCd} 							
 	       , #{crsTypeCd} 							
 	       , #{crsLvlCd} 							
@@ -346,7 +357,11 @@
 	       , #{modNo} 								
 	       , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')	
 	       , #{nopLimitYn} 											
-	       , #{oflnEduPlace} 											
+	       , #{oflnEduPlace} 
+	       , #{thumbFileSn}											
+	       , #{metaTag}	
+	       , #{simsaCode}		
+	       , #{tracseId}											
 	 ) 											  	
     </insert>
     <update id="update" parameterType="courseVO">
@@ -358,7 +373,8 @@
 		       , ENRL_CERT_MTHD = #{enrlCertMthd} 					
 		       , PRSN_CERT_YN = #{prsnCertYn} 						
 		       , CPLT_HANDL_TYPE = #{cpltHandlType} 					
-		       , SCORE_HANDL_MTHD = #{scoreHandlMthd} 				
+		       , SCORE_HANDL_MTHD = #{scoreHandlMthd} 	
+		       , CRS_SVC_TYPE = #{crsSvcType}				
 		       , CERT_ISSUE_YN = #{certIssueYn} 						
 		       , EDU_DIV_CD = #{eduDivCd} 							
 		       , CRS_TYPE_CD = #{crsTypeCd} 							
@@ -389,7 +405,11 @@
 		       , MOD_NO = #{modNo} 									
 		       , MOD_DTTM = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')	
 		       , NOP_LIMIT_YN = #{nopLimitYn} 											
-		       , OFLN_EDU_PLACE = #{oflnEduPlace}  				
+		       , OFLN_EDU_PLACE = #{oflnEduPlace}  		
+		       , THUMB_FILE_SN 	= #{thumbFileSn}			
+		       , META_TAG = #{metaTag}  	
+		       , SIMSA_CODE = #{simsaCode}		
+	           , TRACSE_ID = #{tracseId} 				
 		   WHERE CRS_CD = #{crsCd}														  	
     </update>
 
@@ -487,7 +507,8 @@
 		       , A.CRS_NM 														
 		       , A.CRS_CTGR_CD 												
 		       , A.CRS_OPER_MTHD 												
-		       , A.CRS_OPER_TYPE 												
+		       , A.CRS_OPER_TYPE 
+		       , A.CRS_SVC_TYPE 												
 		       , A.USE_YN 														
 		       , A.REG_NO 														
 			    , (SELECT FN_GET_USER_NAME(A.REG_NO) FROM DUAL) AS REG_NM		
@@ -517,5 +538,42 @@
 		 AND CRS_YEAR = #{crsYear}
 		 AND ORG_CD = #{orgCd}
 		ORDER BY CRS_NM ASC
+	</select>
+	
+	<select id="selectCrsSvcTypeCre" parameterType="courseVO" resultType="courseVO">
+		/*
+			 SQL ID : selectCrsSvcType
+			 설  명 : 개설과정 서비스 타입 조회(R:국비지원 / S:개발원 자체)
+	 	*/
+		SELECT A.CRS_SVC_TYPE 
+			, A.CRS_OPER_MTHD
+		FROM tb_crs_crs  A, tb_crs_cre_Crs B
+		WHERE A.CRS_CD = B.CRS_CD 
+		AND B.CRS_CRE_CD = #{crsCreCd}
+	</select>
+	
+	<select id="selectCrsSvcTypeCrs" parameterType="courseVO" resultType="courseVO">
+		/*
+			 SQL ID : selectCrsSvcType
+			 설  명 : 개설과정 서비스 타입 조회(R:국비지원 / S:개발원 자체)
+	 	*/
+		SELECT CRS_SVC_TYPE
+			, CRS_OPER_MTHD
+		  FROM tb_crs_crs
+		 WHERE CRS_CD = #{crsCd}
+	</select>
+	
+	
+	<select id="selectCrsSvcTypeStd" parameterType="createCourseVO" resultType="courseVO">
+		/*
+			 SQL ID : selectCrsSvcType
+			 설  명 : 개설과정 서비스 타입 조회(R:국비지원 / S:개발원 자체)
+	 	*/
+		SELECT A.CRS_SVC_TYPE 
+			, A.CRS_OPER_MTHD
+		FROM tb_crs_crs  A, tb_crs_cre_Crs B, tb_std_std C
+		WHERE A.CRS_CD = B.CRS_CD 
+		AND B.CRS_CRE_CD = C.CRS_CRE_CD 
+		AND C.STD_NO = #{stdNo}
 	</select>
 </mapper>		

@@ -12,28 +12,28 @@ public interface PrjAssignmentSendMapper {
 	 * @param vo
 	 * @return ProcessResultVO
 	 */
-	public int insert(PrjAssignmentSendVO vo) throws Exception;
+	public int insert(PrjAssignmentSendVO vo) ;
 
 	/**
 	 * 팀프로젝트 과제 조회
 	 * @param vo
 	 * @return ProcessResultVO
 	 */
-	public PrjAssignmentSendVO select(PrjAssignmentSendVO vo) throws Exception;
+	public PrjAssignmentSendVO select(PrjAssignmentSendVO vo) ;
 
 	/**
 	 * 팀프로젝트 과제 수정
 	 * @param vo
 	 * @return ProcessResultVO
 	 */
-	public int update(PrjAssignmentSendVO vo) throws Exception;
+	public int update(PrjAssignmentSendVO vo) ;
 
 	/**
 	 * 팀프로젝트 과제 삭제
 	 * @param vo
 	 * @return ProcessResultVO
 	 */
-	public int delete(PrjAssignmentSendVO vo) throws Exception;
+	public int delete(PrjAssignmentSendVO vo) ;
 
 
 }

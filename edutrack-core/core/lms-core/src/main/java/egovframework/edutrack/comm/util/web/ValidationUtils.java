@@ -20,13 +20,13 @@ public class ValidationUtils {
 	}
 
 	public static boolean isNull( List<?> list) {
-		if ( list.isEmpty() || list == null)
+		if (list == null || list.isEmpty())
 			return true;
 		return false;
 	}
 
 	public static boolean isNull( Set<?> set) {
-		if ( set.isEmpty() || set == null)
+		if (set == null || set.isEmpty())
 			return true;
 		return false;
 	}

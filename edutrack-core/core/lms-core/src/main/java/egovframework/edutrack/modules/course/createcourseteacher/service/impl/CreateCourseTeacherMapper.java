@@ -2,8 +2,6 @@ package egovframework.edutrack.modules.course.createcourseteacher.service.impl;
 
 import java.util.List;
 
-import org.springframework.dao.DataAccessException;
-
 import egovframework.edutrack.modules.course.createcourseteacher.service.TeacherVO;
 import egovframework.edutrack.modules.user.info.service.UsrUserInfoVO;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
@@ -18,22 +16,22 @@ public interface CreateCourseTeacherMapper {
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<TeacherVO> listTeacher(TeacherVO iTeacherVO)  throws DataAccessException ;
+	
+	public List<TeacherVO> listTeacher(TeacherVO iTeacherVO)   ;
 
 	/**
 	 * 개설 과정 강사 정보 조회
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	public TeacherVO selectTeacher(TeacherVO iTeacherVO)  throws DataAccessException ;
+	public TeacherVO selectTeacher(TeacherVO iTeacherVO)   ;
 
 	/**
 	 * 개설 과정 강사인지 확인
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	public TeacherVO isTeacher(TeacherVO iTeacherVO)  throws DataAccessException ;
+	public TeacherVO isTeacher(TeacherVO iTeacherVO)   ;
 
 
 	/**
@@ -41,34 +39,34 @@ public interface CreateCourseTeacherMapper {
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int insertTeacher(TeacherVO iTeacherVO)  throws DataAccessException ;
+	public int insertTeacher(TeacherVO iTeacherVO)   ;
 
 	/**
 	 * 개설 과정 강사 수정
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int updateTeacher(TeacherVO iTeacherVO)  throws DataAccessException ;
+	public int updateTeacher(TeacherVO iTeacherVO)   ;
 
     /**
      * 개설 과정 강사 정보의 복수의 레코드를 Update하고 결과를 반환한다.
      * @param List<WordDictCtgrVO>
      */
-	public int updateBatch(List<TeacherVO> itemArray)   throws DataAccessException ;
+	public int updateBatch(List<TeacherVO> itemArray)    ;
 
 	/**
 	 * 개설 과정 강사 삭제
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int deleteTeacher(TeacherVO iTeacherVO)  throws DataAccessException ;
+	public int deleteTeacher(TeacherVO iTeacherVO)   ;
 
 	/**
 	 * 개설 과정 강사 모두 삭제
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int deleteTeacherAll(TeacherVO iTeacherVO)  throws DataAccessException ;
+	public int deleteTeacherAll(TeacherVO iTeacherVO)   ;
 
 
 	/**
@@ -77,7 +75,7 @@ public interface CreateCourseTeacherMapper {
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int insertCopy(TeacherVO iTeacherVO)   throws DataAccessException ;
+	public int insertCopy(TeacherVO iTeacherVO)    ;
 
 	/**
 	 * 사용자 정보중 강사/튜터인 사용자의 목록중
@@ -85,8 +83,8 @@ public interface CreateCourseTeacherMapper {
 	 * @param CrsTchVO
 	 * @reurn ProcessResultVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<UsrUserInfoVO> listSearch(TeacherVO VO)  throws DataAccessException ;
+	
+	public List<UsrUserInfoVO> listSearch(TeacherVO VO)   ;
 
 	/**
 	 * 회차 강사, 튜터 수정
@@ -95,6 +93,6 @@ public interface CreateCourseTeacherMapper {
 	 */
 	public int updateCrsCreTeacher(TeacherVO teacherVO);
 
-	public List<UsrUserInfoVO> listAllSearch(TeacherVO VO)  throws DataAccessException ;
+	public List<UsrUserInfoVO> listAllSearch(TeacherVO VO)   ;
 
 }

@@ -220,6 +220,9 @@
 		modalBox = new $M.ModalDialog({
 			"modalid" : "modal1"
 		});
+		modalBoxChild = new $M.ModalDialog({
+			"modalid" : "modal1"
+		});
 		$('.inputNumber').inputNumber();	// 숫자만 입력되도록 설정.
 		ItemDTO.sbjCd = "${vo.sbjCd}"; // 과목 코드 설정
 		
@@ -237,6 +240,10 @@
 	function modalBoxClose() {
 		modalBox.clear();
 		modalBox.close();
+	}
+	function modalBoxChildClose() {
+		modalBoxChild.clear();
+		modalBoxChild.close();
 	}
 
 	function tabBox(str) {
@@ -594,7 +601,7 @@
 			}, function (resultDTO) {
 				$("#contentsWriteForm").show();
 				var item = resultDTO.returnVO;
-				if(resultDTO.unitLvl == 1){
+				/* if(resultDTO.unitLvl == 1){
 					$("#unitLvNm").text('차시명');
 					$("#prgrChkTypeTr").show();
 					$("#prgrChkYnTd").show();
@@ -604,7 +611,12 @@
 					$("#prgrChkTypeTr").hide();
 					$("#prgrChkYnTd").hide();
 					$("#atchFilePathTr").hide();
-				}
+				} */
+				$("#unitLvNm").text('차시명');
+				$("#prgrChkTypeTr").show();
+				$("#prgrChkYnTd").show();
+				$("#atchFilePathTr").show();
+				
 				$("#contentsForm").find('input[name="sbjCd"]').val(ItemDTO.sbjCd);
 				$("#contentsForm").find('input[name="unitCd"]').val(item.unitCd);
 				$("#contentsForm").find('input[name="unitType"]').val(item.unitType);

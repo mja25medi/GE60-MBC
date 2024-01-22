@@ -11,8 +11,8 @@ public interface AtalkMapper {
      * 알림톡을 등록한다.  
      * @param  AtalkVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(AtalkVO vo) throws Exception;
+    public int insert(AtalkVO vo) ;
     
 }

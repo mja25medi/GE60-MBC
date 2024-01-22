@@ -18,30 +18,30 @@ public interface SubjectOfflineMapper {
 	 *
 	 * @return ProcessResultVO
 	 */
-	public String selectKey()  throws DataAccessException ;
+	public String selectKey()   ;
 	/**
 	 * 오프라인 과목 목록 조회
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OfflineSubjectVO> list(OfflineSubjectVO iOfflineSubjectVO)  throws DataAccessException ;
+	
+	public List<OfflineSubjectVO> list(OfflineSubjectVO iOfflineSubjectVO)   ;
 
 	/**
 	 * 오프라인 과목 페이징 목록 조회
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OfflineSubjectVO> listPageing(OfflineSubjectVO iOfflineSubjectVO)  throws DataAccessException ;
+	
+	public List<OfflineSubjectVO> listPageing(OfflineSubjectVO iOfflineSubjectVO)   ;
 
 	/**
 	 * 오프라인 과목 페이징 목록 조회
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public int count(OfflineSubjectVO iOfflineSubjectVO)  throws DataAccessException ;
+	
+	public int count(OfflineSubjectVO iOfflineSubjectVO)   ;
 
 	
 	/**
@@ -49,29 +49,29 @@ public interface SubjectOfflineMapper {
 	 *
 	 * @return ProcessResultVO
 	 */
-	public OfflineSubjectVO select(OfflineSubjectVO iOfflineSubjectVO)  throws DataAccessException ;
+	public OfflineSubjectVO select(OfflineSubjectVO iOfflineSubjectVO)   ;
 
 	/**
 	 * 오프라인 과목 목록 조회 (개설과정에 속하지 않은 과목만 검색 함)
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OfflineSubjectVO> listSearch(OfflineSubjectVO iOfflineSubjectVO)  throws DataAccessException ;
+	
+	public List<OfflineSubjectVO> listSearch(OfflineSubjectVO iOfflineSubjectVO)   ;
 
 	/**
 	 * 오프라인 과목 등록
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int insert(OfflineSubjectVO iOfflineSubjectVO)  throws DataAccessException ;
+	public int insert(OfflineSubjectVO iOfflineSubjectVO)   ;
 
 	/**
 	 * 오프라인 과목 수정
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int update(OfflineSubjectVO iOfflineSubjectVO)  throws DataAccessException ;
+	public int update(OfflineSubjectVO iOfflineSubjectVO)   ;
 
 
 	/**
@@ -79,5 +79,5 @@ public interface SubjectOfflineMapper {
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int delete(OfflineSubjectVO iOfflineSubjectVO)   throws DataAccessException ;
+	public int delete(OfflineSubjectVO iOfflineSubjectVO)    ;
 }

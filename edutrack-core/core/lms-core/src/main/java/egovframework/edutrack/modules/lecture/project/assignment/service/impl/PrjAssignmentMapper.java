@@ -13,35 +13,35 @@ public interface PrjAssignmentMapper {
 	 * @param int
 	 * @return
 	 */
-	public int selectKey()  throws Exception;
+	public int selectKey()  ;
 	/**
 	 * 팀프로젝트 과제 등록
 	 * @param vo
 	 * @return ProcessResultListVO
 	 */
-	public int insert(PrjAssignmentVO vo) throws Exception;
+	public int insert(PrjAssignmentVO vo) ;
 
 	/**
 	 * 팀프로젝트 과제 조회
 	 * @param vo
 	 * @return ProcessResultListVO
 	 */
-	public PrjAssignmentVO select(PrjAssignmentVO vo) throws Exception;
+	public PrjAssignmentVO select(PrjAssignmentVO vo) ;
 
 	/**
 	 * 팀프로젝트 과제 수정
 	 * @param vo
 	 * @return ProcessResultListVO
 	 */
-	public int update(PrjAssignmentVO vo) throws Exception;
+	public int update(PrjAssignmentVO vo) ;
 
 	/**
 	 * 팀프로젝트 과제 삭제
 	 * @param vo
 	 * @return ProcessResultListVO
 	 */
-	public int delete(PrjAssignmentVO vo) throws Exception;
+	public int delete(PrjAssignmentVO vo) ;
 
-	public int deletePrjAll(PrjAssignmentVO vo) throws Exception;
+	public int deletePrjAll(PrjAssignmentVO vo) ;
 
 }

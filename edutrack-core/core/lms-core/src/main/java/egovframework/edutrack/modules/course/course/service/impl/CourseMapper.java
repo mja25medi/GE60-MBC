@@ -2,11 +2,8 @@ package egovframework.edutrack.modules.course.course.service.impl;
 
 import java.util.List;
 
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
-
 import egovframework.edutrack.modules.course.course.service.CourseVO;
+import egovframework.edutrack.modules.course.createcourse.service.CreateCourseVO;
 import egovframework.edutrack.modules.system.file.service.SysFileVO;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 
@@ -32,8 +29,7 @@ public interface CourseMapper {
 	 * @param pageScale
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CourseVO> list(CourseVO VO)  throws DataAccessException ;
+	public List<CourseVO> list(CourseVO VO)   ;
 
 	/**
 	 * 과정 목록을 조회하여 반환한다.
@@ -43,25 +39,25 @@ public interface CourseMapper {
 	 * @param listScale
 	 * @param pageScale
 	 * @return
-	 * @throws DataAccessException
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public List<CourseVO> listPageing(CourseVO VO)
-			throws DataAccessException ;
+			 ;
 	/**
 	 * 과정 목록을 조회  수를 반환한다.
 	 * : 페이징 정보 포함(pageInfo)
 	 * @param VO
 	 * @return
-	 * @throws DataAccessException
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public int count(CourseVO VO)
-			throws DataAccessException ;
 	
-	@SuppressWarnings("unchecked")
+	public int count(CourseVO VO)
+			 ;
+	
+	
 	public int countCourse(CourseVO VO)
-			throws DataAccessException ;
+			 ;
 
 	/**
 	 * 과정 목록을 조회하여 반환한다.
@@ -72,14 +68,14 @@ public interface CourseMapper {
 	 * @param pageScale
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CourseVO> listForEnroll(CourseVO VO) throws DataAccessException ;
+	
+	public List<CourseVO> listForEnroll(CourseVO VO)  ;
 
 	
 	/**
 	 * 수강신청내역 조회
 	 */
-	public List<CourseVO> listUserStdCourse(CourseVO VO) throws DataAccessException;
+	public List<CourseVO> listUserStdCourse(CourseVO VO) ;
 
 	/**
 	 * 과정 정보의 단일행 정보를 검색하여 반환한다.
@@ -87,14 +83,14 @@ public interface CourseMapper {
 	 * @param CourseCretermVO
 	 * @return
 	 */
-	public CourseVO select(CourseVO VO) throws DataAccessException ;
+	public CourseVO select(CourseVO VO)  ;
 
 	/**
 	 * 과정 정보를 등록합니다.
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int insert(CourseVO VO) throws DataAccessException ;
+	public int insert(CourseVO VO)  ;
 
 	/**
 	 * 과정 코드 조회
@@ -102,30 +98,30 @@ public interface CourseMapper {
 	 * @param
 	 * @return ProcessResultVO
 	 */
-	public String selectCrsCd() throws DataAccessException ;
+	public String selectCrsCd()  ;
 
 	/**
 	 * 과정 정보 수정
 	 * @param CourseCretermVO
 	 * @reurn ProcessResultVO
 	 */
-	public int update(CourseVO VO) throws DataAccessException ;
+	public int update(CourseVO VO)  ;
 
 	/**
 	 * 과정 정보 삭제
 	 * @param CourseCretermVO
 	 * @reurn ProcessResultVO
 	 */
-	public int delete(CourseVO VO) throws DataAccessException ;
+	public int delete(CourseVO VO)  ;
 
 
 	/**
 	 * 과정명으로 중복확인
 	 * @param CourseCretermVO
 	 * @return
-	 * @throws DataAccessException
+	 * @
 	 */
-	public CourseVO isDupulicateByCrsNm(CourseVO VO) throws DataAccessException ;
+	public CourseVO isDupulicateByCrsNm(CourseVO VO)  ;
 
 	/**
 	 * 과정 목록을 조회하여 반환한다.
@@ -136,8 +132,7 @@ public interface CourseMapper {
 	 * @param pageScale
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CourseVO> listForEnrollPaging(CourseVO VO) throws DataAccessException ;
+	public List<CourseVO> listForEnrollPaging(CourseVO VO)  ;
 
 	/**
 	 * 과정 목록수 반환
@@ -148,8 +143,7 @@ public interface CourseMapper {
 	 * @param pageScale
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public int listForEnrollPagingCount(CourseVO VO) throws DataAccessException ;
+	public int listForEnrollPagingCount(CourseVO VO)  ;
 
 	
 	/**
@@ -160,11 +154,11 @@ public interface CourseMapper {
 	 * @param listScale
 	 * @param pageScale
 	 * @return
-	 * @throws DataAccessException
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public List<CourseVO> listSubInfo(CourseVO VO)
-			throws DataAccessException ;
+			 ;
 
 	/**
 	 * 과정 목록을 조회하여 반환한다. - 오프라인
@@ -174,17 +168,17 @@ public interface CourseMapper {
 	 * @param listScale
 	 * @param pageScale
 	 * @return
-	 * @throws DataAccessException
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CourseVO> listSubInfoOffline(CourseVO VO)
-			throws DataAccessException ;
-
-	@SuppressWarnings("unchecked")
-	public List<CourseVO> listUserCourse(String userNo)
-			throws DataAccessException ;
 	
-	@SuppressWarnings("unchecked")
+	public List<CourseVO> listSubInfoOffline(CourseVO VO)
+			 ;
+
+	
+	public List<CourseVO> listUserCourse(String userNo)
+			 ;
+	
+	
 	public List<CourseVO> listStudentPaymentCourseByUserNo(CourseVO VO);
 	
 	public List<CourseVO> listForCourseStatus(CourseVO vo);
@@ -195,9 +189,16 @@ public interface CourseMapper {
 	 * @param VO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CourseVO> listCourse(CourseVO VO)  throws DataAccessException ;
+	public List<CourseVO> listCourse(CourseVO VO)   ;
 
-	@SuppressWarnings("unchecked")
-	public List<SysFileVO> fileListCourse(CourseVO VO) throws DataAccessException ;;
+	public List<SysFileVO> fileListCourse(CourseVO VO)  ;
+	
+	/**
+	 *  국비지원(산인공 연계 과정) 확인 여부
+	 */
+	public CourseVO selectCrsSvcTypeCre(CourseVO vo) ;
+	
+	public CourseVO selectCrsSvcTypeCrs(CourseVO vo) ;
+	
+	public CourseVO selectCrsSvcTypeStd(CreateCourseVO vo) ;
 }

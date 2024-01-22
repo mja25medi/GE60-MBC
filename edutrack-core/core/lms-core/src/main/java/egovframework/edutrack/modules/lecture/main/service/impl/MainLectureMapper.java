@@ -17,28 +17,28 @@ public interface MainLectureMapper {
 	 * @param vo
 	 * @return
 	 */
-	public MainLectureVO select(MainLectureVO vo ) throws Exception;
+	public MainLectureVO select(MainLectureVO vo ) ;
 	
 	/**
 	 * 강의 일정 조회 (과정)
 	 * @param vo
 	 * @return
 	 */
-	public MainLectureVO selectCourseSchedule(MainLectureVO vo ) throws Exception;
+	public MainLectureVO selectCourseSchedule(MainLectureVO vo ) ;
 	
 	/** 
 	 * 강의 일정 조회 (회차)
 	 * @param vo
 	 * @return
 	 */
-	public MainLectureVO selectCreateCourseSchedule(MainLectureVO vo ) throws Exception;
+	public MainLectureVO selectCreateCourseSchedule(MainLectureVO vo ) ;
 	
 	/**
 	 * 미채점 현황 리스트 과정,시험,과제 성적 리스트별 정보를 가져온다
 	 * @param vo
 	 * @return
-	 * @throws Exception 
+	 * @ 
 	 */
-	public abstract List<EgovMap> listUnScoreStatus(MainLectureVO vo) throws Exception;
+	public abstract List<EgovMap> listUnScoreStatus(MainLectureVO vo) ;
 
 }

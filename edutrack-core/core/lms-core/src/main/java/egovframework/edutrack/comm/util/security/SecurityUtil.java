@@ -384,8 +384,8 @@ public class SecurityUtil {
 			|| Action.matches(".*/home/brd/qna/add")
 			|| Action.matches(".*/home/user/editUserAvatar") // avatar api 연동
 			|| Action.matches(".*/lec/bookmark/xrcloudCallback") // xrcloud webHook 연동
+			|| Action.matches(".*/lec/bookmark/callRedis") // xrcloud webHook 연동
 			;
-
 		return result;
 	}
 	

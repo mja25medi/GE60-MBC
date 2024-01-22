@@ -36,7 +36,7 @@ function goExamPaperPop(){
 		alert("약관에 동의하셔야 시험을 응시하실 수 있습니다.");
 		return;
 	}else{
-		exceptIdCheck();
+		crsSvcTypeCheck();
 	}
 }
 
@@ -59,6 +59,21 @@ function exceptIdCheck(){
 				parent.examPaperStare(examSn, agreeYn);
 			} else {
 				 pop_motp($("#examSn").val());
+			}
+		}
+	);
+}
+
+function crsSvcTypeCheck(){
+	$.getJSON( 
+		"/home/course/selectCrsSvcTypeCheck",{ "crsCreCd":"${vo.crsCreCd}"},			
+		function(data) {
+			if(data.crsSvcType == 'R' && data.crsOperMthd == 'ON') {
+				exceptIdCheck();
+			} else {
+				var agreeYn = $("input[name=examAgree]:checked").val();
+				var examSn  = $("#examSn").val();
+				parent.examPaperStare(examSn, agreeYn);
 			}
 		}
 	);

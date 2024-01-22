@@ -23,64 +23,64 @@ public interface EtcRelatedSiteCtgrMapper {
 	 * 관련사이트 분류의 전체 목록을 조회한다. 
 	 * @param  EtcRelatedSiteCtgrVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<EtcRelatedSiteCtgrVO> list(EtcRelatedSiteCtgrVO vo) throws Exception;
+	
+	public List<EtcRelatedSiteCtgrVO> list(EtcRelatedSiteCtgrVO vo) ;
 	
     /**
 	 * 관련사이트 분류의 검색된 수를 카운트 한다. 
 	 * @param  EtcRelatedSiteCtgrVO 
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int count(EtcRelatedSiteCtgrVO vo) throws Exception;
+	public int count(EtcRelatedSiteCtgrVO vo) ;
 	
     /**
 	 * 관련사이트 분류의 전체 목록을 조회한다. 
 	 * @param  EtcRelatedSiteCtgrVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<EtcRelatedSiteCtgrVO> listPageing(EtcRelatedSiteCtgrVO vo) throws Exception;
+	
+	public List<EtcRelatedSiteCtgrVO> listPageing(EtcRelatedSiteCtgrVO vo) ;
 	
     /**
 	 * 관련사이트 분류의 상세 정보를 조회한다. 
 	 * @param  EtcRelatedSiteCtgrVO 
 	 * @return EtcRelatedSiteCtgrVO
-	 * @throws Exception
+	 * @
 	 */
-	public EtcRelatedSiteCtgrVO select(EtcRelatedSiteCtgrVO vo) throws Exception ;
+	public EtcRelatedSiteCtgrVO select(EtcRelatedSiteCtgrVO vo)  ;
 	
     /**
 	 * 관련사이트 분류의 키를 생성 한다. 
 	 * @return Integer
-	 * @throws Exception
+	 * @
 	 */
-	public String selectKey() throws Exception ;
+	public String selectKey()  ;
 
     /**
      * 관련사이트 분류의 상세 정보를 등록한다.  
      * @param  EtcRelatedSiteCtgrVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(EtcRelatedSiteCtgrVO vo) throws Exception;
+    public int insert(EtcRelatedSiteCtgrVO vo) ;
     
     /**
      * 관련사이트 분류의 상세 정보를 수정한다. 
      * @param  EtcRelatedSiteCtgrVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int update(EtcRelatedSiteCtgrVO vo) throws Exception;
+    public int update(EtcRelatedSiteCtgrVO vo) ;
     
     /**
      * 관련사이트 분류의 상세 정보를 삭제한다.  
      * @param  EtcRelatedSiteCtgrVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int delete(EtcRelatedSiteCtgrVO vo) throws Exception;
+    public int delete(EtcRelatedSiteCtgrVO vo) ;
 }

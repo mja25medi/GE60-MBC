@@ -19,65 +19,65 @@ public interface LogOrgAdminConnLogMapper {
 	 * 관리자 접속 로그의 전체 목록을 조회한다. 
 	 * @param  LogOrgAdminConnLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogOrgAdminConnLogVO> list(LogOrgAdminConnLogVO vo) throws Exception;
+	
+	public List<LogOrgAdminConnLogVO> list(LogOrgAdminConnLogVO vo) ;
 	
     /**
 	 * 관리자 접속 로그의 검색된 수를 카운트 한다. 
 	 * @param  LogOrgAdminConnLogVO 
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int count(LogOrgAdminConnLogVO vo) throws Exception;
+	public int count(LogOrgAdminConnLogVO vo) ;
 	
     /**
 	 * 관리자 접속 로그의 전체 목록을 조회한다. 
 	 * @param  LogOrgAdminConnLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogOrgAdminConnLogVO> listPageing(LogOrgAdminConnLogVO vo) throws Exception ;
+	
+	public List<LogOrgAdminConnLogVO> listPageing(LogOrgAdminConnLogVO vo)  ;
 	
     /**
 	 * 관리자 접속 로그의 상세 정보를 조회한다. 
 	 * @param  LogOrgAdminConnLogVO 
 	 * @return LogOrgAdminConnLogVO
-	 * @throws Exception
+	 * @
 	 */
-	public LogOrgAdminConnLogVO select(LogOrgAdminConnLogVO vo) throws Exception;
+	public LogOrgAdminConnLogVO select(LogOrgAdminConnLogVO vo) ;
 	
     /**
 	 * 관리자 접속 로그의 키를 생성한다. 
 	 * @param   
 	 * @return Integer
-	 * @throws Exception
+	 * @
 	 */
-	public int selectKey() throws Exception;
+	public int selectKey() ;
 	
     /**
 	 * 관리자 접속 로그의 상세 정보를 조회한다. 
 	 * @param  LogOrgAdminConnLogVO 
 	 * @return LogOrgAdminConnLogVO
-	 * @throws Exception
+	 * @
 	 */
-	public int selectLast(LogOrgAdminConnLogVO vo) throws Exception;
+	public int selectLast(LogOrgAdminConnLogVO vo) ;
 
     /**
      * 관리자 접속 로그의 상세 정보를 등록한다.  
      * @param  LogOrgAdminConnLogVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public void insert(LogOrgAdminConnLogVO vo) throws Exception;
+    public void insert(LogOrgAdminConnLogVO vo) ;
     
     /**
      * 관리자 접속 로그의 상세 정보를 수정한다. 
      * @param  LogOrgAdminConnLogVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public void update(LogOrgAdminConnLogVO vo) throws Exception;
+    public void update(LogOrgAdminConnLogVO vo) ;
 }

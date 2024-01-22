@@ -18,13 +18,13 @@ public interface  BkgImgMapper{
 	/**
 	 * 과제 번호 조회
 	 */
-	public int selectKey() throws Exception;
+	public int selectKey() ;
 	/**
      * 배경이미지 전체 목록을 반환한다.
      * @param BkgImgVO.useYn
      * @return ProcessReslutListVO
      */
-	public List<BkgImgVO> list(BkgImgVO VO) throws Exception;
+	public List<BkgImgVO> list(BkgImgVO VO) ;
 
 	/**
      * 시스템 템플릿 전테 목록을 반환한다.
@@ -34,7 +34,7 @@ public interface  BkgImgMapper{
      * @param pageScale
      * @return ProcessReslutListVO
      */
-	public List<BkgImgVO> listPageing(BkgImgVO VO) throws Exception;
+	public List<BkgImgVO> listPageing(BkgImgVO VO) ;
 
 	/**
      * 시스템 템플릿 전테 목록을 반환한다.
@@ -44,14 +44,14 @@ public interface  BkgImgMapper{
      * @param pageScale
      * @return ProcessReslutListVO
      */
-	public int count(BkgImgVO VO) throws Exception;
+	public int count(BkgImgVO VO) ;
 	
 	/**
      * 배경이미지의 단일 항목 정보를 반환한다.
      * @param BkgImgVO.bkgrImgSn
      * @return ProcessResultVO
      */
-	public BkgImgVO select(BkgImgVO VO) throws Exception;
+	public BkgImgVO select(BkgImgVO VO) ;
 
 
 
@@ -60,7 +60,7 @@ public interface  BkgImgMapper{
 	 * @param BkgImgVO
 	 * @return
 	 */
-	public int insert(BkgImgVO VO) throws Exception;
+	public int insert(BkgImgVO VO) ;
 
 
     /**
@@ -68,13 +68,13 @@ public interface  BkgImgMapper{
      * @param BkgImgVO
      * @reurn ProcessResultVO
      */
-	public int update(BkgImgVO VO) throws Exception;
+	public int update(BkgImgVO VO) ;
 	
 	/**
      * 배경이미지 일괄 수정
      * @param codeArray
      */
-	public int updateBatch(List<BkgImgVO> codeArray) throws Exception;
+	public int updateBatch(List<BkgImgVO> codeArray) ;
 
 
 
@@ -83,7 +83,7 @@ public interface  BkgImgMapper{
      *
      * @reurn ProcessResultVO
      */
-	public int delete(BkgImgVO VO)throws Exception;
+	public int delete(BkgImgVO VO);
 
 
 }

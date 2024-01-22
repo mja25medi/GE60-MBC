@@ -11,25 +11,25 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
 @Mapper("courseCretermMapper")
 public interface CourseCretermMapper {
 
-	@SuppressWarnings("unchecked")
-	public List<CourseCretermVO> list(CourseCretermVO VO)  throws DataAccessException ;
+	
+	public List<CourseCretermVO> list(CourseCretermVO VO)   ;
 
-	@SuppressWarnings("unchecked")
+	
 	public List<CourseCretermVO> listPageing(CourseCretermVO VO)
-			throws DataAccessException ;
+			 ;
 	
-	@SuppressWarnings("unchecked")
+	
 	public int count(CourseCretermVO VO)
-			throws DataAccessException ;
+			 ;
 
-	public String selectTermCd() throws DataAccessException ;
+	public String selectTermCd()  ;
 	
-	public CourseCretermVO select(CourseCretermVO VO) throws DataAccessException ;
+	public CourseCretermVO select(CourseCretermVO VO)  ;
 
-	public int insert(CourseCretermVO VO) throws DataAccessException ;
+	public int insert(CourseCretermVO VO)  ;
 
-	public int update(CourseCretermVO VO) throws DataAccessException ;
+	public int update(CourseCretermVO VO)  ;
 
-	public int delete(CourseCretermVO VO) throws DataAccessException ;
+	public int delete(CourseCretermVO VO)  ;
 
 }

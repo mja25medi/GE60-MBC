@@ -28,15 +28,21 @@
                     <div class="course_list test_custom">
                         <div class="item">
                             <ul class="info_disc">
-                                <li><strong>시험기간</strong>
                                 <c:choose>
                            			<c:when test="${item.examStareTypeCd eq 'R' }">
-                               			 <meditag:dateformat type="8" delimeter="." property="${item.examStartDttm}"/>~<meditag:dateformat type="8" delimeter="." property="${item.examEndDttm}"/>
+	                                	<li>
+	                                		<strong>시험기간</strong>
+	                              			<meditag:dateformat type="8" delimeter="." property="${item.examStartDttm}"/>~<meditag:dateformat type="8" delimeter="." property="${item.examEndDttm}"/>
+	                                	</li>
                                		</c:when>
-                           			<c:otherwise>상시</c:otherwise>
+                           			<c:otherwise>
+                           			 	<li>
+	                                		<strong>응시가능진도율</strong>
+	                               			<spring:message code="lecture.message.exam.progress.ratio"/> ${item.stareCritPrgrRatio}% <spring:message code="lecture.message.exam.over"/>
+	                                	</li>
+                           			</c:otherwise>
                            		</c:choose>
-                                </li>
-                             	 <c:choose>
+                             	<c:choose>
                            			<c:when test="${item.regYn eq 'Y'}"> <li><strong>공개여부</strong>공개</li></c:when>
                         			<c:otherwise><li><strong>공개여부</strong>비공개</li></c:otherwise>
                            		</c:choose>

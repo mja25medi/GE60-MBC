@@ -22,7 +22,7 @@ public interface TchTmtabMapper {
 	 * 
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<TchTmtabVO> listTmtab(TchTmtabVO teacherTmtabVO) throws Exception;
+	
+	public List<TchTmtabVO> listTmtab(TchTmtabVO teacherTmtabVO) ;
 
 }

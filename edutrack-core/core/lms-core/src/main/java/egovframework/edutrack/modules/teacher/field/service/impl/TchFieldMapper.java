@@ -22,15 +22,15 @@ public interface TchFieldMapper {
 	 * 
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<TchFieldVO> listField(TchFieldVO TeacherFieldVO) throws Exception;
+	
+	public List<TchFieldVO> listField(TchFieldVO TeacherFieldVO) ;
 	
 	/**
 	 * 강사강의분야 상세 정보
 	 * 
 	 * @return ProcessReslutListVO
 	 */
-	public TchFieldVO selectField(String userNo ,String lecFieldCd) throws Exception;
+	public TchFieldVO selectField(String userNo ,String lecFieldCd) ;
 	
 	
 	/**
@@ -38,7 +38,7 @@ public interface TchFieldMapper {
 	 *  
 	 * @reurn 
 	 */
-	public int insertField(TchFieldVO TeacherFieldVO) throws Exception;
+	public int insertField(TchFieldVO TeacherFieldVO) ;
 	
 	
 	/**
@@ -46,6 +46,6 @@ public interface TchFieldMapper {
 	 *  
 	 * @reurn 
 	 */
-	public int deleteField(String userNo,String lecFieldCd) throws Exception;
+	public int deleteField(String userNo,String lecFieldCd) ;
 
 }

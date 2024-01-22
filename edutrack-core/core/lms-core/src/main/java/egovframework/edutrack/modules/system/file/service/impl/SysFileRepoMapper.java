@@ -24,58 +24,58 @@ public interface SysFileRepoMapper {
 	 * 파일 리파지토리의 전체 목록을 조회한다. 
 	 * @param  SysFileRepoVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<SysFileRepoVO> list(SysFileRepoVO vo) throws Exception;
+	
+	public List<SysFileRepoVO> list(SysFileRepoVO vo) ;
 	
     /**
 	 * 파일 리파지토리의 검색된 수를 카운트 한다. 
 	 * @param  SysFileRepoVO 
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int count(SysFileRepoVO vo) throws Exception;
+	public int count(SysFileRepoVO vo) ;
 	
     /**
 	 * 파일 리파지토리의 전체 목록을 조회한다. 
 	 * @param  SysFileRepoVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<SysFileRepoVO> listPageing(SysFileRepoVO vo) throws Exception ;
+	
+	public List<SysFileRepoVO> listPageing(SysFileRepoVO vo)  ;
 	
     /**
 	 * 파일 리파지토리의 상세 정보를 조회한다. 
 	 * @param  SysFileRepoVO 
 	 * @return SysFileRepoVO
-	 * @throws Exception
+	 * @
 	 */
-	public SysFileRepoVO select(SysFileRepoVO vo) throws Exception;
+	public SysFileRepoVO select(SysFileRepoVO vo) ;
 
     /**
      * 파일 리파지토리의 상세 정보를 등록한다.  
      * @param  SysFileRepoVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(SysFileRepoVO vo) throws Exception;
+    public int insert(SysFileRepoVO vo) ;
     
     /**
      * 파일 리파지토리의 상세 정보를 수정한다. 
      * @param  SysFileRepoVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int update(SysFileRepoVO vo) throws Exception;
+    public int update(SysFileRepoVO vo) ;
     
     /**
      * 파일 리파지토리의 상세 정보를 삭제한다.  
      * @param  SysFileRepoVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int delete(SysFileRepoVO vo) throws Exception;
+    public int delete(SysFileRepoVO vo) ;
 
 }

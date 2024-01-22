@@ -225,7 +225,8 @@
 						parent.ItemVO1.motpPass 	= 'S';
 					} 
 					
-					if(typeof parent.ItemVO1 == 'undefined'){
+					//스마트인재개발원이전 motp부분
+					/* if(typeof parent.ItemVO1 == 'undefined'){
 						for (var i = 0; i < parent.frames.length; i++) {
 							if(typeof parent.frames[i].ItemVO1 != 'undefined'){
 								window.parent[i][parent.frames[i].ItemVO1.returnMethod]();
@@ -235,7 +236,31 @@
 					}else{
 						//window.parent[parent.ItemVO1.returnMethod]();
 						window.parent["showModalBox"]();
+					} 
+					*/
+					
+					if(typeof window.parent.showModalBox == 'undefined'){
+						if(typeof parent.ItemVO1 == 'undefined'){
+							for (var i = 0; i < parent.frames.length; i++) {
+								if(typeof parent.frames[i].ItemVO1 != 'undefined'){
+									window.parent[i][parent.frames[i].ItemVO1.returnMethod]();
+									break;
+								}
+							}
+						}else{
+							if(parent.ItemVO1.returnMethod == 'viewContents'){
+								window.parent[parent.ItemVO1.returnMethod](parent.ItemVO1.sbjCd,parent.ItemVO1.unitCd, parent.ItemVO1.review, parent.ItemVO1.cntsTypeCd, parent.ItemVO1.asmtSn);
+							}else if(parent.ItemVO1.returnMethod == 'goMeta'){
+								window.parent[parent.ItemVO1.returnMethod](parent.ItemVO1.avatar,parent.ItemVO1.userNm, parent.ItemVO1.sbjCd, parent.ItemVO1.unitCd, parent.ItemVO1.roomId);
+							}
+							else{
+								window.parent[parent.ItemVO1.returnMethod]();
+							}
+						}
+					}else{
+						window.parent["showModalBox"]();
 					}
+					 
 					
 				}else if (data.code == "AP001") {// OTP 번호가 서버와 다를 경우
 					//OTP 번호 오류

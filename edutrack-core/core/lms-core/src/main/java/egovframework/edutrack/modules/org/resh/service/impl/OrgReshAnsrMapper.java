@@ -16,31 +16,31 @@ public interface OrgReshAnsrMapper {
 	 * @param OrgReshAnsrVO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OrgReshAnsrVO> list(OrgReshAnsrVO VO)  throws DataAccessException ;
+	
+	public List<OrgReshAnsrVO> list(OrgReshAnsrVO VO)   ;
 
 	/**
 	 * 개설 과정 설문 사용자 응답 페이징 목록 조회
 	 * @param OrgReshAnsrVO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OrgReshAnsrVO> listPageing(OrgReshAnsrVO VO)  throws DataAccessException ;
+	
+	public List<OrgReshAnsrVO> listPageing(OrgReshAnsrVO VO)   ;
 
 	/**
 	 * 개설 과정 설문 사용자 응답 페이징 목록수 반환
 	 * @param OrgReshAnsrVO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public int count(OrgReshAnsrVO VO)  throws DataAccessException ;
+	
+	public int count(OrgReshAnsrVO VO)   ;
 	
 	/**
 	 * 개설 과정 설문 사용자 응답 정보 조회
 	 * @param VO
 	 * @return
 	 */
-	public OrgReshAnsrVO select(OrgReshAnsrVO VO  )  throws DataAccessException ;
+	public OrgReshAnsrVO select(OrgReshAnsrVO VO  )   ;
 
 
 	/**
@@ -48,37 +48,37 @@ public interface OrgReshAnsrMapper {
 	 * @param VO
 	 * @return
 	 */
-	public int insert(OrgReshAnsrVO VO)  throws DataAccessException ;
+	public int insert(OrgReshAnsrVO VO)   ;
 
 	/**
 	 * 개설 과정 설문 사용자 응답 수정
 	 * @param VO
 	 * @return
 	 */
-	public int update(OrgReshAnsrVO VO)  throws DataAccessException ;
+	public int update(OrgReshAnsrVO VO)   ;
 
 	/**
 	 * 개설 과정 설문 사용자 응답 삭제
 	 * @param VO
 	 * @return
 	 */
-	public int delete(OrgReshAnsrVO VO )  throws DataAccessException ;
+	public int delete(OrgReshAnsrVO VO )   ;
 
 	/**
 	 * 개설 과정 설문 사용자 기타 응답 목록 조회
 	 * @param OrgReshAnsrVO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OrgReshAnsrVO> listOpinion(OrgReshAnsrVO VO)  throws DataAccessException ;
+	
+	public List<OrgReshAnsrVO> listOpinion(OrgReshAnsrVO VO)   ;
 
 	/**
 	 * 개설 과정 설문 사용자 기타 응답 목록 조회-엑셀다운로드용
 	 * @param OrgReshAnsrVO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OrgReshAnsrVO> listExcel(OrgReshAnsrVO VO)  throws DataAccessException ;
+	
+	public List<OrgReshAnsrVO> listExcel(OrgReshAnsrVO VO)   ;
 	
 
 	/**
@@ -86,42 +86,42 @@ public interface OrgReshAnsrMapper {
 	 * @param OrgReshAnsrVO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OrgReshAnsrVO> listNoReshSn(OrgReshAnsrVO VO)  throws DataAccessException ;
+	
+	public List<OrgReshAnsrVO> listNoReshSn(OrgReshAnsrVO VO)   ;
 
 	/**
 	 * 개설 과정 설문 사용자 응답건수
 	 * @param OrgReshAnsrVO
 	 * @return
 	 */
-	public OrgReshAnsrVO listCount(OrgReshAnsrVO VO)  throws DataAccessException ;
+	public OrgReshAnsrVO listCount(OrgReshAnsrVO VO)   ;
 
 	/**
 	 * 개설 과정 설문 사용자 기타 점수 응답 목록 조회-엑셀다운로드용
 	 * @param OrgReshAnsrVO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OrgReshAnsrVO> listReshScoreExcel(OrgReshAnsrVO VO)  throws DataAccessException ;
+	
+	public List<OrgReshAnsrVO> listReshScoreExcel(OrgReshAnsrVO VO)   ;
 	
 
-	@SuppressWarnings("unchecked")
-	public List<OrgReshAnsrVO> selectAsrList(OrgReshAnsrVO VO)  throws DataAccessException ;
+	
+	public List<OrgReshAnsrVO> selectAsrList(OrgReshAnsrVO VO)   ;
 	/**
 	 * 개설 과정 설문 결과, 교육생 설문 응시 답 목록 조회
 	 * @param CrsReshAnsrVO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OrgReshResultVO> listReshAnsr(OrgReshResultVO VO)  throws DataAccessException ;
+	
+	public List<OrgReshResultVO> listReshAnsr(OrgReshResultVO VO)   ;
 	
 	/**
 	 * 개설 과정 설문 사용자 응답 목록 조회
 	 * @param OrgReshAnsrVO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OrgReshAnsrVO> listAnsrList(OrgReshAnsrVO VO)  throws DataAccessException ;
+	
+	public List<OrgReshAnsrVO> listAnsrList(OrgReshAnsrVO VO)   ;
 	
 
 }

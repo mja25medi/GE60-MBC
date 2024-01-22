@@ -15,31 +15,31 @@ public interface OrgAuthGrpMenuMapper{
      * 권한 그룹 메뉴의 상세 정보를 등록한다.  
      * @param  OrgAuthGrpMenuVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int merge(OrgAuthGrpMenuVO vo) throws Exception;
+    public int merge(OrgAuthGrpMenuVO vo) ;
     
     /**
      * 권한 그룹 메뉴의 상세 정보를 삭제한다.  
      * @param  OrgAuthGrpMenuVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int delete(OrgAuthGrpMenuVO vo) throws Exception;
+    public int delete(OrgAuthGrpMenuVO vo) ;
     
     /**
      * 권한 그룹 메뉴를 초기화 등록한다.  
      * @param  OrgAuthGrpMenuVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insertInit(OrgAuthGrpMenuVO vo) throws Exception;
+    public int insertInit(OrgAuthGrpMenuVO vo) ;
     
     /**
      * 권한 그룹 메뉴를 초기화 삭제한다.  
      * @param  OrgAuthGrpMenuVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int deleteInit(OrgAuthGrpMenuVO vo) throws Exception;    
+    public int deleteInit(OrgAuthGrpMenuVO vo) ;    
 }

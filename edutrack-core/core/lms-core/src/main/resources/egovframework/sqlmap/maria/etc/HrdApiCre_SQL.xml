@@ -188,8 +188,8 @@
     
 	<select id="listCreInfoData" parameterType="hrdApiCreVO" resultType="hrdApiCreVO">
 		SELECT
-			  A.CRS_CD AS CRS_CD
-			, A.SBJ_CD 	AS COURSE_AGENT_PK
+			A.CRS_CD
+			, A.CRS_CD AS COURSE_AGENT_PK
 			, A.CRS_CRE_CD 	AS CLASS_AGENT_PK
 			, 100 as FULL_SCORE
 			, LEFT(B.ENRL_START_DTTM,8) AS START_DT

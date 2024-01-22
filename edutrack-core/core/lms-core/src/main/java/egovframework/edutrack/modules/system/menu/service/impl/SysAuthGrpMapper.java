@@ -24,40 +24,40 @@ public interface SysAuthGrpMapper{
 	 * 시스템 권한의 전체 목록을 조회한다. 
 	 * @param  SysAuthGrpVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<SysAuthGrpVO> list(SysAuthGrpVO vo) throws Exception;
+	
+	public List<SysAuthGrpVO> list(SysAuthGrpVO vo) ;
 	
      /**
 	 * 시스템 권한의 상세 정보를 조회한다. 
 	 * @param  SysAuthGrpVO 
 	 * @return SysAuthGrpVO
-	 * @throws Exception
+	 * @
 	 */
-	public SysAuthGrpVO select(SysAuthGrpVO vo) throws Exception;
+	public SysAuthGrpVO select(SysAuthGrpVO vo) ;
 
     /**
      * 시스템 권한의 상세 정보를 등록한다.  
      * @param  SysAuthGrpVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(SysAuthGrpVO vo) throws Exception;
+    public int insert(SysAuthGrpVO vo) ;
     
     /**
      * 시스템 권한의 상세 정보를 수정한다. 
      * @param  SysAuthGrpVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int update(SysAuthGrpVO vo) throws Exception;
+    public int update(SysAuthGrpVO vo) ;
     
     /**
      * 시스템 권한의 상세 정보를 삭제한다.  
      * @param  SysAuthGrpVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int delete(SysAuthGrpVO vo) throws Exception ; 
+    public int delete(SysAuthGrpVO vo)  ; 
 }

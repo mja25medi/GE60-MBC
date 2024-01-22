@@ -54,7 +54,7 @@
 						<ul>
 							<c:forEach var="item" items="${bbsAtclList}" varStatus="status">
 								<li>
-									 <a href="#A${status.index }" class="question">
+									 <a href="#A${status.index }" class="question" >
 									 	<span class="category">Q</span>
 									 	<span class="title">${item.atclTitle}</span>
 									 </a>
@@ -98,6 +98,10 @@
 		
 	});
 
+	$(".listFaq.question").on("click", function(){
+        active(this, "accordion");
+    });
+	
 	//검색
 	function listAtcl(page) {
 		$('#bbsAtclForm')

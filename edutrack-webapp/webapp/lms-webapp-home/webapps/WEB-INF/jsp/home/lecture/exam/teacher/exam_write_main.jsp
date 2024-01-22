@@ -319,13 +319,14 @@
 		$("#rsltCfrmDttm").val(formatDate("${vo.rsltCfrmDttm }"));
 		
 		<c:if test="${gubun eq 'E'}">
-		if("ON" == "${examVO.examTypeCd}"){
-			$(".online_exam").show();
-		
-			
+		var semiExamYn = $('input[name="semiExamYn"]:checked').val();
+		if(semiExamYn == 'Y'){
+			$('#semiExamYn_N').attr("disabled",true);
+		} else{ 
+			$('#semiExamYn_Y').attr("disabled",true);
 		}
-		</c:if>
-		examChk();
+	</c:if>
+		
 		
 		//문항 수, 배점 변화에 따른 총점 확인
 		$('#selCnt, #selPnt, #shortCnt, #shortPnt, #desCnt, #desPnt').on('change keyup' ,function() {
@@ -648,6 +649,7 @@
 		}else{
 			$("#examStareTm").attr("disabled",true);
 		}
+		examChk();
 	}
 
 	function changeExamStareTm(){

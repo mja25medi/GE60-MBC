@@ -15,7 +15,7 @@ public interface ForumCmntMapper {
 	 * @param int
 	 * @return
 	 */
-	public int selectKey()  throws Exception;
+	public int selectKey()  ;
 	/**
 	 * 댓글 목록 전체 수 조회
 	 * @author twkim
@@ -23,8 +23,8 @@ public interface ForumCmntMapper {
 	 * @param vo
 	 * @return Integer
 	 */
-	@SuppressWarnings("unchecked")
-	public Integer count(ForumCmntVO vo) throws Exception;
+	
+	public Integer count(ForumCmntVO vo) ;
 	/**
 	 * 댓글 목록 조회
 	 * @author twkim
@@ -35,8 +35,8 @@ public interface ForumCmntMapper {
 	 * @param pageScale
 	 * @return List<ForumCommentVO>
 	 */
-	@SuppressWarnings("unchecked")
-	public List<ForumCmntVO> listPageing(ForumCmntVO vo) throws Exception;
+	
+	public List<ForumCmntVO> listPageing(ForumCmntVO vo) ;
 
 	/**
 	 * 댓글 정보 저장
@@ -45,7 +45,7 @@ public interface ForumCmntMapper {
 	 * @param vo
 	 * @return ProcessResultVO<ForumCommentVO>
 	 */
-	public int insert(ForumCmntVO vo) throws DataAccessException;
+	public int insert(ForumCmntVO vo) ;
 
 	/**
 	 * 댓글 정보 삭제
@@ -54,5 +54,5 @@ public interface ForumCmntMapper {
 	 * @param commentVO
 	 * @return ProcessResultVO<?>
 	 */
-	public int delete(ForumCmntVO vo) throws DataAccessException;
+	public int delete(ForumCmntVO vo) ;
 }

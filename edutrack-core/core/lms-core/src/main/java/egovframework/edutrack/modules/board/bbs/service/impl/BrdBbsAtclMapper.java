@@ -24,100 +24,100 @@ public interface BrdBbsAtclMapper {
 	 * 게시판 게시물의 전체 목록을 조회한다. 
 	 * @param  BrdBbsAtclVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	public List<BrdBbsAtclVO> list(BrdBbsAtclVO vo) throws Exception;
+	public List<BrdBbsAtclVO> list(BrdBbsAtclVO vo) ;
 	
     /**
 	 * 게시판 게시물의 검색된 수를 카운트 한다. 
 	 * @param  BrdBbsAtclVO 
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int count(BrdBbsAtclVO vo) throws Exception;
+	public int count(BrdBbsAtclVO vo) ;
 	
     /**
 	 * 게시판 게시물의 전체 목록을 조회한다. 
 	 * @param  BrdBbsAtclVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	public List<BrdBbsAtclVO> listPageing(BrdBbsAtclVO vo) throws Exception ;
+	public List<BrdBbsAtclVO> listPageing(BrdBbsAtclVO vo)  ;
 	
     /**
 	 * 게시판 게시물의 전체 목록을 조회한다. 
 	 * @param  BrdBbsAtclVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	public List<BrdBbsAtclVO> listTop(BrdBbsAtclVO vo) throws Exception;
+	public List<BrdBbsAtclVO> listTop(BrdBbsAtclVO vo) ;
 	
     /**
 	 * 게시판 게시물의 상세 정보를 조회한다. 
 	 * @param  BrdBbsAtclVO 
 	 * @return BrdBbsAtclVO
-	 * @throws Exception
+	 * @
 	 */
-	public BrdBbsAtclVO select(BrdBbsAtclVO vo) throws Exception;
+	public BrdBbsAtclVO select(BrdBbsAtclVO vo) ;
 	
-	public BrdBbsAtclVO selectService(BrdBbsAtclVO vo) throws Exception;
-	
-	/**
-	 * 게시판 게시물의 상세 정보를 조회한다. 
-	 * @param  BrdBbsAtclVO 
-	 * @return BrdBbsAtclVO
-	 * @throws Exception
-	 */
-	public BrdBbsAtclVO selectAtclWithPreNext(BrdBbsAtclVO vo) throws Exception;
+	public BrdBbsAtclVO selectService(BrdBbsAtclVO vo) ;
 	
 	/**
 	 * 게시판 게시물의 상세 정보를 조회한다. 
 	 * @param  BrdBbsAtclVO 
 	 * @return BrdBbsAtclVO
-	 * @throws Exception
+	 * @
 	 */
-	public BrdBbsAtclVO selectAtclWithPreNextVer5(BrdBbsAtclVO vo) throws Exception;
+	public BrdBbsAtclVO selectAtclWithPreNext(BrdBbsAtclVO vo) ;
+	
+	/**
+	 * 게시판 게시물의 상세 정보를 조회한다. 
+	 * @param  BrdBbsAtclVO 
+	 * @return BrdBbsAtclVO
+	 * @
+	 */
+	public BrdBbsAtclVO selectAtclWithPreNextVer5(BrdBbsAtclVO vo) ;
 
     /**
 	 * 게시판 게시물의 키를 생성한다. 
 	 * @param  BrdBbsAtclVO 
 	 * @return BrdBbsAtclVO
-	 * @throws Exception
+	 * @
 	 */
-	public int selectKey() throws Exception;
+	public int selectKey() ;
 	
     /**
      * 게시판 게시물의 상세 정보를 등록한다.  
      * @param  BrdBbsAtclVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(BrdBbsAtclVO vo) throws Exception;
+    public int insert(BrdBbsAtclVO vo) ;
     
-    public int insertService(BrdBbsAtclVO vo) throws Exception;
+    public int insertService(BrdBbsAtclVO vo) ;
     /**
      * 게시판 게시물의 상세 정보를 수정한다. 
      * @param  BrdBbsAtclVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int update(BrdBbsAtclVO vo) throws Exception;
+    public int update(BrdBbsAtclVO vo) ;
     
     /**
      * 게시판 게시물의 상세 정보를 삭제한다.  
      * @param  BrdBbsAtclVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int delete(BrdBbsAtclVO vo) throws Exception ;
+    public int delete(BrdBbsAtclVO vo)  ;
     
     /**
      * 게시판 게시물의 조회수를 증가 시킨다. 
      * @param  BrdBbsAtclVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int hitsup(BrdBbsAtclVO vo) throws Exception ;
+    public int hitsup(BrdBbsAtclVO vo)  ;
     
-    public BrdBbsAtclVO checkPassword(BrdBbsAtclVO vo) throws Exception;
+    public BrdBbsAtclVO checkPassword(BrdBbsAtclVO vo) ;
 }

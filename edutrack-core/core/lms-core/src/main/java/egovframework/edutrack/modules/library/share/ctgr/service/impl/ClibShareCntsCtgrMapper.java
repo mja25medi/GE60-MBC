@@ -18,8 +18,8 @@ public interface ClibShareCntsCtgrMapper {
 	 * @param ClibCntsShareCtgrVO.userNo
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<ClibShareCntsCtgrVO> list(ClibShareCntsCtgrVO vo) throws Exception ;
+	
+	public List<ClibShareCntsCtgrVO> list(ClibShareCntsCtgrVO vo)  ;
 
 
 	/**
@@ -29,8 +29,8 @@ public interface ClibShareCntsCtgrMapper {
 	 * @param ClibCntsShareCtgrVO.parCtgrCd (최상위 분류를 조회시는 입력이 없어야 한다.)
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<ClibShareCntsCtgrVO> listSub(ClibShareCntsCtgrVO vo) throws Exception;
+	
+	public List<ClibShareCntsCtgrVO> listSub(ClibShareCntsCtgrVO vo) ;
 	/**
 	 * 분류 정보를 조회한다.
 	 * @param ClibCntsShareCtgrVO.orgCd
@@ -38,35 +38,35 @@ public interface ClibShareCntsCtgrMapper {
 	 * @param ClibCntsShareCtgrVO.ctgrCd
 	 * @return ProcessResultVO
 	 */
-	public ClibShareCntsCtgrVO select(ClibShareCntsCtgrVO vo) throws Exception;
+	public ClibShareCntsCtgrVO select(ClibShareCntsCtgrVO vo) ;
 
 	/**
 	 * 분류를 등록하고 결과를 반환한다.
 	 * @param ClibShareCntsCtgrVO
 	 * @reurn ProcessResultVO
 	 */
-	public int insert(ClibShareCntsCtgrVO vo) throws Exception;
+	public int insert(ClibShareCntsCtgrVO vo) ;
 
 	/**
 	 * 분류 코드 조회를 생성해서 반환한다.
 	 * @param ClibCntsShareCtgrVO.orgCd
 	 * @return ProcessResultVO
 	 */
-	public ClibShareCntsCtgrVO selectCtgrCd() throws Exception;
+	public ClibShareCntsCtgrVO selectCtgrCd() ;
 
 	/**
 	 * 분류를 수정하고 결과를 반환한다.
 	 * @param ClibShareCntsCtgrVO
 	 * @reurn ProcessResultVO
 	 */
-	public int update(ClibShareCntsCtgrVO vo) throws Exception ;
+	public int update(ClibShareCntsCtgrVO vo)  ;
 
 	/**
 	 * 분류 정보의 다중 목록을 Update하고 결과를 반환한다.
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int updateBatch(List<ClibShareCntsCtgrVO> itemArray) throws Exception;
+	public int updateBatch(List<ClibShareCntsCtgrVO> itemArray) ;
 
 	/**
 	 * 분류를 삭제하고 결과를 반환한다.
@@ -75,7 +75,7 @@ public interface ClibShareCntsCtgrMapper {
 	 * @param ClibCntsShareCtgrVO.ctgrCd
 	 * @reurn ProcessResultVO
 	 */
-	public int delete(ClibShareCntsCtgrVO vo) throws Exception;
+	public int delete(ClibShareCntsCtgrVO vo) ;
 
 	/**
 	 * 하위 분류를 삭제하고 결과를 반환한다.
@@ -84,5 +84,5 @@ public interface ClibShareCntsCtgrMapper {
 	 * @param ClibCntsShareCtgrVO.parCtgrCd
 	 * @reurn ProcessResultVO
 	 */
-	public int deleteSub(ClibShareCntsCtgrVO vo) throws Exception ;
+	public int deleteSub(ClibShareCntsCtgrVO vo)  ;
 }

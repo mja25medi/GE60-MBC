@@ -17,66 +17,66 @@ public interface ResearchBankMapper {
 	 * @param VO
 	 * @return
 	 */
-	public int selectKey()  throws DataAccessException ;
+	public int selectKey()   ;
 	/**
 	 * 설문 은행 : 설문 목록 조회
 	 * @param VO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<ResearchBankVO> list(ResearchBankVO VO)   throws DataAccessException ;
+	
+	public List<ResearchBankVO> list(ResearchBankVO VO)    ;
 
 	/**
 	 * 설문 은행 : 설문 목록 조회
 	 * @param VO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<ResearchBankVO> listPageing(ResearchBankVO VO)  throws DataAccessException ;
+	
+	public List<ResearchBankVO> listPageing(ResearchBankVO VO)   ;
 
 	/**
 	 * 설문 은행 : 설문 목록수 반환
 	 * @param VO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public int count(ResearchBankVO VO)  throws DataAccessException ;
+	
+	public int count(ResearchBankVO VO)   ;
 	
 	/**
 	 * 설문 은행 : 설문 목록 조회(설문명 검색)
 	 * @param VO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<ResearchBankVO> searchList(ResearchBankVO VO)  throws DataAccessException ;
+	
+	public List<ResearchBankVO> searchList(ResearchBankVO VO)   ;
 
 	/**
 	 * 설문 은행 : 설문 정보 조회
 	 * @param VO
 	 * @return
 	 */
-	public ResearchBankVO select(ResearchBankVO VO  )  throws DataAccessException ;
+	public ResearchBankVO select(ResearchBankVO VO  )   ;
 
 	/**
 	 * 설문 은행 : 설문 정보 등록
 	 * @param VO
 	 * @return
 	 */
-	public int insert(ResearchBankVO VO)   throws DataAccessException ;
+	public int insert(ResearchBankVO VO)    ;
 
 	/**
 	 * 설문 은행 : 설문 정보 수정
 	 * @param VO
 	 * @return
 	 */
-	public int update(ResearchBankVO VO)  throws DataAccessException ;
+	public int update(ResearchBankVO VO)   ;
 
 	/**
 	 * 설문 은행 : 설문 정보 삭제
 	 * @param VO
 	 * @return
 	 */
-	public int delete(ResearchBankVO VO )  throws DataAccessException ;
+	public int delete(ResearchBankVO VO )   ;
 
 
 	/**
@@ -84,6 +84,6 @@ public interface ResearchBankMapper {
 	 * @param VO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<ResearchBankVO> listResearchPreclusive(ResearchBankVO VO)  throws DataAccessException ;
+	
+	public List<ResearchBankVO> listResearchPreclusive(ResearchBankVO VO)   ;
 }

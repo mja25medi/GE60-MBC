@@ -110,7 +110,7 @@
 	<meditag:css href="libs/d3chart/aster_plot/aster_plot.css"/>
 	<![endif]>
 </c:if><c:if test="${not empty jstree}">
-	<script type="text/JavaScript" src="/js/jquery/jquery-1.11.1.min.js"></script>
+	<!-- script type="text/JavaScript" src="/js/jquery/jquery-1.11.1.min.js"></script -->
 	<meditag:js src="/js/jquery/jquery.form.js"/>
 	<meditag:js src="/js/jquery/jquery.cookie.js"/>
 	<meditag:js src="/js/jquery/jquery.hotkeys.js"/>

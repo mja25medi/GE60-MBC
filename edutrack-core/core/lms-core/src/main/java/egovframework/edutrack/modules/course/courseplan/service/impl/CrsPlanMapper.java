@@ -2,10 +2,6 @@ package egovframework.edutrack.modules.course.courseplan.service.impl;
 
 import java.util.List;
 
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
-
 import egovframework.edutrack.modules.course.course.service.CourseVO;
 import egovframework.edutrack.modules.course.courseplan.service.CrsPlanVO;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
@@ -29,42 +25,42 @@ public interface CrsPlanMapper {
 	 * @param CrsPlanVO
 	 * @return
 	 */
-	public CrsPlanVO select(CrsPlanVO VO)  throws DataAccessException ;
+	public CrsPlanVO select(CrsPlanVO VO)   ;
 
 	/**
 	 * 년간 과정 계획 정보를 Insert하고 결과를 반환한다.
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int insert(CrsPlanVO VO)  throws DataAccessException ;
+	public int insert(CrsPlanVO VO)   ;
 
 	/**
 	 * 년간 과정 계획 정보의 단일 레코드를 Update하고 결과를 반환한다.
 	 * @param CrsPlanVO
 	 * @reurn ProcessResultVO
 	 */
-	public int update(CrsPlanVO VO)  throws DataAccessException ;
+	public int update(CrsPlanVO VO)   ;
 
 	/**
 	 * 년간 과정 계획 정보의 단일 레코드를 Update 또는 Insert 하고 결과를 반환한다.
 	 * @param CrsPlanVO
 	 * @reurn ProcessResultVO
 	 */
-	public int marge(CrsPlanVO VO)  throws DataAccessException ;
+	public int marge(CrsPlanVO VO)   ;
 
 	/**
 	 * 년간 과정 계획 단일 항목 정보를 삭제 하고 결과를 반환한다.
 	 * @param CrsPlanVO
 	 * @reurn ProcessResultVO
 	 */
-	public int delete(CrsPlanVO VO)  throws DataAccessException ;
+	public int delete(CrsPlanVO VO)   ;
 
 	/**
 	 * 과정의 모든 과정 계획 정보를 삭제 하고 결과를 반환한다.
 	 * @param CrsPlanVO
 	 * @reurn ProcessResultVO
 	 */
-	public int deleteAll(CrsPlanVO VO)  throws DataAccessException ;
+	public int deleteAll(CrsPlanVO VO)   ;
 
 	/**
 	 * 과정 목록을 조회하여 반환한다.
@@ -75,7 +71,7 @@ public interface CrsPlanMapper {
 	 * @param pageScale
 	 * @return
 	 */
-	public List<CourseVO> list(CourseVO VO)  throws DataAccessException ;
+	public List<CourseVO> list(CourseVO VO)   ;
 
 	/**
 	 * 과정 목록을 조회하여 반환한다.
@@ -85,10 +81,9 @@ public interface CrsPlanMapper {
 	 * @param listScale
 	 * @param pageScale
 	 * @return
-	 * @throws DataAccessException
+	 * @
 	 */
-	public List<CourseVO> listPageing(CourseVO VO)
-			throws DataAccessException ;
+	public List<CourseVO> listPageing(CourseVO VO);
 
 	/**
 	 * 과정 목록수를 반환
@@ -98,8 +93,7 @@ public interface CrsPlanMapper {
 	 * @param listScale
 	 * @param pageScale
 	 * @return
-	 * @throws DataAccessException
+	 * @
 	 */
-	public int count(CourseVO VO)
-			throws DataAccessException ;	
+	public int count(CourseVO VO);	
 }

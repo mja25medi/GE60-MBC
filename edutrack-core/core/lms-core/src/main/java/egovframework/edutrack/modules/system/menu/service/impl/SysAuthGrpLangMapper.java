@@ -24,48 +24,48 @@ public interface SysAuthGrpLangMapper {
 	 * 시스템 권한 언어의 전체 목록을 조회한다. 
 	 * @param  SysAuthGrpLangVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<SysAuthGrpLangVO> list(SysAuthGrpLangVO vo) throws Exception;
+	
+	public List<SysAuthGrpLangVO> list(SysAuthGrpLangVO vo) ;
 	
      /**
 	 * 시스템 권한 언어의 상세 정보를 조회한다. 
 	 * @param  SysAuthGrpLangVO 
 	 * @return SysAuthGrpLangVO
-	 * @throws Exception
+	 * @
 	 */
-	public SysAuthGrpLangVO select(SysAuthGrpLangVO vo) throws Exception;
+	public SysAuthGrpLangVO select(SysAuthGrpLangVO vo) ;
 
     /**
      * 시스템 권한 언어의 상세 정보를 등록한다.  
      * @param  SysAuthGrpLangVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(SysAuthGrpLangVO vo) throws Exception;
+    public int insert(SysAuthGrpLangVO vo) ;
     
     /**
      * 시스템 권한 언어의 상세 정보를 수정한다. 
      * @param  SysAuthGrpLangVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int update(SysAuthGrpLangVO vo) throws Exception ;
+    public int update(SysAuthGrpLangVO vo)  ;
     
     /**
      * 시스템 권한 언어의 상세 정보를 삭제한다.  
      * @param  SysAuthGrpLangVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int delete(SysAuthGrpLangVO vo) throws Exception ;
+    public int delete(SysAuthGrpLangVO vo)  ;
     
     /**
      * 시스템 권한 언어의 전체 정보를 삭제한다.  
      * @param  SysAuthGrpLangVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int deleteAll(SysAuthGrpLangVO vo) throws Exception ;     
+    public int deleteAll(SysAuthGrpLangVO vo)  ;     
 }

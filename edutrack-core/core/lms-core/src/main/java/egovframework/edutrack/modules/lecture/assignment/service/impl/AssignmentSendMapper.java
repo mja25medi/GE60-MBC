@@ -15,46 +15,46 @@ public interface AssignmentSendMapper{
 	/**
 	 * 과제 제출자 목록 전체
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public List<AssignmentSendVO> list(AssignmentVO vo );
 
 	/**
 	 * 과제 제출자 목록 (페이징)
 	 */
-	@SuppressWarnings("unchecked")
-	public List<AssignmentSendVO> listPageing(AssignmentVO vo) throws Exception;
+	
+	public List<AssignmentSendVO> listPageing(AssignmentVO vo) ;
 
 	/**
 	 * 과제 제출자 목록수 반환
 	 */
-	@SuppressWarnings("unchecked")
-	public int count(AssignmentVO vo) throws Exception;
+	
+	public int count(AssignmentVO vo) ;
 
 	
 	/**
 	 * 학습자 과제 제출 정보 조회
 	 */
-	public AssignmentSendVO select(AssignmentSendVO vo ) throws Exception;
+	public AssignmentSendVO select(AssignmentSendVO vo ) ;
 	
 	/**
 	 * 과제 제출 등록
 	 */
-	public int insert(AssignmentSendVO vo) throws Exception;
+	public int insert(AssignmentSendVO vo) ;
 	
 	/**
 	 * 과제 제출 등록 (상세)
 	 */
-	public int insertDetail(AssignmentSendVO vo) throws Exception;
+	public int insertDetail(AssignmentSendVO vo) ;
 
 	/**
 	 * 과제 제출 정보 수정
 	 */
-	public int update(AssignmentSendVO vo) throws Exception;
+	public int update(AssignmentSendVO vo) ;
 
 	/**
 	 * 과제 제출 정보 삭제(all)
 	 */
-	public int deleteAll(AssignmentVO vo)  throws Exception;
+	public int deleteAll(AssignmentVO vo)  ;
 
 	/**
 	 * 과제 제출 정보 삭제

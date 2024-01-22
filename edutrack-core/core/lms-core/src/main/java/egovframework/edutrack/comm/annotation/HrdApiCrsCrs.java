@@ -7,17 +7,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /*
- * 회차 정보 HRD API 연계용 어노테이션 
+ * 과정 정보 HRD API 연계용 어노테이션 
  */
 @Retention(RUNTIME)
 @Target(METHOD)
-public @interface HrdApiCrsCreCrs {
-	CreSyncType  value();
+public @interface HrdApiCrsCrs {
+	SyncType  value();
 	
-	public enum CreSyncType {
-		CREATE("C"), CREUPDATE("U"), DELETE("D"), CRSUPDATE("U");
+	public enum SyncType {
+		CREATE("C"), UPDATE("U"), DELETE("D");
 		
-		private CreSyncType(String s) {
+		private SyncType(String s) {
 			this.setStringValue(s);
 		}
 		

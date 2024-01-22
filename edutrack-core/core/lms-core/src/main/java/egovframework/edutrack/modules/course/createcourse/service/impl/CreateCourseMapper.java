@@ -3,9 +3,6 @@ package egovframework.edutrack.modules.course.createcourse.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.dao.DataAccessException;
-
-import egovframework.edutrack.modules.course.course.service.CourseVO;
 import egovframework.edutrack.modules.course.createcourse.service.CreateCourseVO;
 import egovframework.edutrack.modules.course.createcourse.service.ResearchCourseVO;
 import egovframework.edutrack.modules.course.createcourse.service.UserCourseVO;
@@ -20,24 +17,24 @@ public interface CreateCourseMapper {
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CreateCourseVO> listCreateCourse(CreateCourseVO iCreateCourseVO)  throws DataAccessException ;
+	
+	public List<CreateCourseVO> listCreateCourse(CreateCourseVO iCreateCourseVO)   ;
 
 	/**
 	 * 개설 과정 Pageing 목록 조회
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CreateCourseVO> listCreateCoursePageing(CreateCourseVO iCreateCourseVO)  throws DataAccessException ;
+	
+	public List<CreateCourseVO> listCreateCoursePageing(CreateCourseVO iCreateCourseVO)   ;
 
 	/**
 	 * 개설 과정 Pageing 목록 조회
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public int listCreateCoursePageingCount (CreateCourseVO iCreateCourseVO)  throws DataAccessException ;
+	
+	public int listCreateCoursePageingCount (CreateCourseVO iCreateCourseVO)   ;
 
 	
 	/**
@@ -45,47 +42,47 @@ public interface CreateCourseMapper {
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CreateCourseVO> listCreateCourseForEnroll(CreateCourseVO VO)   throws DataAccessException ;
+	
+	public List<CreateCourseVO> listCreateCourseForEnroll(CreateCourseVO VO)    ;
 	
 	/**
 	 * 회차 조회 - 과정 안내 / 신청용
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CreateCourseVO> createCourseForEnroll(CreateCourseVO VO)   throws DataAccessException ;
+	
+	public List<CreateCourseVO> createCourseForEnroll(CreateCourseVO VO)    ;
 
 	/**
 	 * 날짜별 개설 과정 목록 조회 - 과정 안내 / 신청용
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CreateCourseVO> listCreateCourseForEnrollDate(CreateCourseVO VO)   throws DataAccessException ;
+	
+	public List<CreateCourseVO> listCreateCourseForEnrollDate(CreateCourseVO VO)    ;
 
 	/**
 	 * 날짜별 개설 과정 목록 조회 - 기숙사 배정 관리용.
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CreateCourseVO> listCreateCourseForEnrollDateOffline(CreateCourseVO iCreateCourseVO)  throws DataAccessException ;
+	
+	public List<CreateCourseVO> listCreateCourseForEnrollDateOffline(CreateCourseVO iCreateCourseVO)   ;
 
 	/**
 	 * 개설 과정명 검색 목록 조회 - 과정 안내 / 신청용
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CreateCourseVO> listCreateCourseForEnrollSearch(CreateCourseVO VO)  throws DataAccessException ;
+	
+	public List<CreateCourseVO> listCreateCourseForEnrollSearch(CreateCourseVO VO)   ;
 
 	/**
 	 * 개설 과정 정보 조회
 	 *
 	 * @return ProcessResultVO
 	 */
-	public CreateCourseVO selectCreateCourse(CreateCourseVO iCreateCourseVO)  throws DataAccessException ;
+	public CreateCourseVO selectCreateCourse(CreateCourseVO iCreateCourseVO)   ;
 
 
 
@@ -94,28 +91,28 @@ public interface CreateCourseMapper {
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int insertCreateCourse(CreateCourseVO iCreateCourseVO)  throws DataAccessException ;
+	public int insertCreateCourse(CreateCourseVO iCreateCourseVO)   ;
 
 	/**
 	 * 개설 과정 코드 조회
 	 *
 	 * @return ProcessResultVO
 	 */
-	public String selectCreateCourseCd()  throws DataAccessException ;
+	public String selectCreateCourseCd()   ;
 
 	/**
 	 * 개설 과정 수정
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int updateCreateCourse(CreateCourseVO iCreateCourseVO)  throws DataAccessException ;
+	public int updateCreateCourse(CreateCourseVO iCreateCourseVO)   ;
 
 	/**
 	 * 개설 과정 삭제
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int deleteCreateCourse(CreateCourseVO iCreateCourseVO)  throws DataAccessException ;
+	public int deleteCreateCourse(CreateCourseVO iCreateCourseVO)   ;
 	
 	
 	/**
@@ -123,39 +120,39 @@ public interface CreateCourseMapper {
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int deleteCreateCourseQr(CreateCourseVO iCreateCourseVO)  throws DataAccessException ;
+	public int deleteCreateCourseQr(CreateCourseVO iCreateCourseVO)   ;
 	
 	/**
 	 * 학습자 - 수강 신청한 목록 조회
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<UserCourseVO> listCreateCourseForStudent(Map<String, Object> userInfo)  throws DataAccessException ;
+	
+	public List<UserCourseVO> listCreateCourseForStudent(Map<String, Object> userInfo)   ;
 
 	/**
 	 * 학습자 - 수강 신청한 목록 조회
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<ResearchCourseVO> listCreateCourseForResearch(Map<String, Object> researchInfo)  throws DataAccessException ;
+	
+	public List<ResearchCourseVO> listCreateCourseForResearch(Map<String, Object> researchInfo)   ;
 
 	/**
 	 * 학습자 - 수강 신청한 목록 조회
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<UserCourseVO> listCreateCourseForStudentPageing(Map<String, Object> userInfo)  throws DataAccessException ;
+	
+	public List<UserCourseVO> listCreateCourseForStudentPageing(Map<String, Object> userInfo)   ;
 
 	/**
 	 * 학습자 - 수강 신청한 목록 조회
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public int listCreateCourseForStudentPageingCount(Map<String, Object> userInfo)  throws DataAccessException ;
+	
+	public int listCreateCourseForStudentPageingCount(Map<String, Object> userInfo)   ;
 
 	
 	/**
@@ -163,16 +160,16 @@ public interface CreateCourseMapper {
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<UserCourseVO> listCreateCourseForTeacher(Map<String, Object> userInfo)  throws DataAccessException ;
+	
+	public List<UserCourseVO> listCreateCourseForTeacher(Map<String, Object> userInfo)   ;
 
 	/**
 	 * 교수자 - 진행중인 과정 목록수 반환
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public int listCreateCourseForTeacherCount (Map<String, Object> userInfo)  throws DataAccessException ;
+	
+	public int listCreateCourseForTeacherCount (Map<String, Object> userInfo)   ;
 
 	
 	/**
@@ -180,62 +177,62 @@ public interface CreateCourseMapper {
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<UserCourseVO> listCreateCourseForTeacher(Map<String, Object> userInfo, int curPage, int listScale, int pageScale)  throws DataAccessException ;
+	
+	public List<UserCourseVO> listCreateCourseForTeacher(Map<String, Object> userInfo, int curPage, int listScale, int pageScale)   ;
 
 	/**
 	 * 월별 개설과정 목록 조회(리스트로)
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CreateCourseVO> listCreateCourseForMonth(CreateCourseVO iCreateCourseVO)  throws DataAccessException ;
+	
+	public List<CreateCourseVO> listCreateCourseForMonth(CreateCourseVO iCreateCourseVO)   ;
 
 	/**
 	 * 월별 개설과정 목록 조회(리스트로)
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CreateCourseVO> calendarCreateCourseForMonth(CreateCourseVO iCreateCourseVO)  throws DataAccessException ;
+	
+	public List<CreateCourseVO> calendarCreateCourseForMonth(CreateCourseVO iCreateCourseVO)   ;
 
 	/**
 	 * 과정 코드로 기수 목록 조회
 	 * @param iCreateCourseVO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CreateCourseVO> listCourseTerm(CreateCourseVO iCreateCourseVO)  throws DataAccessException ;
+	
+	public List<CreateCourseVO> listCourseTerm(CreateCourseVO iCreateCourseVO)   ;
 
 	/**
 	 * 월별 개설과정 목록 조회(리스트로)
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CreateCourseVO> calendarCreateCourse(CreateCourseVO iCreateCourseVO)  throws DataAccessException ;
+	
+	public List<CreateCourseVO> calendarCreateCourse(CreateCourseVO iCreateCourseVO)   ;
 
 	/**
 	 * 과정 기수 최대값 가져오기.
 	 * @return ProcessResultVO
 	 */
-	public CreateCourseVO selectMaxTerm(CreateCourseVO VO)  throws DataAccessException ;
+	public CreateCourseVO selectMaxTerm(CreateCourseVO VO)   ;
 
 	/**
 	 * 개설 과정명 검색 목록 조회 - 과정 안내 / 신청용 Paging
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CreateCourseVO> listCreateCourseForEnrollSearchPaging(CreateCourseVO VO)  throws DataAccessException ;
+	
+	public List<CreateCourseVO> listCreateCourseForEnrollSearchPaging(CreateCourseVO VO)   ;
 
 	/**
 	 * 개설 과정명 검색 목록 조회 - 과정 안내 / 신청용 Paging
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public int listCreateCourseForEnrollSearchPagingCount(CreateCourseVO VO)  throws DataAccessException ;
+	
+	public int listCreateCourseForEnrollSearchPagingCount(CreateCourseVO VO)   ;
 
 	
 	/**
@@ -243,86 +240,86 @@ public interface CreateCourseMapper {
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CreateCourseVO> listSubInfo(CreateCourseVO iCreateCourseVO)  throws DataAccessException ;
+	
+	public List<CreateCourseVO> listSubInfo(CreateCourseVO iCreateCourseVO)   ;
 
 	/**
 	 * 과목 사용중인 개설 과정 목록 조회 - 오프라인
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CreateCourseVO> listSubInfoOffline(CreateCourseVO iCreateCourseVO)  throws DataAccessException ;
+	
+	public List<CreateCourseVO> listSubInfoOffline(CreateCourseVO iCreateCourseVO)   ;
 
 	/**
 	 * 진행중인과정 - Todo리스트 목록조회
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CreateCourseVO> listCreateCourseTodoList(CreateCourseVO VO)  throws DataAccessException ;
+	
+	public List<CreateCourseVO> listCreateCourseTodoList(CreateCourseVO VO)   ;
 
 	/**
 	 * 개설 과정 전체 목록 조회
 	 *
 	 * @return List
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CreateCourseVO> listCreateCourseForAll(CreateCourseVO VO)  throws DataAccessException ;
+	
+	public List<CreateCourseVO> listCreateCourseForAll(CreateCourseVO VO)   ;
 	
 	/**
 	 * 개설 과정 전체 목록 조회
 	 *
 	 * @return List
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CreateCourseVO> listDeptByCrsCd(CreateCourseVO VO)  throws DataAccessException ;
+	
+	public List<CreateCourseVO> listDeptByCrsCd(CreateCourseVO VO)   ;
 	
 	/**
 	 * 개설 과정 전체 목록 조회
 	 *
 	 * @return List
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CreateCourseVO> listSbjByDeptCd(CreateCourseVO VO)  throws DataAccessException ;
+	
+	public List<CreateCourseVO> listSbjByDeptCd(CreateCourseVO VO)   ;
 	
 	/**
 	 * 개설 과정 전체 목록 조회
 	 *
 	 * @return List
 	 */
-	@SuppressWarnings("unchecked")
-	public List<UserCourseVO> myCreListForStudent(Map<String, Object> userInfo)  throws DataAccessException ;
+	
+	public List<UserCourseVO> myCreListForStudent(Map<String, Object> userInfo)   ;
 	
 	/**
 	 * 개설 과정 전체 목록 조회
 	 *
 	 * @return List
 	 */
-	@SuppressWarnings("unchecked")
-	public List<UserCourseVO> myCrsListForStudent(Map<String, Object> userInfo)  throws DataAccessException ;
+	
+	public List<UserCourseVO> myCrsListForStudent(Map<String, Object> userInfo)   ;
 	
 	/**
 	 * 개설 과정 전체 목록 조회
 	 *
 	 * @return List
 	 */
-	@SuppressWarnings("unchecked")
-	public List<UserCourseVO> myCreListForTeacher(Map<String, Object> userInfo)  throws DataAccessException ;
+	
+	public List<UserCourseVO> myCreListForTeacher(Map<String, Object> userInfo)   ;
 	
 	/**
 	 * 개설 과정 전체 목록 조회
 	 *
 	 * @return List
 	 */
-	@SuppressWarnings("unchecked")
-	public List<UserCourseVO> myCrsListForTeacher(Map<String, Object> userInfo)  throws DataAccessException ;
+	
+	public List<UserCourseVO> myCrsListForTeacher(Map<String, Object> userInfo)   ;
 	/**
 	 * 개설과정 카운트 조회 - subject 기준
 	 * @param iCreateCourseVO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public int listCreateCourseForEnrollSearchBySubjectPagingCount(CreateCourseVO vo);
 
 	/**
@@ -331,7 +328,7 @@ public interface CreateCourseMapper {
 	 * @param vo
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public List<CreateCourseVO> listCreateCourseForEnrollSearchBySubjectPaging(CreateCourseVO vo);
 
 	/**
@@ -339,7 +336,7 @@ public interface CreateCourseMapper {
 	 * @param vo
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public CreateCourseVO selectCreateCourseForEnroll(CreateCourseVO vo);
 	
 	/**
@@ -355,34 +352,34 @@ public interface CreateCourseMapper {
 	
 	
 	public int countCourse(CreateCourseVO VO)
-			throws DataAccessException ;
+			 ;
 	
 	/**
 	 * 수강신청내역 조회
 	 */
-	public List<CreateCourseVO> listUserStdCourse(CreateCourseVO VO) throws DataAccessException;
+	public List<CreateCourseVO> listUserStdCourse(CreateCourseVO VO) ;
 	
 	/**
 	 * 개설 과정 QR 정보 등록
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int insertCreateCourseQr(CreateCourseVO iCreateCourseVO)  throws DataAccessException ;
+	public int insertCreateCourseQr(CreateCourseVO iCreateCourseVO)   ;
 	
 	/**
 	 * 개설 과정 Pageing 목록 조회 [담임]
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CreateCourseVO> listCreateCourseForTchMgrPageing(CreateCourseVO iCreateCourseVO)  throws DataAccessException ;
+	
+	public List<CreateCourseVO> listCreateCourseForTchMgrPageing(CreateCourseVO iCreateCourseVO)   ;
 
 	/**
 	 * 개설 과정 Pageing 목록 조회 [담임]
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public int listCreateCourseForTchMgrPageingCount (CreateCourseVO iCreateCourseVO)  throws DataAccessException ;
+	
+	public int listCreateCourseForTchMgrPageingCount (CreateCourseVO iCreateCourseVO)   ;
 }
 

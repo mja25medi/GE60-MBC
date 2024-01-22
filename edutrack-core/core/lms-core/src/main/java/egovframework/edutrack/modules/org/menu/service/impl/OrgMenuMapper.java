@@ -23,84 +23,84 @@ public interface OrgMenuMapper {
 	 * 기관 메뉴의 전체 목록을 조회한다. 
 	 * @param  OrgMenuVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OrgMenuVO> list(OrgMenuVO vo) throws Exception;
+	
+	public List<OrgMenuVO> list(OrgMenuVO vo) ;
 	
     /**
 	 * 기관 메뉴의 상세 정보를 조회한다. 
 	 * @param  OrgMenuVO 
 	 * @return OrgMenuVO
-	 * @throws Exception
+	 * @
 	 */
-	public OrgMenuVO selectAuthorizeByMenu(OrgMenuVO vo) throws Exception;
+	public OrgMenuVO selectAuthorizeByMenu(OrgMenuVO vo) ;
 	
-	public OrgMenuVO selectAuthorizeByMenu2(OrgMenuVO vo) throws Exception;
+	public OrgMenuVO selectAuthorizeByMenu2(OrgMenuVO vo) ;
 	
     /**
 	 * 기관 메뉴의 상세 정보를 조회한다. 
 	 * @param  OrgMenuVO 
 	 * @return OrgMenuVO
-	 * @throws Exception
+	 * @
 	 */
-	public OrgMenuVO select(OrgMenuVO vo) throws Exception;
+	public OrgMenuVO select(OrgMenuVO vo) ;
 	
     /**
 	 * 기관 메뉴의 전체 목록을 조회한다. 
 	 * @param  OrgMenuVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OrgMenuVO> listAuthGrpMenu(OrgMenuVO vo) throws Exception;
+	
+	public List<OrgMenuVO> listAuthGrpMenu(OrgMenuVO vo) ;
 	
     /**
 	 * 기관 메뉴의 키를 생성한다. 
 	 * @param  OrgMenuVO 
 	 * @return OrgMenuVO
-	 * @throws Exception
+	 * @
 	 */
-	public String selectKey() throws Exception;	
+	public String selectKey() ;	
 
     /**
      * 기관 메뉴의 상세 정보를 등록한다.  
      * @param  OrgMenuVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(OrgMenuVO vo) throws Exception;
+    public int insert(OrgMenuVO vo) ;
     
     /**
      * 기관 메뉴의 상세 정보를 수정한다. 
      * @param  OrgMenuVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int update(OrgMenuVO vo) throws Exception;
+    public int update(OrgMenuVO vo) ;
     
     /**
      * 기관 메뉴의 정보를 삭제한다.  
      * @param  OrgMenuVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int delete(OrgMenuVO vo) throws Exception;
+    public int delete(OrgMenuVO vo) ;
     
     /**
      * 기관 메뉴의 초기화 등록한다.  
      * @param  OrgMenuVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insertInit(OrgMenuVO vo) throws Exception;
+    public int insertInit(OrgMenuVO vo) ;
     
     /**
      * 기관 메뉴의 초기화 삭제한다.  
      * @param  OrgMenuVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int deleteByMenuLvl(OrgMenuVO vo) throws Exception;    
+    public int deleteByMenuLvl(OrgMenuVO vo) ;    
 
 }

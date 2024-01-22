@@ -17,8 +17,8 @@ public interface OlcCtgrMapper {
 	 * @param OlcCtgrVO.parCtgrCd (선택적으로 입력, 최상위 분류부터 조회시는 입력이 없어야 한다.)
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OlcCtgrVO> listTree(OlcCtgrVO vo) throws Exception;
+	
+	public List<OlcCtgrVO> listTree(OlcCtgrVO vo) ;
 
 	/**
 	 * OLC 분류의 하위 분류를 목록으로 가져온다.
@@ -27,8 +27,8 @@ public interface OlcCtgrMapper {
 	 * @param OlcCtgrVO.parCtgrCd (최상위 분류를 조회시는 입력이 없어야 한다.)
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OlcCtgrVO> listSub(OlcCtgrVO vo)  throws Exception;
+	
+	public List<OlcCtgrVO> listSub(OlcCtgrVO vo)  ;
 
 	/**
 	 * 분류 정보를 조회한다.
@@ -37,34 +37,34 @@ public interface OlcCtgrMapper {
 	 * @param OlcCtgrVO.ctgrCd
 	 * @return ProcessResultVO
 	 */
-	public OlcCtgrVO select(OlcCtgrVO vo)  throws Exception;
+	public OlcCtgrVO select(OlcCtgrVO vo)  ;
 
 	/**
 	 * 분류를 등록하고 결과를 반환한다.
 	 * @param OlcCtgrVO
 	 * @reurn ProcessResultVO
 	 */
-	public int insert(OlcCtgrVO vo)  throws Exception;
+	public int insert(OlcCtgrVO vo)  ;
 
 	/**
 	 * 분류 코드 조회를 생성해서 반환한다.
 	 * @param OlcCtgrVO.orgCd
 	 * @return ProcessResultVO
 	 */
-	public OlcCtgrVO selectCtgrCd() throws Exception;
+	public OlcCtgrVO selectCtgrCd() ;
 	/**
 	 * 분류를 수정하고 결과를 반환한다.
 	 * @param OlcCtgrVO
 	 * @reurn ProcessResultVO
 	 */
-	public int update(OlcCtgrVO vo) throws Exception;
+	public int update(OlcCtgrVO vo) ;
 
 	/**
 	 * 분류 정보의 다중 목록을 Update하고 결과를 반환한다.
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int updateBatch(List<OlcCtgrVO> itemArray) throws Exception;
+	public int updateBatch(List<OlcCtgrVO> itemArray) ;
 
 	/**
 	 * 분류를 삭제하고 결과를 반환한다.
@@ -73,7 +73,7 @@ public interface OlcCtgrMapper {
 	 * @param OlcCtgrVO.ctgrCd
 	 * @reurn ProcessResultVO
 	 */
-	public int delete(OlcCtgrVO vo) throws Exception;
+	public int delete(OlcCtgrVO vo) ;
 
 	/**
 	 * 하위 분류를 삭제하고 결과를 반환한다.
@@ -82,5 +82,5 @@ public interface OlcCtgrMapper {
 	 * @param OlcCtgrVO.parCtgrCd
 	 * @reurn ProcessResultVO
 	 */
-	public int deleteSub(OlcCtgrVO vo) throws Exception;
+	public int deleteSub(OlcCtgrVO vo) ;
 }

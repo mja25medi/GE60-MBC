@@ -13,40 +13,40 @@ public interface LogApiSyncMapper {
 	 * api 전송 이력 리스트 조회
 	 * @param  LogApiSyncVO 
 	 * @return List<EgovMap>
-	 * @throws Exception
+	 * @
 	 */
-	public List<EgovMap> listApiSync(LogApiSyncVO vo) throws Exception; 
+	public List<EgovMap> listApiSync(LogApiSyncVO vo) ; 
 
 	/**
 	 * api 전송 이력 조회
 	 * @param  LogApiSyncVO 
 	 * @return EgovMap
-	 * @throws Exception
+	 * @
 	 */
-	public EgovMap selectApiSync(LogApiSyncVO vo) throws Exception; 
+	public EgovMap selectApiSync(LogApiSyncVO vo) ; 
 	
 	/**
 	 * api 전송 이력 등록
 	 * @param  LogApiSyncVO 
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int insertApiSync(LogApiSyncVO vo) throws Exception; 
+	public int insertApiSync(LogApiSyncVO vo) ; 
 	
 	/**
 	 * api 전송 이력 수정
 	 * @param  LogApiSyncVO 
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int updateApiSync(LogApiSyncVO vo) throws Exception; 
+	public int updateApiSync(LogApiSyncVO vo) ; 
 	
 	/**
 	 * api 전송 이력 삭제
 	 * @param  LogApiSyncVO 
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int deleteApiSync(LogApiSyncVO vo) throws Exception; 
+	public int deleteApiSync(LogApiSyncVO vo) ; 
 	
 }

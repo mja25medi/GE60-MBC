@@ -16,12 +16,9 @@
 	if(agent.indexOf("Mac") > -1) osMac = "Mac";
 	request.setAttribute("osMac", osMac);
 
-	request.setAttribute("wowzaUse", Constants.WOWZA_USE);
-	request.setAttribute("wowzaUrlStmp", Constants.WOWZA_URL_RTMP);
-	request.setAttribute("wowzaUrlStsp", Constants.WOWZA_URL_RTSP);
-	request.setAttribute("wowzaUrlHttp", Constants.WOWZA_URL_HTTP);
-	request.setAttribute("mediaUse", Constants.MEDIA_USE);
-	request.setAttribute("mediaUrl", Constants.MEDIA_URL);
+	request.setAttribute("mediaStreamUse", Constants.MEDIA_STREAM_USE);
+	request.setAttribute("mediaStreamUrl", Constants.MEDIA_STREAM_URL);
+	request.setAttribute("mediaStreamHls", Constants.MEDIA_STREAM_HLS);
 	request.setAttribute("flowplayerKey", Constants.FLOWPLAYER_KEY);
 %>
 <head>
@@ -104,22 +101,31 @@ $(document).ready(function() {
 	$('.inbox-lecture').sidebar({dimPage: false, closable: false, exclusive: true, context: '.vod_content'})
 	.sidebar('attach events', '.lecture-button', 'toggle')
 	
-	var wowzaUse = '${wowzaUse}';
 	var sourcesType = "video/mp4";
-	<c:if test="${cntsTypeCd ne 'CDN'}">
-		var sourcesSrc = "/contents${filePath}/${fileName}";
+	var sourcesSrc = "";
+
+	
+	<c:if test="${mediaStreamUse eq 'use'}">
+		<c:if test="${cntsTypeCd eq 'VOD'}">
+			sourcesType = "application/x-mpegurl";
+			sourcesSrc = "${mediaStreamUrl}${orgCntsPath}${filePath}/${fileName}/${mediaStreamHls}";
+		</c:if>		
+		<c:if test="${cntsTypeCd ne 'VOD' && cntsTypeCd ne 'CDN'}">
+			sourcesSrc = "${filePath}/${fileName}";
+		</c:if>	
+		<c:if test="${cntsTypeCd eq 'CDN'}">
+			sourcesSrc = "${filePath}";
+		</c:if>
 	</c:if>
-	<c:if test="${cntsTypeCd eq 'CDN'}">
-		var sourcesSrc = "${filePath}";
+	<c:if test="${mediaStreamUse ne 'use'}">
+		<c:if test="${cntsTypeCd ne 'CDN'}">
+			sourcesSrc = "${filePath}/${fileName}";
+		</c:if>	
+		<c:if test="${cntsTypeCd eq 'CDN'}">
+			sourcesSrc = "${filePath}";
+		</c:if>
 	</c:if>
 	
-	if(wowzaUse == "use"){
-		sourcesType = "application/x-mpegurl";
-		<c:if test="${cntsTypeCd ne 'CDN'}">
-			sourcesSrc = "${wowzaUrlHttp}${orgCntsPath}${filePath}/${fileName}/playlist.m3u8";
-		</c:if>
-
-	}
    
 	modalBox = new $M.ModalDialog({
 		"modalid" : "modal1"
@@ -134,7 +140,7 @@ $(document).ready(function() {
 	  autoplay: true,
 	  share: false,
 	  hlsQualities: false,
-	  splash: true,
+//	  splash: true,
 	  keyboard: false,
       clip: {
 	    	autoplay: true,

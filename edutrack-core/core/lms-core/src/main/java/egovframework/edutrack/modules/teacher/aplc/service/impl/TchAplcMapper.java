@@ -22,8 +22,8 @@ public interface TchAplcMapper {
 	 * 
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<TchAplcVO> listTeacherAplc(TchAplcVO teacherAplcVO) throws Exception;
+	
+	public List<TchAplcVO> listTeacherAplc(TchAplcVO teacherAplcVO) ;
 	
 	
 	/**
@@ -31,15 +31,15 @@ public interface TchAplcMapper {
 	 * 
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<TchAplcVO> listTeacherAplcResult(TchAplcVO teacherAplcVO) throws Exception;
+	
+	public List<TchAplcVO> listTeacherAplcResult(TchAplcVO teacherAplcVO) ;
 	
 	/**
 	 * 강사신청
 	 *  
 	 * @reurn 
 	 */
-	public int insertTeacherAplc(TchAplcVO teacherAplcVO) throws Exception;
+	public int insertTeacherAplc(TchAplcVO teacherAplcVO) ;
 	
 	
 	/**
@@ -47,27 +47,27 @@ public interface TchAplcMapper {
 	 *  
 	 * @reurn 
 	 */
-	public int updateTeacherAplc(TchAplcVO teacherAplcVO) throws Exception;
+	public int updateTeacherAplc(TchAplcVO teacherAplcVO) ;
 	
 	/**
 	 * 강사승인 시 강사입력
 	 *  
 	 * @reurn 
 	 */
-	public int insertTeacherInfo(TchAplcVO teacherAplcVO) throws Exception;
+	public int insertTeacherInfo(TchAplcVO teacherAplcVO) ;
 	
 	/**
 	 * 강사취소 시 강사삭제
 	 *  
 	 * @reurn 
 	 */
-	public int deleteTeacherInfo(TchAplcVO teacherAplcVO) throws Exception;
+	public int deleteTeacherInfo(TchAplcVO teacherAplcVO) ;
 	
 	/**
 	 * 강사신청 유무확인
 	 *  
 	 * @reurn 
 	 */
-	public TchAplcVO selectProfReg(TchAplcVO teacherAplcVO) throws Exception;
+	public TchAplcVO selectProfReg(TchAplcVO teacherAplcVO) ;
 	
 }

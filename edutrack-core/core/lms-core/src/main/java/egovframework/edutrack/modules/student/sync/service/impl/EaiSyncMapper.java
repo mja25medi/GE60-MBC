@@ -13,27 +13,27 @@ public interface EaiSyncMapper {
 	 * @param  EaiNkoreducompsendVO.linkstatus
 	 * @return ProcessReslutListVO(EaiNkoreducompsendVO)
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public List<EaiNkoreducompsendVO> list(
-			EaiNkoreducompsendVO iEaiNkoreducompsendVO) throws Exception;
+			EaiNkoreducompsendVO iEaiNkoreducompsendVO) ;
 
 	/**
 	 * Eai 연동 목록 조회 (페이징 처리)
 	 * @param  EaiNkoreducompsendVO.linkstatus
 	 * @return ProcessReslutListVO(EaiNkoreducompsendVO)
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public List<EaiNkoreducompsendVO> listPageing(
-			EaiNkoreducompsendVO iEaiNkoreducompsendVO, int curPage, int listScale, int pageScale) throws Exception;
+			EaiNkoreducompsendVO iEaiNkoreducompsendVO, int curPage, int listScale, int pageScale) ;
 	
 	/**
 	 * Eai 연동 목록 조회 (페이징 처리)
 	 * @param  EaiNkoreducompsendVO.linkstatus
 	 * @return int
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public int count(
-			EaiNkoreducompsendVO iEaiNkoreducompsendVO) throws Exception;
+			EaiNkoreducompsendVO iEaiNkoreducompsendVO) ;
 	
 
 	/**
@@ -41,14 +41,14 @@ public interface EaiSyncMapper {
 	 * @reurn ProcessResultVO
 	 */
 	public int updateNkoreducompsend(
-			EaiNkoreducompsendVO iEaiNkoreducompsendVO) throws Exception;
+			EaiNkoreducompsendVO iEaiNkoreducompsendVO) ;
 
 	/**
 	 * EAI 전송 초기화(TBEAISENDRECVSTSMT) 
 	 * @reurn ProcessResultVO
 	 */
 	public int updateEaisendrecvstsmt(
-			EaiNkoreducompsendVO iEaiNkoreducompsendVO) throws Exception;
+			EaiNkoreducompsendVO iEaiNkoreducompsendVO) ;
 
 
 }

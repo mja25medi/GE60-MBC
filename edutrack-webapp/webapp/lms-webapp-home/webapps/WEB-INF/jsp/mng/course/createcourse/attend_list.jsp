@@ -1,5 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/mng/common/page_init.jsp" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:parseDate value="${createCourseVO.enrlStartDttm }" pattern="yyyy.MM.dd" var="startDate"/>
+<fmt:parseDate value="${createCourseVO.enrlEndDttm }" pattern="yyyy.MM.dd" var="endDate"/>
+<fmt:parseDate value="${attendPeriod[0]}" pattern="yyyyMMdd" var="period_0"/>
+<fmt:parseDate value="${attendPeriod[1]}" pattern="yyyyMMdd" var="period_1"/>
+<fmt:parseDate value="${attendPeriod[2]}" pattern="yyyyMMdd" var="period_2"/>
+<fmt:parseDate value="${attendPeriod[3]}" pattern="yyyyMMdd" var="period_3"/>
+<fmt:parseDate value="${attendPeriod[4]}" pattern="yyyyMMdd" var="period_4"/>
 <c:set var="attendList" value="${attendList}"/>
 <c:set var="periodList" value="${periodList}"/>
         <style type="text/css">
@@ -42,7 +50,7 @@
                                             <%-- <meditag:datepicker name1="searchDate" /> --%>
                                         </div>
                                         <div class="pull-right">
-                                            <button class="btn btn-primary btn-sm" style="margin-right: 5px;" id="search_btn"><i class="fa fa-search fa-fw" ></i>검색</button>
+                                            <button class="btn btn-primary btn-sm" style="margin-right: 5px;" id="search_btn" ><i class="fa fa-search fa-fw" ></i>검색</button>
                                             <a href="#0" class="btn btn-primary btn-sm" style="float:right;" onclick="excelDownload('${createCourseVO.crsCreCd}');"><i class="fa fa-file-excel-o fa-fw"></i>엑셀다운로드</a>
                                         </div>
                                     </div>
@@ -83,9 +91,9 @@
                                     <c:forEach var="data" items="${attendList}" varStatus="status">                            
 	                                    <tr>
 	                                        <td>${status.count}</td>
-	                                        <td><a href="javascript:userPop('${data.userNo}','${attendPeriod[0]}')">${data.userNm}</a></td>
+	                                        <td><a href="javascript:userPop('${data.userNo}','')">${data.userNm}</a></td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[0]}')">
+	                                        	<a <c:if test="${startDate <= period_0 && endDate >= period_0}"> href="javascript:userPop('${data.userNo}','${attendPeriod[0]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col01 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col01 eq 'F'}"><span class="f22">×</span></c:when>
@@ -97,7 +105,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[0]}')">
+	                                        	<a <c:if test="${startDate <= period_0 && endDate >= period_0}"> href="javascript:userPop('${data.userNo}','${attendPeriod[0]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col02 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col02 eq 'F'}"><span class="f22">×</span></c:when>
@@ -109,7 +117,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[0]}')">
+	                                        	<a <c:if test="${startDate <= period_0 && endDate >= period_0}"> href="javascript:userPop('${data.userNo}','${attendPeriod[0]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col03 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col03 eq 'F'}"><span class="f22">×</span></c:when>
@@ -121,7 +129,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[0]}')">
+	                                        	<a <c:if test="${startDate <= period_0 && endDate >= period_0}"> href="javascript:userPop('${data.userNo}','${attendPeriod[0]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col04 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col04 eq 'F'}"><span class="f22">×</span></c:when>
@@ -133,7 +141,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[0]}')">
+	                                        	<a <c:if test="${startDate <= period_0 && endDate >= period_0}"> href="javascript:userPop('${data.userNo}','${attendPeriod[0]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col05 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col05 eq 'F'}"><span class="f22">×</span></c:when>
@@ -145,7 +153,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[0]}')">
+	                                        	<a <c:if test="${startDate <= period_0 && endDate >= period_0}"> href="javascript:userPop('${data.userNo}','${attendPeriod[0]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col06 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col06 eq 'F'}"><span class="f22">×</span></c:when>
@@ -157,7 +165,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[0]}')">
+	                                        	<a <c:if test="${startDate <= period_0 && endDate >= period_0}"> href="javascript:userPop('${data.userNo}','${attendPeriod[0]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col07 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col07 eq 'F'}"><span class="f22">×</span></c:when>
@@ -169,7 +177,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[0]}')">
+	                                        	<a <c:if test="${startDate <= period_0 && endDate >= period_0}"> href="javascript:userPop('${data.userNo}','${attendPeriod[0]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col08 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col08 eq 'F'}"><span class="f22">×</span></c:when>
@@ -182,7 +190,7 @@
 	                                        </td>
 	                                        
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[1]}')">
+	                                        	<a <c:if test="${startDate <= period_1 && endDate >= period_1}"> href="javascript:userPop('${data.userNo}','${attendPeriod[1]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col11 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col11 eq 'F'}"><span class="f22">×</span></c:when>
@@ -194,7 +202,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[1]}')">
+	                                        	<a <c:if test="${startDate <= period_1 && endDate >= period_1}"> href="javascript:userPop('${data.userNo}','${attendPeriod[1]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col12 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col12 eq 'F'}"><span class="f22">×</span></c:when>
@@ -206,7 +214,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[1]}')">
+	                                        	<a <c:if test="${startDate <= period_1 && endDate >= period_1}"> href="javascript:userPop('${data.userNo}','${attendPeriod[1]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col13 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col13 eq 'F'}"><span class="f22">×</span></c:when>
@@ -218,7 +226,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[1]}')">
+	                                        	<a <c:if test="${startDate <= period_1 && endDate >= period_1}"> href="javascript:userPop('${data.userNo}','${attendPeriod[1]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col14 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col14 eq 'F'}"><span class="f22">×</span></c:when>
@@ -230,7 +238,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[1]}')">
+	                                        	<a <c:if test="${startDate <= period_1 && endDate >= period_1}"> href="javascript:userPop('${data.userNo}','${attendPeriod[1]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col15 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col15 eq 'F'}"><span class="f22">×</span></c:when>
@@ -242,7 +250,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[1]}')">
+	                                        	<a <c:if test="${startDate <= period_1 && endDate >= period_1}"> href="javascript:userPop('${data.userNo}','${attendPeriod[1]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col16 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col16 eq 'F'}"><span class="f22">×</span></c:when>
@@ -254,7 +262,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[1]}')">
+	                                        	<a <c:if test="${startDate <= period_1 && endDate >= period_1}"> href="javascript:userPop('${data.userNo}','${attendPeriod[1]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col17 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col17 eq 'F'}"><span class="f22">×</span></c:when>
@@ -266,7 +274,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[1]}')">
+	                                        	<a <c:if test="${startDate <= period_1 && endDate >= period_1}"> href="javascript:userPop('${data.userNo}','${attendPeriod[1]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col18 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col18 eq 'F'}"><span class="f22">×</span></c:when>
@@ -279,7 +287,7 @@
 	                                        </td>
 	                                        
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[2]}')">
+	                                        	<a <c:if test="${startDate <= period_2 && endDate >= period_2}"> href="javascript:userPop('${data.userNo}','${attendPeriod[2]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col21 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col21 eq 'F'}"><span class="f22">×</span></c:when>
@@ -291,7 +299,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[2]}')">
+	                                        	<a <c:if test="${startDate <= period_2 && endDate >= period_2}"> href="javascript:userPop('${data.userNo}','${attendPeriod[2]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col22 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col22 eq 'F'}"><span class="f22">×</span></c:when>
@@ -303,7 +311,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[2]}')">
+	                                        	<a <c:if test="${startDate <= period_2 && endDate >= period_2}"> href="javascript:userPop('${data.userNo}','${attendPeriod[2]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col23 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col23 eq 'F'}"><span class="f22">×</span></c:when>
@@ -315,7 +323,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[2]}')">
+	                                        	<a <c:if test="${startDate <= period_2 && endDate >= period_2}"> href="javascript:userPop('${data.userNo}','${attendPeriod[2]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col24 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col24 eq 'F'}"><span class="f22">×</span></c:when>
@@ -327,7 +335,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[2]}')">
+	                                        	<a <c:if test="${startDate <= period_2 && endDate >= period_2}"> href="javascript:userPop('${data.userNo}','${attendPeriod[2]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col25 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col25 eq 'F'}"><span class="f22">×</span></c:when>
@@ -339,7 +347,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[2]}')">
+	                                        	<a <c:if test="${startDate <= period_2 && endDate >= period_2}"> href="javascript:userPop('${data.userNo}','${attendPeriod[2]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col26 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col26 eq 'F'}"><span class="f22">×</span></c:when>
@@ -351,7 +359,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[2]}')">
+	                                        	<a <c:if test="${startDate <= period_2 && endDate >= period_2}"> href="javascript:userPop('${data.userNo}','${attendPeriod[2]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col27 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col27 eq 'F'}"><span class="f22">×</span></c:when>
@@ -363,7 +371,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[2]}')">
+	                                        	<a <c:if test="${startDate <= period_2 && endDate >= period_2}"> href="javascript:userPop('${data.userNo}','${attendPeriod[2]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col28 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col28 eq 'F'}"><span class="f22">×</span></c:when>
@@ -376,7 +384,7 @@
 	                                        </td>
 	                                        
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[3]}')">
+	                                        	<a <c:if test="${startDate <= period_3 && endDate >= period_3}"> href="javascript:userPop('${data.userNo}','${attendPeriod[3]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col31 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col31 eq 'F'}"><span class="f22">×</span></c:when>
@@ -388,7 +396,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[3]}')">
+	                                        	<a <c:if test="${startDate <= period_3 && endDate >= period_3}"> href="javascript:userPop('${data.userNo}','${attendPeriod[3]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col32 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col32 eq 'F'}"><span class="f22">×</span></c:when>
@@ -400,7 +408,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[3]}')">
+	                                        	<a <c:if test="${startDate <= period_3 && endDate >= period_3}"> href="javascript:userPop('${data.userNo}','${attendPeriod[3]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col33 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col33 eq 'F'}"><span class="f22">×</span></c:when>
@@ -412,7 +420,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[3]}')">
+	                                        	<a <c:if test="${startDate <= period_3 && endDate >= period_3}"> href="javascript:userPop('${data.userNo}','${attendPeriod[3]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col34 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col34 eq 'F'}"><span class="f22">×</span></c:when>
@@ -424,7 +432,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[3]}')">
+	                                        	<a <c:if test="${startDate <= period_3 && endDate >= period_3}"> href="javascript:userPop('${data.userNo}','${attendPeriod[3]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col35 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col35 eq 'F'}"><span class="f22">×</span></c:when>
@@ -436,7 +444,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[3]}')">
+	                                        	<a <c:if test="${startDate <= period_3 && endDate >= period_3}"> href="javascript:userPop('${data.userNo}','${attendPeriod[3]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col36 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col36 eq 'F'}"><span class="f22">×</span></c:when>
@@ -448,7 +456,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[3]}')">
+	                                        	<a <c:if test="${startDate <= period_3 && endDate >= period_3}"> href="javascript:userPop('${data.userNo}','${attendPeriod[3]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col37 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col37 eq 'F'}"><span class="f22">×</span></c:when>
@@ -460,7 +468,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[3]}')">
+	                                        	<a <c:if test="${startDate <= period_3 && endDate >= period_3}"> href="javascript:userPop('${data.userNo}','${attendPeriod[3]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col38 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col38 eq 'F'}"><span class="f22">×</span></c:when>
@@ -473,7 +481,7 @@
 	                                        </td>
 	                                       
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[4]}')">
+	                                        	<a <c:if test="${startDate <= period_4 && endDate >= period_4}"> href="javascript:userPop('${data.userNo}','${attendPeriod[4]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col41 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col41 eq 'F'}"><span class="f22">×</span></c:when>
@@ -485,7 +493,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[4]}')">
+	                                        	<a <c:if test="${startDate <= period_4 && endDate >= period_4}"> href="javascript:userPop('${data.userNo}','${attendPeriod[4]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col42 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col42 eq 'F'}"><span class="f22">×</span></c:when>
@@ -497,7 +505,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[4]}')">
+	                                        	<a <c:if test="${startDate <= period_4 && endDate >= period_4}"> href="javascript:userPop('${data.userNo}','${attendPeriod[4]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col43 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col43 eq 'F'}"><span class="f22">×</span></c:when>
@@ -509,7 +517,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[4]}')">
+	                                        	<a <c:if test="${startDate <= period_4 && endDate >= period_4}"> href="javascript:userPop('${data.userNo}','${attendPeriod[4]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col44 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col44 eq 'F'}"><span class="f22">×</span></c:when>
@@ -521,7 +529,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[4]}')">
+	                                        	<a <c:if test="${startDate <= period_4 && endDate >= period_4}"> href="javascript:userPop('${data.userNo}','${attendPeriod[4]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col45 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col45 eq 'F'}"><span class="f22">×</span></c:when>
@@ -533,7 +541,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[4]}')">
+	                                        	<a <c:if test="${startDate <= period_4 && endDate >= period_4}"> href="javascript:userPop('${data.userNo}','${attendPeriod[4]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col46 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col46 eq 'F'}"><span class="f22">×</span></c:when>
@@ -545,7 +553,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[4]}')">
+	                                        	<a <c:if test="${startDate <= period_4 && endDate >= period_4}"> href="javascript:userPop('${data.userNo}','${attendPeriod[4]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col47 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col47 eq 'F'}"><span class="f22">×</span></c:when>
@@ -557,7 +565,7 @@
 	                                        	</a>
 	                                        </td>
 	                                        <td>
-	                                        	<a href="javascript:userPop('${data.userNo}','${attendPeriod[4]}')">
+	                                        	<a <c:if test="${startDate <= period_4 && endDate >= period_4}"> href="javascript:userPop('${data.userNo}','${attendPeriod[4]}')"</c:if>>
 	                                        	<c:choose>
 	                                        		<c:when test="${data.col48 eq 'S'}"><span class="f22">○</span></c:when>
 	                                        		<c:when test="${data.col48 eq 'F'}"><span class="f22">×</span></c:when>
@@ -629,6 +637,15 @@ $(document).ready(function() {
 		    yearSuffix: '년'
     });    
 });
+
+function searchAttend(crsCreCd, searchDate) {
+ 	var url = cUrl("/mng/course/createCourse/listAttend");
+ 	$("#workBody")
+ 		.load(url, {
+ 			"crsCreCd" : crsCreCd,
+ 			"searchDate" : searchDate
+ 		});
+}
 
 
 /**

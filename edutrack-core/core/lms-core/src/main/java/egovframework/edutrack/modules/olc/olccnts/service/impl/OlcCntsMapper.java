@@ -18,7 +18,7 @@ public interface OlcCntsMapper {
 	 * @param int
 	 * @return
 	 */
-	public String selectKey()  throws Exception;
+	public String selectKey()  ;
 
 	/**
 	 * OLC CNTS의 모든 목록을 조회하여 반환한다.
@@ -27,8 +27,8 @@ public interface OlcCntsMapper {
 	 * @param OlcCntsVO.cartrgCd
 	 * @return ProcessResultListVO<OlcCntsVO>
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OlcCntsVO> list(OlcCntsVO vo) throws Exception;
+	
+	public List<OlcCntsVO> list(OlcCntsVO vo) ;
 
 	/**
 	 * OLC CNTS의 페이징된 목록을 조회하여 반환한다.
@@ -41,8 +41,8 @@ public interface OlcCntsMapper {
 	 * @param pageScale
 	 * @return ProcessResultListVO<OlcCntsVO>
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OlcCntsVO> listPageing(OlcCntsVO vo) throws DataAccessException;
+	
+	public List<OlcCntsVO> listPageing(OlcCntsVO vo) ;
 
 	/**
 	 * OLC CNTS의 페이징된 목록수 반환
@@ -55,8 +55,8 @@ public interface OlcCntsMapper {
 	 * @param pageScale
 	 * @return ProcessResultListVO<OlcCntsVO>
 	 */
-	@SuppressWarnings("unchecked")
-	public int count(OlcCntsVO vo) throws DataAccessException;
+	
+	public int count(OlcCntsVO vo) ;
 	
 	/**
 	 * OLC CNTS 정보 단일 레코드를 조회하여 반환한다.
@@ -66,7 +66,7 @@ public interface OlcCntsMapper {
 	 * @param OlcCntsVO.cntsCd
 	 * @return
 	 */
-	public OlcCntsVO select(OlcCntsVO vo) throws DataAccessException;
+	public OlcCntsVO select(OlcCntsVO vo) ;
 
 
 	/**
@@ -74,21 +74,21 @@ public interface OlcCntsMapper {
 	 * @param OlcCntsVO
 	 * @return ProcessResultVO<OlcCntsVO>
 	 */
-	public int insert(OlcCntsVO vo) throws DataAccessException;
+	public int insert(OlcCntsVO vo) ;
 
 	/**
 	 * OLC CNTS 정보 단일 레코드를 Update하고 결과를 반환한다.
 	 * @param OlcCntsVO
 	 * @return ProcessResultVO<OlcCntsVO>
 	 */
-	public int update(OlcCntsVO vo) throws DataAccessException;
+	public int update(OlcCntsVO vo) ;
 
 	/**
 	 * OLC CNTS 정보의 다중 목록을 Update하고 결과를 반환한다.
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int updateBatch(List<OlcCntsVO> olcArray) throws Exception;
+	public int updateBatch(List<OlcCntsVO> olcArray) ;
 
 	/**
 	 * OLC 정보 단일 레코드를 Delete하고 결과를 반환한다.
@@ -97,6 +97,6 @@ public interface OlcCntsMapper {
 	 * @param OlcCntsVO.userNo
 	 * @return ProcessResultVO<OlcCntsVO>
 	 */
-	public int delete(OlcCntsVO vo) throws DataAccessException;
+	public int delete(OlcCntsVO vo) ;
 
 }

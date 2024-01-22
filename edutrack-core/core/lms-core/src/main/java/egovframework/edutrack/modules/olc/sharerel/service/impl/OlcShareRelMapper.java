@@ -17,8 +17,8 @@ public interface OlcShareRelMapper {
 	 * @param OlcShareCtgrVO.parCtgrCd (최상위 분류를 조회시는 입력이 없어야 한다.)
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OlcShareRelVO> listByCartrg(OlcShareRelVO vo) throws Exception ;
+	
+	public List<OlcShareRelVO> listByCartrg(OlcShareRelVO vo)  ;
 
 	/**
 	 * OLC 공유 분류 관계 정보를 페이징 목록으로 가져온다.
@@ -28,15 +28,15 @@ public interface OlcShareRelMapper {
 	 * @param OlcShareCtgrVO.parCtgrCd (최상위 분류를 조회시는 입력이 없어야 한다.)
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OlcShareRelVO> listPageingByCartrg(OlcShareRelVO vo) throws Exception ;
+	
+	public List<OlcShareRelVO> listPageingByCartrg(OlcShareRelVO vo)  ;
 
 	/**
 	 * OLC 공유 분류 관계 정보를 페이징 목록수를 반환
 	 * 카트리지 기준
 	 */
-	@SuppressWarnings("unchecked")
-	public int count(OlcShareRelVO vo) throws Exception ;
+	
+	public int count(OlcShareRelVO vo)  ;
 	
 	/**
 	 * OLC 공유 분류 관계 정보를 목록으로 가져온다.
@@ -46,8 +46,8 @@ public interface OlcShareRelMapper {
 	 * @param OlcShareCtgrVO.parCtgrCd (최상위 분류를 조회시는 입력이 없어야 한다.)
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OlcShareRelVO> listByCtgr(OlcShareRelVO vo) throws Exception ;
+	
+	public List<OlcShareRelVO> listByCtgr(OlcShareRelVO vo)  ;
 
 	/**
 	 * OLC 공유 분류 관계 정보를 페이징 목록으로 가져온다.
@@ -57,8 +57,8 @@ public interface OlcShareRelMapper {
 	 * @param OlcShareCtgrVO.parCtgrCd (최상위 분류를 조회시는 입력이 없어야 한다.)
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OlcShareRelVO> listPageingByCtgr(OlcShareRelVO vo) throws Exception ;
+	
+	public List<OlcShareRelVO> listPageingByCtgr(OlcShareRelVO vo)  ;
 	
 	/**
 	 * OLC 공유 분류 관계 정보를 페이징 목록으로 가져온다.
@@ -68,8 +68,8 @@ public interface OlcShareRelMapper {
 	 * @param OlcShareCtgrVO.parCtgrCd (최상위 분류를 조회시는 입력이 없어야 한다.)
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public int listPageingByCtgrCount(OlcShareRelVO vo) throws Exception ;
+	
+	public int listPageingByCtgrCount(OlcShareRelVO vo)  ;
 	
 	/**
 	 * 공유 분류 관계 정보를 조회한다.
@@ -78,7 +78,7 @@ public interface OlcShareRelMapper {
 	 * @param OlcShareCtgrVO.ctgrCd
 	 * @return ProcessResultVO
 	 */
-	public OlcShareRelVO select(OlcShareRelVO vo) throws Exception ;
+	public OlcShareRelVO select(OlcShareRelVO vo)  ;
 
 
 	/**
@@ -86,7 +86,7 @@ public interface OlcShareRelMapper {
 	 * @param OlcShareRelVO
 	 * @reurn ProcessResultVO
 	 */
-	public int insert(OlcShareRelVO vo) throws Exception ;
+	public int insert(OlcShareRelVO vo)  ;
 	/**
 	 * 공유 분류 관계 정보를 삭제하고 결과를 반환한다.
 	 * @param OlcShareRelVO.orgCd
@@ -94,7 +94,7 @@ public interface OlcShareRelMapper {
 	 * @param OlcShareRelVO.ctgrCd
 	 * @reurn ProcessResultVO
 	 */
-	public int delete(OlcShareRelVO vo) throws Exception ;
+	public int delete(OlcShareRelVO vo)  ;
 
 	/**
 	 * 공유 분류 관계 정보를 삭제하고 결과를 반환한다.
@@ -104,7 +104,7 @@ public interface OlcShareRelMapper {
 	 * @param OlcShareRelVO.parCtgrCd
 	 * @reurn ProcessResultVO
 	 */
-	public int deleteCtgr(OlcShareRelVO vo) throws Exception ;
+	public int deleteCtgr(OlcShareRelVO vo)  ;
 
 	/**
 	 * 공유 분류 관계 정보를 삭제하고 결과를 반환한다.
@@ -114,7 +114,7 @@ public interface OlcShareRelMapper {
 	 * @param OlcShareRelVO.parCtgrCd
 	 * @reurn ProcessResultVO
 	 */
-	public int deleteCartrg(OlcShareRelVO vo) throws Exception;
+	public int deleteCartrg(OlcShareRelVO vo) ;
 
 
 	/**
@@ -125,7 +125,7 @@ public interface OlcShareRelMapper {
 	 * @param OlcShareRelVO.parCtgrCd
 	 * @reurn ProcessResultVO
 	 */
-	public int deleteCartrgCheck(OlcShareRelVO vo) throws Exception;
+	public int deleteCartrgCheck(OlcShareRelVO vo) ;
 
 	/**
 	 * OLC 지식공유 분류 관계 정보를 목록으로 가져온다.
@@ -135,8 +135,8 @@ public interface OlcShareRelMapper {
 	 * @param OlcShareCtgrVO.parCtgrCd (최상위 분류를 조회시는 입력이 없어야 한다.)
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OlcShareRelVO> listByCtgrKnow(OlcShareRelVO vo) throws Exception;
+	
+	public List<OlcShareRelVO> listByCtgrKnow(OlcShareRelVO vo) ;
 
 	/**
 	 * OLC 지식공유 분류 관계 정보를 페이징 목록으로 가져온다.
@@ -146,7 +146,7 @@ public interface OlcShareRelMapper {
 	 * @param OlcShareCtgrVO.parCtgrCd (최상위 분류를 조회시는 입력이 없어야 한다.)
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OlcShareRelVO> listPageingByCtgrKnow(OlcShareRelVO vo) throws Exception ;
+	
+	public List<OlcShareRelVO> listPageingByCtgrKnow(OlcShareRelVO vo)  ;
 
 }

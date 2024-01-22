@@ -24,50 +24,50 @@ public interface LogUserLoginTryLogMapper {
 	 * 로그인 시도 로그의 전체 목록을 조회한다. 
 	 * @param  LogUserLoginTryLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogUserLoginTryLogVO> list(LogUserLoginTryLogVO vo) throws Exception;
+	
+	public List<LogUserLoginTryLogVO> list(LogUserLoginTryLogVO vo) ;
 	
     /**
 	 * 로그인 시도 로그의 검색된 수를 카운트 한다. 
 	 * @param  LogUserLoginTryLogVO 
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int count(LogUserLoginTryLogVO vo) throws Exception;
+	public int count(LogUserLoginTryLogVO vo) ;
 	
     /**
 	 * 로그인 시도 로그의 전체 목록을 조회한다. 
 	 * @param  LogUserLoginTryLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogUserLoginTryLogVO> listPageing(LogUserLoginTryLogVO vo) throws Exception;
+	
+	public List<LogUserLoginTryLogVO> listPageing(LogUserLoginTryLogVO vo) ;
 	
     /**
 	 * 로그인 시도 로그의 상세 정보를 조회한다. 
 	 * @param   
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int selectKey() throws Exception;
+	public int selectKey() ;
 	
     /**
      * 로그인 시도 로그의 상세 정보를 등록한다.  
      * @param  LogUserLoginTryLogVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public void insert(LogUserLoginTryLogVO vo) throws Exception;
+    public void insert(LogUserLoginTryLogVO vo) ;
     
     /**
 	 * api용 회원로그인 조회
 	 * @param  LogUserLoginTryLogVO 
 	 * @return List<EgovMap>
-	 * @throws Exception
+	 * @
 	 */
-	public List<EgovMap> selectUserLoginApi(LogUserLoginTryLogVO infoVO) throws Exception; 
+	public List<EgovMap> selectUserLoginApi(LogUserLoginTryLogVO infoVO) ; 
 
 }

@@ -256,10 +256,12 @@
 									<input type="submit" value="submit" style="display:none" />
 									</form>
 							</div>
-                        <div class="text-center" style="margin-bottom:10px;">
-                            <a href="#0" class="btn btn-primary" onclick="editContentsList('${createOnlineSubjectVO.sbjCd}','${fn:length(contentsList)}')">저장 </a>                                   
-                            <a href="#0" class="btn btn-default" onclick="layerHide('${createOnlineSubjectVO.sbjCd}')">닫기 </a>
-                        </div>
+						<c:if test="${sbjType eq 'OF'}">	
+	                        <div class="text-center" style="margin-bottom:10px;">
+	                            <a href="#0" class="btn btn-primary" onclick="editContentsList('${createOnlineSubjectVO.sbjCd}','${fn:length(contentsList)}')">저장 </a>                                   
+	                            <a href="#0" class="btn btn-default" onclick="layerHide('${createOnlineSubjectVO.sbjCd}')">닫기 </a>
+	                        </div>
+                        </c:if>
                     </div>
                     </td>
                 </tr> 
@@ -319,7 +321,7 @@
 	function cntsEditFormPop(unitCd) {
 		var sbjCd = '${createOnlineSubjectVO.sbjCd}';
 		var crsCreCd = '${createOnlineSubjectVO.crsCreCd}';
-		var addContent  = "<iframe id='addFrame' name='addFrame' width='100%' height='100%' "
+		var addContent  = "<iframe id='cntsEditFormPop' name='cntsEditFormPop' width='100%' height='100%' "
 			+ "frameborder='0' src='<c:url value="/mng/course/createCourse/subject/editFormContentsPop"/>"
 			+ "?sbjCd="+sbjCd+"&unitCd="+unitCd+"&crsCreCd="+crsCreCd+"'/>";
 			parent.modalBox.clear();

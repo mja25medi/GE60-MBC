@@ -23,26 +23,26 @@ public interface LogMsgMngMapper {
 	 *
 	 * @return List<LogMsgMngVO>
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogMsgMngVO> listMessageMainPageing(LogMsgMngVO ilogMsgMngVO)  throws DataAccessException ;
+	
+	public List<LogMsgMngVO> listMessageMainPageing(LogMsgMngVO ilogMsgMngVO)   ;
 	
 	/**
 	 * 메세지 관리 Pageing 목록 조회
 	 *
 	 * @return int
 	 */
-	@SuppressWarnings("unchecked")
-	public int listMessageMainPageingCount (LogMsgMngVO ilogMsgMngVO)  throws DataAccessException ;
 	
-	public LogMsgMngVO select(LogMsgMngVO VO) throws DataAccessException ;
+	public int listMessageMainPageingCount (LogMsgMngVO ilogMsgMngVO)   ;
+	
+	public LogMsgMngVO select(LogMsgMngVO VO)  ;
 	
 	/**
 	 * 메시지 관리 Pageing 목록 조회
 	 *
 	 * @return List<LogMsgMngVO>
 	 */
-	@SuppressWarnings("unchecked")
-	public List<EgovMap> listRecvStudent(LogMsgMngVO ilogMsgMngVO)  throws DataAccessException ;
+	
+	public List<EgovMap> listRecvStudent(LogMsgMngVO ilogMsgMngVO)   ;
 	
 	public List<LogMsgMngVO> listMsgTrans(LogMsgMngVO vo);
 	

@@ -56,7 +56,7 @@
 										<button type="button" class="primary" onclick="alert('<spring:message code="lecture.message.asmt.send.alert.answer.ratio" arguments="${item.sendCritPrgrRatio}"/>')"><spring:message code="button.send.asmt"/></button>
 									</c:when>
 									<c:otherwise><!-- 온라인 과제이며 과제 제출 가능--> 
-										<button type="button" class="primary" onclick="exceptIdCheck('${item.asmtSn}')"><spring:message code="button.send.asmt"/></button>
+										<button type="button" class="primary" onclick="crsSvcTypeCheck('${item.asmtSn}')"><spring:message code="button.send.asmt"/></button>
 									</c:otherwise>
 								</c:choose>                               
                              </div>
@@ -126,6 +126,20 @@
 		document.location.href =  "/lec/assignment/addSendMain?asmtSn="+asmtSn;
 	}
 	
+	
+	function crsSvcTypeCheck(asmtSn){
+		$.getJSON( 
+			"/home/course/selectCrsSvcTypeCheck",{ "crsCreCd":"${vo.crsCreCd}"},			
+			function(data) {
+				if(data.crsSvcType == 'R' && data.crsOperMthd == 'ON') {
+					exceptIdCheck(asmtSn);
+				} else {
+					document.location.href =  "/lec/assignment/addSendMain?asmtSn="+asmtSn;
+				}
+			}
+		);
+	}
+
 	function exceptIdCheck(asmtSn){
 		ItemVO1.returnMethod = 'addSend';
 		

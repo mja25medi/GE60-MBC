@@ -34,7 +34,11 @@
 											</li>
 										</c:forEach>
 									</c:if> --%>
-                           <li><a class="btn-line btn-down" href="#" onclick="javascript:fileDown('${fileItem.fileSn}');" title="강의계획서 다운로드">다운로드<i></i></a></li>
+									<li>
+										<c:forEach var="fileItem" items="${courseVO.attachFiles}" varStatus="status">
+			                           		<a class="btn-line btn-down" href="#" onclick="javascript:fileDown('${fileItem.fileSn}');" title="강의계획서 다운로드">다운로드<i></i></a>
+			                           	</c:forEach>
+		                           	</li>
                             <li class="head"><label>교육비</label></li>
                             <li>
                             	<c:if test="${createCourseVO.eduPrice eq 0 }">무료</c:if>

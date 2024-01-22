@@ -5,7 +5,6 @@ import static egovframework.edutrack.comm.annotation.HrdApiStdStd.SyncType.UPDAT
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,9 +24,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import egovframework.edutrack.Constants;
 import egovframework.edutrack.comm.annotation.HrdApiCrsCreCrs;
 import egovframework.edutrack.comm.annotation.HrdApiCrsCreCrs.CreSyncType;
-import egovframework.edutrack.comm.annotation.HrdApiCrsOnlnSbj;
+import egovframework.edutrack.comm.annotation.HrdApiCrsCrs;
 import egovframework.edutrack.comm.annotation.HrdApiScore;
 import egovframework.edutrack.comm.annotation.HrdApiStdStd;
 import egovframework.edutrack.comm.annotation.HrdApiUsrUserInfo;
@@ -38,6 +38,7 @@ import egovframework.edutrack.comm.util.web.StringUtil;
 import egovframework.edutrack.comm.util.web.UserBroker;
 import egovframework.edutrack.comm.util.web.ValidationUtils;
 import egovframework.edutrack.modules.course.course.service.CourseVO;
+import egovframework.edutrack.modules.course.course.service.impl.CourseMapper;
 import egovframework.edutrack.modules.course.createcourse.service.CreateCourseVO;
 import egovframework.edutrack.modules.etc.hrdapi.service.HrdApiCreVO;
 import egovframework.edutrack.modules.etc.hrdapi.service.HrdApiOnlnSbjVO;
@@ -46,8 +47,6 @@ import egovframework.edutrack.modules.etc.hrdapi.service.HrdApiStdVO;
 import egovframework.edutrack.modules.etc.hrdapi.service.HrdApiUserInfoVO;
 import egovframework.edutrack.modules.etc.hrdapi.service.HrdApiUserLoginVO;
 import egovframework.edutrack.modules.etc.hrdapi.service.HrdApiVO;
-import egovframework.edutrack.modules.etc.hrdapi.service.HrdCourseSendable;
-import egovframework.edutrack.modules.etc.hrdapi.service.HrdStdSearchable;
 import egovframework.edutrack.modules.etc.hrdapi.service.impl.HrdApiCreMapper;
 import egovframework.edutrack.modules.etc.hrdapi.service.impl.HrdApiOnlnSbjMapper;
 import egovframework.edutrack.modules.etc.hrdapi.service.impl.HrdApiScoreMapper;
@@ -62,7 +61,6 @@ import egovframework.edutrack.modules.log.apisync.service.LogApiSyncVO;
 import egovframework.edutrack.modules.log.apisync.service.impl.LogApiSyncMapper;
 import egovframework.edutrack.modules.log.logintry.service.LogUserLoginTryLogVO;
 import egovframework.edutrack.modules.log.logintry.service.impl.LogUserLoginTryLogMapper;
-import egovframework.edutrack.modules.org.info.service.OrgOrgInfoVO;
 import egovframework.edutrack.modules.org.info.service.impl.OrgOrgInfoMapper;
 import egovframework.edutrack.modules.student.result.service.EduResultVO;
 import egovframework.edutrack.modules.student.result.service.impl.EduResultMapper;
@@ -123,24 +121,39 @@ public class SyncAspect {
 	@Resource(name="orgOrgInfoMapper")
 	private OrgOrgInfoMapper 		orgOrgInfoMapper;
 	
-	 
-	/** 산업인력공단 API 사용여부 확인 **/
-	 public String getHrdApiUseYn() {
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-		String orgCd = UserBroker.getUserOrgCd(request);	// 기관 코드 조회
-		String useYn = "N";
-		try {
-			useYn = orgOrgInfoMapper.selectHrdApiUseYn(orgCd);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return useYn;
+	@Resource(name="courseMapper")
+	private CourseMapper 		courseMapper;
+	
+	
+	/** 산업인력공단 연계 과정 확인 **/
+	 public CourseVO selectCrsSvcTypeCre(String crsCreCd) {
+		CourseVO courseVO = new CourseVO();
+		courseVO.setCrsCreCd(crsCreCd);
+		courseVO = courseMapper.selectCrsSvcTypeCre(courseVO);
+		return courseVO;
 	}
+	 
+	 public CourseVO selectCrsSvcTypeCrs(String crsCd) {
+		CourseVO courseVo = new CourseVO();
+		courseVo.setCrsCreCd(crsCd);
+		courseVo = courseMapper.selectCrsSvcTypeCrs(courseVo);
+		return courseVo;
+	}
+	 
+	 public CourseVO selectCrsSvcTypeStd(String stdNo) {
+		CourseVO courseVo = new CourseVO();
+		CreateCourseVO createCourseVO = new CreateCourseVO();
+		createCourseVO.setStdNo(stdNo);
+		courseVo = courseMapper.selectCrsSvcTypeStd(createCourseVO);
+		return courseVo;
+	}
+	 
 	
     @Around("execution(* egovframework.edutrack.modules.etc.hrdapi.service.HrdApiRestTemplate.*(..))")
 	public Object proceedingApi(ProceedingJoinPoint pjp) throws Throwable {
     	Object result = null;
-    	if("Y".equals(getHrdApiUseYn())) {
+    	/** 산업인력공단 API 사용여부 확인 **/
+    	if(Constants.HRD_API_USE_YN.equals("Y")) {
     	
     		System.out.println("LOG::::::::::::::::Start");
     		long start = System.currentTimeMillis();
@@ -214,7 +227,7 @@ public class SyncAspect {
     /** 회원 정보 api 시작 **/
     @AfterReturning("@annotation(egovframework.edutrack.comm.annotation.HrdApiUsrUserInfo)")
    	public void insertUsrUserInfoApi(JoinPoint jp) throws Throwable {
-    	if("Y".equals(getHrdApiUseYn())) {
+    	if(Constants.HRD_API_USE_YN.equals("Y")) {
     		try {	
     	   		UsrUserInfoVO uuivo = new UsrUserInfoVO();
     			Object[] params = jp.getArgs();
@@ -306,7 +319,7 @@ public class SyncAspect {
     
     @AfterReturning(pointcut = "execution(* egovframework.edutrack.modules.user.info.service.impl.UsrUserInfoServiceImpl.addBatch(..)) ", returning = "resultVO")
    	public void insertUsrUserInfoApi(JoinPoint jp, ProcessResultListVO<?> resultVO) throws Throwable {
-    	if("Y".equals(getHrdApiUseYn())) {
+    	if(Constants.HRD_API_USE_YN.equals("Y")) {
 	    	try {	
 				List<UsrUserInfoVO> userList = new ArrayList<UsrUserInfoVO>();
 				if(resultVO!=null) {
@@ -404,7 +417,7 @@ public class SyncAspect {
     /** 회원 로그인 정보 api 시작 **/
     @AfterReturning("@annotation(egovframework.edutrack.comm.annotation.HrdApiUsrLogin)")
    	public void insertUsrLoginApi(JoinPoint jp) throws Throwable {
-    	if("Y".equals(getHrdApiUseYn())) {
+    	if(Constants.HRD_API_USE_YN.equals("Y")) {
 	    	try {	
 		   		UsrLoginVO ulvo = new UsrLoginVO();
 		   		LogUserLoginTryLogVO lultlvo = new LogUserLoginTryLogVO();
@@ -458,9 +471,9 @@ public class SyncAspect {
     /** 회원 로그인 정보 api 끝 **/
     
     /** 과정정보  api 시작 **/
-	@AfterReturning("@annotation(annotation)")
+    /*@AfterReturning("@annotation(annotation)")
 	public void insertCourserInfoApi(JoinPoint jp, HrdApiCrsOnlnSbj annotation) {
-		if("Y".equals(getHrdApiUseYn())) {
+		if(Constants.HRD_API_USE_YN.equals("Y")) {
 			try {
 				HrdCourseSendable target = Arrays.stream(jp.getArgs())
 				    						.filter(HrdCourseSendable.class::isInstance)
@@ -497,13 +510,64 @@ public class SyncAspect {
 		if(ValidationUtils.isEmpty(courseAgentPk)) throw new IllegalArgumentException("courseAgentPk empty");
 		if(ValidationUtils.isEmpty(simsaCode) || simsaCode.length() != 20) vo.setSimsaCode("I202201010000L000000"); // 예외 발생? 기본값 세팅?
 		if(ValidationUtils.isEmpty(tracseId) || tracseId.length() != 17) vo.setTracseId("ABA20220000111111"); // 예외 발생? 기본값 세팅?
+	}*/
+    /** 과정정보  api 끝 **/
+	
+	/** 과정정보  api 시작 (과목코드 -> crs)**/
+	@AfterReturning("@annotation(annotation)")
+	public void insertCourserInfoApi(JoinPoint jp, HrdApiCrsCrs annotation) {
+		if(Constants.HRD_API_USE_YN.equals("Y")) {
+			try {
+				Object[] params = jp.getArgs();
+				
+				CourseVO courseVO = new CourseVO();
+				for(Object param : params) {
+					if(param instanceof CourseVO) {
+						courseVO = (CourseVO) param;
+						break;
+					}
+				}
+				// 국비지원(산인공 연계 과정) + 온라인 확인 여부
+				CourseVO checkVO = selectCrsSvcTypeCrs(courseVO.getCrsCd());
+				if(checkVO.getCrsSvcType().equals("R") && checkVO.getCrsOperMthd().equals("ON")) {
+					HrdApiCrsCrs.SyncType syncType = annotation.value();
+					String syncTypeStr = syncType.getStringValue();
+					HrdApiOnlnSbjVO hrdApiOnlnSbjVO = HrdApiOnlnSbjVO.CreateHrdApiOnlnSbjVO(courseVO.getCrsCd(), courseVO.getCrsNm(), courseVO.getSimsaCode(), courseVO.getTracseId(), syncTypeStr);
+					validateHrdOnlnSbjVO(hrdApiOnlnSbjVO);
+				    
+				    if(DELETE.equals(syncType)) {
+				    	String courseAgnetPk = hrdApiOnlnSbjVO.getCourseAgentPk();
+				    	hrdApiOnlnSbjVO = Optional.ofNullable(hrdApiOnlnSbjMapper.selectRecentOne(hrdApiOnlnSbjVO))
+				    			.orElseThrow(() -> new IllegalArgumentException("해당하는 API 연계 내역이 존재하지 않습니다. pk: " + courseAgnetPk));
+				    }
+				    
+				    String userNo = getUserNoFromSession();
+				    hrdApiOnlnSbjVO.setRegNo(userNo);
+				    hrdApiOnlnSbjVO.setModNo(userNo);
+				    
+				    hrdApiOnlnSbjMapper.insert(hrdApiOnlnSbjVO);
+				}
+		    } catch (Exception e) {
+		    	log.error("과정 정보 내역 API 연동 오류 -> " +  e.getMessage());
+		    }
+		}
+	}
+	
+	private void validateHrdOnlnSbjVO(HrdApiOnlnSbjVO vo) {
+		String courseAgentPk = vo.getCourseAgentPk();
+		String simsaCode = vo.getSimsaCode();
+		String tracseId = vo.getTracseId();
+		
+		if(ValidationUtils.isEmpty(courseAgentPk)) throw new IllegalArgumentException("courseAgentPk empty");
+		if(ValidationUtils.isEmpty(simsaCode) || simsaCode.length() != 20) vo.setSimsaCode("I202201010000L000000"); // 예외 발생? 기본값 세팅?
+		if(ValidationUtils.isEmpty(tracseId) || tracseId.length() != 17) vo.setTracseId("ABA20220000111111"); // 예외 발생? 기본값 세팅?
 	}
     /** 과정정보  api 끝 **/
     
     /** 수업정보  api 시작 **/
 	@AfterReturning("@annotation(egovframework.edutrack.comm.annotation.HrdApiCrsCreCrs)")
 	public void insertCreInfoApi(JoinPoint jp) {
-		if("Y".equals(getHrdApiUseYn())) {
+		if(Constants.HRD_API_USE_YN.equals("Y")) {
 			try { 
 				MethodSignature signature = (MethodSignature) jp.getSignature();
 			    Method method = signature.getMethod();
@@ -512,7 +576,7 @@ public class SyncAspect {
 			    Object[] params = jp.getArgs();
 			    HrdApiCreVO hacvo = new HrdApiCreVO();
 			    
-			    if(creSyncType.name().equals("CRSUPDATE")) {	//기수 수정할 때
+			    /*if(creSyncType.name().equals("CRSUPDATE")) {	//기수 수정할 때
 			    	CourseVO courseVO = new CourseVO();
 					for(Object param : params) {
 						if(param instanceof CourseVO) {
@@ -521,7 +585,7 @@ public class SyncAspect {
 						}
 					}
 					hacvo.setCrsCd(courseVO.getCrsCd());
-			    }else {	
+			    }else {*/	
 			    	CreateCourseVO createCourseVO = new CreateCourseVO();
 					for(Object param : params) {
 						if(param instanceof CreateCourseVO) {
@@ -529,33 +593,37 @@ public class SyncAspect {
 							break;
 						}
 					}
-					hacvo.setCrsCd(createCourseVO.getCrsCd());
-			   		hacvo.setCrsCreCd(createCourseVO.getCrsCreCd());
-			    }
-		   		
-			    String userNo = getUserNoFromSession();
-			   
-			    if(creSyncType.name().equals("DELETE")) {
-			    	HrdApiCreVO cvo = new HrdApiCreVO();
-			    	hacvo.setClassAgentPk(hacvo.getCrsCreCd());
-			    	cvo = hrdApiCreMapper.selectRecentOne(hacvo);
-			    	if(cvo == null) throw new Exception("해당하는 API 연계 내역이 존재하지 않습니다. pk: " + hacvo.getClassAgentPk());
-			    	cvo.setChangeState(creSyncType.getStringValue());
-			    	cvo.setRegNo(userNo);
-			    	cvo.setModNo(userNo);
-			    	hrdApiCreMapper.insertHrdApiCre(cvo); 
-			    }else {
-			    	 List<HrdApiCreVO> returnList = hrdApiCreMapper.listCreInfoData(hacvo);
-			    	 for(int i=0;i<returnList.size();i++) {
-					    	HrdApiCreVO vo = new HrdApiCreVO();
-					    	vo = returnList.get(i);
-					    	vo.setChangeState(creSyncType.getStringValue());
-					    	vo.setRegNo(userNo);
-					    	vo.setModNo(userNo);
-					   		hrdApiCreMapper.insertHrdApiCre(vo); 
+					// 국비지원(산인공 연계 과정) + 온라인 확인 여부
+					CourseVO checkVO = selectCrsSvcTypeCre(createCourseVO.getCrsCreCd());
+					if(checkVO.getCrsSvcType().equals("R") && checkVO.getCrsOperMthd().equals("ON")) {
+						hacvo.setCrsCd(createCourseVO.getCrsCd());
+				   		hacvo.setCrsCreCd(createCourseVO.getCrsCreCd());
+				    //}
+			   		
+					    String userNo = getUserNoFromSession();
+					   
+					    if(creSyncType.name().equals("DELETE")) {
+					    	HrdApiCreVO cvo = new HrdApiCreVO();
+					    	hacvo.setClassAgentPk(hacvo.getCrsCreCd());
+					    	cvo = hrdApiCreMapper.selectRecentOne(hacvo);
+					    	if(cvo == null) throw new Exception("해당하는 API 연계 내역이 존재하지 않습니다. pk: " + hacvo.getClassAgentPk());
+					    	cvo.setChangeState(creSyncType.getStringValue());
+					    	cvo.setRegNo(userNo);
+					    	cvo.setModNo(userNo);
+					    	hrdApiCreMapper.insertHrdApiCre(cvo); 
+					    }else {
+					    	 List<HrdApiCreVO> returnList = hrdApiCreMapper.listCreInfoData(hacvo);
+					    	 for(int i=0;i<returnList.size();i++) {
+							    	HrdApiCreVO vo = new HrdApiCreVO();
+							    	vo = returnList.get(i);
+							    	vo.setChangeState(creSyncType.getStringValue());
+							    	vo.setRegNo(userNo);
+							    	vo.setModNo(userNo);
+							   		hrdApiCreMapper.insertHrdApiCre(vo); 
+							    }
 					    }
-			    }
-			    
+					}
+					
 			} catch (Exception e) {
 			   	log.error("수업 정보 내역 API 연동 오류 " +  e.getMessage());
 			}
@@ -566,34 +634,52 @@ public class SyncAspect {
     /** 수강정보  api 시작 **/
 	@AfterReturning("@annotation(annotation)")
 	public void insertStdInfoApi(JoinPoint jp, HrdApiStdStd annotation) {
-		if("Y".equals(getHrdApiUseYn())) {
+		if(Constants.HRD_API_USE_YN.equals("Y")) {
 			try {
-			HrdStdSearchable targetParam = Arrays.stream(jp.getArgs())
-											.filter(HrdStdSearchable.class::isInstance)
-											.map(HrdStdSearchable.class::cast)
-											.findAny()
-											.orElseThrow(() -> new IllegalArgumentException("타입이 일치하는 인자가 없습니다. : HrdStdSearchable"));
-			
-			HrdApiStdStd.SyncType syncType = annotation.value();
-			
-			StudentVO target = Optional.ofNullable(studentMapper.selectStudentInfoCre(new StudentVO(targetParam)))
-									.orElseThrow(() -> new IllegalArgumentException("해당하는 수강생이 존재하지 않습니다. pk: " + targetParam.callHrdStdNo()));
-			
-			HrdApiStdVO hrdApiStd = new HrdApiStdVO(target, syncType);
-			hrdApiStd.setSearchInfoFromStudent(target);
-			
-			if(UPDATE.equals(syncType)) {
-				EduResultVO eduResult = Optional.ofNullable(eduResultMapper.selectResult(new EduResultVO(targetParam)))
-											.orElse(new EduResultVO());
-				hrdApiStd.updateScore(eduResult);
-			}
-			
-		    String userNo = getUserNoFromSession();
-		    hrdApiStd.setRegNo(userNo);
-		    hrdApiStd.setModNo(userNo);
-			
-			hrdApiStdMapper.insertHrdApiStd(hrdApiStd);
-			
+				/*HrdStdSearchable targetParam = Arrays.stream(jp.getArgs())
+												.filter(HrdStdSearchable.class::isInstance)
+												.map(HrdStdSearchable.class::cast)
+												.findAny()
+												.orElseThrow(() -> new IllegalArgumentException("타입이 일치하는 인자가 없습니다. : HrdStdSearchable"));
+				*/
+				Object[] params = jp.getArgs();
+				StudentVO studentVO = new StudentVO();
+				for(Object param : params) {
+					if(param instanceof StudentVO) {
+						studentVO = (StudentVO) param;
+						break;
+					}
+				}
+				
+				
+				HrdApiStdStd.SyncType syncType = annotation.value();
+				String syncTypeStr = syncType.getStringValue();
+				String stdNo = studentVO.getStdNo();
+				
+				StudentVO target = Optional.ofNullable(studentMapper.selectStudentInfoCre(new StudentVO(stdNo)))
+										.orElseThrow(() -> new IllegalArgumentException("해당하는 수강생이 존재하지 않습니다."));
+				
+				
+				// 국비지원(산인공 연계 과정) + 온라인 확인 여부
+				CourseVO checkVO = selectCrsSvcTypeCre(target.getCrsCreCd());
+				if(checkVO.getCrsSvcType().equals("R") && checkVO.getCrsOperMthd().equals("ON")) {
+					HrdApiStdVO hrdApiStd = new HrdApiStdVO(target, syncType);
+					hrdApiStd.setSearchInfoFromStudent(target);
+					
+					if(UPDATE.equals(syncType)) {
+						EduResultVO paramEduResultVO = new EduResultVO();
+						paramEduResultVO.setStdNo(stdNo);
+						EduResultVO viewEduResult = Optional.ofNullable(eduResultMapper.selectResult(paramEduResultVO))
+													.orElse(new EduResultVO());
+						hrdApiStd.updateScore(viewEduResult);
+					}
+					
+				    String userNo = getUserNoFromSession();
+				    hrdApiStd.setRegNo(userNo);
+				    hrdApiStd.setModNo(userNo);
+					
+					hrdApiStdMapper.insertHrdApiStd(hrdApiStd);
+				}
 			} catch (Exception e) {
 				log.error("수강 정보 내역 API 연동 오류 -> " +  e.getMessage());
 			}
@@ -609,69 +695,81 @@ public class SyncAspect {
      * @return
      * @throws Throwable
      */
-    @Around("@annotation(egovframework.edutrack.comm.annotation.HrdApiScore)")
-    public Object proceedingApiScoreTest(ProceedingJoinPoint pjp) throws Throwable {
-    	Object result = null;
-    	if("Y".equals(getHrdApiUseYn())) {
-	    	MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
-	    	HrdApiScore custom = methodSignature.getMethod().getAnnotation(HrdApiScore.class);
-	    	methodSignature.getMethod().getReturnType();
-	    	result = pjp.proceed(pjp.getArgs());
-	    	
-	    	ExamStareVO examStareVO = new ExamStareVO();
-	    	AssignmentSendVO assignmentSendVO = new AssignmentSendVO();
-	    	BookmarkVO bookmarkVO = new BookmarkVO();
-	    	
-	    	Object[] params = pjp.getArgs();
-	    	String stdNo = "";
-	    	String[] stdNoList = null;
-	    	String category = "";
-	    	String saveType = "";
-	    	
-			for(Object param : params) {
-				if(param instanceof ExamStareVO) {
-					examStareVO = (ExamStareVO) param;
-					stdNo = examStareVO.getStdNo();
-					category = StringUtil.nvl(examStareVO.getScoreCategory());
-					saveType = StringUtil.nvl(examStareVO.getScoreSaveType());
-					break;
-				}
-				if(param instanceof AssignmentSendVO) {
-					assignmentSendVO = (AssignmentSendVO) param;
-					stdNo = assignmentSendVO.getStdNo();
-					category = StringUtil.nvl(assignmentSendVO.getScoreCategory());
-					saveType = StringUtil.nvl(assignmentSendVO.getScoreSaveType());
-					break;
-				}
-				if(param instanceof BookmarkVO) {
-					bookmarkVO = (BookmarkVO) param;
-					stdNo = bookmarkVO.getStdNo();
-					category = StringUtil.nvl(bookmarkVO.getScoreCategory());
-					saveType = StringUtil.nvl(bookmarkVO.getScoreSaveType());
-					break;
-				}
+    //@Around("@annotation(egovframework.edutrack.comm.annotation.HrdApiScore)")
+	//@AfterReturning("@annotation(annotation)")
+	@AfterReturning("@annotation(egovframework.edutrack.comm.annotation.HrdApiScore)")
+    public void proceedingApiScoreTest(JoinPoint jp) {
+    	if(Constants.HRD_API_USE_YN.equals("Y")) {
+    		try {
+    			//MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
+    	    	//HrdApiScore custom = methodSignature.getMethod().getAnnotation(HrdApiScore.class);
+    	    	//methodSignature.getMethod().getReturnType();
+    	    	//result = pjp.proceed(pjp.getArgs());
+    			MethodSignature signature = (MethodSignature) jp.getSignature();
+			    Method method = signature.getMethod();
+			    HrdApiScore annotation = method.getAnnotation(HrdApiScore.class);
+    	    	
+    	    	ExamStareVO examStareVO = new ExamStareVO();
+    	    	AssignmentSendVO assignmentSendVO = new AssignmentSendVO();
+    	    	BookmarkVO bookmarkVO = new BookmarkVO();
+    	    	
+    	    	Object[] params = jp.getArgs();
+    	    	String stdNo = "";
+    	    	String[] stdNoList = null;
+    	    	String category = "";
+    	    	String saveType = "";
+    	    	
+    			for(Object param : params) {
+    				if(param instanceof ExamStareVO) {
+    					examStareVO = (ExamStareVO) param;
+    					stdNo = examStareVO.getStdNo();
+    					category = StringUtil.nvl(examStareVO.getScoreCategory());
+    					saveType = StringUtil.nvl(examStareVO.getScoreSaveType());
+    					break;
+    				}
+    				if(param instanceof AssignmentSendVO) {
+    					assignmentSendVO = (AssignmentSendVO) param;
+    					stdNo = assignmentSendVO.getStdNo();
+    					category = StringUtil.nvl(assignmentSendVO.getScoreCategory());
+    					saveType = StringUtil.nvl(assignmentSendVO.getScoreSaveType());
+    					break;
+    				}
+    				if(param instanceof BookmarkVO) {
+    					bookmarkVO = (BookmarkVO) param;
+    					stdNo = bookmarkVO.getStdNo();
+    					category = StringUtil.nvl(bookmarkVO.getScoreCategory());
+    					saveType = StringUtil.nvl(bookmarkVO.getScoreSaveType());
+    					break;
+    				}
+    			}
+    	    	
+    			// 국비지원(산인공 연계 과정) + 온라인 확인 여부
+    			CourseVO checkVO = selectCrsSvcTypeStd(stdNo);
+    			if(checkVO.getCrsSvcType().equals("R") && checkVO.getCrsOperMthd().equals("ON")) {
+    				//STD_RESULT 테이블에 데이터가 없으면 INSERT
+    		    	EduResultVO eduResultVO = new EduResultVO(); 
+    		    	eduResultVO.setStdNo(stdNo);
+    		    	EduResultVO resultEduResultVO = eduResultMapper.selectResult(eduResultVO);
+    		    	if(resultEduResultVO == null) {
+    		    		eduResultVO.setRegNo("AUTO");
+    		    		eduResultMapper.insertResult(eduResultVO);
+    		    	}
+    		    	
+    		    	if("EXAM".equals(category)) {
+    		    		if(!"T".equals(StringUtil.nvl(examStareVO.getStartFlagYn()))) {//임지저장일 경우에는 성적 api 쌓지 않음 / 시험시작, 제출, 평가만  성적 api 쌓기
+    		    			hrdApiScoreExam(examStareVO, saveType);
+    		    		}
+    		    	}else if("ASMT".equals(category)) {
+    		    		hrdApiScoreAsmt(assignmentSendVO, saveType);
+    		    	}else if("BOOKMARK".equals(category)) {
+    		    		hrdApiScoreBookmark(bookmarkVO, saveType);
+    		    	}
+    			}
+			} catch (Exception e) {
+				log.error("성적  API 연동 오류 -> " +  e.getMessage());
 			}
 	    	
-	    	//STD_RESULT 테이블에 데이터가 없으면 INSERT
-	    	EduResultVO eduResultVO = new EduResultVO(); 
-	    	eduResultVO.setStdNo(stdNo);
-	    	EduResultVO resultEduResultVO = eduResultMapper.selectResult(eduResultVO);
-	    	if(resultEduResultVO == null) {
-	    		eduResultVO.setRegNo("AUTO");
-	    		eduResultMapper.insertResult(eduResultVO);
-	    	}
-	    	
-	    	if("EXAM".equals(category)) {
-	    		if(!"T".equals(StringUtil.nvl(examStareVO.getStartFlagYn()))) {//임지저장일 경우에는 성적 api 쌓지 않음 / 시험시작, 제출, 평가만  성적 api 쌓기
-	    			hrdApiScoreExam(examStareVO, saveType);
-	    		}
-	    	}else if("ASMT".equals(category)) {
-	    		hrdApiScoreAsmt(assignmentSendVO, saveType);
-	    	}else if("BOOKMARK".equals(category)) {
-	    		hrdApiScoreBookmark(bookmarkVO, saveType);
-	    	}
     	}
-		return result;
     	
     }
     

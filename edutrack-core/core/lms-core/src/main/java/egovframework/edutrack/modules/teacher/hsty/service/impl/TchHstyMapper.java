@@ -21,22 +21,22 @@ public interface TchHstyMapper {
 	 * @param int
 	 * @return
 	 */
-	public int selectKey()  throws Exception;
+	public int selectKey()  ;
 
 	/**
 	 * 강사 활동이력 목록
 	 * 
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<TchHstyVO> listHsty(TchHstyVO teacherHstyVO) throws Exception;
+	
+	public List<TchHstyVO> listHsty(TchHstyVO teacherHstyVO) ;
 	
 	/**
 	 * 강사 활동이력 상세 정보
 	 * 
 	 * @return ProcessReslutListVO
 	 */
-	public TchHstyVO selectHsty(String userNo, int hstySn) throws Exception;
+	public TchHstyVO selectHsty(String userNo, int hstySn) ;
 	
 
 	/**
@@ -44,14 +44,14 @@ public interface TchHstyMapper {
 	 *  
 	 * @reurn 
 	 */
-	public int insertHsty(TchHstyVO teacherHstyVO) throws Exception;
+	public int insertHsty(TchHstyVO teacherHstyVO) ;
 	
 	/**
 	 * 강사활동이력 수정
 	 *  
 	 * @reurn 
 	 */
-	public int updateHsty(TchHstyVO teacherHstyVO) throws Exception;
+	public int updateHsty(TchHstyVO teacherHstyVO) ;
 	
 	
 	/**
@@ -59,6 +59,6 @@ public interface TchHstyMapper {
 	 *  
 	 * @reurn 
 	 */
-	public int deleteHsty(String userNo, int hstySn) throws Exception;
+	public int deleteHsty(String userNo, int hstySn) ;
 
 }

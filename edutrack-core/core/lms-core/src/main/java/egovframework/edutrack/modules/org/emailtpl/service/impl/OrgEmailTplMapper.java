@@ -23,72 +23,72 @@ public interface OrgEmailTplMapper{
 	 * 이메일 템플릿의 전체 목록을 조회한다. 
 	 * @param  OrgEmailTplVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OrgEmailTplVO> list(OrgEmailTplVO vo) throws Exception;
+	
+	public List<OrgEmailTplVO> list(OrgEmailTplVO vo) ;
 	
     /**
 	 * 이메일 템플릿의 검색된 수를 카운트 한다. 
 	 * @param  OrgEmailTplVO 
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int count(OrgEmailTplVO vo) throws Exception;
+	public int count(OrgEmailTplVO vo) ;
 	
     /**
 	 * 이메일 템플릿의 전체 목록을 조회한다. 
 	 * @param  OrgEmailTplVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OrgEmailTplVO> listPageing(OrgEmailTplVO vo) throws Exception;
+	
+	public List<OrgEmailTplVO> listPageing(OrgEmailTplVO vo) ;
 	
     /**
 	 * 이메일 템플릿의 상세 정보를 조회한다. 
 	 * @param  OrgEmailTplVO 
 	 * @return OrgEmailTplVO
-	 * @throws Exception
+	 * @
 	 */
-	public OrgEmailTplVO select(OrgEmailTplVO vo) throws Exception;
+	public OrgEmailTplVO select(OrgEmailTplVO vo) ;
 	
     /**
 	 * 이메일 템플릿의 키를 생성한다. 
 	 * @return String
-	 * @throws Exception
+	 * @
 	 */
-	public String selectKey() throws Exception;	
+	public String selectKey() ;	
 
     /**
      * 이메일 템플릿의 상세 정보를 등록한다.  
      * @param  OrgEmailTplVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(OrgEmailTplVO vo) throws Exception;
+    public int insert(OrgEmailTplVO vo) ;
     
     /**
      * 이메일 템플릿의 상세 정보를 수정한다. 
      * @param  OrgEmailTplVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int update(OrgEmailTplVO vo) throws Exception;
+    public int update(OrgEmailTplVO vo) ;
     
     /**
      * 이메일 템플릿의 상세 정보를 삭제한다.  
      * @param  OrgEmailTplVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int delete(OrgEmailTplVO vo) throws Exception;
+    public int delete(OrgEmailTplVO vo) ;
 
     /**
      * 기관의 이메일 템플릿의 전체 삭제한다.  
      * @param  OrgEmailTplVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int deleteAll(OrgEmailTplVO vo) throws Exception;
+    public int deleteAll(OrgEmailTplVO vo) ;
 }

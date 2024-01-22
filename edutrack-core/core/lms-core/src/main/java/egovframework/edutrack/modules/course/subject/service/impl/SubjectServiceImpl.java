@@ -638,7 +638,7 @@ public class SubjectServiceImpl extends EgovAbstractServiceImpl implements Subje
 	 * @return  ProcessResultVO
 	 */
 	@Override
-	@HrdApiCrsOnlnSbj(SyncType.CREATE)
+	//@HrdApiCrsOnlnSbj(SyncType.CREATE)
 	public ProcessResultVO<OnlineSubjectVO> addOnline(OnlineSubjectVO iOnlineSubjectVO) throws Exception {
 		
 		ProcessResultVO<OnlineSubjectVO> resultVO = new ProcessResultVO<OnlineSubjectVO>();
@@ -665,7 +665,7 @@ public class SubjectServiceImpl extends EgovAbstractServiceImpl implements Subje
 	 * @return  ProcessResultVO
 	 */
 	@Override
-	@HrdApiCrsOnlnSbj(SyncType.UPDATE)
+	//@HrdApiCrsOnlnSbj(SyncType.UPDATE)
 	public ProcessResultVO<OnlineSubjectVO> editOnline(OnlineSubjectVO iOnlineSubjectVO) throws Exception {
 		ProcessResultVO<OnlineSubjectVO> resultVO = new ProcessResultVO<OnlineSubjectVO>();
 		subjectOnlineMapper.update(iOnlineSubjectVO);
@@ -684,7 +684,7 @@ public class SubjectServiceImpl extends EgovAbstractServiceImpl implements Subje
 	 * @return ProcessResultVO
 	 */
 	@Override
-	@HrdApiCrsOnlnSbj(SyncType.DELETE)
+	//@HrdApiCrsOnlnSbj(SyncType.DELETE)
 	public ProcessResultVO<?> deleteOnline(OnlineSubjectVO iOnlineSubjectVO) throws Exception {
 		sysFileService.removeFile(iOnlineSubjectVO, new NestedThumbFileHandler()); // 파일정보 삭제..
 		sysFileService.removeFile(iOnlineSubjectVO, new NestedPlanFileHandler()); // 파일정보 삭제..
@@ -817,7 +817,6 @@ public class SubjectServiceImpl extends EgovAbstractServiceImpl implements Subje
 	 * @return  ProcessResultVO
 	 */
 	@Override
-	@HrdApiCrsOnlnSbj(SyncType.CREATE)
 	public ProcessResultVO<LecRoomVO> addLecRoom(LecRoomVO lecRoomVO) throws Exception {
 		
 		ProcessResultVO<LecRoomVO> resultVO = new ProcessResultVO<LecRoomVO>();
@@ -918,7 +917,6 @@ public class SubjectServiceImpl extends EgovAbstractServiceImpl implements Subje
 	 * @return  ProcessResultVO
 	 */
 	@Override
-	@HrdApiCrsOnlnSbj(SyncType.UPDATE)
 	public ProcessResultVO<LecRoomVO> editLecRoom(LecRoomVO lecRoomVO) throws Exception {
 		ProcessResultVO<LecRoomVO> resultVO = new ProcessResultVO<LecRoomVO>();
 		
@@ -936,7 +934,6 @@ public class SubjectServiceImpl extends EgovAbstractServiceImpl implements Subje
 	 * @return ProcessResultVO
 	 */
 	@Override
-	@HrdApiCrsOnlnSbj(SyncType.DELETE)
 	public ProcessResultVO<?> deleteLecRoom(LecRoomVO lecRoomVO) throws Exception {
 		subjectOnlineMapper.deleteLecRoom(lecRoomVO);
 		// 성공처리를 표현하는 ProcessResultVO<Object>를 반환.

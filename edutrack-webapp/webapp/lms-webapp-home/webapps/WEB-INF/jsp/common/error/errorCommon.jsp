@@ -9,7 +9,7 @@
 %>
 <!DOCTYPE html>
 <html lang="ko">
-	<jsp:include page="/tpl/003/inc/home_common.jsp" />
+	<jsp:include page="common.jsp" />
 <body>
     
     <section class="extras errorBasic">

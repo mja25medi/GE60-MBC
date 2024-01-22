@@ -20,8 +20,8 @@ public interface MyLecBbsAtclMapper {
 	 * @param pageScale
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<MyLecBbsAtclVO> listPageing(MyLecBbsAtclVO vo) throws DataAccessException;
+	
+	public List<MyLecBbsAtclVO> listPageing(MyLecBbsAtclVO vo) ;
 
 	/**
 	 * 게시글 레코드 목록수 반환
@@ -31,8 +31,8 @@ public interface MyLecBbsAtclMapper {
 	 * @param pageScale
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public int count(MyLecBbsAtclVO vo) throws DataAccessException;
+	
+	public int count(MyLecBbsAtclVO vo) ;
 	
 	/**
 	 * 단일 게시물 조회.
@@ -41,6 +41,6 @@ public interface MyLecBbsAtclMapper {
 	 * @param arclSn
 	 * @return BbsArticleVO
 	 */
-	public MyLecBbsAtclVO select(MyLecBbsAtclVO vo) throws Exception;
+	public MyLecBbsAtclVO select(MyLecBbsAtclVO vo) ;
 
 }

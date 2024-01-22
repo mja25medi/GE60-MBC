@@ -18,8 +18,8 @@ public interface ClibOlcCntsMapper {
 	 * @param ClibOlcCntsVO.ctgrCd
 	 * @return ProcessResultListVO<ClibOlcCntsVO>
 	 */
-	@SuppressWarnings("unchecked")
-	public List<ClibOlcCntsVO> list(ClibOlcCntsVO vo) throws Exception;
+	
+	public List<ClibOlcCntsVO> list(ClibOlcCntsVO vo) ;
 
 	/**
 	 * 콘텐츠 라리브러리 : OLC의 페이징된 목록을 조회하여 반환한다.
@@ -32,8 +32,8 @@ public interface ClibOlcCntsMapper {
 	 * @param pageScale
 	 * @return ProcessResultListVO<ClibOlcCntsVO>
 	 */
-	@SuppressWarnings("unchecked")
-	public List<ClibOlcCntsVO> listPageing(ClibOlcCntsVO vo) throws DataAccessException;
+	
+	public List<ClibOlcCntsVO> listPageing(ClibOlcCntsVO vo) ;
 
 	/**
 	 * 콘텐츠 라리브러리 : OLC의 페이징된 목록수 반환
@@ -46,8 +46,8 @@ public interface ClibOlcCntsMapper {
 	 * @param pageScale
 	 * @return ProcessResultListVO<ClibOlcCntsVO>
 	 */
-	@SuppressWarnings("unchecked")
-	public int count(ClibOlcCntsVO vo) throws DataAccessException;
+	
+	public int count(ClibOlcCntsVO vo) ;
 	
 	/**
 	 * 콘텐츠 라리브러리 : OLC 정보 단일 레코드를 조회하여 반환한다.
@@ -56,49 +56,49 @@ public interface ClibOlcCntsMapper {
 	 * @param ClibOlcCntsVO.cartrgCd
 	 * @return
 	 */
-	public ClibOlcCntsVO select(ClibOlcCntsVO vo) throws DataAccessException;
+	public ClibOlcCntsVO select(ClibOlcCntsVO vo) ;
 
 	/**
 	 * 콘텐츠 라리브러리 : OLC 정보 단일 레코드를 DB에 Insert하고 결과를 반환한다.
 	 * @param ClibOlcCntsVO
 	 * @return ProcessResultVO<ClibOlcCntsVO>
 	 */
-	public int insert(ClibOlcCntsVO vo) throws DataAccessException;
+	public int insert(ClibOlcCntsVO vo) ;
 
 	/**
 	 * 콘텐츠 라리브러리 : OLC 콘텐츠의 콘텐츠키를 생성하여 반환한다.
 	 * @param ClibMediaCntsVO.orgCd
 	 * @return ProcessResultVO
 	 */
-	public ClibOlcCntsVO selectCntsCd() throws Exception;
+	public ClibOlcCntsVO selectCntsCd() ;
 
 	/**
 	 * 콘텐츠 라리브러리 : OLC 정보 단일 레코드를 Update하고 결과를 반환한다.
 	 * @param ClibOlcCntsVO
 	 * @return ProcessResultVO<ClibOlcCntsVO>
 	 */
-	public int update(ClibOlcCntsVO vo) throws DataAccessException;
+	public int update(ClibOlcCntsVO vo) ;
 
 	/**
 	 * 콘텐츠 라리브러리 : OLC 정보의 다중 목록을 Update하고 결과를 반환한다.
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int updateBatch(List<ClibOlcCntsVO> olcArray) throws Exception;
+	public int updateBatch(List<ClibOlcCntsVO> olcArray) ;
 
 	/**
 	 * 콘텐츠 라리브러리 : OLC 정보 단일 레코드를 Delete하고 결과를 반환한다.
 	 * @param ClibOlcCntsVO.cntsCd
 	 * @return ProcessResultVO<ClibOlcCntsVO>
 	 */
-	public int delete(ClibOlcCntsVO vo) throws DataAccessException;
+	public int delete(ClibOlcCntsVO vo) ;
 
 	/**
 	 * 콘텐츠 라리브러리 : 해당글의 조회수를 1 증가시킨다.
 	 *
 	 * @param BbsAtclVO
 	 */
-	public void hitsup(ClibOlcCntsVO vo) throws DataAccessException;
+	public void hitsup(ClibOlcCntsVO vo) ;
 
 	/**
 	 * 콘텐츠 라리브러리 : OLC 콘탠츠를 공유 콘텐츠로 복사한다.

@@ -24,65 +24,65 @@ public interface LogAdminConnLogMapper {
 	 * 관리자 접속 로그의 전체 목록을 조회한다. 
 	 * @param  LogAdminConnLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogAdminConnLogVO> list(LogAdminConnLogVO vo) throws Exception;
+	
+	public List<LogAdminConnLogVO> list(LogAdminConnLogVO vo) ;
 	
     /**
 	 * 관리자 접속 로그의 검색된 수를 카운트 한다. 
 	 * @param  LogAdminConnLogVO 
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int count(LogAdminConnLogVO vo) throws Exception;
+	public int count(LogAdminConnLogVO vo) ;
 	
     /**
 	 * 관리자 접속 로그의 전체 목록을 조회한다. 
 	 * @param  LogAdminConnLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogAdminConnLogVO> listPageing(LogAdminConnLogVO vo) throws Exception;
+	
+	public List<LogAdminConnLogVO> listPageing(LogAdminConnLogVO vo) ;
 	
     /**
 	 * 관리자 접속 로그의 상세 정보를 조회한다. 
 	 * @param  LogAdminConnLogVO 
 	 * @return LogAdminConnLogVO
-	 * @throws Exception
+	 * @
 	 */
-	public LogAdminConnLogVO select(LogAdminConnLogVO vo) throws Exception;
+	public LogAdminConnLogVO select(LogAdminConnLogVO vo) ;
 	
     /**
 	 * 관리자 접속 로그의 키를 생성한다. 
 	 * @param   
 	 * @return Integer
-	 * @throws Exception
+	 * @
 	 */
-	public int selectKey() throws Exception;
+	public int selectKey() ;
 	
     /**
 	 * 관리자 접속 로그의 상세 정보를 조회한다. 
 	 * @param  LogAdminConnLogVO 
 	 * @return LogAdminConnLogVO
-	 * @throws Exception
+	 * @
 	 */
-	public int selectLast(LogAdminConnLogVO vo) throws Exception;
+	public int selectLast(LogAdminConnLogVO vo) ;
 
     /**
      * 관리자 접속 로그의 상세 정보를 등록한다.  
      * @param  LogAdminConnLogVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(LogAdminConnLogVO vo) throws Exception;
+    public int insert(LogAdminConnLogVO vo) ;
     
     /**
      * 관리자 접속 로그의 상세 정보를 수정한다. 
      * @param  LogAdminConnLogVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int update(LogAdminConnLogVO vo) throws Exception;
+    public int update(LogAdminConnLogVO vo) ;
 }

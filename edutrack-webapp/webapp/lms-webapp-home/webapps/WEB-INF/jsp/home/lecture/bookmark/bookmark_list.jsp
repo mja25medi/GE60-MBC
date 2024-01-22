@@ -18,6 +18,9 @@
 							<c:when test="${termDayCnt < 0 }">
 								0%
 							</c:when>
+							<c:when test="${createCourseVO.enrlStartDttm > nowDate }"> <!-- 교육기간 시작 이전 -->
+								0%
+							</c:when>
 							<c:otherwise>
 								${prpsRatio}%
 							</c:otherwise>

@@ -22,101 +22,101 @@ public interface LogMsgTransLogMapper {
 	 * 메시지 전송의 전체 목록을 조회한다. 
 	 * @param  LogMsgTransLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogMsgTransLogVO> list(LogMsgTransLogVO vo) throws Exception;
+	
+	public List<LogMsgTransLogVO> list(LogMsgTransLogVO vo) ;
 	
     /**
 	 * 메시지 전송의 검색된 수를 카운트 한다. 
 	 * @param  LogMsgTransLogVO 
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int count(LogMsgTransLogVO vo) throws Exception;
+	public int count(LogMsgTransLogVO vo) ;
 	
     /**
 	 * 메시지 전송의 전체 목록을 조회한다. 
 	 * @param  LogMsgTransLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogMsgTransLogVO> listPageing(LogMsgTransLogVO vo) throws Exception;
+	
+	public List<LogMsgTransLogVO> listPageing(LogMsgTransLogVO vo) ;
 	
     /**
 	 * 메시지 전송의 상세 정보를 조회한다. 
 	 * @param  LogMsgTransLogVO 
 	 * @return LogMsgTransLogVO
-	 * @throws Exception
+	 * @
 	 */
-	public LogMsgTransLogVO select(LogMsgTransLogVO vo) throws Exception;
+	public LogMsgTransLogVO select(LogMsgTransLogVO vo) ;
 
     /**
      * 메시지 전송의 상세 정보를 등록한다.  
      * @param  LogMsgTransLogVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(LogMsgTransLogVO vo) throws Exception;
+    public int insert(LogMsgTransLogVO vo) ;
     
     /**
      * 메시지 전송의 상세 정보를 재등록한다.  
      * @param  LogMsgTransLogVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int reinsert(LogMsgTransLogVO vo) throws Exception;
+    public int reinsert(LogMsgTransLogVO vo) ;
     
     /**
      * 메시지 전송의 상세 정보를 수정한다. 
      * @param  LogMsgTransLogVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int update(LogMsgTransLogVO vo) throws Exception;
+    public int update(LogMsgTransLogVO vo) ;
     
     /**
      * 메시지 전송의 상세 정보를 삭제한다.  
      * @param  LogMsgTransLogVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int delete(LogMsgTransLogVO vo) throws Exception;
+    public int delete(LogMsgTransLogVO vo) ;
     
     /**
      * 메시지 전송의 상세 정보를 삭제한다.  
      * @param  LogMsgTransLogVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int deleteByRecvAddr(LogMsgTransLogVO vo) throws Exception;
+    public int deleteByRecvAddr(LogMsgTransLogVO vo) ;
     
     /**
 	 * 여러 테이블에서 사용자 연락처를 조회해온다. 
 	 * @param  LogMsgTransLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogMsgTransLogVO> listReceiver(LogMsgTransLogVO vo) throws Exception;
 	
-	@SuppressWarnings("unchecked")
-	public List<LogMsgTransLogVO> listReceiverStd(LogMsgTransLogVO vo) throws Exception;
+	public List<LogMsgTransLogVO> listReceiver(LogMsgTransLogVO vo) ;
+	
+	
+	public List<LogMsgTransLogVO> listReceiverStd(LogMsgTransLogVO vo) ;
 	
     /**
      * 메시지 읽음 표시 
      * @param  LogMsgTransLogVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int updateRead(LogMsgTransLogVO vo) throws Exception;
+    public int updateRead(LogMsgTransLogVO vo) ;
     
     /**
  	 * 메시지Trans의 키를 생성한다. 
  	 * @param   
  	 * @return 
- 	 * @throws Exception
+ 	 * @
  	 */
- 	public int selectKey() throws Exception;
+ 	public int selectKey() ;
 }

@@ -2,9 +2,6 @@ package egovframework.edutrack.modules.course.assignmentbank.service.impl;
 
 import java.util.List;
 
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
-
 import egovframework.edutrack.modules.course.assignmentbank.service.AssignmentQbankCategoryVO;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 
@@ -16,8 +13,7 @@ public interface AssignmentQbankCategoryMapper {
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<AssignmentQbankCategoryVO> list(String sbjCd)  throws Exception;
+	public List<AssignmentQbankCategoryVO> list(String sbjCd)  ;
 
 
 	/**
@@ -25,21 +21,21 @@ public interface AssignmentQbankCategoryMapper {
 	 *
 	 * @return ProcessResultVO
 	 */
-	public AssignmentQbankCategoryVO select(AssignmentQbankCategoryVO iAssignmentQbankCategoryVO)  throws Exception;
+	public AssignmentQbankCategoryVO select(AssignmentQbankCategoryVO iAssignmentQbankCategoryVO)  ;
 
 	/**
 	 * 과제 문제은행 분류 등록
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int insert(AssignmentQbankCategoryVO iAssignmentQbankCategoryVO)  throws Exception;
+	public int insert(AssignmentQbankCategoryVO iAssignmentQbankCategoryVO)  ;
 
 	/**
 	 * 과제 문제은행 분류 코드 조회
 	 *
 	 * @return ProcessResultVO
 	 */
-	public AssignmentQbankCategoryVO selectCd()  throws Exception;
+	public AssignmentQbankCategoryVO selectCd()  ;
 
 
 	/**
@@ -47,12 +43,12 @@ public interface AssignmentQbankCategoryMapper {
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int update(AssignmentQbankCategoryVO iAssignmentQbankCategoryVO)  throws Exception;
+	public int update(AssignmentQbankCategoryVO iAssignmentQbankCategoryVO)  ;
 
 	/**
 	 * 과제 문제은행 분류 코드 삭제
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int delete(AssignmentQbankCategoryVO iAssignmentQbankCategoryVO)  throws Exception;
+	public int delete(AssignmentQbankCategoryVO iAssignmentQbankCategoryVO)  ;
 }

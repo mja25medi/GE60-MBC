@@ -13,67 +13,67 @@ public interface HrdApiUserInfoMapper {
 		 * api 년도 기수별  전송  조회
 		 * @param  HrdApiUserInfoVO 
 		 * @return EgovMap
-		 * @throws Exception
+		 * @
 		 */
-		public EgovMap selectUserInfo(HrdApiUserInfoVO vo) throws Exception; 
+		public EgovMap selectUserInfo(HrdApiUserInfoVO vo) ; 
 	
 		/**
 		 * api 년도 기수별 전송 리스트 조회
 		 * @param  HrdApiUserInfoVO 
 		 * @return List<EgovMap>
-		 * @throws Exception
+		 * @
 		 */
-		public List<EgovMap> listUserInfo(HrdApiUserInfoVO vo) throws Exception; 
+		public List<EgovMap> listUserInfo(HrdApiUserInfoVO vo) ; 
 
 		/**
 		 * api 회원 정보의 페이징 목록을 조회한다. 
 		 * @param  HrdApiUserInfoVO 
 		 * @return List
-		 * @throws Exception
+		 * @
 		 */
-		@SuppressWarnings("unchecked")
-		public List<EgovMap> listPageingUserInfo(HrdApiUserInfoVO vo) throws Exception ;
+		
+		public List<EgovMap> listPageingUserInfo(HrdApiUserInfoVO vo)  ;
 		
 		/**
 		 * api 년도 회원정보 건수 조회
 		 * @param  HrdApiUserInfoVO 
 		 * @return int
-		 * @throws Exception
+		 * @
 		 */
-		public int countUserInfo(HrdApiUserInfoVO vo) throws Exception;
+		public int countUserInfo(HrdApiUserInfoVO vo) ;
 		
 		/**
 		 * api 년도 기수별  전송 등록
 		 * @param  HrdApiUserInfoVO 
 		 * @return int
-		 * @throws Exception
+		 * @
 		 */
-		public int insertUserInfo(HrdApiUserInfoVO vo) throws Exception; 
+		public int insertUserInfo(HrdApiUserInfoVO vo) ; 
 		
 		/**
 		 * api 년도 기수별  전송 수정
 		 * @param  HrdApiUserInfoVO 
 		 * @return int
-		 * @throws Exception
+		 * @
 		 */
-		public int updateUserInfo(HrdApiUserInfoVO vo) throws Exception; 
+		public int updateUserInfo(HrdApiUserInfoVO vo) ; 
 		
 		/**
 		 * api 년도 기수별  전송 삭제
 		 * @param  HrdApiUserInfoVO 
 		 * @return int
-		 * @throws Exception
+		 * @
 		 */
-		public int deleteUserInfo(HrdApiUserInfoVO vo) throws Exception; 
+		public int deleteUserInfo(HrdApiUserInfoVO vo) ; 
 		
 		
 		/**
 		 * api용 회원정보 조회
 		 * @param  HrdApiUserInfoVO 
 		 * @return List<EgovMap>
-		 * @throws Exception
+		 * @
 		 */
-		public List<EgovMap> listUserInfoHrdApiSync(HrdApiUserInfoVO infoVO) throws Exception; 
+		public List<EgovMap> listUserInfoHrdApiSync(HrdApiUserInfoVO infoVO) ; 
 		
 
 }

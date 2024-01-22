@@ -19,52 +19,52 @@ public interface SubjectCategoryMapper {
 	 *
 	 * @return ProcessResultVO
 	 */
-	public String selectKey()  throws DataAccessException ;
+	public String selectKey()   ;
 	
 	/**
 	 * 과목 분류 목록 조회
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<SubjectCategoryVO> list(SubjectCategoryVO iSubjectCategoryVO)   throws DataAccessException ;
+	
+	public List<SubjectCategoryVO> list(SubjectCategoryVO iSubjectCategoryVO)    ;
 	
 	/**
 	 * 과목 분류 목록 조회
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<SubjectCategoryVO> listVer5(SubjectCategoryVO iSubjectCategoryVO)   throws DataAccessException ;
+	
+	public List<SubjectCategoryVO> listVer5(SubjectCategoryVO iSubjectCategoryVO)    ;
 
 	/**
 	 * 과목 분류 목록 조회 (하위 분류 목록이 있는 과목 분류)
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<SubjectCategoryVO> listSort(SubjectCategoryVO iSubjectCategoryVO)  throws DataAccessException ;
+	
+	public List<SubjectCategoryVO> listSort(SubjectCategoryVO iSubjectCategoryVO)   ;
 
 	/**
 	 * 하위 과목 분류 목록 조회
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<SubjectCategoryVO> listSub(SubjectCategoryVO iSubjectCategoryVO)  throws DataAccessException ;
+	
+	public List<SubjectCategoryVO> listSub(SubjectCategoryVO iSubjectCategoryVO)   ;
 
 	/**
 	 * 과목 분류 정보 조회
 	 *
 	 * @return ProcessResultVO
 	 */
-	public SubjectCategoryVO select(SubjectCategoryVO iSubjectCategoryVO)  throws DataAccessException ;
+	public SubjectCategoryVO select(SubjectCategoryVO iSubjectCategoryVO)   ;
 	/**
 	 * 과목 분류 등록
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int insert(SubjectCategoryVO iSubjectCategoryVO)  throws DataAccessException ;
+	public int insert(SubjectCategoryVO iSubjectCategoryVO)   ;
 
 
 	/**
@@ -72,29 +72,29 @@ public interface SubjectCategoryMapper {
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int update(SubjectCategoryVO iSubjectCategoryVO)  throws DataAccessException ;
+	public int update(SubjectCategoryVO iSubjectCategoryVO)   ;
 
 	/**
 	 * 과목 분류 삭제
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int delete(SubjectCategoryVO iSubjectCategoryVO)  throws DataAccessException ;
+	public int delete(SubjectCategoryVO iSubjectCategoryVO)   ;
 
 	/**
 	 * 과목 분류 순서 변경
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int updateBatch(List<SubjectCategoryVO> categoryArray)  throws DataAccessException ;
+	public int updateBatch(List<SubjectCategoryVO> categoryArray)   ;
 	
 	/**
 	 * 과목 분류 목록 조회 - 수강신청
 	 * @param iSubjectCategoryVO
 	 * @return
-	 * @throws DataAccessException
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<SubjectCategoryVO> listForEnroll(SubjectCategoryVO iSubjectCategoryVO)   throws DataAccessException ;
+	
+	public List<SubjectCategoryVO> listForEnroll(SubjectCategoryVO iSubjectCategoryVO)    ;
 	
 }

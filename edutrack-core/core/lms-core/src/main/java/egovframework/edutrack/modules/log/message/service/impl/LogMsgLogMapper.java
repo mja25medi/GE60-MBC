@@ -19,126 +19,126 @@ public interface LogMsgLogMapper {
 	 * 메시지의 전체 목록을 조회한다. 
 	 * @param  LogMsgLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogMsgLogVO> list(LogMsgLogVO vo) throws Exception;
+	
+	public List<LogMsgLogVO> list(LogMsgLogVO vo) ;
 	
     /**
 	 * 메시지의 검색된 수를 카운트 한다. 
 	 * @param  LogMsgLogVO 
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int count(LogMsgLogVO vo) throws Exception;
+	public int count(LogMsgLogVO vo) ;
 	
     /**
 	 * 메시지의 전체 목록을 조회한다. 
 	 * @param  LogMsgLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogMsgLogVO> listPageing(LogMsgLogVO vo) throws Exception;
+	
+	public List<LogMsgLogVO> listPageing(LogMsgLogVO vo) ;
 	
     /**
 	 * 메시지의 상세 정보를 조회한다. 
 	 * @param  LogMsgLogVO 
 	 * @return LogMsgLogVO
-	 * @throws Exception
+	 * @
 	 */
-	public LogMsgLogVO select(LogMsgLogVO vo) throws Exception;
+	public LogMsgLogVO select(LogMsgLogVO vo) ;
 	
    /**
 	 * 메시지의 키를 생성한다. 
 	 * @param  LogMsgLogVO 
 	 * @return LogMsgLogVO
-	 * @throws Exception
+	 * @
 	 */
-	public int selectKey() throws Exception;
+	public int selectKey() ;
 
     /**
      * 메시지의 상세 정보를 등록한다.  
      * @param  LogMsgLogVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(LogMsgLogVO vo) throws Exception;
+    public int insert(LogMsgLogVO vo) ;
     
     /**
      * 메시지의 상세 정보를 재등록한다.  
      * @param  LogMsgLogVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int reinsert(LogMsgLogVO vo) throws Exception;
+    public int reinsert(LogMsgLogVO vo) ;
     
     /**
      * 메시지의 상세 정보를 수정한다. 
      * @param  LogMsgLogVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int update(LogMsgLogVO vo) throws Exception;
+    public int update(LogMsgLogVO vo) ;
     
     /**
      * 메시지의 상세 정보를 삭제한다.  
      * @param  LogMsgLogVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int delete(LogMsgLogVO vo) throws Exception;
+    public int delete(LogMsgLogVO vo) ;
     
     /**
 	 * 보낸쪽지함 검색된 수를 카운트 한다. 
 	 * @param  LogMsgLogVO 
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int countSendMsg(LogMsgLogVO vo) throws Exception;
+	public int countSendMsg(LogMsgLogVO vo) ;
 	
     /**
 	 * 보낸쪽지함 전체 목록을 조회한다. 
 	 * @param  LogMsgLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogMsgLogVO> listSendMsgPageing(LogMsgLogVO vo) throws Exception;
+	
+	public List<LogMsgLogVO> listSendMsgPageing(LogMsgLogVO vo) ;
 	
     /**
 	 * 받은쪽지함 검색된 수를 카운트 한다. 
 	 * @param  LogMsgLogVO 
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int countRecvMsg(LogMsgLogVO vo) throws Exception;
+	public int countRecvMsg(LogMsgLogVO vo) ;
 	
     /**
 	 * 받은쪽지함 전체 목록을 조회한다. 
 	 * @param  LogMsgLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogMsgLogVO> listRecvMsgPageing(LogMsgLogVO vo) throws Exception;
+	
+	public List<LogMsgLogVO> listRecvMsgPageing(LogMsgLogVO vo) ;
 	
 	/**
 	 * 받은쪽지함 전체 목록을 조회한다. 
 	 * @param  LogMsgLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogMsgLogVO> listTopRecvMsg(LogMsgLogVO vo) throws Exception;
+	
+	public List<LogMsgLogVO> listTopRecvMsg(LogMsgLogVO vo) ;
 	
     /**
 	 * 읽지 않은 쪽지수를 카운트 한다.
 	 * @param  LogMsgLogVO 
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int countMsg(LogMsgLogVO vo) throws Exception;
+	public int countMsg(LogMsgLogVO vo) ;
 	
     /**
 	 * [CRM] 메시지 종류 별 카운트
@@ -156,7 +156,7 @@ public interface LogMsgLogMapper {
 
    /**
 	 * 메시지 그룹의 키를 생성한다. 
-	 * @throws Exception
+	 * @
 	 */
 	public int selectKeyGrpSn();
 }

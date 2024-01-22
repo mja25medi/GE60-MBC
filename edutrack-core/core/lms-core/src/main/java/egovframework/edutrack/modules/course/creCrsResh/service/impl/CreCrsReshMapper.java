@@ -17,47 +17,47 @@ public interface CreCrsReshMapper {
 	 * @param CreCrsReshVO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CreCrsReshVO> list(CreCrsReshVO VO)  throws DataAccessException ;
+	
+	public List<CreCrsReshVO> list(CreCrsReshVO VO)   ;
 
 	/**
 	 * 개설 과정 설문 페이징 목록 조회
 	 * @param CreCrsReshVO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CreCrsReshVO> listPageing(CreCrsReshVO VO)  throws DataAccessException ;
+	
+	public List<CreCrsReshVO> listPageing(CreCrsReshVO VO)   ;
 
 	/**
 	 * 개설 과정 설문 페이징 목록수 반환 
 	 * @param CreCrsReshVO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public int count(CreCrsReshVO VO)  throws DataAccessException ;
+	
+	public int count(CreCrsReshVO VO)   ;
 	
 	/**
 	 * 개설 과정 설문 갯수 반환
 	 * @param CreCrsReshVO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public int itemCount(CreCrsReshVO VO)  throws DataAccessException ;
+	
+	public int itemCount(CreCrsReshVO VO)   ;
 	
 	/**
 	 * 개설 과정 설문 답변 갯수 반환
 	 * @param CreCrsReshVO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public int ansrCount(CreCrsReshVO VO)  throws DataAccessException ;
+	
+	public int ansrCount(CreCrsReshVO VO)   ;
 	
 	/**
 	 * 개설 과정 설문 정보 조회
 	 * @param VO
 	 * @return
 	 */
-	public CreCrsReshVO select(CreCrsReshVO VO  )   throws DataAccessException ;
+	public CreCrsReshVO select(CreCrsReshVO VO  )    ;
 
 
 	/**
@@ -65,20 +65,20 @@ public interface CreCrsReshMapper {
 	 * @param VO
 	 * @return
 	 */
-	public int insert(CreCrsReshVO VO)  throws DataAccessException ;
+	public int insert(CreCrsReshVO VO)   ;
 
 	/**
 	 * 개설 과정 설문 수정
 	 * @param VO
 	 * @return
 	 */
-	public int update(CreCrsReshVO VO)   throws DataAccessException ;
+	public int update(CreCrsReshVO VO)    ;
 
 	/**
 	 * 개설 과정 설문 삭제
 	 * @param VO
 	 * @return
 	 */
-	public int delete(CreCrsReshVO VO )  throws DataAccessException ;
+	public int delete(CreCrsReshVO VO )   ;
 
 }

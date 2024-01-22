@@ -13,47 +13,47 @@ public interface OpenCrsCtgrMapper {
 	 * @param int
 	 * @return
 	 */
-	public String selectKey()  throws Exception;
+	public String selectKey()  ;
 	/**
 	 * 공개강좌 분류 목록
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OpenCrsCtgrVO> list(OpenCrsCtgrVO vo) throws Exception;
+	
+	public List<OpenCrsCtgrVO> list(OpenCrsCtgrVO vo) ;
 
 	/**
 	 * 공개강좌 분류 정보
 	 *
 	 * @return ProcessResultVO
 	 */
-	public OpenCrsCtgrVO select(OpenCrsCtgrVO vo) throws Exception;
+	public OpenCrsCtgrVO select(OpenCrsCtgrVO vo) ;
 
 	/**
 	 * 공개강좌 분류 정보 등록
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int insert(OpenCrsCtgrVO vo) throws Exception;
+	public int insert(OpenCrsCtgrVO vo) ;
 
 	/**
 	 * 공개강좌 분류 정보 수정
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int update(OpenCrsCtgrVO vo) throws Exception;
+	public int update(OpenCrsCtgrVO vo) ;
 
     /**
      * 공개강좌 분류 정보 일괄 수정
      * @param codeArray
      */
-	public int updateBatch(List<OpenCrsCtgrVO> itemArray) throws Exception;
+	public int updateBatch(List<OpenCrsCtgrVO> itemArray) ;
 
 	/**
 	 * 공개강좌 분류 정보 삭제
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int delete(OpenCrsCtgrVO vo) throws Exception;
+	public int delete(OpenCrsCtgrVO vo) ;
 
 }

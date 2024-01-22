@@ -18,15 +18,15 @@ public interface OpenCrsSbjMapper  {
      *
      * @return ProcessReslutListDTO
      */
-	@SuppressWarnings("unchecked")
-	public List<OpenCrsSbjVO> list(OpenCrsSbjVO vo) throws Exception;
+	
+	public List<OpenCrsSbjVO> list(OpenCrsSbjVO vo) ;
 
     /**
      * 공개강좌 연결과목 정보
      *
      * @return ProcessResultDTO
      */
-	public OpenCrsSbjVO select(OpenCrsSbjVO vo) throws Exception;
+	public OpenCrsSbjVO select(OpenCrsSbjVO vo) ;
 
 
     /**
@@ -34,32 +34,32 @@ public interface OpenCrsSbjMapper  {
      *
      * @reurn ProcessResultDTO
      */
-	public int insert(OpenCrsSbjVO vo) throws Exception;
+	public int insert(OpenCrsSbjVO vo) ;
 
     /**
      * 공개강좌 연결과목 정보 수정
      *
      * @reurn ProcessResultDTO
      */
-	public int update(OpenCrsSbjVO vo) throws Exception;
+	public int update(OpenCrsSbjVO vo) ;
 
     /**
      * 공개강좌 연결과목 정보 일괄 수정
      * @param codeArray
      */
-	public int updateBatch(List<OpenCrsSbjVO> itemArray) throws Exception;
+	public int updateBatch(List<OpenCrsSbjVO> itemArray) ;
 
     /**
      * 공개강좌 연결과목 정보 삭제
      *
      * @reurn ProcessResultDTO
      */
-	public int delete(OpenCrsSbjVO vo) throws Exception;
+	public int delete(OpenCrsSbjVO vo) ;
 
     /**
      * 공개강좌 연결과목 정보 전체 삭제
      *
      * @reurn ProcessResultDTO
      */
-	public int deleteAll(OpenCrsSbjVO vo) throws Exception;
+	public int deleteAll(OpenCrsSbjVO vo) ;
 }

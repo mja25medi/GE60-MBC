@@ -2,9 +2,6 @@ package egovframework.edutrack.modules.course.assignmentbank.service.impl;
 
 import java.util.List;
 
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
-
 import egovframework.edutrack.modules.course.assignmentbank.service.AssignmentQbankQuestionVO;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 
@@ -19,8 +16,7 @@ public interface AssignmentQbankQuestionMapper {
 	 *
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<AssignmentQbankQuestionVO> list(AssignmentQbankQuestionVO questionVO) throws Exception ;
+	public List<AssignmentQbankQuestionVO> list(AssignmentQbankQuestionVO questionVO)  ;
 
 
 	/**
@@ -28,21 +24,21 @@ public interface AssignmentQbankQuestionMapper {
 	 *
 	 * @return ProcessResultVO
 	 */
-	public AssignmentQbankQuestionVO select(AssignmentQbankQuestionVO assignmentQbankQuestionVO) throws Exception ;
+	public AssignmentQbankQuestionVO select(AssignmentQbankQuestionVO assignmentQbankQuestionVO)  ;
 
 	/**
 	 * 과제 문제은행 문제 등록
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int insert(AssignmentQbankQuestionVO entity) throws Exception ;
+	public int insert(AssignmentQbankQuestionVO entity)  ;
 
 	/**
 	 * 과제 문제은행 문제 코드 조회
 	 *
 	 * @return ProcessResultVO
 	 */
-	public AssignmentQbankQuestionVO selectSn()  throws Exception ;
+	public AssignmentQbankQuestionVO selectSn()   ;
 
 
 	/**
@@ -50,12 +46,12 @@ public interface AssignmentQbankQuestionMapper {
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int update(AssignmentQbankQuestionVO iAssignmentQbankQuestionVO) throws Exception ;
+	public int update(AssignmentQbankQuestionVO iAssignmentQbankQuestionVO)  ;
 
 	/**
 	 * 과제 문제은행 문제 코드 삭제
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int delete(AssignmentQbankQuestionVO assignmentQbankQuestionVO) throws Exception ;
+	public int delete(AssignmentQbankQuestionVO assignmentQbankQuestionVO)  ;
 }

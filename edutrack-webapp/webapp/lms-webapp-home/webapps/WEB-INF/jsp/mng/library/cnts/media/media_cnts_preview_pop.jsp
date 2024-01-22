@@ -16,7 +16,6 @@
 	</div>
 </c:if>
 </c:if>
-
 <c:if test="${playerDiv eq 'common' }">
 	<c:choose>
 		<c:when test="${fileExt eq 'mp4' }">
@@ -29,94 +28,86 @@
 	if(agent.indexOf("Mac") > -1) osMac = "Mac";
 	request.setAttribute("osMac", osMac);
 
-	request.setAttribute("wowzaUse", Constants.WOWZA_USE);
-	request.setAttribute("wowzaUrlStmp", Constants.WOWZA_URL_RTMP);
-	request.setAttribute("wowzaUrlStsp", Constants.WOWZA_URL_RTSP);
-	request.setAttribute("wowzaUrlHttp", Constants.WOWZA_URL_HTTP);
-	request.setAttribute("mediaUse", Constants.MEDIA_USE);
-	request.setAttribute("mediaUrl", Constants.MEDIA_URL);
+	request.setAttribute("mediaStreamUse", Constants.MEDIA_STREAM_USE);
+	request.setAttribute("mediaStreamUrl", Constants.MEDIA_STREAM_URL);
+	request.setAttribute("mediaStreamHls", Constants.MEDIA_STREAM_HLS);
 	request.setAttribute("flowplayerKey", Constants.FLOWPLAYER_KEY);
 %>
-	<script type="text/javascript">
-		var isStartPlay	= false; //-- 동영상 재생이 시작되었는지에 대한 체크 , 크롬에서 전체화면/일반화면 전환시 새로 ready를 호출되어 이어보기 메시지가 계속 뜨는 현상 방지
+<script type="text/javascript" defer="defer">
 
-		$(document).ready(function() {
-			$("body").css("background-color",parent.contentColor);
+	$(document).ready(function() {
+		var sourcesType = "video/mp4";
+		var sourcesSrc = "";
+		<c:if test="${mediaStreamUse eq 'use'}">
+			<c:if test="${cntsTypeCd eq 'VOD'}">
+				sourcesType = "application/x-mpegurl";
+				sourcesSrc = "${mediaStreamUrl}/${filePath}/${fileName}/${mediaStreamHls}";
+			</c:if>		
+			<c:if test="${cntsTypeCd ne 'VOD' && cntsTypeCd ne 'CDN'}">
+				sourcesSrc = "${filePath}/${fileName}";
+			</c:if>	
+			<c:if test="${cntsTypeCd eq 'CDN'}">
+				sourcesSrc = "${filePath}";
+			</c:if>
+		</c:if>
+		<c:if test="${mediaStreamUse ne 'use'}">
+			<c:if test="${cntsTypeCd ne 'CDN'}">
+				sourcesSrc = "${filePath}/${fileName}";
+			</c:if>	
+			<c:if test="${cntsTypeCd eq 'CDN'}">
+				sourcesSrc = "${filePath}";
+			</c:if>
+		</c:if>
+	
+		// 플로플레이어 인증키
+		var flowerPlayerKey = '${flowplayerKey}';
+	
+		flowplayer("#player",{
+		  key: flowerPlayerKey,
+		  autoplay: true,
+		  share: false,
+		  hlsQualities: false,
+//		  splash: true,
+		  keyboard: false,
+	      clip: {
+		    	autoplay: true,
+		        sources: [
+		            {
+		                type: sourcesType,
+						src: sourcesSrc
+		            }
+		        ],
+		    }
 		});
+	});
+	
 
-		//-- 동영생 재생 위치를 넘겨 준다.
-		function checkPlayTime(video_time) {
 
-		}
 
-		flowplayer(function(api, root) {
-			// when a new video is about to be loaded
-			api.bind("load", function() {
-				//$("#fpengine").text(api.engine);
-			});
-			api.bind("load", function (e, api, video) {
-				//alert(" \n load engine: "+ api.engine+" \n video.src: "+ video.src);
-				//$("#videosrc").text(video.src);
-			});
-			// when a video is loaded and ready to play
-			api.bind("ready", function() {
-				api.play(); //-- 크롬에서 전체화면/일반화면 전환시 새로 ready를 호출되어 동영상 재생이 멈추는 현상 방지, 단 전체화면 상태에서 esc 를 통해 돌아오는 경우에는 정지가 됨
-			});
-			api.bind("progress", function() {	    	// Play중 시간 갱신
-				//checkPlayTime(api.video.time);
-			});
-			api.bind("finish", function() {	      	// Play 종료시
-				//alert('Play End!!');
-			});
+	flowplayer(function(api, root) {
+		// when a new video is about to be loaded
+		api.bind("load", function() {
+			//$("#fpengine").text(api.engine);
 		});
+		api.bind("load", function (e, api, video) {
+			//alert(" \n load engine: "+ api.engine+" \n video.src: "+ video.src);
+			//$("#videosrc").text(video.src);
+		});
+		// when a video is loaded and ready to play
+		api.bind("ready", function() {
+			api.play(); //-- 크롬에서 전체화면/일반화면 전환시 새로 ready를 호출되어 동영상 재생이 멈추는 현상 방지, 단 전체화면 상태에서 esc 를 통해 돌아오는 경우에는 정지가 됨
+		});
+		api.bind("progress", function() {	    	// Play중 시간 갱신
+			//checkPlayTime(api.video.time);
+		});
+		api.bind("finish", function() {	      	// Play 종료시
+			//alert('Play End!!');
+		});
+	});
+
 	</script>
-<div id="playerLayer" data-key="${flowplayerKey}"
-	<c:if test="${USER_DEVICE eq 'PC'}">
-	 data-swf="<c:url value="/libs/flowplayer/flowplayer.swf"/>"
-	 data-engine="flash" data-flashfit="true"
-	 data-fullscreen="true"
-	</c:if>
-	 data-native_fullscreen="false"
-	 data-embed="false"
-	 data-volume="0.5"
-	 data-keyboard="false"
-	 class="flowplayer aside-time ">
-	<video>
-	<c:if test="${USER_DEVICE eq 'PC'}">
-		<c:if test="${wowzaUse eq 'use'}">
-		<source type="video/flash" src="mp4:${filePath}/${fileName}"><%-- 와우자 서버를 사용하는경우(vod_smart_yn=Y) 기본 적으로 flash engine을 통해 rtmp 스트리밍을 지원하도록 설정 해 준다.--%>
-			<c:if test="${osMac eq 'Mac' }">
-		<source type="video/mp4" src="${wowzaUrlHttp}${filePath}/${fileName}/playlist.m3u8"> <!-- MAC OS 만 통과-->
-			</c:if>
-			<c:if test="${osMac ne 'Mac' }">
-		<source type="video/mp4" src="${filePath}/${fileName}">   <!-- Mac 빼고 나머지는 http 전송 -->
-			</c:if>
-		</c:if>
-		<c:if test="${wowzaUse ne 'use'}">
-			<c:if test="${cntsTypeCd ne 'CDN'}">
-				<source type="video/mp4" src="${filePath}/${fileName}">
-			</c:if>
-			<c:if test="${cntsTypeCd eq 'CDN'}">
-				<source type="video/mp4" src="${filePath}">
-			</c:if>
-		</c:if>
-	</c:if>
-	<c:if test="${USER_DEVICE ne 'PC'}"> <!-- 모바일 또는 디바이스 확인 안되는 경우  -->
-		<c:if test="${wowzaUse eq 'use' && USER_OS eq 'ios'}">
-		<source type="video/mp4" src="${wowzaUrlHttp}${filePath}/${fileName}/playlist.m3u8"> <!-- ios , android 4.3 통과 -->
-		</c:if>
-		<c:if test="${wowzaUse ne 'use' ||  USER_OS ne 'ios'}">
-		<%-- <source type="video/mp4" src="${filePath}/${fileName}"> android가 스트리밍 시 단말기 및 브라우저에 따라 오류 발생하는 양상이 다르게 나오므로  wowzq+mp4+ios 조건  이외는 모두 http 전송 --%>
-			<c:if test="${cntsTypeCd ne 'CDN'}">
-				<source type="video/mp4" src="${filePath}/${fileName}">
-			</c:if>
-			<c:if test="${cntsTypeCd eq 'CDN'}">
-				<source type="video/mp4" src="${filePath}">
-			</c:if>
-		</c:if>
-	</c:if>
-	</video>
-</div>
+
+	<div id="player" ></div>
 
 		</c:when>
 		<c:when test="${fileExt eq 'mp3' }">

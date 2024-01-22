@@ -19,9 +19,9 @@ public interface LogPrivateInfoInqLogMapper {
 	 * @param LogPrivateInfoInqLogVO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public List<LogPrivateInfoInqLogVO> list(
-			LogPrivateInfoInqLogVO vo) throws Exception;
+			LogPrivateInfoInqLogVO vo) ;
 
 	/**
 	 * 개인정보 조회 이력 페이징 목록을 반환한다.
@@ -31,9 +31,9 @@ public interface LogPrivateInfoInqLogMapper {
 	 * @param pageScale
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public List<LogPrivateInfoInqLogVO> listPageing(
-			LogPrivateInfoInqLogVO vo) throws Exception;
+			LogPrivateInfoInqLogVO vo) ;
 
 	/**
 	 * 개인정보 조회 이력 페이징 목록수 반환.
@@ -43,25 +43,25 @@ public interface LogPrivateInfoInqLogMapper {
 	 * @param pageScale
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public int count(
-			LogPrivateInfoInqLogVO vo) throws Exception;
+			LogPrivateInfoInqLogVO vo) ;
 	
 	/**
 	 * 개인정보 조회 이력 단일 항목 정보를 반환한다.
 	 * @param LogPrivateInfoInqLogVO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public LogPrivateInfoInqLogVO select(
-			LogPrivateInfoInqLogVO vo) throws Exception;
+			LogPrivateInfoInqLogVO vo) ;
 
 	/**
 	 * 개인정보 조회 이력 정보를 저장하고 결과를 반환한다.
 	 * @param LogPrivateInfoInqLogVO
 	 * @return
 	 */
-	public int insert(LogPrivateInfoInqLogVO vo) throws Exception;
+	public int insert(LogPrivateInfoInqLogVO vo) ;
 
 
 

@@ -20,31 +20,31 @@ public interface OrgCrsCertMapper{
 	 * 기관 수료증의 상세 정보를 조회한다. 
 	 * @param  OrgCrsCertVO 
 	 * @return OrgCrsCertVO
-	 * @throws Exception
+	 * @
 	 */
-	public OrgCrsCertVO select(OrgCrsCertVO vo) throws Exception;
+	public OrgCrsCertVO select(OrgCrsCertVO vo) ;
 
     /**
      * 기관 수료증의 상세 정보를 등록한다.  
      * @param  OrgCrsCertVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(OrgCrsCertVO vo) throws Exception;
+    public int insert(OrgCrsCertVO vo) ;
     
     /**
      * 기관 수료증의 상세 정보를 수정한다. 
      * @param  OrgCrsCertVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int update(OrgCrsCertVO vo) throws Exception;
+    public int update(OrgCrsCertVO vo) ;
     
     /**
      * 기관 수료증의 상세 정보를 삭제한다.  
      * @param  OrgCrsCertVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int delete(OrgCrsCertVO vo) throws Exception;
+    public int delete(OrgCrsCertVO vo) ;
 }

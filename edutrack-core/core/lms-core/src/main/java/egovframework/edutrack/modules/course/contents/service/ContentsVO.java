@@ -49,11 +49,6 @@ public class ContentsVO extends DefaultVO {
 	private String	classStartTime;
 	private String	classEndTime;
 	
-	private String	classStartHour;
-	private String	classStartMin;
-	private String	classEndHour;
-	private String	classEndMin;
-	
 	private String	zoomUrl;
 	private String sceneId;
 	private String roomId;
@@ -385,38 +380,6 @@ public class ContentsVO extends DefaultVO {
 
 	public void setClassEndTime(String classEndTime) {
 		this.classEndTime = classEndTime;
-	}
-
-	public String getClassStartHour() {
-		return classStartHour;
-	}
-
-	public void setClassStartHour(String classStartHour) {
-		this.classStartHour = classStartHour;
-	}
-
-	public String getClassStartMin() {
-		return classStartMin;
-	}
-
-	public void setClassStartMin(String classStartMin) {
-		this.classStartMin = classStartMin;
-	}
-
-	public String getClassEndHour() {
-		return classEndHour;
-	}
-
-	public void setClassEndHour(String classEndHour) {
-		this.classEndHour = classEndHour;
-	}
-
-	public String getClassEndMin() {
-		return classEndMin;
-	}
-
-	public void setClassEndMin(String classEndMin) {
-		this.classEndMin = classEndMin;
 	}
 
 	public String getZoomUrl() {

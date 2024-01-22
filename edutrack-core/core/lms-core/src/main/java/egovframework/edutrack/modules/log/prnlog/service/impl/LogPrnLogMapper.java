@@ -22,41 +22,41 @@ public interface LogPrnLogMapper  {
 	 * 개인 정보 출력 로그 전체 목록을 조회한다. 
 	 * @param  LogPrnLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogPrnLogVO> list(LogPrnLogVO vo) throws Exception;
+	
+	public List<LogPrnLogVO> list(LogPrnLogVO vo) ;
 	
     /**
 	 * 개인 정보 출력 로그의 검색된 수를 조회한다. 
 	 * @param  BrdBbsAtclVO 
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int count(LogPrnLogVO vo) throws Exception;
+	public int count(LogPrnLogVO vo) ;
 	
     /**
 	 * 개인 정보 출력 로그 페이징 목록을 조회한다. 
 	 * @param  LogPrnLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogPrnLogVO> listPageing(LogPrnLogVO vo) throws Exception;
+	
+	public List<LogPrnLogVO> listPageing(LogPrnLogVO vo) ;
 	
     /**
 	 * 개인 정보 출력 로그의 정보를 조회한다. 
 	 * @param  LogPrnLogVO 
 	 * @return LogPrnLogVO
-	 * @throws Exception
+	 * @
 	 */
-	public LogPrnLogVO select(LogPrnLogVO vo) throws Exception;
+	public LogPrnLogVO select(LogPrnLogVO vo) ;
 
     /**
      * 개인 정보 출력 로그의 정보를 등록한다.  
      * @param  LogPrnLogVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(LogPrnLogVO vo) throws Exception;
+    public int insert(LogPrnLogVO vo) ;
 }

@@ -24,89 +24,89 @@ public interface SysCodeMapper {
 	 * 코드 정보의 전체 목록을 조회한다. 
 	 * @param  SysCodeVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<SysCodeVO> list(SysCodeVO vo) throws Exception;
+	
+	public List<SysCodeVO> list(SysCodeVO vo) ;
 	
     /**
 	 * 코드 정보의 검색된 수를 카운트 한다. 
 	 * @param  SysCodeVO 
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int count(SysCodeVO vo) throws Exception;
+	public int count(SysCodeVO vo) ;
 	
     /**
 	 * 코드 정보의 전체 목록을 조회한다. 
 	 * @param  SysCodeVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<SysCodeVO> listPageing(SysCodeVO vo) throws Exception;
+	
+	public List<SysCodeVO> listPageing(SysCodeVO vo) ;
 	
     /**
 	 * 코드 정보의 상세 정보를 조회한다. 
 	 * @param  SysCodeVO 
 	 * @return SysCodeVO
-	 * @throws Exception
+	 * @
 	 */
-	public SysCodeVO select(SysCodeVO vo) throws Exception;
+	public SysCodeVO select(SysCodeVO vo) ;
 
     /**
      * 코드 정보의 상세 정보를 등록한다.  
      * @param  SysCodeVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(SysCodeVO vo) throws Exception;
+    public int insert(SysCodeVO vo) ;
     
     /**
      * 코드 정보의 상세 정보를 수정한다. 
      * @param  SysCodeVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int update(SysCodeVO vo) throws Exception;
+    public int update(SysCodeVO vo) ;
     
     /**
      * 코드 정보의 상세 정보를 일괄 수정한다. 
      * @param  SysCodeVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int updateBatch(List<SysCodeVO> codeArray) throws Exception;
+    public int updateBatch(List<SysCodeVO> codeArray) ;
     
     /**
      * 코드 정보의 상세 정보를 삭제한다.  
      * @param  SysCodeVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int delete(SysCodeVO vo) throws Exception;
+    public int delete(SysCodeVO vo) ;
 
     /**
      * 코드 분류 하위의 코드 정보 전체를 상세 정보를 삭제한다.  
      * @param  SysCodeVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int deleteAll(SysCodeVO vo) throws Exception;
+    public int deleteAll(SysCodeVO vo) ;
     
     /**
 	 * 설정 테이블에 코드의 버전 값을 조회 한다.
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int selectVersion() throws Exception;
+	public int selectVersion() ;
     
     /**
 	 * 설정 테이블에 코드의 버전 값을 증가 시킨다.
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int updateVersion() throws Exception;
+	public int updateVersion() ;
 	
 	/**
 	 * 시스템 코드 목록 (직업구분에 따른 JOB_CTGR )
@@ -114,7 +114,7 @@ public interface SysCodeMapper {
 	 * @param codeCd
 	 * @return
 	 */
-	public List<SysCodeVO> listSelectCd(SysCodeVO vo)  throws Exception;
+	public List<SysCodeVO> listSelectCd(SysCodeVO vo)  ;
 
 	/**
 	 * 시스템 코드 목록 (직업구분에 따른 JOB_CTGR의 CODE_OPTN코드 조회 )
@@ -122,6 +122,6 @@ public interface SysCodeMapper {
 	 * @param codeOptn
 	 * @return
 	 */
-	public List<SysCodeVO> listSelectOptn(SysCodeVO vo)  throws Exception;
+	public List<SysCodeVO> listSelectOptn(SysCodeVO vo)  ;
 
 }

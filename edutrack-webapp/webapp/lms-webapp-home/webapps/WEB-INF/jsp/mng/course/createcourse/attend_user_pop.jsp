@@ -1,3 +1,5 @@
+
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/mng/common/page_init.jsp" %>
 <c:set var="vo" value="${vo}"/>
@@ -7,7 +9,7 @@
         <div class="col-md-5 col-xs-18">
             <div class="panel panel-default">
                 
-       <form name="attendUpdate" id="attendUpdate" onsubmit="return false">
+       <form name="attendUpdate" id="attendUpdate" onsubmit="return false" method="post">
            	<input type="hidden" name="crsCreCd" value="${vo.crsCreCd}"/>
                 <div class="panel-body" id="leftWorkArea" style="border-top:0px;">                   
                     <div class="mb10">                       
@@ -245,11 +247,15 @@ function chgStat(time) {
 }
 
 function updateAttendStat() {
+	var attendDttm = $('#attendDttm').val()
+	attendDttm = attendDttm.replaceAll("-", ".");
+	var crsCreCd = '${vo.crsCreCd}'
 	$('#attendUpdate').attr("action","/mng/course/createCourse/updateAttendStat");
 	$('#attendUpdate').ajaxSubmit(function (resultDTO) {
 		if(resultDTO.result >= 0) {
 			alert("수정되었습니다.")
 			selectAttend();
+			parent.searchAttend(crsCreCd, attendDttm);
 		}
 	});
 }

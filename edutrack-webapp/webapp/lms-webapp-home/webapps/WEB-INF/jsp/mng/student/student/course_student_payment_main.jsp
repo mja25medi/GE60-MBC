@@ -161,7 +161,7 @@ function excelDownload(){
 		iframeHtml = '<iframe id="_m_download_iframe" name="_m_download_iframe" style="visibility: none; display: none;"></iframe>';
 		$("body").append(iframeHtml);
 	}
-	var url = cUrl("/mng/std/student/excelDownloadListStdPay?" + $("#stuPayForm").serialize());
+	var url = cUrl("/mng/course/std/excelDownloadListStd?" + $("#stuPayForm").serialize());
 	
 	$("#_m_download_iframe").attr("src", url);
 }
@@ -225,7 +225,7 @@ function studentWrite() {
 /* IDE 엑셀 업로드 */
 function excelUpload(){
 	var addContent  = "<iframe id='addStuPayFrame' name='addStuPayFrame' width='100%' height='100%' "
-		+ "frameborder='0' scrolling='auto' src='/mng/std/student/addStdIdeExcelPop"
+		+ "frameborder='0' scrolling='auto' src='/mng/course/std/addStdIdeExcelPop"
 		+ "?crsCreCd="+ItemDTO.crsCreCd+"'/>";
 		parent.modalBox.clear();
 		parent.modalBox.addContents(addContent);

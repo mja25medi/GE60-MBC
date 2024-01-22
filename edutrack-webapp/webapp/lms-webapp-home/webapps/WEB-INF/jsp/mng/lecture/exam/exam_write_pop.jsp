@@ -51,14 +51,14 @@
 				</c:if>
 			</td>
 		</tr>
-		<tr class="online_exam">
+		<tr class="online_exam" > 
 			<th scope="row">평가구분</th>
-			<td class="text-center" colspan="3" >
+			<td class="text-center" colspan="3">
 				<label style="font-weight:normal; float: left;">
-					<input type="radio" name="semiExamYn" id="semiExamYn" value="N" onclick="examChk()" <c:if test="${examVO.semiExamYn eq 'N'}">checked</c:if>/>일반시험
+					<input type="radio" name="semiExamYn" id="semiExamYn_N" value="N" onclick="examChk()" <c:if test="${examVO.semiExamYn eq 'N'}">checked</c:if>/>일반시험
 				</label>
 				<label style="font-weight:normal;margin-left:10px; float: left;">
-					<input type="radio" name="semiExamYn" id="semiExamYn" value="Y" onclick="examChk()" <c:if test="${examVO.semiExamYn eq 'Y'}">checked</c:if>/>진행단계평가
+					<input type="radio" name="semiExamYn" id="semiExamYn_Y" value="Y" onclick="examChk()" <c:if test="${examVO.semiExamYn eq 'Y'}">checked</c:if>/>진행단계평가
 				</label>
 			</td>
 		</tr>
@@ -131,12 +131,12 @@
 		<tr class="online_exam semiExamYn_Y" style="display: none;">
 				<th scope="row">강의</th>
 				<td colspan="3">
-					<select name="sbjCd" id="sbjCd" class="form-select" style="float:left;">
+					<select name="sbjCd" id="sbjCd" class="form-control input-sm" style="float:left; width: auto;">
 						<c:forEach var="item" items="${onlineSubjectList}" varStatus="status">
 							<option value="${item.sbjCd }" <c:if test="${item.sbjCd eq examVO.sbjCd}">selected</c:if>>${item.sbjNm}</option>
 						</c:forEach>				
 					</select>
-					<input type="text" style="width:50px;float:left;text-align:right;" dispName="<spring:message code="lecture.title.exam.answer.ratio"/>" maxlength="3" isNull="N" lenCheck="3" name="stareLecCount" id="stareLecCount" value="${vo.stareLecCount }" onfocus="this.select()" class="inputSpecial inputNumber examTypeControl examStareTypeControl form-control input-sm" onkeyup="isChkMaxNumber(this,100)"/>
+					<input type="text" style="width:50px;float:left;text-align:center;" dispName="<spring:message code="lecture.title.exam.answer.ratio"/>" maxlength="3" isNull="N" lenCheck="3" name="stareLecCount" id="stareLecCount" value="${vo.stareLecCount }" onfocus="this.select()" class="inputSpecial inputNumber examTypeControl examStareTypeControl form-control input-sm" onkeyup="isChkMaxNumber(this,100)"/>
 					<span style="float:left;line-height:30px;"> 강 수강 후</span>
 				</td>
 		</tr>
@@ -244,13 +244,14 @@
 
 		changeExamType();
 		changeExamStareType();
-		examChk();
 		<c:if test="${gubun eq 'E'}">
-		if("ON" == "${examVO.examTypeCd}"){
-			$(".online_exam").show();
-		}
+			var semiExamYn = $('input[name="semiExamYn"]:checked').val();
+			if(semiExamYn == 'Y'){
+				$('#semiExamYn_N').attr("disabled",true);
+			} else{ 
+				$('#semiExamYn_Y').attr("disabled",true);
+			}
 		</c:if>
-		
 		//문항 수, 배점 변화에 따른 총점 확인
 		$('#selCnt, #selPnt, #shortCnt, #shortPnt, #desCnt, #desPnt').on('change keyup' ,function() {
 			getExamQstnTotScore(this);
@@ -594,6 +595,7 @@
 		}else{
 			$("#examStareTm").attr("disabled",true);
 		}
+		examChk();
 	}
 
 	function changeExamStareTm(){

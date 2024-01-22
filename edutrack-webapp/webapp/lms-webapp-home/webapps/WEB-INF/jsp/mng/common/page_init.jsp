@@ -42,6 +42,11 @@
 	if(StringUtil.nvl((String)session.getAttribute("CONTEXT_ROOT")).equals("")==false)
 		request.setAttribute("CONTEXT_PATH", "/"+(String)session.getAttribute("CONTEXT_ROOT"));
 	
+	request.setAttribute(Constants.USER_DEVICE, UserBroker.getUserDevice((HttpServletRequest)pageContext.getRequest()));
+	request.setAttribute(Constants.USER_APP_TYPE, UserBroker.getAppType((HttpServletRequest)pageContext.getRequest()));
+	request.setAttribute(Constants.USER_OS, UserBroker.getUserOS((HttpServletRequest)pageContext.getRequest()));
+	request.setAttribute(Constants.USER_BROWSER, UserBroker.getUserBrowser((HttpServletRequest)pageContext.getRequest()));
+	
 	String browser = "";
 	String userAgent = request.getHeader("User-Agent");
 	if (userAgent.indexOf("Trident") > 0 || userAgent.indexOf("MSIE") > 0) {

@@ -23,98 +23,98 @@ public interface OrgPageMapper{
 	 * 기관 페이지의 전체 목록을 조회한다. 
 	 * @param  OrgPageVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OrgPageVO> list(OrgPageVO vo) throws Exception;
+	
+	public List<OrgPageVO> list(OrgPageVO vo) ;
 	
     /**
 	 * 메뉴에 연결되지 않은 기관 페이지의 전체 목록을 조회한다. 
 	 * @param  OrgPageVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OrgPageVO> listForMenu(OrgPageVO vo) throws Exception;	
+	
+	public List<OrgPageVO> listForMenu(OrgPageVO vo) ;	
 	
     /**
 	 * 기관 페이지의 검색된 수를 카운트 한다. 
 	 * @param  OrgPageVO 
 	 * @return int
-	 * @throws Exception
+	 * @
 	 */
-	public int count(OrgPageVO vo) throws Exception;
+	public int count(OrgPageVO vo) ;
 	
     /**
 	 * 기관 페이지의 전체 목록을 조회한다. 
 	 * @param  OrgPageVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<OrgPageVO> listPageing(OrgPageVO vo) throws Exception;
+	
+	public List<OrgPageVO> listPageing(OrgPageVO vo) ;
 	
     /**
 	 * 기관 페이지의 상세 정보를 조회한다. 
 	 * @param  OrgPageVO 
 	 * @return OrgPageVO
-	 * @throws Exception
+	 * @
 	 */
-	public OrgPageVO select(OrgPageVO vo) throws Exception;
+	public OrgPageVO select(OrgPageVO vo) ;
 
     /**
      * 기관 페이지의 상세 정보를 등록한다.  
      * @param  OrgPageVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(OrgPageVO vo) throws Exception;
+    public int insert(OrgPageVO vo) ;
     
     /**
      * 기관 페이지의 상세 정보를 수정한다. 
      * @param  OrgPageVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int update(OrgPageVO vo) throws Exception;
+    public int update(OrgPageVO vo) ;
     
     /**
      * 기관 페이지의 상세 정보를 삭제한다.  
      * @param  OrgPageVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int delete(OrgPageVO vo) throws Exception;
+    public int delete(OrgPageVO vo) ;
     
     /**
      * 기관의 전체 페이지를 삭제한다.  
      * @param  OrgPageVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int deleteAll(OrgPageVO vo) throws Exception;    
+    public int deleteAll(OrgPageVO vo) ;    
 
     /**
      * 페이지와 메뉴를 연결 한다. 
      * @param  OrgPageVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int updateMenuCd(OrgPageVO vo) throws Exception;
+    public int updateMenuCd(OrgPageVO vo) ;
     
     /**
      * 페이지와 메뉴의 연결을 해제 한다. 
      * @param  OrgPageVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int updateMenuCdToNull(OrgPageVO vo) throws Exception;
+    public int updateMenuCdToNull(OrgPageVO vo) ;
     
     /**
      * Default가 아닌 모늗 페이지와 메뉴의 연결을 해제 한다. 
      * @param  OrgPageVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int updateAllMenuCdToNull(OrgPageVO vo) throws Exception;     
+    public int updateAllMenuCdToNull(OrgPageVO vo) ;     
 }

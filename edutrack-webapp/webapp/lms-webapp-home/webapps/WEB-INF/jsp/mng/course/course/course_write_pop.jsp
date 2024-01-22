@@ -37,6 +37,18 @@
 				</div>
 			</td>
 		</tr>
+		<tr>
+			<th scope="row"><span style="color:red;">* </span><label for="simsaCode">심사코드</label></th>
+			<td colspan="3">
+				<input type="text" dispName="심사코드" maxlength="50" isNull="N" lenCheck="50"  name="simsaCode" value="${vo.simsaCode }" class="form-control input-sm" id="simsaCode"/>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row"><span style="color:red;">* </span><label for="tracseId">훈련과정 ID</label></th>
+			<td colspan="3">
+				<input type="text" dispName="훈련과정 ID" maxlength="50" isNull="N" lenCheck="50"  name="tracseId" value="${vo.tracseId }" class="form-control input-sm" id="tracseId"/>
+			</td>
+		</tr>
 		<tr >
 			<th scope="row"><span style="color:red;">* </span><spring:message code="course.title.course.category"/></th>
 			<td>

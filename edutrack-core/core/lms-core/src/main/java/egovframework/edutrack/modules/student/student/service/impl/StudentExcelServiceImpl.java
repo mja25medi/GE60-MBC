@@ -895,37 +895,39 @@ public class StudentExcelServiceImpl
 			String ideUrl = StringUtil.nvl(POIExcelUtil.getCellValue(row.getCell(1)));
 			String crsCreCd = StringUtil.nvl(vo.getCrsCreCd());
 			
-			if("".equals(userId) || "".equals(ideUrl)) {
-				throw new ServiceProcessException((rowIndex + 1) + "라인\n회원 아이디, IDE URL은 필수 값입니다.");
-			}
-			
-			//userId로 stdNo조회
-			vo.setUserId(userId);
-			StudentVO resultInfoVO = studentMapper.selectStdNo(vo);
-			
-			if(resultInfoVO == null) {
-				throw new ServiceProcessException((rowIndex + 1) + "라인(아이디 : " + userId  + ", 개설과정코드 : " + crsCreCd + ")\n수강중인 회원 정보가 없습니다. 수강 정보(수강 여부, 상태 등)를 확인바랍니다.");
-			} else if(ValidationUtils.isEmpty(resultInfoVO.getStdNo())) {
-				throw new ServiceProcessException((rowIndex + 1) + "라인(아이디 : " + userId  + ", 개설과정코드 : " + crsCreCd + ")\n수강중인 회원 정보가 없습니다. 수강 정보(수강 여부, 상태 등)를 확인바랍니다.");
-			}
-			
-			//IDE URL 유무체크
-			vo.setIdeUrl(ideUrl);
-			int result = studentMapper.selectCreIdeUrl(vo);
-			
-			if(result == 0) {
-				throw new ServiceProcessException((rowIndex + 1) + "라인(아이디 : " + userId  + ", 개설과정코드 : " + crsCreCd + ")\n 해당 IDE URL은 없는 주소입니다. 확인바랍니다.");
-			}
+			if(!"".equals(userId) && !"".equals(ideUrl) ) {	
+				if("".equals(userId) || "".equals(ideUrl)) {
+					throw new ServiceProcessException((rowIndex + 1) + "라인\n회원 아이디, IDE URL은 필수 값입니다.");
+				}			
 
-			//IDE URL 업데이트
-			StudentVO stuVO = new StudentVO();
-			stuVO.setStdNo(resultInfoVO.getStdNo());
-			stuVO.setCrsCreCd(crsCreCd);
-			stuVO.setIdeUrl(ideUrl);
-			stuVO.setModNo(vo.getModNo());
+				//userId로 stdNo조회
+				vo.setUserId(userId);
+				StudentVO resultInfoVO = studentMapper.selectStdNo(vo);
+
+				if(resultInfoVO == null) {
+					throw new ServiceProcessException((rowIndex + 1) + "라인(아이디 : " + userId  + ", 개설과정코드 : " + crsCreCd + ")\n수강중인 회원 정보가 없습니다. 수강 정보(수강 여부, 상태 등)를 확인바랍니다.");
+				} else if(ValidationUtils.isEmpty(resultInfoVO.getStdNo())) {
+					throw new ServiceProcessException((rowIndex + 1) + "라인(아이디 : " + userId  + ", 개설과정코드 : " + crsCreCd + ")\n수강중인 회원 정보가 없습니다. 수강 정보(수강 여부, 상태 등)를 확인바랍니다.");
+				}	
 			
-			studentService.addStudentIdeUrl(stuVO);
-			resultVO.getReturnVO();
+				//IDE URL 유무체크
+				vo.setIdeUrl(ideUrl);
+				int result = studentMapper.selectCreIdeUrl(vo);
+				
+				if(result == 0) {
+					throw new ServiceProcessException((rowIndex + 1) + "라인(아이디 : " + userId  + ", 개설과정코드 : " + crsCreCd + ")\n 해당 IDE URL은 없는 주소입니다. 확인바랍니다.");
+				}
+
+				//IDE URL 업데이트
+				StudentVO stuVO = new StudentVO();
+				stuVO.setStdNo(resultInfoVO.getStdNo());
+				stuVO.setCrsCreCd(crsCreCd);
+				stuVO.setIdeUrl(ideUrl);
+				stuVO.setModNo(vo.getModNo());
+				
+				studentService.addStudentIdeUrl(stuVO);
+				resultVO.getReturnVO();
+			}		
 		}
 
 		return resultVO;

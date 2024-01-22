@@ -18,15 +18,15 @@ public interface ExamMapper {
 	 * @param vo.regYn (등록여부)
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<ExamVO> list(ExamVO vo ) throws Exception;
+	
+	public List<ExamVO> list(ExamVO vo ) ;
 
 	/**
 	 * 시험 정보 단일항목 반환.
 	 * @param vo
 	 * @return
 	 */
-	public ExamVO selectExam(ExamVO vo )  throws Exception;
+	public ExamVO selectExam(ExamVO vo )  ;
 
 	/**
 	 * 학습자의 목록을 반환한다.
@@ -34,43 +34,43 @@ public interface ExamMapper {
 	 * @param vo
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<ExamVO> listExamStd(ExamVO vo ) throws Exception;
+	
+	public List<ExamVO> listExamStd(ExamVO vo ) ;
 
 	/**
 	 * 시험의 정보를 등록하고 결과를 반환한다.
 	 * @param vo
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public int insertExam(ExamVO vo)  throws Exception;
+	
+	public int insertExam(ExamVO vo)  ;
 
 	/**
 	 * 시험의 정보를 수정하고 결과를 반환한다.
 	 * @param vo
 	 * @return
 	 */
-	public int updateExam(ExamVO vo)  throws Exception;
+	public int updateExam(ExamVO vo)  ;
 
 	/**
 	 * 시험 정보를 삭제하고 결과를 반환한다.
 	 * @param vo
 	 * @return
 	 */
-	public int deleteExam(ExamVO vo )  throws Exception;
+	public int deleteExam(ExamVO vo )  ;
 	
 	/**
 	 * 시험 고유 번호를 검색하여 반환한다.
 	 * @return
 	 */
-	public ExamVO selectExamSn()  throws Exception;
+	public ExamVO selectExamSn()  ;
 	
 	/**
 	 * 시험 관련 정보 현황
 	 * @param vo
 	 * @return
 	 */
-	public EgovMap selectExamStatus(ExamVO vo) throws Exception;
+	public EgovMap selectExamStatus(ExamVO vo) ;
 	
 	List<EgovMap> selectExamEvalType(String crsCreCd);
 	

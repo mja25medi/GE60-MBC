@@ -20,45 +20,45 @@ public interface LogSysUserLogMapper  {
 	 * 국가별 가입 목록을 조회한다. 
 	 * @param  LogSysUserLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysUserLogVO> listCountry(LogSysUserLogVO vo) throws Exception;
+	
+	public List<LogSysUserLogVO> listCountry(LogSysUserLogVO vo) ;
 	
     /**
 	 * 소셜별 가입 목록을 조회한다. 
 	 * @param  LogSysUserLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysUserLogVO> listSns(LogSysUserLogVO vo) throws Exception;
+	
+	public List<LogSysUserLogVO> listSns(LogSysUserLogVO vo) ;
 	
     /**
 	 * 성별 가입 목록을 조회한다. 
 	 * @param  LogSysUserLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysUserLogVO> listSex(LogSysUserLogVO vo) throws Exception;
+	
+	public List<LogSysUserLogVO> listSex(LogSysUserLogVO vo) ;
 	
     /**
 	 * 나이별 가입 목록을 조회한다. 
 	 * @param  LogSysUserLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysUserLogVO> listAge(LogSysUserLogVO vo) throws Exception;
+	
+	public List<LogSysUserLogVO> listAge(LogSysUserLogVO vo) ;
 	
     /**
 	 * 자동 날짜 조회. 
 	 * @param  LogSysUserLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public LogSysUserLogVO selectAutoDate(LogSysUserLogVO vo) throws Exception;
+	
+	public LogSysUserLogVO selectAutoDate(LogSysUserLogVO vo) ;
 	
 }

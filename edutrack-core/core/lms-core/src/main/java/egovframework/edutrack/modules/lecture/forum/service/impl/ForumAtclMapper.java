@@ -16,9 +16,9 @@ public interface ForumAtclMapper {
 	 * @date 2013. 10. 23.
 	 * @param iForumArticleVO
 	 * @return int
-	 * @throws DataAccessException 
+	 * @ 
 	 */
-	public int count(ForumAtclVO vo) throws DataAccessException;
+	public int count(ForumAtclVO vo) ;
 	
 	/**
 	 * 토론 게시글 목록 조회 paging
@@ -29,9 +29,9 @@ public interface ForumAtclMapper {
 	 * @param listScale
 	 * @param pageScale
 	 * @return
-	 * @throws DataAccessException List<ForumArticleVO>
+	 * @ List<ForumArticleVO>
 	 */
-	public List<ForumAtclVO> listPageing(ForumAtclVO vo) throws DataAccessException;
+	public List<ForumAtclVO> listPageing(ForumAtclVO vo) ;
 	
 	/**
 	 * 토론 게시글 목록 조회 paging
@@ -42,9 +42,9 @@ public interface ForumAtclMapper {
 	 * @param listScale
 	 * @param pageScale
 	 * @return
-	 * @throws DataAccessException List<ForumArticleVO>
+	 * @ List<ForumArticleVO>
 	 */
-	public List<ForumAtclVO> listPageingVer5(ForumAtclVO vo) throws DataAccessException;
+	public List<ForumAtclVO> listPageingVer5(ForumAtclVO vo) ;
 
 	/**
 	 * 토론 게시글 목록 조회
@@ -53,7 +53,7 @@ public interface ForumAtclMapper {
 	 * @param vo
 	 * @return List<ForumArticleVO>
 	 */
-	public List<ForumAtclVO> list(ForumAtclVO vo) throws Exception;
+	public List<ForumAtclVO> list(ForumAtclVO vo) ;
 
 	/**
 	 * 토론 게시글 상세 조회
@@ -62,7 +62,7 @@ public interface ForumAtclMapper {
 	 * @param vo
 	 * @return ProcessResultVO<ForumArticleVO>
 	 */
-	public ForumAtclVO select(ForumAtclVO vo)  throws Exception;
+	public ForumAtclVO select(ForumAtclVO vo)  ;
 
 	/**
 	 * 토론 게시글 상세 조회
@@ -71,7 +71,7 @@ public interface ForumAtclMapper {
 	 * @param vo
 	 * @return ProcessResultVO<ForumArticleVO>
 	 */
-	public int selectKey()  throws Exception;
+	public int selectKey()  ;
 
 	/**
 	 * 토론 게시글 등록
@@ -80,7 +80,7 @@ public interface ForumAtclMapper {
 	 * @param vo
 	 * @return ProcessResultVO<ForumArticleVO>
 	 */
-	public int insert(ForumAtclVO vo)  throws Exception;
+	public int insert(ForumAtclVO vo)  ;
 
 	/**
 	 * 토론 게시글 수정
@@ -89,7 +89,7 @@ public interface ForumAtclMapper {
 	 * @param vo
 	 * @return ProcessResultVO<ForumArticleVO>
 	 */
-	public int update(ForumAtclVO vo) throws DataAccessException;
+	public int update(ForumAtclVO vo) ;
 
 	/**
 	 * 게시글 삭제
@@ -98,16 +98,16 @@ public interface ForumAtclMapper {
 	 * @param iForumArticleVO
 	 * @return ProcessResultVO<?>
 	 */
-	public int delete(ForumAtclVO vo) throws DataAccessException;
+	public int delete(ForumAtclVO vo) ;
 
 	/**
 	 * 조회수 증가
 	 * @author twkim
 	 * @date 2013. 10. 23.
 	 * @param iForumArticleVO
-	 * @throws DataAccessException void
+	 * @ void
 	 */
-	public void hitsup(ForumAtclVO vo) throws DataAccessException ;
+	public void hitsup(ForumAtclVO vo)  ;
 
 
 }

@@ -17,6 +17,7 @@
 				<col style="width:auto"/>
 				<col style="width:auto"/>
 				<col style="width:auto"/>
+				<col style="width:auto"/>
 				<col style="width:80px"/>
 				<col style="width:50px"/>
 				<col style="width:72px"/>
@@ -26,6 +27,7 @@
 					<th scope="col"><spring:message code="common.title.no"/></th>
 					<th scope="col"><spring:message code="lecture.title.exam.name"/></th>
 					<th scope="col"><spring:message code="lecture.title.exam.duration"/></th>
+					<th scope="col"><spring:message code="lecture.title.exam.answer.ratio"/></th>
 					<th scope="col"><spring:message code="lecture.title.exam.examtype"/></th>
 					<th scope="col"><spring:message code="lecture.title.exam.ansrtype"/></th>
 					<th scope="col"><spring:message code="lecture.title.exam.timelimit"/></th>

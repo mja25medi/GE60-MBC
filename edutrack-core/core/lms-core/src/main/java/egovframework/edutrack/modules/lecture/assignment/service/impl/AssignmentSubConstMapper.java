@@ -12,22 +12,22 @@ public interface AssignmentSubConstMapper{
 	/**
 	 * 제한 사항 목록 조회
 	 */
-	@SuppressWarnings("unchecked")
-	public List<AssignmentSubConstVO> list(AssignmentSubConstVO vo)  throws Exception;
+	
+	public List<AssignmentSubConstVO> list(AssignmentSubConstVO vo)  ;
 
 	/**
 	 * Select Key 조회
 	 * @param int
 	 * @return
 	 */
-	public int selectKey()  throws Exception;
+	public int selectKey()  ;
 
 	/**
 	 * 제한 사항 등록
 	 * @param AssignmentSubConstVO
 	 * @return
 	 */
-	public int insert(AssignmentSubConstVO vo)  throws Exception;
+	public int insert(AssignmentSubConstVO vo)  ;
 
 
 	/**
@@ -35,5 +35,5 @@ public interface AssignmentSubConstMapper{
 	 * @param AssignmentSubConstVO
 	 * @return
 	 */
-	public int deleteAll(AssignmentSubConstVO vo)  throws Exception;
+	public int deleteAll(AssignmentSubConstVO vo)  ;
 }

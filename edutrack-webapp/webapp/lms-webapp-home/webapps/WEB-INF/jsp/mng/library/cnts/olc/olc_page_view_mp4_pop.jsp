@@ -11,12 +11,9 @@
 
 	String cntsBase = "/contents/usercnts";
 
-	request.setAttribute("wowzaUse", Constants.WOWZA_USE);
-	request.setAttribute("wowzaUrlStmp", Constants.WOWZA_URL_RTMP);
-	request.setAttribute("wowzaUrlStsp", Constants.WOWZA_URL_RTSP);
-	request.setAttribute("wowzaUrlHttp", Constants.WOWZA_URL_HTTP);
-	request.setAttribute("mediaUse", Constants.MEDIA_USE);
-	request.setAttribute("mediaUrl", Constants.MEDIA_URL);
+	request.setAttribute("mediaStreamUse", Constants.MEDIA_STREAM_USE);
+	request.setAttribute("mediaStreamUrl", Constants.MEDIA_STREAM_URL);
+	request.setAttribute("mediaStreamHls", Constants.MEDIA_STREAM_HLS);
 	request.setAttribute("flowplayerKey", Constants.FLOWPLAYER_KEY);
 	request.setAttribute("cntsBase", cntsBase);
 %>
@@ -106,24 +103,24 @@
 	 class="flowplayer aside-time ">
 	<video>
 	<c:if test="${USER_DEVICE eq 'PC'}">
-		<c:if test="${wowzaUse eq 'use'}">
+		<c:if test="${mediaStreamUse eq 'use'}">
 		<source type="video/flash" src="mp4:${cntsBase}/${clibOlcPageDTO.userNo}/${clibOlcPageDTO.filePath}"><%-- 와우자 서버를 사용하는경우(vod_smart_yn=Y) 기본 적으로 flash engine을 통해 rtmp 스트리밍을 지원하도록 설정 해 준다.--%>
 			<c:if test="${osMac eq 'Mac' }">
-		<source type="video/mp4" src="${wowzaUrlHttp}${cntsBase}/${clibOlcPageDTO.userNo}/${clibOlcPageDTO.filePath}/playlist.m3u8"> <!-- MAC OS 만 통과-->
+		<source type="video/mp4" src="${mediaStreamUrl}${cntsBase}/${clibOlcPageDTO.userNo}/${clibOlcPageDTO.filePath}/${mediaStreamHls}"> <!-- MAC OS 만 통과-->
 			</c:if>
 			<c:if test="${osMac ne 'Mac' }">
 		<source type="video/mp4" src="${cntsBase}/${clibOlcPageDTO.userNo}/${clibOlcPageDTO.filePath}">   <!-- Mac 빼고 나머지는 http 전송 -->
 			</c:if>
 		</c:if>
-		<c:if test="${wowzaUse ne 'use'}">
+		<c:if test="${mediaStreamUse ne 'use'}">
 		<source type="video/mp4" src="${cntsBase}/${clibOlcPageDTO.userNo}/${clibOlcPageDTO.filePath}">
 		</c:if>
 	</c:if>
 	<c:if test="${USER_DEVICE ne 'PC'}"> <!-- 모바일 또는 디바이스 확인 안되는 경우  -->
-		<c:if test="${wowzaUse eq 'use' && USER_OS eq 'ios'}">
-		<source type="video/mp4" src="${wowzaUrlHttp}${cntsBase}/${clibOlcPageDTO.userNo}/${clibOlcPageDTO.filePath}/playlist.m3u8"> <!-- ios , android 4.3 통과 -->
+		<c:if test="${mediaStreamUse eq 'use' && USER_OS eq 'ios'}">
+		<source type="video/mp4" src="${mediaStreamUrl}${cntsBase}/${clibOlcPageDTO.userNo}/${clibOlcPageDTO.filePath}/${mediaStreamHls}"> <!-- ios , android 4.3 통과 -->
 		</c:if>
-		<c:if test="${wowzaUse ne 'use' ||  USER_OS ne 'ios'}">
+		<c:if test="${mediaStreamUse ne 'use' ||  USER_OS ne 'ios'}">
 		<source type="video/mp4" src="${cntsBase}/${clibOlcPageDTO.userNo}/${clibOlcPageDTO.filePath}"> <%-- android가 스트리밍 시 단말기 및 브라우저에 따라 오류 발생하는 양상이 다르게 나오므로  wowzq+mp4+ios 조건  이외는 모두 http 전송 --%>
 		</c:if>
 	</c:if>

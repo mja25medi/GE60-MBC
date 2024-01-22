@@ -275,5 +275,13 @@
 		var iframeObj = parent.document.getElementById("subWorkFrame");
 		parent.resizeIframe3(iframeObj, $(document).height());
 	}
+	
+	function sbjCntsReload(sbjCd){
+		$("#contentsList_"+sbjCd).load(
+    			cUrl("/mng/course/createCourse/subject/listContentsCreate"),
+    			{  "crsCreCd": "${createCourseVO.crsCreCd}", "sbjCd" : sbjCd },
+    		);
+		
+	}
 
 </script>

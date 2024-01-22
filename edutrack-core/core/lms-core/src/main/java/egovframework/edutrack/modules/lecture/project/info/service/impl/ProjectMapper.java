@@ -12,57 +12,57 @@ public interface ProjectMapper {
 	 * @param int
 	 * @return
 	 */
-	public int selectKey()  throws Exception;
+	public int selectKey()  ;
 
 	/**
 	 * 팀프로젝트 목록 조회
 	 * @param vo
 	 * @return ProcessResultListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<ProjectVO> list(ProjectVO vo) throws Exception;
+	
+	public List<ProjectVO> list(ProjectVO vo) ;
 
 	/**
 	 * 팀프로젝트 목록 조회
 	 * @param vo
 	 * @return ProcessResultListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<ProjectVO> listPrjStudent(ProjectVO vo) throws Exception;
+	
+	public List<ProjectVO> listPrjStudent(ProjectVO vo) ;
 
 	/**
 	 * 팀프로젝트 정보 등록
 	 * @param vo
 	 * @return ProcessResultVO
 	 */
-	public int insert(ProjectVO vo) throws Exception;
+	public int insert(ProjectVO vo) ;
 
 	/**
 	 * 팀프로젝트 정보 수정
 	 * @param vo
 	 * @return ProcessResultVO
 	 */
-	public int update(ProjectVO vo) throws Exception;
+	public int update(ProjectVO vo) ;
 
 	/**
 	 * 팀프로젝트 정보 조회
 	 * @param vo
 	 * @return ProcessResultVO
 	 */
-	public ProjectVO select(ProjectVO vo) throws Exception;
+	public ProjectVO select(ProjectVO vo) ;
 
 	/**
 	 * 팀프로젝트 정보 조회 (학습자용)
 	 * @param vo
 	 * @return ProcessResultVO
 	 */
-	public ProjectVO selectPrjStudent(ProjectVO vo) throws Exception;
+	public ProjectVO selectPrjStudent(ProjectVO vo) ;
 	
 	/**
 	 * 팀프로젝트 정보 삭제
 	 * @param vo
 	 * @return ProcessResultVO
 	 */
-	public int delete(ProjectVO vo) throws Exception;
+	public int delete(ProjectVO vo) ;
 
 }

@@ -12,57 +12,57 @@ public interface PrjBbsMapper {
 	 * @param vo
 	 * @return ProcessResultListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<PrjBbsVO> list(PrjBbsVO vo) throws Exception;
+	
+	public List<PrjBbsVO> list(PrjBbsVO vo) ;
 
 	/**
 	 * 팀프로젝트 게시판 목록 조회
 	 * @param vo
 	 * @return ProcessResultListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<PrjBbsVO> listBbs(PrjBbsVO vo) throws Exception;
+	
+	public List<PrjBbsVO> listBbs(PrjBbsVO vo) ;
 
 	/**
 	 * 팀프로젝트 게시판 코드 조회
 	 * @param vo
 	 * @return ProcessResultListVO
 	 */
-	public String selectProjectBoardBbsCd() throws Exception;
+	public String selectProjectBoardBbsCd() ;
 
 	/**
 	 * 팀프로젝트 게시판 등록 
 	 * @param vo
 	 * @return ProcessResultVO
 	 */
-	public int insert(PrjBbsVO vo) throws Exception;
+	public int insert(PrjBbsVO vo) ;
 
 	/**
 	 * 팀프로젝트 게시판 정보 조회
 	 * @param vo
 	 * @return ProcessResultVO
 	 */
-	public PrjBbsVO select(PrjBbsVO vo) throws Exception;
+	public PrjBbsVO select(PrjBbsVO vo) ;
 	
 	/**
 	 * 팀프로젝트 게시판 정보 수정
 	 * @param vo
 	 * @return ProcessResultVO
 	 */
-	public int update(PrjBbsVO vo) throws Exception;
+	public int update(PrjBbsVO vo) ;
 
 	/**
 	 * 팀프로젝트 게시판 정보 삭제
 	 * @param vo
 	 * @return ProcessResultVO
 	 */
-	public int delete(PrjBbsVO vo) throws Exception;
+	public int delete(PrjBbsVO vo) ;
 
 	/**
 	 * 팀프로젝트 게시판 전체 삭제
 	 * @param vo
 	 * @return ProcessResultVO
 	 */
-	public int deleteAll(PrjBbsVO vo) throws Exception;
+	public int deleteAll(PrjBbsVO vo) ;
 
 }

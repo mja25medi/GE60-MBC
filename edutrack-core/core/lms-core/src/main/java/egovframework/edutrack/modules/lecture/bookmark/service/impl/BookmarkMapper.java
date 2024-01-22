@@ -16,79 +16,79 @@ public interface BookmarkMapper {
 	 * @param iBookmarkVO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<BookmarkVO> listBookmark(BookmarkVO iBookmarkVO ) throws Exception;
+	
+	public List<BookmarkVO> listBookmark(BookmarkVO iBookmarkVO ) ;
 
 	/**
 	 * 교내 강의 관리용 학습 목차 리스트를 가져온다.
 	 * @param iBookmarkVO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<BookmarkVO> listCntsForClass(BookmarkVO iBookmarkVO ) throws Exception;
+	
+	public List<BookmarkVO> listCntsForClass(BookmarkVO iBookmarkVO ) ;
 
 	/**
 	 * 학습자의 통합 학습 결과를 가져온다.
 	 * @param iBookmarkVO
 	 * @return
 	 */
-	public BookmarkVO selectBookmarkStd(BookmarkVO iBookmarkVO )  throws Exception;
+	public BookmarkVO selectBookmarkStd(BookmarkVO iBookmarkVO )  ;
 
 	/**
 	 * 학습자의 단위 학습 결과를 가져온다.
 	 * @param iBookmarkVO
 	 * @return
 	 */
-	public BookmarkVO selectBookmark(BookmarkVO iBookmarkVO) throws Exception;
+	public BookmarkVO selectBookmark(BookmarkVO iBookmarkVO) ;
 
 	/**
 	 * 콘텐츠의 정보를 가져온다.
 	 * @param iBookmarkVO
 	 * @return
 	 */
-	public BookmarkVO selectContents(BookmarkVO iBookmarkVO) throws Exception;
+	public BookmarkVO selectContents(BookmarkVO iBookmarkVO) ;
 	
 	/**
 	 * 콘텐츠의 정보를 가져온다.
 	 * @param iBookmarkVO
 	 * @return
 	 */
-	public BookmarkVO selectContentsVer5(BookmarkVO iBookmarkVO) throws Exception;
+	public BookmarkVO selectContentsVer5(BookmarkVO iBookmarkVO) ;
 
 	/**
 	 * 학습 결과를 저장한다.
 	 * @param iBookmarkVO
 	 * @return
 	 */
-	public int insertBookmark(BookmarkVO iBookmarkVO)  throws Exception;
+	public int insertBookmark(BookmarkVO iBookmarkVO)  ;
 	
 	/**
 	 * 학습 결과를 저장한다.
 	 * @param iBookmarkVO
 	 * @return
 	 */
-	public int insertBookmarkDetail(BookmarkVO iBookmarkVO)  throws Exception;
+	public int insertBookmarkDetail(BookmarkVO iBookmarkVO)  ;
 
 	/**
 	 * 학습 결과를 Update한다.
 	 * @param iBookmarkVO
 	 * @return
 	 */
-	public int updateBookmark(BookmarkVO iBookmarkVO) throws Exception;
+	public int updateBookmark(BookmarkVO iBookmarkVO) ;
 	
 	/**
 	 * 학습 결과를 Update한다.
 	 * @param iBookmarkVO
 	 * @return
 	 */
-	public int updateDetailStudyYn(BookmarkVO iBookmarkVO) throws Exception;
+	public int updateDetailStudyYn(BookmarkVO iBookmarkVO) ;
 
 	/**
 	 * 학습 횟수를 증가 시킨다.
 	 * @param iBookmarkVO
 	 * @return
 	 */
-	public int updateHitsup(BookmarkVO iBookmarkVO)  throws Exception;
+	public int updateHitsup(BookmarkVO iBookmarkVO)  ;
 	
 	/**
 	 * 학습 횟수를 증가 시킨다.
@@ -102,57 +102,57 @@ public interface BookmarkMapper {
 	 * @param iBookmarkVO
 	 * @return
 	 */
-	public int deleteBookmark(BookmarkVO iBookmarkVO) throws Exception;
+	public int deleteBookmark(BookmarkVO iBookmarkVO) ;
 
 	/**
 	 * 학습자 번호로 수강내역 전체 삭제
 	 * @param iBookmarkVO
 	 * @return
 	 */
-	public int deleteBookmarkStdNo(BookmarkVO iBookmarkVO)  throws Exception;
+	public int deleteBookmarkStdNo(BookmarkVO iBookmarkVO)  ;
 
 	/**
 	 * 해당 일자에 수강을 할 수 있는지 결과를 반환한다.
 	 * @param iBookmarkVO
 	 * @return
 	 */
-	public BookmarkVO selectTodayStudyYn(BookmarkVO iBookmarkVO) throws Exception;
+	public BookmarkVO selectTodayStudyYn(BookmarkVO iBookmarkVO) ;
 
 	/**
 	 * 해당 단원의 학습자 진도율 목록을 반환한다.
 	 * @param iBookmarkVO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<BookmarkVO> listStdBookmark(BookmarkVO iBookmarkVO )  throws Exception;
+	
+	public List<BookmarkVO> listStdBookmark(BookmarkVO iBookmarkVO )  ;
 
 	/**
 	 * 과정의 최종 학습일자를 검색한다.
 	 * @param iBookmarkVO
 	 * @return
 	 */
-	public BookmarkVO selectLastStudyDttm(BookmarkVO iBookmarkVO) throws Exception;
+	public BookmarkVO selectLastStudyDttm(BookmarkVO iBookmarkVO) ;
 	
 	/**
 	 * 과정의 최종 학습일자를 검색한다.
 	 * @param iBookmarkVO
 	 * @return
 	 */
-	public BookmarkVO checkDayLimit(BookmarkVO iBookmarkVO) throws Exception;
+	public BookmarkVO checkDayLimit(BookmarkVO iBookmarkVO) ;
 	
 	/**
 	 * 과정의 최종 학습일자를 검색한다.
 	 * @param iBookmarkVO
 	 * @return
 	 */
-	public BookmarkVO selectSbjBookmarkCnt(BookmarkVO iBookmarkVO) throws Exception;
+	public BookmarkVO selectSbjBookmarkCnt(BookmarkVO iBookmarkVO) ;
 	
 	/**
 	 * 진행단계평가 응시 기준조회
 	 * @param iBookmarkVO
 	 * @return
 	 */
-	public BookmarkVO selectBookmarkInfo(BookmarkVO iBookmarkVO) throws Exception;
+	public BookmarkVO selectBookmarkInfo(BookmarkVO iBookmarkVO) ;
 	
 	
 	/**
@@ -160,13 +160,13 @@ public interface BookmarkMapper {
 	 * @param iBookmarkVO
 	 * @return
 	 */
-	public int insertBookmarkLog(BookmarkVO iBookmarkVO)  throws Exception;
+	public int insertBookmarkLog(BookmarkVO iBookmarkVO)  ;
 
 	/**
 	 * 해당 단원의 학습자 진도율 목록을 반환한다.
 	 * @param iBookmarkVO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<BookmarkVO> listBookmarkLog(BookmarkVO iBookmarkVO )  throws Exception;
+	
+	public List<BookmarkVO> listBookmarkLog(BookmarkVO iBookmarkVO )  ;
 }

@@ -11,20 +11,20 @@ public interface  UserLoginLogMapper {
 	 * @param userLoginLogVO
 	 * @return 
 	 */
-	public int insert(UserLoginLogVO vo) throws Exception;
+	public int insert(UserLoginLogVO vo) ;
 
 	/**
 	 * 사용자 로그 삭제
 	 * @param userVO
 	 * @return 
 	 */
-	public int delete(String loginId) throws Exception;
+	public int delete(String loginId) ;
 
 	/**
 	 * 사용자 로그 삭제
 	 * @param userVO
 	 * @return 
 	 */
-	public int deleteAuto() throws Exception;
+	public int deleteAuto() ;
 
 }

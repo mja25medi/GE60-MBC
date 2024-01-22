@@ -24,48 +24,48 @@ public interface SysMenuLangMapper {
 	 * 시스템 메뉴 언어의 전체 목록을 조회한다. 
 	 * @param  SysMenuLangVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<SysMenuLangVO> list(SysMenuLangVO vo) throws Exception;
+	
+	public List<SysMenuLangVO> list(SysMenuLangVO vo) ;
 	
      /**
 	 * 시스템 메뉴 언어의 상세 정보를 조회한다. 
 	 * @param  SysMenuLangVO 
 	 * @return SysMenuLangVO
-	 * @throws Exception
+	 * @
 	 */
-	public SysMenuLangVO select(SysMenuLangVO vo) throws Exception;
+	public SysMenuLangVO select(SysMenuLangVO vo) ;
 
     /**
      * 시스템 메뉴 언어의 상세 정보를 등록한다.  
      * @param  SysMenuLangVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(SysMenuLangVO vo) throws Exception;
+    public int insert(SysMenuLangVO vo) ;
     
     /**
      * 시스템 메뉴 언어의 상세 정보를 수정한다. 
      * @param  SysMenuLangVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int update(SysMenuLangVO vo) throws Exception ;
+    public int update(SysMenuLangVO vo)  ;
     
     /**
      * 시스템 메뉴 언어의 상세 정보를 삭제한다.  
      * @param  SysMenuLangVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int delete(SysMenuLangVO vo) throws Exception ;
+    public int delete(SysMenuLangVO vo)  ;
     
     /**
      * 시스템 메뉴 언어의 전체 정보를 삭제한다.  
      * @param  SysMenuLangVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int deleteAll(SysMenuLangVO vo) throws Exception ;
+    public int deleteAll(SysMenuLangVO vo)  ;
 }

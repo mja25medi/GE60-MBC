@@ -216,7 +216,7 @@ public interface SubjectService {
 	 *
 	 * @return  ProcessResultVO
 	 */
-	@HrdApiCrsOnlnSbj(SyncType.CREATE)
+	//@HrdApiCrsOnlnSbj(SyncType.CREATE)
 	public ProcessResultVO<OnlineSubjectVO> addOnline(
 			OnlineSubjectVO iOnlineSubjectVO) throws Exception;
 
@@ -225,7 +225,7 @@ public interface SubjectService {
 	 *
 	 * @return  ProcessResultVO
 	 */
-	@HrdApiCrsOnlnSbj(SyncType.UPDATE)
+	//@HrdApiCrsOnlnSbj(SyncType.UPDATE)
 	public ProcessResultVO<OnlineSubjectVO> editOnline(
 			OnlineSubjectVO iOnlineSubjectVO) throws Exception;
 
@@ -234,7 +234,7 @@ public interface SubjectService {
 	 * 
 	 * @return ProcessResultVO
 	 */
-	@HrdApiCrsOnlnSbj(SyncType.DELETE)
+	//@HrdApiCrsOnlnSbj(SyncType.DELETE)
 	public ProcessResultVO<?> deleteOnline(OnlineSubjectVO iOnlineSubjectVO) throws Exception;
 	
 	/**
@@ -280,7 +280,6 @@ public interface SubjectService {
 	 *
 	 * @return  ProcessResultVO
 	 */
-	@HrdApiCrsOnlnSbj(SyncType.CREATE)
 	public ProcessResultVO<LecRoomVO> addLecRoom(LecRoomVO lecRoomVO) throws Exception;	
 	
 	/**
@@ -331,7 +330,6 @@ public interface SubjectService {
 	 *
 	 * @return  ProcessResultVO
 	 */
-	@HrdApiCrsOnlnSbj(SyncType.UPDATE)
 	public ProcessResultVO<LecRoomVO> editLecRoom(LecRoomVO lecRoomVO) throws Exception;
 	
 	/**
@@ -339,7 +337,6 @@ public interface SubjectService {
 	 * 
 	 * @return ProcessResultVO
 	 */
-	@HrdApiCrsOnlnSbj(SyncType.DELETE)
 	public ProcessResultVO<?> deleteLecRoom(LecRoomVO lecRoomVO) throws Exception;
 
 	 

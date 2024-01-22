@@ -20,40 +20,40 @@ public interface SysFileRepoLangMapper {
 	 * 파일 리파지토리 언어의 전체 목록을 조회한다. 
 	 * @param  SysFileRepoLangVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<SysFileRepoLangVO> list(SysFileRepoLangVO vo) throws Exception;
+	
+	public List<SysFileRepoLangVO> list(SysFileRepoLangVO vo) ;
 	
     /**
      * 파일 리파지토리 언어의 상세 정보를 등록한다.  
      * @param  SysFileRepoLangVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(SysFileRepoLangVO vo) throws Exception;
+    public int insert(SysFileRepoLangVO vo) ;
     
     /**
      * 파일 리파지토리 언어의 상세 정보를 수정한다. 
      * @param  SysFileRepoLangVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int update(SysFileRepoLangVO vo) throws Exception;
+    public int update(SysFileRepoLangVO vo) ;
     
     /**
      * 파일 리파지토리 언어의 상세 정보를 삭제한다.  
      * @param  SysFileRepoLangVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int delete(SysFileRepoLangVO vo) throws Exception ;
+    public int delete(SysFileRepoLangVO vo)  ;
     
     /**
      * 파일 리파지토리 언어의 상세 정보를 삭제한다.  
      * @param  SysFileRepoLangVO
      * @return int
-     * @throws Exception
+     * @
      */
-    public int deleteAll(SysFileRepoLangVO vo) throws Exception ;
+    public int deleteAll(SysFileRepoLangVO vo)  ;
 }

@@ -31,8 +31,8 @@ public interface CreCrsDeclsMapper {
 	 * @param pageScale
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<CreCrsDeclsVO> list(CreCrsDeclsVO VO)  throws DataAccessException ;
+	
+	public List<CreCrsDeclsVO> list(CreCrsDeclsVO VO)   ;
 
 	/**
 	 * 개설 과정 분반 목록을 조회하여 반환한다.
@@ -42,11 +42,11 @@ public interface CreCrsDeclsMapper {
 	 * @param listScale
 	 * @param pageScale
 	 * @return
-	 * @throws DataAccessException
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public List<CreCrsDeclsVO> listPageing(CreCrsDeclsVO VO)
-			throws DataAccessException;
+			;
 
 	/**
 	 * 개설 과정 분반 목록을 조회하여 반환한다.
@@ -56,11 +56,11 @@ public interface CreCrsDeclsMapper {
 	 * @param listScale
 	 * @param pageScale
 	 * @return
-	 * @throws DataAccessException
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public int count(CreCrsDeclsVO VO)
-			throws DataAccessException;
+			;
 	
 	/**
 	 * 개설 과정 분반 정보의 단일행 정보를 검색하여 반환한다.
@@ -68,41 +68,41 @@ public interface CreCrsDeclsMapper {
 	 * @param CreCrsDeclsVO
 	 * @return
 	 */
-	public CreCrsDeclsVO select(CreCrsDeclsVO VO)  throws DataAccessException ;
+	public CreCrsDeclsVO select(CreCrsDeclsVO VO)   ;
 
 	/**
 	 * 개설 과정 분반 정보를 등록합니다.
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public int insert(CreCrsDeclsVO VO)  throws DataAccessException ;
+	public int insert(CreCrsDeclsVO VO)   ;
 
 	/**
 	 * 개설 과정 분반 정보 삭제
 	 * @param CreCrsDeclsVO
 	 * @reurn ProcessResultVO
 	 */
-	public int delete(CreCrsDeclsVO VO)   throws DataAccessException ;
+	public int delete(CreCrsDeclsVO VO)    ;
 
 	/**
 	 * 개설 과정 분반 정보 삭제
 	 * @param CreCrsDeclsVO
 	 * @reurn ProcessResultVO
 	 */
-	public int deleteAll(CreCrsDeclsVO VO)  throws DataAccessException ;
+	public int deleteAll(CreCrsDeclsVO VO)   ;
 
 	/**
 	 * 등록된 분반의 카운트를 반환한다.
 	 * @param VO
 	 * @return
 	 */
-	public int getCount(CreCrsDeclsVO VO)   throws DataAccessException ;
+	public int getCount(CreCrsDeclsVO VO)    ;
 
 	/**
 	 * 삭제되는 분반수강생으로 1분만으로 변경
 	 * @param CreCrsDeclsVO
 	 * @reurn ProcessResultVO
 	 */
-	public int declsUpdate(CreCrsDeclsVO VO)  throws DataAccessException ;
+	public int declsUpdate(CreCrsDeclsVO VO)   ;
 
 }

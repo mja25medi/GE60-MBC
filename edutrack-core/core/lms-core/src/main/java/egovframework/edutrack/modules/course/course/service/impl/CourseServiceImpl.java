@@ -11,8 +11,8 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import egovframework.edutrack.Constants;
-import egovframework.edutrack.comm.annotation.HrdApiCrsCreCrs;
-import egovframework.edutrack.comm.annotation.HrdApiCrsCreCrs.CreSyncType;
+import egovframework.edutrack.comm.annotation.HrdApiCrsCrs;
+import egovframework.edutrack.comm.annotation.HrdApiCrsCrs.SyncType;
 import egovframework.edutrack.comm.service.ProcessResultListVO;
 import egovframework.edutrack.comm.service.ProcessResultVO;
 import egovframework.edutrack.comm.util.web.FileUtil;
@@ -29,8 +29,6 @@ import egovframework.edutrack.modules.course.coursesubject.service.impl.CrsOnlnS
 import egovframework.edutrack.modules.course.crsbbs.info.service.impl.CrsBbsInfoMapper;
 import egovframework.edutrack.modules.course.crstch.service.CrsTchVO;
 import egovframework.edutrack.modules.course.crstch.service.impl.CrsTchMapper;
-import egovframework.edutrack.modules.course.subject.service.OnlineSubjectVO;
-import egovframework.edutrack.modules.org.fac.service.OrgFacInfoVO;
 import egovframework.edutrack.modules.system.file.service.SysFileService;
 import egovframework.edutrack.modules.system.file.service.SysFileVO;
 import egovframework.edutrack.modules.system.file.service.support.FileHandler;
@@ -336,6 +334,7 @@ extends EgovAbstractServiceImpl implements CourseService  {
 	 * @return ProcessResultVO<CourseVO>
 	 */
 	@Override
+	@HrdApiCrsCrs(SyncType.CREATE)
 	public ProcessResultVO<CourseVO> add(CourseVO vo) throws Exception {
 		//-- 자동생성인 경우 과정 코드 받아오기
 		if("Y".equals(vo.getAutoMakeCd())) {
@@ -343,24 +342,16 @@ extends EgovAbstractServiceImpl implements CourseService  {
 		}
 		
 		ProcessResultVO<CourseVO> resultVO = new ProcessResultVO<CourseVO>();
-		
-		
-		try {
-			setDateConvert(vo);
-			courseMapper.insert(vo);
-			//---- 과정 폴더 생성
-			String contentsDir =  Constants.CONTENTS_STORAGE_PATH + File.separator  + vo.getOrgCd() + File.separator + vo.getCrsCd();
-			FileUtil.createDirectory(contentsDir);
-			sysFileService.bindFile(vo, new NestedThumbFileHandler());
-			sysFileService.bindFile(vo, new NestedPlanFileHandler());
-			sysFileService.bindFile(vo, new NestedImagesFileHandler());
-			resultVO.setReturnVO(vo);
-			resultVO.setResultSuccess();
-		} catch (Exception e){
-			e.printStackTrace();
-			resultVO.setResultFailed();
-			resultVO.setMessage(e.getMessage());
-		}
+		setDateConvert(vo);
+		courseMapper.insert(vo);
+		//---- 과정 폴더 생성
+		String contentsDir =  Constants.CONTENTS_STORAGE_PATH + File.separator  + vo.getOrgCd() + File.separator + vo.getCrsCd();
+		FileUtil.createDirectory(contentsDir);
+		sysFileService.bindFile(vo, new NestedThumbFileHandler());
+		sysFileService.bindFile(vo, new NestedPlanFileHandler());
+		sysFileService.bindFile(vo, new NestedImagesFileHandler());
+		resultVO.setReturnVO(vo);
+		resultVO.setResultSuccess();
 
 		return resultVO;
 	}
@@ -371,7 +362,8 @@ extends EgovAbstractServiceImpl implements CourseService  {
 	 * @return ProcessResultVO<CourseVO>
 	 */
 	@Override
-	@HrdApiCrsCreCrs(CreSyncType.CRSUPDATE)
+	//@HrdApiCrsCreCrs(CreSyncType.CRSUPDATE)
+	@HrdApiCrsCrs(SyncType.UPDATE)
 	public ProcessResultVO<CourseVO> edit(CourseVO vo) throws Exception {
 		ProcessResultVO<CourseVO> resultVO = new ProcessResultVO<CourseVO>();
 		setDateConvert(vo);
@@ -392,35 +384,30 @@ extends EgovAbstractServiceImpl implements CourseService  {
 	 * @return 삭제 처리 결과 VO
 	 */
 	@Override
+	@HrdApiCrsCrs(SyncType.DELETE)
 	public ProcessResultVO<?> remove(CourseVO VO) throws Exception {
 		ProcessResultVO<CourseVO> resultVO = new ProcessResultVO<CourseVO>();
-		try {
-			//-- 년간 과정 계획을 삭제한다.
-			CrsPlanVO cpVO = new CrsPlanVO();
-			cpVO.setCrsCd(VO.getCrsCd());
-			crsPlanMapper.deleteAll(cpVO);
+		//-- 년간 과정 계획을 삭제한다.
+		CrsPlanVO cpVO = new CrsPlanVO();
+		cpVO.setCrsCd(VO.getCrsCd());
+		crsPlanMapper.deleteAll(cpVO);
 
-			//-- 과정강사 삭제
-			CrsTchVO ctVO = new CrsTchVO();
-			ctVO.setCrsCd(VO.getCrsCd());
-			crsTchMapper.deleteAll(ctVO);
+		//-- 과정강사 삭제
+		CrsTchVO ctVO = new CrsTchVO();
+		ctVO.setCrsCd(VO.getCrsCd());
+		crsTchMapper.deleteAll(ctVO);
 
-			//-- 과정 과목 삭제
-			CrsOnlnSbjVO cosVO = new CrsOnlnSbjVO();
-			cosVO.setCrsCd(VO.getCrsCd());
-			crsOnlnSbjMapper.deleteAll(cosVO);
+		//-- 과정 과목 삭제
+		CrsOnlnSbjVO cosVO = new CrsOnlnSbjVO();
+		cosVO.setCrsCd(VO.getCrsCd());
+		crsOnlnSbjMapper.deleteAll(cosVO);
 
-			CrsOflnSbjVO cfsVO = new CrsOflnSbjVO();
-			cfsVO.setCrsCd(VO.getCrsCd());
-			crsOflnSbjMapper.deleteAll(cfsVO);
-			
-			courseMapper.delete(VO); // 분류 삭제
-			resultVO.setResultSuccess();
-		} catch (Exception e) {
-			e.printStackTrace();
-			resultVO.setResultFailed();
-			resultVO.setMessage(e.getMessage());
-		}
+		CrsOflnSbjVO cfsVO = new CrsOflnSbjVO();
+		cfsVO.setCrsCd(VO.getCrsCd());
+		crsOflnSbjMapper.deleteAll(cfsVO);
+		
+		courseMapper.delete(VO); // 분류 삭제
+		resultVO.setResultSuccess();
 		return resultVO;
 	}
 
@@ -620,4 +607,27 @@ extends EgovAbstractServiceImpl implements CourseService  {
 		}
 		return resultList;
 	}
+	
+	
+	/**
+	 * 개설과정 서비스 타입 조회(R:국비지원 / S:개발원 자체)
+	 * @param CourseVO vo
+	 * @param String
+	 * @return  ProcessResultVO
+	 */
+	@Override
+	public ProcessResultVO<CourseVO> selectCrsSvcTypeCre(CourseVO vo) throws Exception{
+		ProcessResultVO<CourseVO> resultVO = new ProcessResultVO<CourseVO>();
+		try {
+			CourseVO returnVO = courseMapper.selectCrsSvcTypeCre(vo);
+			resultVO.setReturnVO(returnVO);
+			resultVO.setResultSuccess();
+		} catch (Exception e){
+			e.printStackTrace();
+			resultVO.setResultFailed();
+			resultVO.setMessage(e.getMessage());
+		}	
+		return resultVO;
+	}
+	
 }

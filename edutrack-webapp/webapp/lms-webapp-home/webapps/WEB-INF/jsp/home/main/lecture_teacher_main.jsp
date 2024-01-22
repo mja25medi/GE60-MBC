@@ -3,6 +3,8 @@
 <%
 	String authGrpCd = UserBroker.getClassUserType(request);
 	request.setAttribute("authGrpCd", authGrpCd);
+	String redisYn = Constants.REDIS_CHECK_YN;
+	request.setAttribute("redisYn", redisYn);
 %>
 <c:url var="img_base" value="/img/home" />
 <div class="segment">
@@ -116,7 +118,7 @@
 								<td scope="row" data-label="보낸사람">${msgItem.sendNm }</td>
 								<td class="title" data-label="내용"><a href="#0"><a href="javascript:viewRecvMsgPop('${msgItem.msgSn }','${msgItem.msgTransSn }');">${msgItem.title }</a></a></td>
 								<td data-label="보낸일"><meditag:dateformat type="1" delimeter="." property="${msgItem.transDttm }"/></td>
-								<td data-label="확인"><label class="btn3 sm solid fcBlue">확인</label></td>
+								<td data-label="확인"> <button type="button" class="btn3 sm solid fcBlue" onclick="viewRecvMsgPop('${msgItem.msgSn }','${msgItem.msgTransSn }')">확인</button></td>
 							</tr>
 						</c:forEach>
 					</tbody>
@@ -204,7 +206,9 @@
 		$("#course").css("display","none");
 		
 		callRedis();
-    	setInterval(callRedis, 3000);
+		<%if("Y".equals(redisYn)){%>
+		setInterval(callRedis, 3000);
+    	<%}%>
 	});
 
 	function modalBoxClose() {

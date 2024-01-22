@@ -16,8 +16,8 @@ public interface PrjMemberMapper {
 	 * @param vo
 	 * @return ProcessResultListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<PrjMemberVO> list(PrjMemberVO vo) throws Exception;
+	
+	public List<PrjMemberVO> list(PrjMemberVO vo) ;
 
 	
 	/**
@@ -25,49 +25,49 @@ public interface PrjMemberMapper {
 	 * @param vo
 	 * @return ProcessResultListVO
 	 */
-	public List<PrjMemberVO> stdList(PrjMemberVO vo) throws Exception;
+	public List<PrjMemberVO> stdList(PrjMemberVO vo) ;
 
 	/**
 	 * 총 학습자 조회
 	 * @param vo
 	 * @return ProcessResultListVO
 	 */
-	public List<PrjMemberVO> learnerList(PrjMemberVO vo) throws Exception;
+	public List<PrjMemberVO> learnerList(PrjMemberVO vo) ;
 
 	/**
 	 * 총학습자 수
 	 * @param vo
 	 * @return ProcessResultVO
 	 */
-	public PrjMemberVO selectLearnerCnt(PrjMemberVO vo) throws Exception;
+	public PrjMemberVO selectLearnerCnt(PrjMemberVO vo) ;
 
 	/**
 	 * 팀원 등록
 	 * @param vo
 	 * @return 
 	 */
-	public int insert(PrjMemberVO vo) throws Exception;
+	public int insert(PrjMemberVO vo) ;
 
 	/**
 	 * 이전 프로젝트 팀원 복사
 	 * @param vo
 	 * @return 
 	 */
-	public int insertMember(PrjMemberVO vo) throws Exception;
+	public int insertMember(PrjMemberVO vo) ;
 
 	/**
 	 * 팀장 선정 
 	 * @param vo
 	 * @return ProcessResultListVO
 	 */
-	public int update(PrjMemberVO vo) throws Exception;
+	public int update(PrjMemberVO vo) ;
 
 	/**
 	 * 팀원 삭제
 	 * @param vo
 	 * @return 
 	 */
-	public int updatePrjMbr(List<PrjMemberVO> teamMbrArray) throws Exception;
+	public int updatePrjMbr(List<PrjMemberVO> teamMbrArray) ;
 
 
 	/**
@@ -75,16 +75,16 @@ public interface PrjMemberMapper {
 	 * @param vo
 	 * @return 
 	 */
-	public int delete(List<PrjMemberVO> teamMbrArray) throws Exception;
+	public int delete(List<PrjMemberVO> teamMbrArray) ;
 	
 	/**
 	 * 팀원 전체 삭제
 	 * @param vo
 	 * @return 
 	 */
-	public int deletePrjAll(PrjMemberVO vo) throws Exception;
+	public int deletePrjAll(PrjMemberVO vo) ;
 
-	public int deletePrjTeamAll(PrjMemberVO vo) throws Exception;
+	public int deletePrjTeamAll(PrjMemberVO vo) ;
 
 
 }

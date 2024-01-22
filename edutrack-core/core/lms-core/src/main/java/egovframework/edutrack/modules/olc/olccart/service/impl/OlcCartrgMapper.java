@@ -17,8 +17,8 @@ public interface OlcCartrgMapper {
 	 * @param OlcCartrgVO.ctgrCd
 	 * @return ProcessResultListVO<OlcCartrgVO>
 	 */
-	@SuppressWarnings("unchecked")
-	public abstract List<OlcCartrgVO> list(OlcCartrgVO vo) throws Exception;
+	
+	public abstract List<OlcCartrgVO> list(OlcCartrgVO vo) ;
 
 	/**
 	 * OLC의 페이징된 목록을 조회하여 반환한다.
@@ -31,10 +31,10 @@ public interface OlcCartrgMapper {
 	 * @param pageScale
 	 * @return ProcessResultListVO<OlcCartrgVO>
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public abstract List<OlcCartrgVO> listPageing(
 			OlcCartrgVO vo, int curPage, int listScale, int pageScale)
-			throws DataAccessException;
+			;
 
 	/**
 	 * OLC의 페이징된 목록을 조회하여 반환한다.
@@ -47,10 +47,10 @@ public interface OlcCartrgMapper {
 	 * @param pageScale
 	 * @return ProcessResultListVO<OlcCartrgVO>
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public abstract int count(
 			OlcCartrgVO vo)
-			throws DataAccessException;
+			;
 	
 	/**
 	 * OLC 정보 단일 레코드를 조회하여 반환한다.
@@ -60,7 +60,7 @@ public interface OlcCartrgMapper {
 	 * @return
 	 */
 	public abstract OlcCartrgVO select(OlcCartrgVO vo)
-			throws DataAccessException;
+			;
 	/**
 	 * cartrgCd값를 조회하여 반환한다.
 	 * @param OlcCartrgVO.orgCd
@@ -69,7 +69,7 @@ public interface OlcCartrgMapper {
 	 * @return
 	 */
 	public abstract String selectKey()
-			throws DataAccessException;
+			;
 
 	/**
 	 * OLC 정보 단일 레코드를 DB에 Insert하고 결과를 반환한다.
@@ -77,7 +77,7 @@ public interface OlcCartrgMapper {
 	 * @return ProcessResultVO<OlcCartrgVO>
 	 */
 	public abstract int insert(OlcCartrgVO vo)
-			throws DataAccessException;
+			;
 
 	/**
 	 * OLC 정보 단일 레코드를 Update하고 결과를 반환한다.
@@ -85,14 +85,14 @@ public interface OlcCartrgMapper {
 	 * @return ProcessResultVO<OlcCartrgVO>
 	 */
 	public abstract int update(OlcCartrgVO vo)
-			throws DataAccessException;
+			;
 
 	/**
 	 * OLC 정보의 다중 목록을 Update하고 결과를 반환한다.
 	 *
 	 * @reurn ProcessResultVO
 	 */
-	public abstract int updateBatch(List<OlcCartrgVO> olcArray) throws Exception;
+	public abstract int updateBatch(List<OlcCartrgVO> olcArray) ;
 
 	/**
 	 * OLC 정보 단일 레코드를 Delete하고 결과를 반환한다.
@@ -100,7 +100,7 @@ public interface OlcCartrgMapper {
 	 * @return ProcessResultVO<OlcCartrgVO>
 	 */
 	public abstract int delete(OlcCartrgVO vo)
-			throws DataAccessException;
+			;
 
 	/**
 	 * OLC 공유정보 단일 레코드를 Update하고 결과를 반환한다.
@@ -108,7 +108,7 @@ public interface OlcCartrgMapper {
 	 * @return ProcessResultVO<OlcCartrgVO>
 	 */
 	public abstract int updateShare(OlcCartrgVO vo)
-			throws DataAccessException;
+			;
 
 	/**
 	 * OLC 정보 단일 레코드를 Update하고 결과를 반환한다.
@@ -116,14 +116,14 @@ public interface OlcCartrgMapper {
 	 * @return ProcessResultVO<OlcCartrgVO>
 	 */
 	public abstract int updateShareCd(OlcCartrgVO vo)
-			throws DataAccessException;
+			;
 
 	/**
 	 * 해당글의 조회수를 1 증가시킨다.
 	 *
 	 * @param BbsAtclVO
 	 */
-	public abstract void hitsup(OlcCartrgVO vo) throws DataAccessException;
+	public abstract void hitsup(OlcCartrgVO vo) ;
 
 
 	/**
@@ -132,7 +132,7 @@ public interface OlcCartrgMapper {
 	 * @return ProcessResultVO<OlcCartrgVO>
 	 */
 	public abstract int updateDesing(OlcCartrgVO vo)
-			throws DataAccessException;
+			;
 
 	/**
 	 * OLC 공유정보 단일 레코드를 Update하고 결과를 반환한다. - 콘텐츠공유
@@ -140,7 +140,7 @@ public interface OlcCartrgMapper {
 	 * @return ProcessResultVO<OlcCartrgVO>
 	 */
 	public abstract int updateShareContents(OlcCartrgVO vo)
-			throws DataAccessException;
+			;
 
 	/**
 	 * OLC 공유정보 단일 레코드를 Update하고 결과를 반환한다. - 지식공유
@@ -148,6 +148,6 @@ public interface OlcCartrgMapper {
 	 * @return ProcessResultVO<OlcCartrgVO>
 	 */
 	public abstract int updateShareKnow(OlcCartrgVO vo)
-			throws DataAccessException;
+			;
 
 }

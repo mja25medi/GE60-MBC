@@ -22,21 +22,21 @@ public interface TchThesisMapper {
 	 * @param int
 	 * @return
 	 */
-	public int selectKey()  throws Exception;
+	public int selectKey()  ;
 	/**
 	 * 강사 발표논문 목록
 	 * 
 	 * @return ProcessReslutListVO
 	 */
-	@SuppressWarnings("unchecked")
-	public List<TchThesisVO> listThesis(TchThesisVO teacherThesisVO) throws Exception;
+	
+	public List<TchThesisVO> listThesis(TchThesisVO teacherThesisVO) ;
 	
 	/**
 	 * 강사  발표논문 상세 정보
 	 * 
 	 * @return ProcessReslutListVO
 	 */
-	public TchThesisVO selectThesis(TchThesisVO teacherThesisVO) throws Exception;
+	public TchThesisVO selectThesis(TchThesisVO teacherThesisVO) ;
 	
 	
 	/**
@@ -44,14 +44,14 @@ public interface TchThesisMapper {
 	 *  
 	 * @reurn 
 	 */
-	public int insertThesis(TchThesisVO teacherThesisVO) throws Exception;
+	public int insertThesis(TchThesisVO teacherThesisVO) ;
 	
 	/**
 	 * 강사 발표논문 수정
 	 *  
 	 * @reurn 
 	 */
-	public int updateThesis(TchThesisVO teacherThesisVO) throws Exception;
+	public int updateThesis(TchThesisVO teacherThesisVO) ;
 	
 	
 	/**
@@ -59,6 +59,6 @@ public interface TchThesisMapper {
 	 *  
 	 * @reurn 
 	 */
-	public int deleteThesis(String userNo, Integer thesisSn) throws Exception;
+	public int deleteThesis(String userNo, Integer thesisSn) ;
 
 }

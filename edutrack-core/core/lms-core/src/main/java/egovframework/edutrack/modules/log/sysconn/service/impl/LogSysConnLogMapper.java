@@ -20,152 +20,152 @@ public interface LogSysConnLogMapper  {
 	 * 월별 시스템 접속 로그 목록을 조회한다. 
 	 * @param  LogSysConnLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysConnLogVO> listMonth(LogSysConnLogVO vo) throws Exception;
+	
+	public List<LogSysConnLogVO> listMonth(LogSysConnLogVO vo) ;
 	
     /**
 	 * 주별 시스템 접속 로그 목록을 조회한다. 
 	 * @param  LogSysConnLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysConnLogVO> listWeek(LogSysConnLogVO vo) throws Exception;
+	
+	public List<LogSysConnLogVO> listWeek(LogSysConnLogVO vo) ;
 	
     /**
 	 * 일별 시스템 접속 로그 목록을 조회한다. 
 	 * @param  LogSysConnLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysConnLogVO> listDay(LogSysConnLogVO vo) throws Exception;
+	
+	public List<LogSysConnLogVO> listDay(LogSysConnLogVO vo) ;
 	
     /**
 	 * 시간별 시스템 접속 로그 목록을 조회한다. 
 	 * @param  LogSysConnLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysConnLogVO> listHour(LogSysConnLogVO vo) throws Exception;
+	
+	public List<LogSysConnLogVO> listHour(LogSysConnLogVO vo) ;
 	
 	/**
 	 * 월별 시스템 모든 접속 로그 목록을 조회한다. 
 	 * @param  LogSysConnLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysConnLogVO> AllListMonth(LogSysConnLogVO vo) throws Exception;
+	
+	public List<LogSysConnLogVO> AllListMonth(LogSysConnLogVO vo) ;
 	
     /**
 	 * 주별 시스템 모든 접속 로그 목록을 조회한다. 
 	 * @param  LogSysConnLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysConnLogVO> AllListWeek(LogSysConnLogVO vo) throws Exception;
+	
+	public List<LogSysConnLogVO> AllListWeek(LogSysConnLogVO vo) ;
 	
     /**
 	 * 일별 시스템 모든 접속 로그 목록을 조회한다. 
 	 * @param  LogSysConnLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysConnLogVO> AllListDay(LogSysConnLogVO vo) throws Exception;
+	
+	public List<LogSysConnLogVO> AllListDay(LogSysConnLogVO vo) ;
 	
     /**
 	 * 시간별 시스템 모든 접속 로그 목록을 조회한다. 
 	 * @param  LogSysConnLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysConnLogVO> AllListHour(LogSysConnLogVO vo) throws Exception;
+	
+	public List<LogSysConnLogVO> AllListHour(LogSysConnLogVO vo) ;
 	
 	/**
 	 * 월별 시스템 모든 접속 로그 목록을 조회한다. 
 	 * @param  LogSysConnLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysConnLogVO> sysListMonth(LogSysConnLogVO vo) throws Exception;
+	
+	public List<LogSysConnLogVO> sysListMonth(LogSysConnLogVO vo) ;
 	
     /**
 	 * 주별 시스템 모든 접속 로그 목록을 조회한다. 
 	 * @param  LogSysConnLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysConnLogVO> sysListWeek(LogSysConnLogVO vo) throws Exception;
+	
+	public List<LogSysConnLogVO> sysListWeek(LogSysConnLogVO vo) ;
 	
     /**
 	 * 일별 시스템 모든 접속 로그 목록을 조회한다. 
 	 * @param  LogSysConnLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysConnLogVO> sysListDay(LogSysConnLogVO vo) throws Exception;
+	
+	public List<LogSysConnLogVO> sysListDay(LogSysConnLogVO vo) ;
 	
     /**
 	 * 시간별 시스템 모든 접속 로그 목록을 조회한다. 
 	 * @param  LogSysConnLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysConnLogVO> sysListHour(LogSysConnLogVO vo) throws Exception;
+	
+	public List<LogSysConnLogVO> sysListHour(LogSysConnLogVO vo) ;
 	
     /**
 	 * 자동 날짜 조회. 
 	 * @param  LogSysConnLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public LogSysConnLogVO selectAutoDate(LogSysConnLogVO vo) throws Exception;
+	
+	public LogSysConnLogVO selectAutoDate(LogSysConnLogVO vo) ;
 	
     /**
 	 * 시간별 시스템 접속 로그 목록을 조회한다. 
 	 * @param  LogSysConnLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysConnLogVO> listHourByDay(LogSysConnLogVO vo) throws Exception;
+	
+	public List<LogSysConnLogVO> listHourByDay(LogSysConnLogVO vo) ;
 	
     /**
 	 * 요일별 시스템 접속 로그 목록을 조회한다. 
 	 * @param  LogSysConnLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysConnLogVO> listDayByWeek(LogSysConnLogVO vo) throws Exception;
+	
+	public List<LogSysConnLogVO> listDayByWeek(LogSysConnLogVO vo) ;
 	
     /**
 	 * 일자별 시스템 접속 로그 목록을 조회한다. 
 	 * @param  LogSysConnLogVO 
 	 * @return List
-	 * @throws Exception
+	 * @
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogSysConnLogVO> listDayByMonth(LogSysConnLogVO vo) throws Exception;
+	
+	public List<LogSysConnLogVO> listDayByMonth(LogSysConnLogVO vo) ;
 	
 
     /**
      * 시스템 접속 로그의 상세 정보를 등록한다.  
      * @param  LogSysConnLogVO
      * @return String
-     * @throws Exception
+     * @
      */
-    public int insert(LogSysConnLogVO vo) throws Exception;
+    public int insert(LogSysConnLogVO vo) ;
 }

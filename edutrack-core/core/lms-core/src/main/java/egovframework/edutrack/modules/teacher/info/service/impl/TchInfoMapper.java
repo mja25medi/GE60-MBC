@@ -11,27 +11,27 @@ public interface TchInfoMapper {
 	 * @param vo
 	 * @return
 	 */
-	public TchInfoVO select(TchInfoVO vo) throws Exception;
+	public TchInfoVO select(TchInfoVO vo) ;
 
 	/**
 	 * 강사 정보를 Insert 하고 결과를 리턴한다.
 	 * @param vo
 	 * @return
 	 */
-	public int insert(TchInfoVO vo) throws Exception;
+	public int insert(TchInfoVO vo) ;
 
 	/**
 	 * 강사 정보를 Update하고 결과를 리턴한다.
 	 * @param vo
 	 * @return
 	 */
-	public int update(TchInfoVO vo) throws Exception;
+	public int update(TchInfoVO vo) ;
 
 	/**
 	 * 강사 정보를 Delete하고 결과를 리턴한다.
 	 * @param vo
 	 * @return
 	 */
-	public int delete(TchInfoVO vo) throws Exception;
+	public int delete(TchInfoVO vo) ;
 
 }

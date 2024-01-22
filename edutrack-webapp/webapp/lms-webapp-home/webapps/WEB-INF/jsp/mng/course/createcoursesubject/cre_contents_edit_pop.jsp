@@ -488,10 +488,13 @@ function getMetaScenes(sceneId){
 		$('#contentsForm').ajaxSubmit(function (resultDTO) {
 			alert(resultDTO.message);
 			if(resultDTO.result >= 0) {
+				var sbjCd = '${vo.sbjCd}';
+				parent.document.getElementById('subWorkFrame').contentWindow.sbjCntsReload(sbjCd);
 				parent.modalBox.close();
 			}
 		});
 	}
+	
 
 	function closeContentsEditForm() {
 		$("#contentsForm").find('input[name="unitNm"]').val("");
@@ -632,7 +635,7 @@ function getMetaScenes(sceneId){
 			alert(resultDTO.message);
 			if(resultDTO.result >= 0) {
 				parent.modalBox.close();
-				contentsList(sbjCd);
+				parent.document.getElementById('subWorkFrame').contentWindow.sbjCntsReload(sbjCd);
 			}
 		});
 	}

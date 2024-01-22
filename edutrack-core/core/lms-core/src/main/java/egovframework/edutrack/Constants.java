@@ -170,7 +170,6 @@ public class Constants {
 
 	// ASP 관련 설정
 	public static final String  SAAS_ORGNM				= "ORGNM";
-	public static final String  SAAS_DOMAINNM			= "DOMAINNM";
 	public static final String  SAAS_ORGCD				= "ORGCD";
 	public static final String  SAAS_LAYOUT_TPL			= "LAYOUTTPL";
 	public static final String  SAAS_LAYOUT_TPL_TYPE	= "TYLTYPE";
@@ -286,13 +285,9 @@ public class Constants {
 	public static final String MOBILE_TABLET		= "tablet";
 
 	//-- 미디어 서버 관련 설정
-	public static final String WOWZA_USE 			= framework.getString("framework.wowza.use");
-	public static final String WOWZA_URL_RTMP		= framework.getString("framework.wowza.url.rtmp");
-	public static final String WOWZA_URL_RTSP 		= framework.getString("framework.wowza.url.rtsp");
-	public static final String WOWZA_URL_HTTP 		= framework.getString("framework.wowza.url.http");
-
-	public static final String MEDIA_USE 			= framework.getString("framework.media.use");
-	public static final String MEDIA_URL			= framework.getString("framework.media.url");
+	public static final String MEDIA_STREAM_USE 			= framework.getString("framework.media.streaming.use");
+	public static final String MEDIA_STREAM_URL			= framework.getString("framework.media.streaming.url");
+	public static final String MEDIA_STREAM_HLS			= framework.getString("framework.media.streaming.hls");
 
 	public static final String MEDIA_FILE_MP3		= ".mp3,.ogg,.fla";
 	public static final String MEDIA_FILE_MP4		= ".mp4,.m4v,.flv";
