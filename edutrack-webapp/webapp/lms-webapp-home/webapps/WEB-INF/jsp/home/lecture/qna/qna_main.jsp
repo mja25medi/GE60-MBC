@@ -60,8 +60,8 @@
 		});
 	}
 	
-	function readQstn(qnaSn) {
-		document.location.href = "/lec/qna/viewQnaMain?qnaSn=" + qnaSn;
+	function readQstn(qnaSn, crsCreCd) {
+		document.location.href = "/lec/qna/viewQnaMain?qnaSn=" + qnaSn + "&crsCreCd="+crsCreCd;
 	}
 	
 	function addQstn(){

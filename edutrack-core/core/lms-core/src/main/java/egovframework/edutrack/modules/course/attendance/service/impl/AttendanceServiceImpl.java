@@ -242,6 +242,31 @@ public class AttendanceServiceImpl extends EgovAbstractServiceImpl implements At
 		AttendanceVO exVO = attendanceMapper.viewAttend(vo);
 		if(exVO.getEnterFlag() == null  || !exVO.getEnterFlag().equals("E")) {
 			vo.setEnterTime(DateTimeUtil.getDateTime().toString());
+			String enterTime = vo.getEnterTime().substring(8);
+			if(enterTime.compareTo("091000") > 0) {
+				vo.setClassStat1("T");
+			} 
+			if (enterTime.compareTo("100000") > 0) {
+				vo.setClassStat2("T");
+			} 
+			if (enterTime.compareTo("110000") > 0) {
+				vo.setClassStat3("T");
+			}
+			if (enterTime.compareTo("130000") > 0) {
+				vo.setClassStat4("T");
+			}
+			if (enterTime.compareTo("140000") > 0) {
+				vo.setClassStat5("T");
+			}
+			if (enterTime.compareTo("150000") > 0) {
+				vo.setClassStat6("T");
+			}
+			if (enterTime.compareTo("160000") > 0) {
+				vo.setClassStat7("T");
+			}
+			if (enterTime.compareTo("170000") > 0) {
+				vo.setClassStat8("T");
+			}
 			vo.setEnterFlag("E");
 			attendanceMapper.enterClass(vo);
 			resultVO.setResult(1);
@@ -264,61 +289,48 @@ public class AttendanceServiceImpl extends EgovAbstractServiceImpl implements At
 		if(exVO.getEnterFlag().equals("E")) {
 			vo.setQuitTime(DateTimeUtil.getDateTime().toString());
 			vo.setEnterFlag("Q");
-			attendanceMapper.quitClass(vo); //전체 출석 처리
 			
-			//외출 상태 처리
-			if(null2void(exVO.getClassStat1()).equals("O")) {
-				vo.setClassStat1("O");
+			if(!exVO.getClassStat1().equals(null)) {
+				vo.setClassStat1(exVO.getClassStat1());
+			} else {
+				vo.setClassStat1("S");
+			}if(!exVO.getClassStat2().equals(null)) {
+				vo.setClassStat2(exVO.getClassStat2());
+			} else {
+				vo.setClassStat2("S");
 			}
-			if(null2void(exVO.getClassStat2()).equals("O")) {
-				vo.setClassStat2("O");
+			if(!exVO.getClassStat3().equals(null)) {
+				vo.setClassStat3(exVO.getClassStat3());
+			} else {
+				vo.setClassStat3("S");
 			}
-			if(null2void(exVO.getClassStat3()).equals("O")) {
-				vo.setClassStat3("O");
+			if(!exVO.getClassStat4().equals(null)) {
+				vo.setClassStat4(exVO.getClassStat4());
+			} else {
+				vo.setClassStat4("S");
 			}
-			if(null2void(exVO.getClassStat4()).equals("O")) {
-				vo.setClassStat4("O");
+			if(!exVO.getClassStat5().equals(null)) {
+				vo.setClassStat5(exVO.getClassStat5());
+			} else {
+				vo.setClassStat5("S");
 			}
-			if(null2void(exVO.getClassStat5()).equals("O")) {
-				vo.setClassStat5("O");
+			if(!exVO.getClassStat6().equals(null)) {
+				vo.setClassStat6(exVO.getClassStat6());
+			} else {
+				vo.setClassStat6("S");
 			}
-			if(null2void(exVO.getClassStat6()).equals("O")) {
-				vo.setClassStat6("O");
+			if(!exVO.getClassStat7().equals(null)) {
+				vo.setClassStat7(exVO.getClassStat7());
+			} else {
+				vo.setClassStat7("S");
 			}
-			if(null2void(exVO.getClassStat7()).equals("O")) {
-				vo.setClassStat7("O");
-			}
-			if(null2void(exVO.getClassStat8()).equals("O")) {
-				vo.setClassStat8("O");
+			if(!exVO.getClassStat8().equals(null)) {
+				vo.setClassStat8(exVO.getClassStat8());
+			} else {
+				vo.setClassStat8("S");
 			}
 			
-			//각 교시별 지각 처리 --시간 기준은 스마트 인재개발원에 맞춰야함
-			String enterTime = exVO.getEnterTime().substring(8);
-			if(enterTime.compareTo("091000") > 0) {
-				vo.setClassStat1("T");
-			}
-			if (enterTime.compareTo("100000") > 0) {
-				vo.setClassStat2("T");
-			}
-			if (enterTime.compareTo("110000") > 0) {
-				vo.setClassStat3("T");
-			}
-			if (enterTime.compareTo("130000") > 0) {
-				vo.setClassStat4("T");
-			}
-			if (enterTime.compareTo("140000") > 0) {
-				vo.setClassStat5("T");
-			} 
-			if (enterTime.compareTo("150000") > 0) {
-				vo.setClassStat6("T");
-			}
-			if (enterTime.compareTo("160000") > 0) {
-				vo.setClassStat7("T");
-			}
-			if (enterTime.compareTo("170000") > 0) {
-				vo.setClassStat8("T");
-			}
-			attendanceMapper.tardyCheck(vo);
+			attendanceMapper.quitClass(vo);
 			resultVO.setResult(1);
 			resultVO.setMessage("퇴실 처리되었습니다");
 		} else {
@@ -330,6 +342,7 @@ public class AttendanceServiceImpl extends EgovAbstractServiceImpl implements At
 
 	/**
 	 * 조퇴
+	 * 출석 시 출석한 교시의 데이터만 기록하기 때문에 데이터가 외출이나 지각데이터가 있는 경우가 아니면 S출석으로 기록한다
 	 */
 	@Override
 	public ProcessResultVO<AttendanceVO> leftClass(AttendanceVO vo, int leftTime) throws Exception {
@@ -354,7 +367,11 @@ public class AttendanceServiceImpl extends EgovAbstractServiceImpl implements At
 				} break;
 				
 				case 10:{
-					vo.setClassStat1("S");
+					if(!exVO.getClassStat1().equals(null)) {
+						vo.setClassStat1(exVO.getClassStat1());
+					} else {
+						vo.setClassStat1("S");
+					}
 					vo.setClassStat2("L");
 					vo.setClassStat3("L");
 					vo.setClassStat4("L");
@@ -368,8 +385,15 @@ public class AttendanceServiceImpl extends EgovAbstractServiceImpl implements At
 				} break;
 				
 				case 11:{
-					vo.setClassStat1("S");
-					vo.setClassStat2("S");
+					if(!exVO.getClassStat1().equals(null)) {
+						vo.setClassStat1(exVO.getClassStat1());
+					} else {
+						vo.setClassStat1("S");
+					}if(!exVO.getClassStat2().equals(null)) {
+						vo.setClassStat2(exVO.getClassStat1());
+					} else {
+						vo.setClassStat2("S");
+					}
 					vo.setClassStat3("L");
 					vo.setClassStat4("L");
 					vo.setClassStat5("L");
@@ -382,9 +406,20 @@ public class AttendanceServiceImpl extends EgovAbstractServiceImpl implements At
 				} break;
 				
 				case 13:{
-					vo.setClassStat1("S");
-					vo.setClassStat2("S");
-					vo.setClassStat3("S");
+					if(!exVO.getClassStat1().equals(null)) {
+						vo.setClassStat1(exVO.getClassStat1());
+					} else {
+						vo.setClassStat1("S");
+					}if(!exVO.getClassStat2().equals(null)) {
+						vo.setClassStat2(exVO.getClassStat2());
+					} else {
+						vo.setClassStat2("S");
+					}
+					if(!exVO.getClassStat3().equals(null)) {
+						vo.setClassStat3(exVO.getClassStat3());
+					} else {
+						vo.setClassStat3("S");
+					}
 					vo.setClassStat4("L");
 					vo.setClassStat5("L");
 					vo.setClassStat6("L");
@@ -396,10 +431,25 @@ public class AttendanceServiceImpl extends EgovAbstractServiceImpl implements At
 				} break;
 				
 				case 14:{
-					vo.setClassStat1("S");
-					vo.setClassStat2("S");
-					vo.setClassStat3("S");
-					vo.setClassStat4("S");
+					if(!exVO.getClassStat1().equals(null)) {
+						vo.setClassStat1(exVO.getClassStat1());
+					} else {
+						vo.setClassStat1("S");
+					}if(!exVO.getClassStat2().equals(null)) {
+						vo.setClassStat2(exVO.getClassStat2());
+					} else {
+						vo.setClassStat2("S");
+					}
+					if(!exVO.getClassStat3().equals(null)) {
+						vo.setClassStat3(exVO.getClassStat3());
+					} else {
+						vo.setClassStat3("S");
+					}
+					if(!exVO.getClassStat4().equals(null)) {
+						vo.setClassStat4(exVO.getClassStat4());
+					} else {
+						vo.setClassStat4("S");
+					}
 					vo.setClassStat5("L");
 					vo.setClassStat6("L");
 					vo.setClassStat7("L");
@@ -410,11 +460,30 @@ public class AttendanceServiceImpl extends EgovAbstractServiceImpl implements At
 				} break;
 				
 				case 15:{
-					vo.setClassStat1("S");
-					vo.setClassStat2("S");
-					vo.setClassStat3("S");
-					vo.setClassStat4("S");
-					vo.setClassStat5("S");
+					if(!exVO.getClassStat1().equals(null)) {
+						vo.setClassStat1(exVO.getClassStat1());
+					} else {
+						vo.setClassStat1("S");
+					}if(!exVO.getClassStat2().equals(null)) {
+						vo.setClassStat2(exVO.getClassStat2());
+					} else {
+						vo.setClassStat2("S");
+					}
+					if(!exVO.getClassStat3().equals(null)) {
+						vo.setClassStat3(exVO.getClassStat3());
+					} else {
+						vo.setClassStat3("S");
+					}
+					if(!exVO.getClassStat4().equals(null)) {
+						vo.setClassStat4(exVO.getClassStat4());
+					} else {
+						vo.setClassStat4("S");
+					}
+					if(!exVO.getClassStat5().equals(null)) {
+						vo.setClassStat5(exVO.getClassStat5());
+					} else {
+						vo.setClassStat5("S");
+					}
 					vo.setClassStat6("L");
 					vo.setClassStat7("L");
 					vo.setClassStat8("L");
@@ -424,12 +493,35 @@ public class AttendanceServiceImpl extends EgovAbstractServiceImpl implements At
 				} break;
 				
 				case 16:{
-					vo.setClassStat1("S");
-					vo.setClassStat2("S");
-					vo.setClassStat3("S");
-					vo.setClassStat4("S");
-					vo.setClassStat5("S");
-					vo.setClassStat6("S");
+					if(!exVO.getClassStat1().equals(null)) {
+						vo.setClassStat1(exVO.getClassStat1());
+					} else {
+						vo.setClassStat1("S");
+					}if(!exVO.getClassStat2().equals(null)) {
+						vo.setClassStat2(exVO.getClassStat2());
+					} else {
+						vo.setClassStat2("S");
+					}
+					if(!exVO.getClassStat3().equals(null)) {
+						vo.setClassStat3(exVO.getClassStat3());
+					} else {
+						vo.setClassStat3("S");
+					}
+					if(!exVO.getClassStat4().equals(null)) {
+						vo.setClassStat4(exVO.getClassStat4());
+					} else {
+						vo.setClassStat4("S");
+					}
+					if(!exVO.getClassStat5().equals(null)) {
+						vo.setClassStat5(exVO.getClassStat5());
+					} else {
+						vo.setClassStat5("S");
+					}
+					if(!exVO.getClassStat6().equals(null)) {
+						vo.setClassStat6(exVO.getClassStat5());
+					} else {
+						vo.setClassStat6("S");
+					}
 					vo.setClassStat7("L");
 					vo.setClassStat8("L");
 					attendanceMapper.leftClass(vo);
@@ -438,13 +530,40 @@ public class AttendanceServiceImpl extends EgovAbstractServiceImpl implements At
 				} break;
 				
 				case 17:{
-					vo.setClassStat1("S");
-					vo.setClassStat2("S");
-					vo.setClassStat3("S");
-					vo.setClassStat4("S");
-					vo.setClassStat5("S");
-					vo.setClassStat6("S");
-					vo.setClassStat7("S");
+					if(!exVO.getClassStat1().equals(null)) {
+						vo.setClassStat1(exVO.getClassStat1());
+					} else {
+						vo.setClassStat1("S");
+					}if(!exVO.getClassStat2().equals(null)) {
+						vo.setClassStat2(exVO.getClassStat2());
+					} else {
+						vo.setClassStat2("S");
+					}
+					if(!exVO.getClassStat3().equals(null)) {
+						vo.setClassStat3(exVO.getClassStat3());
+					} else {
+						vo.setClassStat3("S");
+					}
+					if(!exVO.getClassStat4().equals(null)) {
+						vo.setClassStat4(exVO.getClassStat4());
+					} else {
+						vo.setClassStat4("S");
+					}
+					if(!exVO.getClassStat5().equals(null)) {
+						vo.setClassStat5(exVO.getClassStat5());
+					} else {
+						vo.setClassStat5("S");
+					}
+					if(!exVO.getClassStat6().equals(null)) {
+						vo.setClassStat6(exVO.getClassStat6());
+					} else {
+						vo.setClassStat6("S");
+					}
+					if(!exVO.getClassStat7().equals(null)) {
+						vo.setClassStat7(exVO.getClassStat7());
+					} else {
+						vo.setClassStat7("S");
+					}
 					vo.setClassStat8("L");
 					attendanceMapper.leftClass(vo);
 					resultVO.setResult(1);

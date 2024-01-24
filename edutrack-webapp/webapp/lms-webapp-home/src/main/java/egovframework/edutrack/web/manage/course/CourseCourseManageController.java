@@ -30,8 +30,6 @@ import egovframework.edutrack.modules.course.category.service.CourseCategoryServ
 import egovframework.edutrack.modules.course.category.service.CourseCategoryVO;
 import egovframework.edutrack.modules.course.course.service.CourseService;
 import egovframework.edutrack.modules.course.course.service.CourseVO;
-import egovframework.edutrack.modules.course.subject.service.OnlineSubjectVO;
-import egovframework.edutrack.modules.course.subject.service.SubjectCategoryVO;
 import egovframework.edutrack.modules.system.code.service.SysCodeVO;
 import egovframework.edutrack.modules.user.dept.service.UsrDeptInfoVO;
 
@@ -49,13 +47,6 @@ public class CourseCourseManageController extends GenericController {
 
 	@Autowired @Qualifier("courseCategoryService")
 	private CourseCategoryService	courseCategoryService;
-
-	private static final String COURSE_MAIN			= "course_main";
-	private static final String COURSE_LIST			= "course_list";
-	private static final String COURSE_WRITE		= "course_write";
-	private static final String COURSE_MANAGE		= "course_manage";
-
-
 
 	/**
 	 * 과정 관리 메인

@@ -101,25 +101,4 @@ public class WebUtil {
 	}
 
 	
-	/**
-	 * 통합로그인 대상 기관인지 체크 한다.
-	 * 통합로그인 대상 기관은 true, 아니면 false를 반환한다.
-	 * @param request
-	 * @return
-	 */
-	public static boolean isSSO(HttpServletRequest request) {
-//		String orgCd = UserBroker.getUserOrgCd(request);
-		String itgrtMbrUseYn = UserBroker.getItgrtMbrUseYn(request);
-		
-		if(itgrtMbrUseYn.equals("Y")){
-			return true;
-		}
-		
-//		if(Constants.SSO_ORG.equals("ALL") || Constants.SSO_ORG.indexOf(orgCd)>=0) {
-//			return true;
-//		}
-		return false;
-	}
-	
-
 }

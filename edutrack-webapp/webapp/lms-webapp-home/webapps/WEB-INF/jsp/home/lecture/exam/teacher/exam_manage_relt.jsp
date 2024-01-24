@@ -71,26 +71,19 @@
 									<ul class="list">
 										<li class="head"><label>시험기간</label></li>
 										<li>
-											<meditag:dateformat type="1" delimeter="." property="${examVO.examStartDttm}" />
-											<meditag:dateformat type="7" delimeter="." property="${examVO.examStartDttm}" /> ~ <meditag:dateformat type="1" delimeter="." property="${examVO.examEndDttm}" /> 
-											<meditag:dateformat type="7" delimeter="." property="${examVO.examEndDttm}" />
+											${examVO.examStartDttm} ${examVO.examStartHour }:${examVO.examStartMin } ~ ${examVO.examEndDttm} ${examVO.examEndHour }:${examVO.examEndMin }
 									 	</li>
 									</ul>
 									<ul class="list">
 										<li class="head"><label>결과확인일</label></li>
-										<li><meditag:dateformat type="1" delimeter="." property="${examVO.rsltCfrmDttm}" />
-											<meditag:dateformat type="7" delimeter="." property="${examVO.rsltCfrmDttm}" />
-										</li>
+										<li>${examVO.rsltCfrmDttm} ${examVO.rsltCfrmHour }:${examVO.rsltCfrmMin }</li>
 									</ul>
 								</c:if>
 							</c:if>
 							<c:if test="${examVO.examTypeCd eq 'OFF'}">
 								<ul class="list">
 									<li class="head"><label>결과확인일</label></li>
-									<li><meditag:dateformat type="1" delimeter="."	property="${examVO.examStartDttm}" />  
-										<meditag:dateformat type="7" delimeter="." property="${examVO.examStartDttm}" /> ~ <meditag:dateformat type="1" delimeter="." property="${examVO.examEndDttm}" /> 
-										<meditag:dateformat type="7" delimeter="." property="${examVO.examEndDttm}" />
-									</li>
+									<li>${examVO.examStartDttm} ${examVO.examStartHour }:${examVO.examStartMin } ~ ${examVO.examEndDttm} ${examVO.examEndHour }:${examVO.examEndMin }</li>
 								</ul>
 							</c:if>
 							<ul class="list">

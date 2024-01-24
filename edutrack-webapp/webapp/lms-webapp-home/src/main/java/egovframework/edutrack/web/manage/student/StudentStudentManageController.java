@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -840,19 +841,21 @@ public class StudentStudentManageController extends GenericController {
 		vo.setReceiptDt(StringUtil.ReplaceAll(vo.getReceiptDt(),".",""));
 		vo.setPaymDttm(StringUtil.ReplaceAll(vo.getPaymDttm(),".",""));
 
+		String orgCd = UserBroker.getUserOrgCd(request);
+		OrgOrgInfoVO orgInfoVO = new OrgOrgInfoVO();
+		orgInfoVO.setOrgCd(orgCd);
+		orgInfoVO = orgOrgInfoService.view(orgInfoVO);
+		
+		CreateCourseVO createCourseVO = new CreateCourseVO();
+		createCourseVO.setOrgCd(orgCd);
+		createCourseVO.setCrsCreCd(vo.getCrsCreCd());
+		CreateCourseVO viewCreateCourseVO = createCourseService.viewCreateCourse(createCourseVO).getReturnVO();
+		vo.setCrsCd(viewCreateCourseVO.getCrsCd());//crsCd 세팅 (산인공용)
+
 		ProcessResultVO<StudentVO> resultVO = studentService.addStudent(vo);
 		if(resultVO.getResult() > 0) {
-			//-- 수강승인 성공자에게 메일 보내기..
-			String orgCd = UserBroker.getUserOrgCd(request);
-			OrgOrgInfoVO orgInfoVO = new OrgOrgInfoVO();
-			orgInfoVO.setOrgCd(orgCd);
-			orgInfoVO = orgOrgInfoService.view(orgInfoVO);
-
-			CreateCourseVO createCourseVO = new CreateCourseVO();
-			createCourseVO.setOrgCd(orgCd);
-			createCourseVO.setCrsCreCd(vo.getCrsCreCd());
-			createCourseVO = createCourseService.viewCreateCourse(createCourseVO).getReturnVO();
-
+			////-- 수강승인 성공자에게 메일 보내기..
+			
 			UsrUserInfoVO userInfoVO = new UsrUserInfoVO();
 			userInfoVO.setUserNo(vo.getUserNo());
 			userInfoVO = usrUserInfoService.view(userInfoVO);
@@ -2277,134 +2280,6 @@ public class StudentStudentManageController extends GenericController {
 	}
 	
 	/**
-	 * [HRD] 회차관리>IDE URL>엑셀업로드 폼
-	 * @param vo
-	 * @param commandMap
-	 * @param model
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value="/addStdIdeExcelPop")
-	public String addStdIdeExcelPop( StudentVO vo, Map commandMap, ModelMap model,
-			HttpServletRequest request,	HttpServletResponse response) throws Exception {
-		commonVOProcessing(vo, request);
-		
-		request.setAttribute("fileupload", "Y");
-		String crsCreCd = request.getParameter("crsCreCd");
-		request.setAttribute("crsCreCd", crsCreCd);
-		
-		return "mng/student/student/student_ide_write_excel_pop";
-	}
-	
-	/**
-	 * [HRD] 회차관리>IDE URL>엑셀업로드 - SAMPLE 다운로드
-	 * @param vo
-	 * @param commandMap
-	 * @param model
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 */
-	@RequestMapping(value="/sampleExcelStdIde")
-	public void sampleExcelStdIde ( CreateCourseVO vo, Map commandMap, ModelMap model,
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		commonVOProcessing(vo, request);
-		
-
-		String orgCd = UserBroker.getUserOrgCd(request);
-		
-		response.setHeader("Content-Disposition", "attachment;filename=stu_sample.xlsx;");
-		response.setHeader( "Content-Transfer-Coding", "binary" );
-		response.setContentType("application/vnd.ms-excel;charset=utf-8");
-		OutputStream os = response.getOutputStream();
-		try {
-			int rowNum = 0;
-
-			XSSFWorkbook wbook = new XSSFWorkbook();
-			XSSFSheet sheet = wbook.createSheet("IDE_URL업로드");
-
-			// 페이지 제목줄 .. 작업코멘트 5줄.
-			XSSFRow pageRow1 = sheet.createRow((short)rowNum);
-			pageRow1.setHeight((short)2000);
-			String info = "IDE 일괄 등록\n"
-							+ "* 샘플 데이터와 같은 형식으로 샘플 파일에 작성하여 업로드해야 정상적으로 등록됩니다.\n"
-							+ "* 아이디와 IDE URL은 중복되지 않도록 주의하여 주십시오.\n"
-							;
-			POIExcelUtil.createMergeCell(info, pageRow1, 0, 1, "left");
-			
-			//-- 컬럼 제목줄 만들기
-			rowNum++;
-			XSSFRow titleRow = sheet.createRow((short)rowNum);
-
-			POIExcelUtil.createTitleCell("아이디", titleRow, 0);
-			POIExcelUtil.createTitleCell("IDE URL", titleRow, 1);
-			
-			//-- 셀의 넓이 조절
-			sheet.setColumnWidth(0, sheet.getDefaultColumnWidth() * 500);
-			sheet.setColumnWidth(1, sheet.getDefaultColumnWidth() * 4000);
-			
-			try {
-				wbook.write(os);
-			} catch (Exception ex) {
-				String name = ex.getClass().getName();
-				if (!name.equals("org.apache.catalina.connector.ClientAbortException")) {
-					throw ex;
-				}
-			} finally {
-				if(os != null) {
-					os.close();
-				}
-			}
-		} catch (Exception e) {
-			log.error("IOException occurred");
-		}
-	}
-	
-	/**
-	 * [HRD] 회차관리>IDE URL>엑셀업로드 - 수강생 등록
-	 * @param vo
-	 * @param commandMap
-	 * @param model
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 */
-	@PostMapping(value="/uploadExcelStdIde")
-	public String uploadExcelStdIde ( StudentVO vo, Map commandMap, ModelMap model,
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		commonVOProcessing(vo, request);
-		
-		String fileName = StringUtil.nvl(request.getParameter("fileName"));
-		
-		String type =  StringUtil.nvl(request.getParameter("type"));
-		String filePath = StringUtil.nvl(request.getParameter("filePath"));
-		String orgCd = StringUtil.nvl(UserBroker.getUserOrgCd(request), "ORG0000001");
-		String regIp = request.getRemoteAddr();
-		String crsCreCd = StringUtil.nvl(request.getParameter("crsCreCd"));
-		vo.setOrgCd(orgCd);
-		vo.setRegIp(regIp);
-		vo.setCrsCreCd(crsCreCd);
-		
-		ProcessResultVO<StudentVO> resultVO = new ProcessResultVO<>();
-		try {
-			studentExcelService.addStudentIdeUrlExcel(vo, fileName, filePath);
-			resultVO.setResultSuccess();
-			resultVO.setMessage("IDE URL 등록에 성공하였습니다.");
-		} catch(MediopiaDefineException e1) {
-			resultVO.setResultFailed();
-			resultVO.setMessage(e1.getMessage());
-		} catch (Exception e) {
-			resultVO.setResultFailed();
-			log.error(e.getMessage());
-			resultVO.setMessage("IDE URL 등록에 실패하였습니다. 반복될 경우, 담당자에게 문의바랍니다.");
-		}
-		
-		return JsonUtil.responseJson(response, resultVO);
-	}
-	
-	/**
 	 * [HRD] 관리자>수강신청관리>엑셀업로드 - SAMPLE 다운로드
 	 * @param vo
 	 * @param commandMap
@@ -3358,7 +3233,9 @@ public class StudentStudentManageController extends GenericController {
 		if(resultVo.getResult() <= 0 || resultVo.getReturnList().size() <= 0) {
 			errorCode = "회원이 아닙니다. 회원등록후 응시생을 등록해주세요.";
 		}
-		System.out.println("errorCode : " + errorCode);
+		if(StringUtils.hasText(errorCode)) {
+			log.error("errorCode : " + errorCode);
+		}
 		vo.setErrorCode(errorCode);
 
 		return JsonUtil.responseJson(response, vo);

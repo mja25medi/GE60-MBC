@@ -150,5 +150,9 @@
 		</bean>
 		<bean class="org.springframework.mobile.device.DeviceResolverHandlerInterceptor" />
 	</mvc:interceptors>
-    
+    <mvc:annotation-driven>
+	    <mvc:argument-resolvers>
+	        <bean class="org.springframework.mobile.device.DeviceWebArgumentResolver" />
+	    </mvc:argument-resolvers>
+	</mvc:annotation-driven>
 </beans>

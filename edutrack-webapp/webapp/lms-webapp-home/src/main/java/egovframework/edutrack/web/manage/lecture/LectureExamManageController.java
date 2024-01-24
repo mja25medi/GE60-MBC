@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import egovframework.edutrack.Constants;
@@ -1462,7 +1463,9 @@ public class LectureExamManageController extends GenericController{
 				errorCode += "|"+"TYPERGTANSR";
 			}
 		}
-		System.out.println("errorCode : " + errorCode);
+		if(StringUtils.hasText(errorCode)) {
+			log.error("errorCode : " + errorCode);
+		}
 		vo.setErrorCode(errorCode);
 
 		return JsonUtil.responseJson(response, vo);

@@ -24,6 +24,9 @@ public class ValidationUtils {
 			return true;
 		return false;
 	}
+	public static boolean isNotNull( List<?> list) {
+		return !isNull(list);
+	}
 
 	public static boolean isNull( Set<?> set) {
 		if (set == null || set.isEmpty())

@@ -29,7 +29,6 @@ import egovframework.edutrack.modules.course.createcoursesubject.service.CreateC
 import egovframework.edutrack.modules.course.subject.service.OnlineSubjectVO;
 import egovframework.edutrack.modules.course.subject.service.SubjectCategoryVO;
 import egovframework.edutrack.modules.course.subject.service.SubjectService;
-import egovframework.edutrack.modules.kollus.util.KollusMediaTokenUtil;
 import egovframework.edutrack.modules.lecture.bookmark.service.BookmarkService;
 import egovframework.edutrack.modules.lecture.bookmark.service.BookmarkVO;
 import egovframework.edutrack.modules.library.share.media.service.ClibShareMediaCntsService;
@@ -253,31 +252,17 @@ public class CourseSubjectHomeController extends GenericController {
 
 			request.setAttribute("playerDiv", clibShareMediaCntsVO.getPlayerDiv());
 
-			if("kollus".equals(clibShareMediaCntsVO.getPlayerDiv())) {
-				//-- Player가 콜루스 인 경우
-				//-- 미디어 토큰을 받아 온다.
-				String userIdKey = "";
-				//-- 학습자인 경우 미디어 토큰을 만들기 위한 ID STD_NO_UNIT_CD, 미디어 토큰에 USER_ID가 입력되어야 북마크 API 작동
-				String mediaToken = KollusMediaTokenUtil.getKollusMediaToken(orgInfoVO.getKollusKeyCd(),
-						clibShareMediaCntsVO.getMediaCntsKey(), "", userIdKey);
-				request.setAttribute("playerUrl", Constants.KOLLUS_PLAYER_URL);
-				request.setAttribute("mediaToken", mediaToken);
-				//-- 접속되어 있던 시간을 구하기 위해 현재 시간을 넘긴다.
-				String currentDateTime = DateTimeUtil.getCurrentString();
-				request.setAttribute("currentDateTime", currentDateTime);
-			} else {
-				String ext = FileUtil.getFileExtention(clibShareMediaCntsVO.getFileNm());
-				String fileExt = "none";
-				if(Constants.MEDIA_FILE_MP3.contains(ext)) {
-					fileExt = "mp3";
-				} else if(Constants.MEDIA_FILE_MP4.contains(ext)) {
-					fileExt = "mp4";
-				}
-				request.setAttribute("filePath", "/contents"+clibShareMediaCntsVO.getFilePath());
-				request.setAttribute("fileName", clibShareMediaCntsVO.getFileNm());
-				request.setAttribute("fileExt", fileExt);
-				request.setAttribute("flowplayerKey", Constants.FLOWPLAYER_KEY);
+			String ext = FileUtil.getFileExtention(clibShareMediaCntsVO.getFileNm());
+			String fileExt = "none";
+			if(Constants.MEDIA_FILE_MP3.contains(ext)) {
+				fileExt = "mp3";
+			} else if(Constants.MEDIA_FILE_MP4.contains(ext)) {
+				fileExt = "mp4";
 			}
+			request.setAttribute("filePath", "/contents"+clibShareMediaCntsVO.getFilePath());
+			request.setAttribute("fileName", clibShareMediaCntsVO.getFileNm());
+			request.setAttribute("fileExt", fileExt);
+			request.setAttribute("flowplayerKey", Constants.FLOWPLAYER_KEY);
 			return "home/course/subject/media_contents_view_pop";
 
 		} else if("CDN".equals(contentsVO.getCntsTypeCd())) { //-- CDN 콘텐츠의 경우

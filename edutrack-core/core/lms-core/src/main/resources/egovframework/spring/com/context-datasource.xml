@@ -9,7 +9,7 @@
     <alias name="dataSource-${framework.database.db_type}" alias="egov.dataSource" />
     
     <!-- mssql-->
-    <bean id="dataSourceMssqlSpied" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <bean id="dataSourceMssqlSpied" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="${framework.database.driver_class_name}"/>
         <property name="url" value="${framework.database.url}" />
         <property name="username" value="${framework.database.user_name}"/>
@@ -28,7 +28,7 @@
     </bean>
     
     <!-- mysql -->
-    <bean id="dataSourceMysqlSpied" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <bean id="dataSourceMysqlSpied" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="${framework.database.driver_class_name}"/>
         <property name="url" value="${framework.database.url}" />
         <property name="username" value="${framework.database.user_name}"/>
@@ -46,7 +46,7 @@
         </property>
     </bean>
     <!-- mariaDB -->
-    <bean id="dataSourceMariaSpied" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <bean id="dataSourceMariaSpied" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="${framework.database.driver_class_name}"/>
         <property name="url" value="${framework.database.url}" />
         <property name="username" value="${framework.database.user_name}"/>
@@ -86,7 +86,7 @@
     </bean> -->
     
     <!-- Oracle -->
-    <bean id="dataSourceOracleSpied" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <bean id="dataSourceOracleSpied" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="${framework.database.driver_class_name}"/>
         <property name="url" value="${framework.database.url}" />
         <property name="username" value="${framework.database.user_name}"/>
@@ -107,12 +107,12 @@
     </bean>
     
     <!-- Altibase -->
-    <bean id="dataSourceAltibaseSpied" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <bean id="dataSourceAltibaseSpied" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="${framework.database.driver_class_name}"/>
         <property name="url" value="${framework.database.url}" />
         <property name="username" value="${framework.database.user_name}"/>
         <property name="password" value="${framework.database.password}"/>
-        <property name="maxActive" value="10"/>
+        <property name="maxTotal" value="10"/>
     </bean>
     <bean id="dataSource-altibase" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
         <constructor-arg ref="dataSourceAltibaseSpied" />
@@ -125,7 +125,7 @@
     </bean>
 
     <!-- Tibero -->
-    <bean id="dataSourceTiberoSpied" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <bean id="dataSourceTiberoSpied" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="${framework.database.driver_class_name}"/>
         <property name="url" value="${framework.database.url}" />
         <property name="username" value="${framework.database.user_name}"/>

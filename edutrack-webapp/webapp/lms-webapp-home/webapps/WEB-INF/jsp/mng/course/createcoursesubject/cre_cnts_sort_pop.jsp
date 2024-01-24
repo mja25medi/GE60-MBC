@@ -52,11 +52,12 @@
 	 * 처리 결과 표시 콜백
 	 */
 	function processCallback(resultDTO) {
+		var sbjCd = '${vo.sbjCd}';
 		alert(resultDTO.message);
 
 		if(resultDTO.result >= 0) {
 			// 정상 처리
-			parent.contentsList();
+			parent.sbjCntsReload(sbjCd);
 			parent.modalBoxClose();
 		} else {
 			// 비정상 처리
@@ -159,5 +160,10 @@
 				selectBox.selectedIndex = ti;
 			}
 		}
+	}
+	
+	function modalBoxClose() {
+		modalBox.clear();
+		modalBox.close();
 	}
 </script>

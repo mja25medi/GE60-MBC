@@ -506,8 +506,6 @@ public class ClibOlcCntsHomeController extends GenericController {
 		if(!"create".equals(clibOlcPageVO.getPageDiv()) ){
 			String ext = FileUtil.getFileExtention(clibOlcPageVO.getFilePath());
 
-			System.out.println("ext : " + ext);
-
 			if(Constants.MEDIA_FILE_MP3.contains(ext)) {
 				returnUrl = "olc_page_view_mp3";
 			} else if(Constants.MEDIA_FILE_MP4.contains(ext)) {

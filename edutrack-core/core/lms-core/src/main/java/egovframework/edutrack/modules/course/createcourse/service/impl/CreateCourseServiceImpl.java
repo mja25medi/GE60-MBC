@@ -749,6 +749,12 @@ public class CreateCourseServiceImpl extends EgovAbstractServiceImpl implements 
 		bbsVO.setCrsCreCd(iCreateCourseVO.getCrsCreCd());
 		lecBbsMapper.deleteAll(bbsVO);
 
+		//수강신청 삭제한 학생 정보 삭제
+		StudentVO svo = new StudentVO();
+		svo.setEnrlSts("D");
+		svo.setCrsCreCd(iCreateCourseVO.getCrsCreCd());
+		studentMapper.deleteCreateCourseStudent(svo);
+		
 		//-- 개설된 과정의 분반을 삭제한다.
 		CreCrsDeclsVO creCrsDeclsVO = new CreCrsDeclsVO();
 		creCrsDeclsVO.setCrsCreCd(iCreateCourseVO.getCrsCreCd());

@@ -482,7 +482,6 @@
 	function editUser() {
 		//필수값 체크
 		if(!validate(document.userInfoForm)) return;
-<c:if test="${not IS_SSO}">
 
 	<c:if test="${useSex eq 'Y' && requiredSex eq 'Y' }">
 		if(!$("#sexCdM").is(":checked") && !$("#sexCdF").is(":checked") ){
@@ -490,7 +489,6 @@
 			return;
 		}
 	</c:if>
-</c:if>	
 		if(!validateMobileNo()) {
 			alert("휴대폰 번호를 올바르게 입력해 주세요.");
 			return;

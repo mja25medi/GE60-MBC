@@ -284,4 +284,8 @@
 		
 	}
 
+	function modalBoxClose() {
+		modalBox.clear();
+		modalBox.close();
+	}
 </script>

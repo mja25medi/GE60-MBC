@@ -265,7 +265,6 @@ public class TchInfoManageController extends GenericController{
 		ProcessResultVO<TchInfoVO> resultVO = null;
 		try {
 			resultVO = tchInfoService.add(tchInfoVO);
-			System.out.println(resultVO);
 			if(resultVO.getResult() > 0) {
 				resultVO.setMessage(getMessage(request, "teacher.message.teacherinfo.add.success"));
 			} else if(resultVO.getResult() == -1) {

@@ -283,33 +283,6 @@ public class UsrUserInfoServiceImpl
 	}
 	
 	/**
-	 * 사용자 정보를 가져온다. 로그인시에 사용
-	 * - 사용자 상태가 U인 사용자만 가져온다.
-	 * - 입력한 패스워드를 암호화 하여 리턴한다.
-	 * @param UsrUserInfoVO vo
-	 * @return  ProcessResultDTO
-	 */
-	@Override
-	public UsrUserInfoVO viewForSsoLogin(UsrUserInfoVO vo) throws Exception {
-		//SNS로그인
-		if(ValidationUtils.isNotEmpty(vo.getSnsKey()) && ValidationUtils.isNotEmpty(vo.getSnsDiv())){
-			vo.setUserPass("");
-			vo = usrUserInfoMapper.selectForSsoLogin(vo);
-			//sns 사용자는 패스워드가 없으므로 로직을 통과하기위해 강제로 같게 만듬
-			vo.setUserPass("0");
-			vo.setEncUserPass("0");
-		}else{
-//			String encUserPass = 
-//					KISASeed.seed256HashEncryption(vo.getUserPass());
-//					vo.getUserPass();
-			vo = usrUserInfoMapper.selectForSsoLogin(vo);
-			vo.setEncUserPass(vo.getUserPass());
-		}
-		this.getAuthGrp(vo);
-		return vo;
-	}
-
-	/**
 	 * 사용자 정보 등록
 	 * @param UsrUserInfoVO vo
 	 * @param userInfoChgDivCd
@@ -1866,23 +1839,6 @@ public class UsrUserInfoServiceImpl
 		}
 		
 		String result = usrLoginMapper.updateSnsDiv(ulvo);
-		return result;
-	}
-	
-	/**
-	 * 사용자 정보 수정
-	 * @param UsrUserInfoVO vo
-	 * @param int
-	 * @return  ProcessResultDTO
-	 */
-	@Override
-	@HrdApiUsrUserInfo(Type.UPDATE)
-	public int editSso(UsrUserInfoVO vo, String userInfoChgDivCd) throws Exception {
-		UsrUserInfoVO uuvo = new UsrUserInfoVO();
-		uuvo = usrUserInfoMapper.selectForSsoLogin(vo);
-		vo.setUserNo(uuvo.getUserNo());
-		int result = usrUserInfoMapper.update(vo);
-		if(result<0)TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 		return result;
 	}
 	

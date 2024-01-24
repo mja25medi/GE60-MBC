@@ -135,9 +135,7 @@
 							<c:if test="${empty clibMediaCntsVO.fileNm}">
 									<a href="javascript:mediaFileUpload()" class="btn btn-primary btn-xs" id="media-file-upload-button"><spring:message code="library.title.contents.media.file.select"/></a>
 							</c:if>
-							<c:if test="${not empty clibMediaCntsVO.fileNm}">
-									<div id="media-file-name">${clibMediaCntsVO.fileNm}</div>
-							</c:if>
+							<div id="media-file-name"><c:if test="${not empty clibMediaCntsVO.fileNm}">${clibMediaCntsVO.fileNm}</c:if></div>
 						</div>
 					</td>
 				</tr>			

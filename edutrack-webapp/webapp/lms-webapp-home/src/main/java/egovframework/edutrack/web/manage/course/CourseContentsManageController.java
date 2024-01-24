@@ -808,7 +808,6 @@ public class CourseContentsManageController extends GenericController {
 			orgInfoVO.setOrgCd(orgCd);
 			orgInfoVO = orgOrgInfoService.view(orgInfoVO);
 			request.setAttribute("kollusUseYn", orgInfoVO.getKollusUseYn());
-			request.setAttribute("kollusPlayerUrl", Constants.KOLLUS_PLAYER_URL);
 			request.setAttribute("cntsTypeCd", workType);
 
 			forwardUrl = "mng/course/contents/left_media_cnts_div";

@@ -202,6 +202,7 @@ public class OrganizationUtil {
 						throw new AccessDeniedException("common.message.organization.nouse");
 					} else {
 						session.setAttribute(Constants.SAAS_ORGNM, orgOrgInfoVO.getOrgNm());
+						session.setAttribute(Constants.SAAS_DOMAINNM, orgOrgInfoVO.getDomainNm());
 						session.setAttribute(Constants.SAAS_ORGCD, orgOrgInfoVO.getOrgCd());
 						session.setAttribute(Constants.SAAS_LAYOUT_TPL, StringUtil.nvl(orgOrgInfoVO.getLayoutTplCd(),"center"));
 						session.setAttribute(Constants.SAAS_COLOR_TPL, StringUtil.nvl(orgOrgInfoVO.getColorTplCd(),"001"));

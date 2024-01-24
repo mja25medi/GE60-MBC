@@ -344,7 +344,7 @@
 				<tr>
 					<th scope="row"><spring:message code="course.title.createcourse.info"/></th>
 					<td colspan="3">
-						<textarea style="height:50px" dispName="<spring:message code="course.title.createcourse.info"/>" isNull="N" lenCheck="2000" name="creDesc" class="form-control input-sm" id="creDesc_0">${vo.creDesc }</textarea>
+						<textarea style="height:50px" dispName="<spring:message code="course.title.createcourse.info"/>" lenCheck="2000" name="creDesc" class="form-control input-sm" id="creDesc_0">${vo.creDesc }</textarea>
 					</td>
 				</tr>
 			</table>
@@ -524,9 +524,9 @@
 		var enrlEndArray = enrlEendDate.split('.');
 		var endArray = endDate.split('.');
 
-		var enrl_start_date = new Date(enrlStartArray[0], enrlStartArray[1], enrlStartArray[2]);
-		var enrl_end_date = new Date(enrlEndArray[0], enrlEndArray[1], enrlEndArray[2]);
-		var end_date = new Date(endArray[0], endArray[1], endArray[2]);
+		var enrl_start_date = new Date(enrlStartArray[0], enrlStartArray[1]-1, enrlStartArray[2]);
+		var enrl_end_date = new Date(enrlEndArray[0], enrlEndArray[1]-1, enrlEndArray[2]);
+		var end_date = new Date(endArray[0], endArray[1]-1, endArray[2]);
 		
 		if(end_date.getTime() > enrl_start_date.getTime()) {
 			alert("교육기간은 교육신청기간 종료날짜 이후에만 가능합니다.");

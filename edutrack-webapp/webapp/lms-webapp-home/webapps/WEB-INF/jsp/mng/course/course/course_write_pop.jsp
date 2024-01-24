@@ -264,7 +264,9 @@
 			<td>
 				<select name="cpltHandlType" id="cpltHandlType" class="form-control input-sm">
 					<c:forEach var="item" items="${cpltHandlTypeList}" varStatus="status">
-					<option value="${item.codeCd}" <c:if test="${vo.cpltHandlType eq item.codeCd}">selected</c:if> >${item.codeNm}</option>
+						<c:if test="${item.codeCd eq 'AT'}"> <!-- 24.01.22 임종혁부장. 자동처리만 나오게 요청 -->
+							<option value="${item.codeCd}" <c:if test="${vo.cpltHandlType eq item.codeCd}">selected</c:if> >${item.codeNm}</option>
+						</c:if>
 					</c:forEach>				
 				</select>
 			</td>
@@ -360,7 +362,7 @@
 		</c:if>
 		<c:if test="${gubun eq 'E'}">
 			<button class="btn btn-primary btn-sm" onclick="editCourse()"><spring:message code="button.add"/></button>
-			<button class="btn btn-info btn-sm" onclick="crsMngForm('${vo.crsCd}')"><spring:message code="button.manage"/></button>
+			<%-- <button class="btn btn-info btn-sm" onclick="crsMngForm('${vo.crsCd}')"><spring:message code="button.manage"/></button> --%>
 			<button class="btn btn-warning btn-sm" onclick="delCourse()"><spring:message code="button.delete"/></button>
 		</c:if>
 		<button class="btn btn-default btn-sm" onclick="javascript:parent.modalBoxClose()"><spring:message code="button.close"/></button>

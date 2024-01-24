@@ -1,5 +1,6 @@
 <%@	page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/jsp/common/page_init.jsp" %>
+
 <c:url var="img_base" value="/img/home" />
 
 	<div class="segment">
@@ -31,13 +32,13 @@
 	                <button type="button" class="btn type6" onclick="resHelp()">코딩실습 도움주기</button>
 	            </c:if>
 				<c:if test="${authGrpCd ne 'TCH'}">
-	            	<c:if test="${createCourseVO.creTypeCd eq 'OF' or createCourseVO.creTypeCd eq 'BL' }">
-		                 <c:if test="${attendanceVO.enterFlag ne 'E' && nowDate >= enrlStartDttm && nowDate <=enrlEndDttm}">
+	            	<c:if test="${(createCourseVO.creTypeCd eq 'OF' or createCourseVO.creTypeCd eq 'BL') && nowDate >= createCourseVO.enrlStartDttm && nowDate <= createCourseVO.enrlEndDttm}">
+		                 <c:if test="${attendanceVO.enterFlag ne 'E'}">
                          	<button type="button" class="btn type3" onclick="enterClass()">출석하기</button>
                          </c:if>
-                         <c:if test="${attendanceVO.enterFlag eq 'E'}">
-                         	 <button type="button" id="quitBtn" class="btn type3" onclick="quitClass()" style="display: none;">퇴실하기</button>
-                         	 <button type="button" class="btn type3" onclick="classOutingCheck()">외출/조퇴하기</button>
+                         <c:if test="${attendanceVO.enterFlag eq 'E' }">
+                         	 	<button type="button" id="quitBtn" class="btn type3" onclick="quitClass()" style="display: none;">퇴실하기</button>
+                         	 	<button type="button" id="outBtn" class="btn type3" onclick="classOutingCheck()">외출/조퇴하기</button>
                          </c:if>
 	                 </c:if>
 	            </c:if>
@@ -272,7 +273,19 @@
 		$(".modal").css("display","none");
 		$("#course").css("display","none");
 
+		clock();
+        setInterval(clock, 60000); 
 	});
 
+	function clock(){
+        let today = new Date();
+        let H = today.getHours();
+        let M = today.getMinutes();
+        let S = today.getSeconds();
+		if(H>=18 && M>=0) {
+			$('#outBtn').hide();
+			$('#quitBtn').show();
+		}
+    }
 
 </script>

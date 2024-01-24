@@ -50,7 +50,6 @@ import egovframework.edutrack.modules.course.createcoursesubject.service.CreateO
 import egovframework.edutrack.modules.course.createcourseteacher.service.CreateCourseTeacherService;
 import egovframework.edutrack.modules.course.subject.service.OnlineSubjectVO;
 import egovframework.edutrack.modules.course.subject.service.SubjectService;
-import egovframework.edutrack.modules.kollus.util.KollusMediaTokenUtil;
 import egovframework.edutrack.modules.lecture.assignment.service.AssignmentSendVO;
 import egovframework.edutrack.modules.lecture.assignment.service.AssignmentService;
 import egovframework.edutrack.modules.lecture.assignment.service.AssignmentSubConstVO;
@@ -211,6 +210,9 @@ public class BookmarkLectureController
 		
 		int prpsRatio = Math.round((nowDayCnt/termDayCnt)*100);
 		request.setAttribute("prpsRatio", Math.min(100, prpsRatio));//권장 진도율
+		
+		String nowDate = DateTimeUtil.getDateType(1, DateTimeUtil.getDate(),".");
+		request.setAttribute("nowDate", nowDate);
 		
 		request.setAttribute("createCourseVO", createCourseVO);
 		request.setAttribute("mainLectureVO", mainLectureVO);
@@ -627,34 +629,17 @@ public class BookmarkLectureController
 
 			request.setAttribute("playerDiv", clibShareMediaCntsVO.getPlayerDiv());
 
-			if("kollus".equals(clibShareMediaCntsVO.getPlayerDiv())) {
-				//-- Player가 콜루스 인 경우
-				//-- 미디어 토큰을 받아 온다.
-				String userIdKey = "";
-				//-- 학습자인 경우 미디어 토큰을 만들기 위한 ID STD_NO_UNIT_CD, 미디어 토큰에 USER_ID가 입력되어야 북마크 API 작동
-				if("STU".equals(classUserType)) {
-					userIdKey = stdNo+"_"+contentsVO.getSbjCd()+"_"+contentsVO.getUnitCd();
-				}
-				String mediaToken = KollusMediaTokenUtil.getKollusMediaToken(orgInfoVO.getKollusKeyCd(),
-						clibShareMediaCntsVO.getMediaCntsKey(), "", userIdKey);
-				request.setAttribute("playerUrl", Constants.KOLLUS_PLAYER_URL);
-				request.setAttribute("mediaToken", mediaToken);
-				//-- 접속되어 있던 시간을 구하기 위해 현재 시간을 넘긴다.
-				String currentDateTime = DateTimeUtil.getCurrentString();
-				request.setAttribute("currentDateTime", currentDateTime);
-			} else {
-				String ext = FileUtil.getFileExtention(clibShareMediaCntsVO.getFileNm());
-				String fileExt = "none";
-				if(Constants.MEDIA_FILE_MP3.contains(ext)) {
-					fileExt = "mp3";
-				} else if(Constants.MEDIA_FILE_MP4.contains(ext)) {
-					fileExt = "mp4";
-				}
-				request.setAttribute("filePath", "/contents"+clibShareMediaCntsVO.getFilePath());
-				request.setAttribute("fileName", clibShareMediaCntsVO.getFileNm());
-				request.setAttribute("fileExt", fileExt);
-				request.setAttribute("flowplayerKey", Constants.FLOWPLAYER_KEY);
+			String ext = FileUtil.getFileExtention(clibShareMediaCntsVO.getFileNm());
+			String fileExt = "none";
+			if(Constants.MEDIA_FILE_MP3.contains(ext)) {
+				fileExt = "mp3";
+			} else if(Constants.MEDIA_FILE_MP4.contains(ext)) {
+				fileExt = "mp4";
 			}
+			request.setAttribute("filePath", "/contents"+clibShareMediaCntsVO.getFilePath());
+			request.setAttribute("fileName", clibShareMediaCntsVO.getFileNm());
+			request.setAttribute("fileExt", fileExt);
+			request.setAttribute("flowplayerKey", Constants.FLOWPLAYER_KEY);
 			return "home/lecture/bookmark/media_contents_view_pop";
 
 		} else if("CDN".equals(contentsVO.getCntsTypeCd())) { //-- CDN 콘텐츠의 경우
@@ -1055,8 +1040,6 @@ public class BookmarkLectureController
 		cspcVO.setPageCts(cspcVO.getPageCts().replaceAll("ClibMediaCntsManage", "BookmarkLecture"));
 		cspcVO.setPageCts(cspcVO.getPageCts().replaceAll("ClibMediaCntsHome", "BookmarkLecture"));
 
-		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@");
-		System.out.println(cspcVO.getPageCts());
 		/*
 		if(!"create".equals(cspcVO.getPageDiv())) {
 			String ext = FileUtil.getFileExtention(cspcVO.getFilePath());
@@ -1106,27 +1089,18 @@ public class BookmarkLectureController
 		request.setAttribute("uldStsCd", clibMediaCntsVO.getUldStsCd());
 		request.setAttribute("playerDiv", clibMediaCntsVO.getPlayerDiv());
 
-		if("kollus".equals(clibMediaCntsVO.getPlayerDiv())) {
-			//-- Player가 콜루스 인 경우
-			//-- 미디어 토큰을 받아 온다.
-			String mediaToken = KollusMediaTokenUtil.getKollusMediaToken(orgInfoVO.getKollusKeyCd(),
-					clibMediaCntsVO.getMediaCntsKey(), "", "");
-			request.setAttribute("playerUrl", Constants.KOLLUS_PLAYER_URL);
-			request.setAttribute("mediaToken", mediaToken);
-		} else {
-			String ext = FileUtil.getFileExtention(clibMediaCntsVO.getFileNm());
-			String fileExt = "none";
-			if(Constants.MEDIA_FILE_MP3.contains(ext)) {
-				fileExt = "mp3";
-			} else if(Constants.MEDIA_FILE_MP4.contains(ext)) {
-				fileExt = "mp4";
-			}
-			request.setAttribute("filePath", "/contents"+clibMediaCntsVO.getFilePath());
-			request.setAttribute("fileName", clibMediaCntsVO.getFileNm());
-			request.setAttribute("fileExt", fileExt);
-			request.setAttribute("flowplayerKey", Constants.FLOWPLAYER_KEY);
-			request.setAttribute("bookmarkVO", vo);
+		String ext = FileUtil.getFileExtention(clibMediaCntsVO.getFileNm());
+		String fileExt = "none";
+		if(Constants.MEDIA_FILE_MP3.contains(ext)) {
+			fileExt = "mp3";
+		} else if(Constants.MEDIA_FILE_MP4.contains(ext)) {
+			fileExt = "mp4";
 		}
+		request.setAttribute("filePath", "/contents"+clibMediaCntsVO.getFilePath());
+		request.setAttribute("fileName", clibMediaCntsVO.getFileNm());
+		request.setAttribute("fileExt", fileExt);
+		request.setAttribute("flowplayerKey", Constants.FLOWPLAYER_KEY);
+		request.setAttribute("bookmarkVO", vo);
 		return "home/lecture/bookmark/media_cnts_preview_pop";
 	}
 
@@ -1608,128 +1582,6 @@ public class BookmarkLectureController
 	}
 
 	/**
-	 * 콜루스 콘텐츠 북마크 콜백용.
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping(value="/indexKollusCallback")
-	public String indexKollusCallback(Map commandMap, ModelMap model,
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-		String result = request.getParameter("result");
-		String uservalue0 = request.getParameter("uservalue0");
-
-		String currentDateTime = DateTimeUtil.getCurrentString();
-
-		Map<String, Object> resultMap = JsonUtil.getJsonObject(result);
-		Map<String, Object> userInfo = (Map<String, Object>)resultMap.get("user_info");
-		Map<String, Object> contentsInfo = (Map<String, Object>)resultMap.get("content_info");
-		Map<String, Object> blockInfo = (Map<String, Object>)resultMap.get("block_info");
-		Map<String, Object> blockArray = (Map<String, Object>)blockInfo.get("blocks");
-
-		String[] userKey = StringUtil.split((String)userInfo.get("client_user_id"),"_");
-		String stdNo = userKey[0];
-		String sbjCd = userKey[1];
-		String unitCd = userKey[2];
-		String duration = (String)contentsInfo.get("duration");
-		String playTime = (String)contentsInfo.get("playtime");
-		String palyTimePercent = (String)contentsInfo.get("playtime_percent");
-		String startAt = (String)contentsInfo.get("start_at");
-		String lastPlayAt = (String)contentsInfo.get("last_play_at");
-		String serial = (String)contentsInfo.get("serial");
-		int blockCount = Integer.parseInt((String)blockInfo.get("block_count"));
-		int blockTime = (int)Math.ceil(Integer.parseInt(duration) / blockCount);
-
-		BookmarkVO bookmarkVO = new BookmarkVO();
-		bookmarkVO.setStdNo(stdNo);
-		bookmarkVO.setSbjCd(sbjCd);
-		bookmarkVO.setUnitCd(unitCd);
-
-		int sessionPlayTime = 0;
-		if(Integer.parseInt(serial) > 0)
-			sessionPlayTime = Integer.parseInt(playTime) - (30 * (Integer.parseInt(serial) -1));
-
-
-		//-- 기존의 bookmark 정보를 가져온다.
-		bookmarkVO = bookmarkService.viewBookmark(bookmarkVO).getReturnVO();
-
-		String oldBlockInfoString = bookmarkVO.getStudyBlockInfo();
-		Map<String, Object> oldBlockInfo = null;
-		if(ValidationUtils.isEmpty(oldBlockInfoString)) {
-			oldBlockInfo = new LinkedHashMap<String, Object>();
-			for(int i=0; i < blockCount; i++) {
-				oldBlockInfo.put("b"+i, "0");
-				oldBlockInfo.put("t"+i, "0");
-				oldBlockInfo.put("p"+i, "0");
-			}
-		} else {
-			oldBlockInfo = (Map)JsonUtil.getJsonObject(oldBlockInfoString).get("blocks");
-		}
-
-		int totalReadRatio = 0;
-		int prgrRatio = 0;
-		int totalConnTime = 0;
-
-		Map<String, Object> saveBlockInfo = new LinkedHashMap<String, Object>();
-
-		for(int i=0; i < blockCount; i++) {
-			String oldBlock = (String)oldBlockInfo.get("b"+i);
-			int oldBlockTime = Integer.parseInt((String)oldBlockInfo.get("t"+i));
-			int oldBlockRatio = Integer.parseInt((String)oldBlockInfo.get("p"+i));
-
-			String newBlock = (String)blockArray.get("b"+i);
-			int newBlockTime = Integer.parseInt((String)blockArray.get("t"+i));
-			int newBlockRatio = Integer.parseInt((String)blockArray.get("p"+i));
-
-			//-- 기존과 신규 구간 정보 조합
-			if("1".equals(oldBlock)) { //-- 기존에 본 기록이 있는 경우
-				saveBlockInfo.put("b"+i, oldBlock);
-			} else {
-				saveBlockInfo.put("b"+i, newBlock);
-			}
-			int saveBlockTime = oldBlockTime + newBlockTime;
-			int saveBlockRatio = oldBlockRatio + newBlockRatio;
-			if(saveBlockTime > blockTime) saveBlockTime = blockTime;
-			if(saveBlockRatio > 100) saveBlockRatio = 100;
-			saveBlockInfo.put("t"+i, Integer.toString(saveBlockTime));
-			saveBlockInfo.put("p"+i, Integer.toString(saveBlockRatio));
-
-			int readRatio = saveBlockRatio;
-			if(readRatio > 100) readRatio = 100;
-			totalReadRatio += readRatio;
-		}
-		prgrRatio = Math.round(totalReadRatio / blockCount);
-
-		Map<String, Object> finalBlockInfo = new LinkedHashMap<String, Object>();
-		finalBlockInfo.put("block_count", Integer.toString(blockCount));
-		finalBlockInfo.put("blocks", saveBlockInfo);
-
-		totalConnTime = bookmarkVO.getConnTotTm() + sessionPlayTime;
-
-		//-- 신규 정보 셋팅
-		bookmarkVO.setConnTotTm(totalConnTime);
-		bookmarkVO.setPrgrRatio(prgrRatio);
-		bookmarkVO.setSeekTime(lastPlayAt);
-		bookmarkVO.setModNo("kollus");
-		bookmarkVO.setConnTm(Integer.parseInt(playTime));
-		bookmarkVO.setStudyBlockInfo(JsonUtil.getJsonString(finalBlockInfo));
-
-		if("0".equals(serial)) {
-			//-- 첫번째 로그인 경우만 접속수 증가
-			bookmarkVO.setConnCnt(bookmarkVO.getConnCnt() + 1);
-		}
-
-		//--- bookmark 정보 저장
-		bookmarkService.editBookmark(bookmarkVO);
-
-        response.setStatus(200);
-		return "home/lecture/bookmark/kollus_callback";
-	}
-
-	/**
 	 * 교재 목차 목록 조회 (Json 형태로 반환)
 	 * @param request
 	 * @return
@@ -1790,6 +1642,13 @@ public class BookmarkLectureController
 		usrloginVo.setUserId(userId);
 		String idCheck = usrUserInfoService.selectExceptionIdCheck(usrloginVo);
 		
+		//국비지원(산인공 연계 과정) 확인 여부
+		CourseVO courseVo = new CourseVO();
+		String crsCreCd = vo.getCrsCreCd();
+		courseVo.setCrsCreCd(crsCreCd);
+		ProcessResultVO<CourseVO> resultCourseVO = courseService.selectCrsSvcTypeCre(courseVo);
+		CourseVO checkVO = resultCourseVO.getReturnVO();
+		
 		//북마크 모든 정보 가져 옴
 		ProcessResultVO<BookmarkVO> resultVO = new ProcessResultVO<BookmarkVO>();
 		resultVO = bookmarkService.selectBookmarkInfo(vo);
@@ -1806,34 +1665,25 @@ public class BookmarkLectureController
 		 004 : 진행단계 평가 응시 후 수강 가능 알림
 		*/
 		
-		//1. 입과이면
-		if(returnVO.getSbjBookmarkCnt() == 0) {
-			//심사용 예외아이디 여부 확인
-			if(idCheck.equals("Y")) {
-				returnVO.setReturnValueCheck("002");
-			}else {
-				returnVO.setReturnValueCheck("000");
-			}
-		}else {
-			//2. 일일 학습시간 초과
-			if(!returnVO.getTodayStudyYn().equals("Y")) {
-				returnVO.setReturnValueCheck("003");
-			}else {
-				//진행단계평가  없는 경우 (미공개 포함)
-				if(returnVO.getStareLecCount() == 0) {
-					if(lec8Count == 0) {
-						if(idCheck.equals("Y")) {
-							returnVO.setReturnValueCheck("002");
-						}else {
-							returnVO.setReturnValueCheck("001");
-						}
-					}else {
-						returnVO.setReturnValueCheck("002");
-					}
+		if(!(checkVO.getCrsSvcType().equals("R") && checkVO.getCrsOperMthd().equals("OF"))) {
+			//국비지원(산인공 연계 과정)이며 온라인 과정인 경우
+			returnVO.setReturnValueCheck("002");
+		}else{
+			//1. 입과이면
+			if(returnVO.getSbjBookmarkCnt() == 0) {
+				//심사용 예외아이디 여부 확인
+				if(idCheck.equals("Y")) {
+					returnVO.setReturnValueCheck("002");
 				}else {
-					//진행단계평가  있는 경우
-					if(returnVO.getStareLecCount()> returnVO.getPrgrLecCount()) {
-						//응시 가능 진도 수 확인
+					returnVO.setReturnValueCheck("000");
+				}
+			}else {
+				//2. 일일 학습시간 초과
+				if(!returnVO.getTodayStudyYn().equals("Y")) {
+					returnVO.setReturnValueCheck("003");
+				}else {
+					//진행단계평가  없는 경우 (미공개 포함)
+					if(returnVO.getStareLecCount() == 0) {
 						if(lec8Count == 0) {
 							if(idCheck.equals("Y")) {
 								returnVO.setReturnValueCheck("002");
@@ -1844,10 +1694,9 @@ public class BookmarkLectureController
 							returnVO.setReturnValueCheck("002");
 						}
 					}else {
-						//진행단계평가  응시 여부 확인
-						if(returnVO.getStareSemiExam() == 0) {	
-							returnVO.setReturnValueCheck("004");
-						}else {
+						//진행단계평가  있는 경우
+						if(returnVO.getStareLecCount()> returnVO.getPrgrLecCount()) {
+							//응시 가능 진도 수 확인
 							if(lec8Count == 0) {
 								if(idCheck.equals("Y")) {
 									returnVO.setReturnValueCheck("002");
@@ -1857,11 +1706,27 @@ public class BookmarkLectureController
 							}else {
 								returnVO.setReturnValueCheck("002");
 							}
+						}else {
+							//진행단계평가  응시 여부 확인
+							if(returnVO.getStareSemiExam() == 0) {	
+								returnVO.setReturnValueCheck("004");
+							}else {
+								if(lec8Count == 0) {
+									if(idCheck.equals("Y")) {
+										returnVO.setReturnValueCheck("002");
+									}else {
+										returnVO.setReturnValueCheck("001");
+									}
+								}else {
+									returnVO.setReturnValueCheck("002");
+								}
+							}
 						}
 					}
 				}
 			}
 		}
+		
 		return JsonUtil.responseJson(response, returnVO);
 	}
 	
@@ -2003,8 +1868,10 @@ public class BookmarkLectureController
 			HttpServletRequest request,	HttpServletResponse response) throws Exception {
 		commonVOProcessing(vo, request);
 			ProcessResultVO<CreateCourseVO> resultVO = new ProcessResultVO<CreateCourseVO>();
-		
-			String sid = RedisUtil.getValue(Constants.REDIS_NAMESPACE+":SID:"+vo.getCrsCreCd());
+			String sid = "";
+			if (Constants.REDIS_CHECK_YN.equals("Y")) {
+				sid = RedisUtil.getValue(Constants.REDIS_NAMESPACE+":SID:"+vo.getCrsCreCd());
+			}
 			if(sid == null || sid == "") {
 				resultVO.setResult(-1);
 			} else {

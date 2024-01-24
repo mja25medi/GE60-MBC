@@ -76,7 +76,6 @@ public class UserAttendController extends GenericController {
 		
 		//18시 이후일 시 입실 불가
 		SimpleDateFormat timeFmt = new SimpleDateFormat("HHmmss");
-		System.out.println(timeFmt.format(DateTimeUtil.getCurrentDate()));
 		String currentTime = timeFmt.format(DateTimeUtil.getCurrentDate());
 		int compare = currentTime.compareTo("180000");
 		if(compare>0) {
@@ -124,7 +123,6 @@ public class UserAttendController extends GenericController {
 		
 		//18시 이전일 시 퇴실 불가
 		SimpleDateFormat timeFmt = new SimpleDateFormat("HHmmss");
-		System.out.println(timeFmt.format(DateTimeUtil.getCurrentDate()));
 		String currentTime = timeFmt.format(DateTimeUtil.getCurrentDate());
 		int compare = currentTime.compareTo("180000");
 		if(compare<0) {

@@ -170,6 +170,7 @@ public class Constants {
 
 	// ASP 관련 설정
 	public static final String  SAAS_ORGNM				= "ORGNM";
+	public static final String  SAAS_DOMAINNM			= "DOMAINNM";
 	public static final String  SAAS_ORGCD				= "ORGCD";
 	public static final String  SAAS_LAYOUT_TPL			= "LAYOUTTPL";
 	public static final String  SAAS_LAYOUT_TPL_TYPE	= "TYLTYPE";
@@ -296,8 +297,6 @@ public class Constants {
 	//-- Mediaplayer config
 	public static final String MEDIAPLAYER			= framework.getString("framework.media.player");    //-- 시스템에서 사용하는 Media Player (flowplayer)
 	public static final String FLOWPLAYER_KEY		= framework.getString("framework.flowplayer.key"); //-- flowplayer 설정 시에만 사용
-	public static final String KOLLUS_API_URL		= framework.getString("framework.kollus.api.url"); //-- kollus 설정 시에만 사용
-	public static final String KOLLUS_PLAYER_URL	= framework.getString("framework.kollus.player.url"); //-- kollus 설정 시에만 사용
 
 	//-- Webeditor 관련 설정
 	public static final String WEBEDITOR_YSEYN		= framework.getString("framework.webeditor.useyn");
@@ -319,27 +318,6 @@ public class Constants {
 	public static final String THUNDER_AUTO_MAILID 	= framework.getString("framework.mail.thundermail.automail.mailid");
 	public static final String THUNDER_MASS_APIURL 	= framework.getString("framework.mail.thundermail.massmail.apiurl");
 	public static final String THUNDER_MASS_USERCD 	= framework.getString("framework.mail.thundermail.massmail.usercode");
-	
-	//-- 다이퀘스트 검색엔진 설정
-	public static final String SEARCH_IP 		= framework.getString("framework.search.ip");
-	public static final String SEARCH_PORT		= framework.getString("framework.search.port");
-	
-	//-- 통합검색 sso  설정
-	public static final String SSO_ORG 		= framework.getString("framework.sso.org");
-	public static final String SSO_FRONT_DOMAIN 		= framework.getString("framework.sso.front.domain");
-	public static final String SSO_MANAGE_DOMAIN 		= framework.getString("framework.sso.manage.domain");
-	public static final String SSO_FRONT_LOGIN_CHECK_URL 		= framework.getString("framework.sso.front.login.check.url");
-	public static final String SSO_FRONT_LOGIN_URL 		= framework.getString("framework.sso.front.login.url");
-	public static final String SSO_FRONT_LOGOUT_URL 		= framework.getString("framework.sso.front.logout.url");
-	public static final String SSO_FRONT_USER_SEARCH_URL 		= framework.getString("framework.sso.front.user.search.url");
-	public static final String SSO_FRONT_JOIN_URL 		= framework.getString("framework.sso.front.join.url");
-	public static final String SSO_FRONT_IDPW_SEARCH_URL 		= framework.getString("framework.sso.front.idpw.search.url");
-	public static final String SSO_MANAGE_LOGIN_CHECK_URL 		= framework.getString("framework.sso.manage.login.check.url");
-	public static final String SSO_MANAGE_LOGIN_URL 		= framework.getString("framework.sso.manage.login.url");
-	public static final String SSO_MANAGE_LOGOUT_URL 		= framework.getString("framework.sso.manage.logout.url");
-	public static final String SSO_MANAGE_USER_SEARCH_URL 		= framework.getString("framework.sso.manage.user.search.url");
-	public static final String SSO_MANAGE_USER_LIST_URL 		= framework.getString("framework.sso.manage.user.list.url");
-	public static final String SSO_MANAGE_HEALTH_CHECK_URL		= framework.getString("framework.sso.manage.health.check.url");
 	
 	public static final String KEY_SNS_JUSO = framework.getString("framework.juso.site.key");
 	public static final String JUSO_SITE_DOMAIN = framework.getString("framework.juso.site.domain");

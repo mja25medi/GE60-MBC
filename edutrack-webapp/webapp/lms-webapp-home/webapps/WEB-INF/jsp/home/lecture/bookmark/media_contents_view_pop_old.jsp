@@ -20,45 +20,6 @@
 </c:if>
 
 <c:if test="${bookmarkVO.todayStudyYn eq 'Y' }">
-	<c:if test="${playerDiv eq 'kollus' }">
-<html>
-<head>
-	<base target="_self"></base>
-	<meta http-equiv="Content-Type"	content="text/html;	charset=UTF-8">
-	<meta http-equiv="Expires" content="-1">
-	<meta http-equiv="Pragma" content="no-cache">
-	<meta http-equiv="Cache-Control" content="No-Cache">
-
-	<title>Contents View Page</title>
-
-	<meditag:js	src="/bootstrap/bower_components/jquery/dist/jquery.min.js" />
-	<meditag:js	src="/bootstrap/bower_components/jquery/dist/jquery.form.js" />
-	<meditag:js	src="/js/scorm/bookmark.js" />
-
-	<style type="text/css">
-	<!--
-		html,body {
-			height:100%;
-			overflow:hidden;
-		}
-		A:link    {color:#666666;text-decoration:none;font-size:9pt;}
-		A:visited {color:#666666;text-decoration:nonefont-size:9pt;}
-		A:active  {color:#666666;text-decoration:nonefont-size:9pt;}
-		A:hover   {color:#003399;text-decoration:underline;font-size:9pt;}
-	-->
-	</style>
-
-	<script type="text/javascript">
-		window.onunload = function(){
-			opener.listContents();
-		}
-	</script>
-</head>
-<body style="margin:0px;">
-	<iframe id='previewFrame' name='previewFrame' style="width:100%; height:100%" frameborder='0' scrolling='no' src='${playerUrl}/s?key=${mediaToken}&uservalue0=${currentDateTime}'/>
-</body>
-</html>
-	</c:if>
 	<c:if test="${playerDiv eq 'common' }">
 		<c:choose>
 			<c:when test="${fileExt eq 'mp4'}">

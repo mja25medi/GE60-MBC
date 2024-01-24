@@ -44,7 +44,6 @@ import egovframework.edutrack.modules.course.createcoursesubject.service.CreateO
 import egovframework.edutrack.modules.course.createcourseteacher.service.CreateCourseTeacherService;
 import egovframework.edutrack.modules.course.subject.service.OnlineSubjectVO;
 import egovframework.edutrack.modules.course.subject.service.SubjectService;
-import egovframework.edutrack.modules.kollus.util.KollusMediaTokenUtil;
 import egovframework.edutrack.modules.lecture.assignment.service.AssignmentService;
 import egovframework.edutrack.modules.lecture.assignment.service.AssignmentVO;
 import egovframework.edutrack.modules.lecture.bookmark.service.BookmarkService;
@@ -341,7 +340,6 @@ public class ContentsLectureController
 			orgInfoVO.setOrgCd(orgCd);
 			orgInfoVO = orgOrgInfoService.view(orgInfoVO);
 			request.setAttribute("kollusUseYn", orgInfoVO.getKollusUseYn());
-			request.setAttribute("kollusPlayerUrl", Constants.KOLLUS_PLAYER_URL);
 			request.setAttribute("cntsTypeCd", workType);
 
 			forwardUrl = "home/lecture/contents/left_media_cnts_div";
@@ -416,26 +414,17 @@ public class ContentsLectureController
 		request.setAttribute("uldStsCd", "complete");
 		request.setAttribute("playerDiv", vo.getPlayerDiv());
 		if("VOD".equals(vo.getCntsTypeCd())) {
-			if("kollus".equals(vo.getPlayerDiv())) {
-				//-- Player가 콜루스 인 경우
-				//-- 미디어 토큰을 받아 온다.
-				String mediaToken = KollusMediaTokenUtil.getKollusMediaToken(orgInfoVO.getKollusKeyCd(),
-						vo.getMediaCntsKey(), "", "");
-				request.setAttribute("playerUrl", Constants.KOLLUS_PLAYER_URL);
-				request.setAttribute("mediaToken", mediaToken);
-			} else {
-				String ext = FileUtil.getFileExtention(vo.getFileNm());
-				String fileExt = "none";
-				if(Constants.MEDIA_FILE_MP3.contains(ext)) {
-					fileExt = "mp3";
-				} else if(Constants.MEDIA_FILE_MP4.contains(ext)) {
-					fileExt = "mp4";
-				}
-				request.setAttribute("filePath", "/contents"+vo.getFilePath());
-				request.setAttribute("fileName", vo.getFileNm());
-				request.setAttribute("fileExt", fileExt);
-				request.setAttribute("flowplayerKey", Constants.FLOWPLAYER_KEY);
+			String ext = FileUtil.getFileExtention(vo.getFileNm());
+			String fileExt = "none";
+			if(Constants.MEDIA_FILE_MP3.contains(ext)) {
+				fileExt = "mp3";
+			} else if(Constants.MEDIA_FILE_MP4.contains(ext)) {
+				fileExt = "mp4";
 			}
+			request.setAttribute("filePath", "/contents"+vo.getFilePath());
+			request.setAttribute("fileName", vo.getFileNm());
+			request.setAttribute("fileExt", fileExt);
+			request.setAttribute("flowplayerKey", Constants.FLOWPLAYER_KEY);
 		}else if("CDN".equals(vo.getCntsTypeCd())) {
 		
 			String ext = FileUtil.getFileExtention(vo.getFileNm());

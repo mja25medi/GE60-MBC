@@ -27,6 +27,8 @@ import egovframework.edutrack.modules.course.course.service.CourseService;
 import egovframework.edutrack.modules.course.course.service.CourseVO;
 import egovframework.edutrack.modules.course.coursesubject.service.CrsOnlnSbjService;
 import egovframework.edutrack.modules.course.coursesubject.service.CrsOnlnSbjVO;
+import egovframework.edutrack.modules.course.creCrsResh.service.CreCrsReshService;
+import egovframework.edutrack.modules.course.creCrsResh.service.CreCrsReshVO;
 import egovframework.edutrack.modules.course.createcourse.service.CreateCourseService;
 import egovframework.edutrack.modules.course.createcourse.service.CreateCourseVO;
 import egovframework.edutrack.modules.course.createcoursesubject.service.CreateCourseSubjectService;
@@ -38,6 +40,10 @@ import egovframework.edutrack.modules.course.createcoursetimetable.service.Timet
 import egovframework.edutrack.modules.course.subject.service.LecRoomVO;
 import egovframework.edutrack.modules.course.subject.service.OnlineSubjectVO;
 import egovframework.edutrack.modules.course.subject.service.SubjectService;
+import egovframework.edutrack.modules.lecture.assignment.service.AssignmentService;
+import egovframework.edutrack.modules.lecture.assignment.service.AssignmentVO;
+import egovframework.edutrack.modules.lecture.exam.service.ExamService;
+import egovframework.edutrack.modules.lecture.exam.service.ExamVO;
 import egovframework.edutrack.modules.org.info.service.OrgOrgInfoService;
 import egovframework.edutrack.modules.system.code.service.SysCodeVO;
 import egovframework.edutrack.modules.system.config.service.SysCfgService;
@@ -86,6 +92,16 @@ public class CourseCreateCourseManageController extends GenericController{
 	
 	@Autowired @Qualifier("crsOnlnSbjService")
 	private CrsOnlnSbjService	crsOnlnSbjService;
+	
+	@Autowired @Qualifier("creCrsReshService")
+	private CreCrsReshService	creCrsReshService;
+	
+	@Autowired @Qualifier("examService")
+	private ExamService	examService;
+	
+	@Autowired @Qualifier("assignmentService")
+	private AssignmentService 			assignmentService;
+	
 
 	private static final String CREATE_COURSE_MAIN		= "create_course_main";
 	private static final String COURSE_LIST				= "course_list";
@@ -395,6 +411,34 @@ public class CourseCreateCourseManageController extends GenericController{
 
 		CreateCourseVO ccVO = createCourseService.viewCreateCourse(vo).getReturnVO();
 		ProcessResultVO<?> resultVO = new ProcessResultVO<Object>();
+		
+		CreCrsReshVO ccrVO = new CreCrsReshVO();
+		ccrVO.setCrsCreCd(ccVO.getCrsCreCd());
+		List<CreCrsReshVO> reshList = creCrsReshService.list(ccrVO).getReturnList();
+		if(!reshList.isEmpty()) {
+			resultVO.setResult(-1);
+			resultVO.setMessage("등록된 설문이 있습니다. 개설과정을 삭제 할 수 없습니다.");
+			return JsonUtil.responseJson(response, resultVO);
+		}
+		
+		ExamVO evo = new ExamVO();
+		evo.setCrsCreCd(ccVO.getCrsCreCd());
+		List<ExamVO> examList = examService.listExam(evo).getReturnList();
+		if(!examList.isEmpty()) {
+			resultVO.setResult(-1);
+			resultVO.setMessage("등록된 시험이 있습니다. 개설과정을 삭제 할 수 없습니다.");
+			return JsonUtil.responseJson(response, resultVO);
+		}
+		
+		AssignmentVO avo = new AssignmentVO();
+		avo.setCrsCreCd(ccVO.getCrsCreCd());
+		List<AssignmentVO> asmtList = assignmentService.listAssignment(avo).getReturnList();
+		if(!asmtList.isEmpty()) {
+			resultVO.setResult(-1);
+			resultVO.setMessage("등록된 과제가 있습니다. 개설과정을 삭제 할 수 없습니다.");
+			return JsonUtil.responseJson(response, resultVO);
+		}
+		
 		if(ccVO.getStuCnt() > 0) {
 			resultVO.setResult(-1);
 			resultVO.setMessage(getMessage(request, "course.message.createcourse.alert.delete1").replace("\\n\\n", "\r\n"));

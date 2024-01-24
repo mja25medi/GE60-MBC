@@ -42,7 +42,7 @@
 							<div id="contentsList" style="width:100%;height:690px;overflow:auto;border:2px solid #4FADBC;font-size:14px;">
 							
 							</div>
-							<div id="contentsWriteArea" style="border:2px solid #4FADBC;width:100%;height:283px;margin-top:7px;">
+							<div id="contentsWriteArea" style="border:2px solid #4FADBC;width:100%;height:310px;margin-top:7px;">
 								<div id="contentsWriteForm" style="width:100%;display:none;">
 									<form id="contentsForm" name="contentsForm" class="form-inline" onsubmit="return false">
 									<input type="hidden" name="sbjCd" value="${vo.sbjCd}" />

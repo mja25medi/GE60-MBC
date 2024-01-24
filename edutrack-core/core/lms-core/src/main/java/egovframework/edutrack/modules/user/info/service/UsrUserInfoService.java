@@ -78,16 +78,6 @@ public interface UsrUserInfoService {
 			throws Exception;
 	
 	/**
-	 * 사용자 정보를 가져온다. 로그인시에 사용
-	 * - 사용자 상태가 U인 사용자만 가져온다.
-	 * - 입력한 패스워드를 암호화 하여 리턴한다.
-	 * @param UsrUserInfoVO vo
-	 * @return  ProcessResultDTO
-	 */
-	public abstract UsrUserInfoVO viewForSsoLogin(UsrUserInfoVO vo)
-			throws Exception;
-
-	/**
 	 * 사용자 정보 등록
 	 * @param UsrUserInfoVO vo
 	 * @param userInfoChgDivCd
@@ -236,16 +226,6 @@ public interface UsrUserInfoService {
 	 */
 	@HrdApiUsrUserInfo(Type.UPDATE)
 	public abstract String updateSnsDiv(UsrUserInfoVO vo, String userInfoChgDivCd)
-			throws Exception;
-	
-	/**
-	 * 사용자 정보 수정
-	 * @param UsrUserInfoVO vo
-	 * @param int
-	 * @return  ProcessResultDTO
-	 */
-	@HrdApiUsrUserInfo(Type.UPDATE)
-	public abstract int editSso(UsrUserInfoVO vo, String userInfoChgDivCd)
 			throws Exception;
 	
 	/**

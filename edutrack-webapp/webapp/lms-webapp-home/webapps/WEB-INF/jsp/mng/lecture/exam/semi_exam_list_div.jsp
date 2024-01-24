@@ -40,7 +40,7 @@
 							<meditag:dateformat type="1" delimeter="." property="${item.examStartDttm}"/> <meditag:dateformat type="7" delimeter="." property="${item.examStartDttm}"/> ~ <meditag:dateformat type="1" delimeter="." property="${item.examEndDttm}"/> <meditag:dateformat type="7" delimeter="." property="${item.examEndDttm}"/>
 						</c:when>
 						<c:otherwise>
-							강의  ${item.stareLecCount}강 수강 후 
+							강의  ${item.stareLecCount}강 수강 후
 						</c:otherwise>
 					</c:choose>
 				</td>

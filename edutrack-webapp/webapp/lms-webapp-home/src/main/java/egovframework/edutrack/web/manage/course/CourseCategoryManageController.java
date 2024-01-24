@@ -183,7 +183,6 @@ public class CourseCategoryManageController extends GenericController{
 		commonVOProcessing(vo, request);
 		
 		
-		System.out.println(vo.getCrsCtgrCd() + "===============");
 		ProcessResultVO<CourseCategoryVO> resultVO = courseCategoryService.viewCategory(vo.getCrsCtgrCd());
 		vo = resultVO.getReturnVO();
 		request.setAttribute("vo", vo);

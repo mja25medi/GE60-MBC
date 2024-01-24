@@ -20,7 +20,6 @@ import egovframework.edutrack.modules.course.createcoursesubject.service.CreateO
 import egovframework.edutrack.modules.course.createcoursesubject.service.CreateOnlineSubjectVO;
 import egovframework.edutrack.modules.course.subject.service.OfflineSubjectVO;
 import egovframework.edutrack.modules.course.subject.service.OnlineSubjectVO;
-import egovframework.edutrack.modules.student.subjectresult.service.impl.SubjectEduResultMapper;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
@@ -38,9 +37,6 @@ public class CreateCourseSubjectServiceImpl extends EgovAbstractServiceImpl impl
 	@Resource(name="createCourseSubjectMapper")
 	private CreateCourseSubjectMapper createCourseSubjectMapper;
 
-	@Resource(name="subjectEduResultMapper")
-	private SubjectEduResultMapper subjectEduResultMapper;
-	
 	@Resource(name="contentsMapper")
 	private ContentsMapper contentsMapper;
 
@@ -140,10 +136,6 @@ public class CreateCourseSubjectServiceImpl extends EgovAbstractServiceImpl impl
 	 */
 	@Override
 	public	ProcessResultVO<CreateOfflineSubjectVO> deleteOfflineSubject(CreateOfflineSubjectVO iOfflineSubjectVO) throws Exception {
-		//오프라인 과목 결과 정보 삭제
-		//SubjectEduResultVO subjectEduResultVO = new SubjectEduResultVO();
-		//subjectEduResultVO.setCrsCreCd(iOfflineSubjectVO.getCrsCreCd());
-		//subjectEduResultMapper.deleteOflnSbjResult(subjectEduResultVO);
 
 		//오프라인 과목 삭제
 		createCourseOfflineSubjectMapper.delete(iOfflineSubjectVO);
@@ -375,11 +367,6 @@ public class CreateCourseSubjectServiceImpl extends EgovAbstractServiceImpl impl
 	 */
 	@Override
 	public 	ProcessResultVO<CreateOnlineSubjectVO> deleteOnlineSubject(CreateOnlineSubjectVO iOnlineSubjectVO) throws Exception {
-
-		//온라인 과목 결과 정보 삭제
-		//SubjectEduResultVO subjectEduResultVO = new SubjectEduResultVO();
-		//subjectEduResultVO.setCrsCreCd(iOnlineSubjectVO.getCrsCreCd());
-		//subjectEduResultMapper.deleteOnlnSbjResult(subjectEduResultVO);
 
 		//온라인 과목 삭제
 		createCourseOnlineSubjectMapper.delete(iOnlineSubjectVO);

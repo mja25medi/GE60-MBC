@@ -32,7 +32,7 @@
                            			<c:when test="${item.examStareTypeCd eq 'R' }">
 	                                	<li>
 	                                		<strong>시험기간</strong>
-	                              			<meditag:dateformat type="8" delimeter="." property="${item.examStartDttm}"/>~<meditag:dateformat type="8" delimeter="." property="${item.examEndDttm}"/>
+	                              			${item.examStartDttm} ${item.examStartHour }:${item.examStartMin } ~ ${item.examEndDttm} ${item.examEndHour }:${item.examEndMin }
 	                                	</li>
                                		</c:when>
                            			<c:otherwise>

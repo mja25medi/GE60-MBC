@@ -29,7 +29,7 @@
                                 <td class="m_hidden">${pageInfo.totalRecordCount - ((pageInfo.currentPageNo- 1) * pageInfo.recordCountPerPage) - status.index }</td>
                                 <td class="title" data-title="회차" style="text-align: center;" >${item.parUnitNm }</td>
                                 <td class="title" style="text-align: center;">
-									<a href="javascript:readQstn(${item.qnaSn })">
+									<a href="javascript:readQstn(${item.qnaSn }, '${item.crsCreCd }')">
 									${fn:substring(item.qnaTitle,0, 30)}<c:if test="${fn:length(item.qnaTitle) > 30 }">...</c:if>
 								</a>
 								</td>

@@ -580,7 +580,6 @@ public class MainHomeController extends GenericController {
 			}
 
 			String requestUrl = request.getRequestURL().toString();
-//			System.out.println("requestUrl=="+requestUrl);
 
 			// 로그인 리다이렉트 시 메시지 세팅
 			if(isLoginRedirect(mcd)) {

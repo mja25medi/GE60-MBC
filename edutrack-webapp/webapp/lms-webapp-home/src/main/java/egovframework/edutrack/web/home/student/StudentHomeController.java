@@ -1012,7 +1012,6 @@ public class StudentHomeController
 	@PostMapping(value="/addBasket")
 	public String addBasket(PaymentVO vo, Map commandMap, ModelMap model,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++가나다");
 		commonVOProcessing(vo, request);
 		
 		ProcessResultVO<PaymentVO> resultVO = new ProcessResultVO<>();
@@ -1228,13 +1227,14 @@ public class StudentHomeController
 
 		//결제 모듈 호출
 		String returnPaymNo = "";
+		Map<String,String> paramMap = new Hashtable<>();
 		try{
 
 			//#############################
 			// 인증결과 파라미터 일괄 수신
 			//#############################
 			request.setCharacterEncoding("UTF-8");
-			Map<String,String> paramMap = new Hashtable<String,String>();
+			
 			Enumeration elems = request.getParameterNames();
 
 			String temp = "";
@@ -1493,7 +1493,7 @@ public class StudentHomeController
 			}
 
 		}catch(Exception e){
-			System.out.println(e.getMessage());
+			log.error(e.getMessage());
 			return enrollBasketResultRedirect("200", e.getMessage());
 		}
 		
@@ -1746,7 +1746,7 @@ public class StudentHomeController
 			}
 			
 		}catch(Exception e){
-			System.out.println(e.getMessage());
+			log.error(e.getMessage());
 			return enrollBasketResultRedirect("100", e.getMessage());
 		}
 		
@@ -1779,10 +1779,6 @@ public class StudentHomeController
 			setAlertMessage(request, "로그인 후 이용바랍니다.");
 			return "redirect:"+ new URLBuilder("/home/main/indexMain").toString();
 		}
-		
-		//System.out.println(request.getParameter("errMsgCode"));
-		//System.out.println(request.getParameter("errMsg"));
-		
 		
 		//결제 결과 받아서 paym_cd 받아서, 가상계좌인 경우 보여줘야 할지??
 		//결제 내역 페이지에서 보여주면 될지?
@@ -2424,7 +2420,9 @@ public class StudentHomeController
 					log.error("[수강생 이니시스 전체 환불 오류] 수강생번호 : " + studentVO.getStdNo() + ", 메시지 : 이니시스 환불 후 DB 처리 실패");
 					throw new ServiceProcessException("환불 처리하지 못하였습니다.\n결제 금액은 환불 되고, 홈페이지에서 수강 취소가 되지 않는 경우 담당자에게 연락바랍니다.");
 				}
-			}else {
+			}else if("01".equals(resultCode)) {
+				setAlertMessage(request, "이미 취소된 거래입니다.");
+			} else {
 				log.error("[수강생 이니시스 전체 환불 오류] resultCode : " + resultCode  + ", stdNo : " + studentVO.getStdNo());
 				throw new ServiceProcessException("[결제 취소 오류]\n 메시지 : " + StringUtil.nvl(cancelResultDTO.getResultMsg()));
 			}

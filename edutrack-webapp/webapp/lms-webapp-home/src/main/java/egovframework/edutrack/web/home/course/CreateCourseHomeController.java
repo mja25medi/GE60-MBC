@@ -1,8 +1,7 @@
 package egovframework.edutrack.web.home.course;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +49,6 @@ import egovframework.edutrack.modules.course.subject.service.SubjectService;
 import egovframework.edutrack.modules.opencourse.course.service.OpenCrsService;
 import egovframework.edutrack.modules.opencourse.course.service.OpenCrsVO;
 import egovframework.edutrack.modules.org.menu.service.OrgMenuVO;
-import egovframework.edutrack.modules.org.page.service.OrgPageVO;
 import egovframework.edutrack.modules.student.result.service.EduResultService;
 import egovframework.edutrack.modules.student.result.service.EduResultVO;
 import egovframework.edutrack.modules.system.code.service.SysCodeVO;
@@ -1120,5 +1118,28 @@ public class CreateCourseHomeController extends GenericController {
 		model.addAttribute("createCourseVO", resultVO);
 		return "home/course/createcourse/view_course_enroll_info_div";
 	}
+	
+	
+	/**
+	 *
+	 * 국비지원(산인공 연계 과정) 확인 여부
+	 * @return  ProcessResultVO
+	 */
+	@RequestMapping(value="/selectCrsSvcTypeCheck")
+	public String selectCrsSvcTypeCheck(CreateCourseVO vo, Map commandMap, ModelMap model,
+			HttpServletRequest request,	HttpServletResponse response) throws Exception {
+
+		CourseVO courseVo = new CourseVO();
+		String crsCreCd = vo.getCrsCreCd();
+		courseVo.setCrsCreCd(crsCreCd);
+		ProcessResultVO<CourseVO> resultCourseVO = courseService.selectCrsSvcTypeCre(courseVo);
+		CourseVO checkVO = resultCourseVO.getReturnVO();
+		
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("crsSvcType", checkVO.getCrsSvcType());
+		map.put("crsOperMthd", checkVO.getCrsOperMthd());
+		return JsonUtil.responseJson(response, map);
+	}
+
 	
 }

@@ -17,7 +17,6 @@
 			<mapping action="/mng/course/category/addFormCategorySub" />	
 			<mapping action="/mng/course/category/sortFormCategory" />	
 			<mapping action="/mng/course/category/editFormCategory" />	
-			<mapping action="/mng/library/cnts/media/kollus_upload" />	
 			
 		</tpl>
 		<tpl type="ifm">

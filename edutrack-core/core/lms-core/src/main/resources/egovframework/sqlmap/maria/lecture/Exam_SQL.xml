@@ -98,7 +98,89 @@
 		<!-- 시험의 목록을 반환한다.
 	 * 등록여부에 따라 시험 목록 반환
 	 * @param vo.regYn (등록여부)  -->
-		<include refid="listQuery" />
+		<![CDATA[
+		SELECT A.CRS_CRE_CD  
+		      , A.EXAM_SN  
+		      , A.EXAM_TITLE  
+		      , A.EXAM_CTS  
+		      , A.SEMI_EXAM_YN
+		      , A.EXAM_TYPE_CD  
+		      , A.EXAM_STARE_TYPE_CD  
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_START_DTTM,'%Y-%m-%d')) as EXAM_START_DTTM
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_START_DTTM,'%H')) AS EXAM_START_HOUR  
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_START_DTTM,'%i')) AS EXAM_START_MIN  
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_END_DTTM,'%Y-%m-%d')) as EXAM_END_DTTM
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_END_DTTM,'%H')) AS EXAM_END_HOUR  
+		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_END_DTTM,'%i')) AS EXAM_END_MIN  
+		      , (SELECT FN_GET_DATE_FORMAT(A.RSLT_CFRM_DTTM,'%Y-%m-%d')) as RSLT_CFRM_DTTM
+		      , (SELECT FN_GET_DATE_FORMAT(A.RSLT_CFRM_DTTM,'%H')) AS RSLT_CFRM_HOUR  
+		      , (SELECT FN_GET_DATE_FORMAT(A.RSLT_CFRM_DTTM,'%i')) AS RSLT_CFRM_MIN  
+		      , A.EXAM_STARE_TM  
+		      , A.EXAM_VIEW_TYPE_CD  
+		      , A.STARE_TM_USE_YN  
+		      , IFNULL(FN_GET_NULL(A.STARE_CRIT_PRGR_RATIO),0) AS STARE_CRIT_PRGR_RATIO
+		      , A.STARE_LEC_COUNT
+		      , A.STARE_LIMIT_CNT
+		      , (SELECT COUNT(*) 
+		      		FROM tb_lec_bookmark LEC, tb_crs_cre_crs_onln_sbj CRE
+		      		WHERE CRE.SBJ_CD = LEC.SBJ_CD
+		      		AND CRE.CRS_CRE_CD = A.CRS_CRE_CD
+		      		AND CRE.SBJ_CD =A.SBJ_CD
+		      		AND LEC.STD_NO = #{stdNo}
+		      		AND LEC.PRGR_RATIO > 90
+		      	) AS PRGR_LEC_COUNT
+	      	  , (SELECT SBJ_NM
+	      			FROM tb_crs_onln_sbj SBJ  
+	      			WHERE SBJ.SBJ_CD =A.SBJ_CD     			      	
+	      		) AS SBJ_NM
+		      , A.SEL_CNT
+		      , A.SEL_PNT
+		      , A.SHORT_CNT
+		      , A.SHORT_PNT
+		      , A.DES_CNT
+		      , A.DES_PNT
+		      , A.REG_YN  
+		      , A.REG_NO  
+		      , A.REG_DTTM  
+		      , A.MOD_NO  
+			  , (SELECT FN_GET_USER_NAME(A.MOD_NO)) AS MOD_NM  
+			  , (SELECT FN_GET_USER_NAME(A.REG_NO)) AS REG_NM  
+		      , A.MOD_DTTM  
+		      , IFNULL(( SELECT STARE_CNT  
+		          		FROM tb_lec_exam_stare  
+		          	   WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+		               	 AND STD_NO = #{stdNo}  
+		               	 AND EXAM_SN = A.EXAM_SN ),0) AS STARE_CNT  
+		      , ( SELECT END_DTTM  
+		          		FROM tb_lec_exam_stare  
+		          	   WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+		               	 AND STD_NO = #{stdNo}  
+		               	 AND EXAM_SN = A.EXAM_SN ) AS END_DTTM 
+		      , IFNULL(( SELECT RATE_YN 
+				        FROM tb_lec_exam_stare  
+		               WHERE CRS_CRE_CD = A.CRS_CRE_CD  
+		                 AND STD_NO = #{stdNo}  
+		                 AND EXAM_SN = A.EXAM_SN ),'N') AS RATE_YN  
+		      , CASE WHEN DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		                  BETWEEN A.EXAM_START_DTTM AND A.EXAM_END_DTTM  
+                     THEN 'Y' ELSE 'N' END AS CONN_YN	
+		      , CASE WHEN A.RSLT_CFRM_DTTM < DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		             THEN 'Y' ELSE 'N' END AS RSLT_YN  
+		      , (SELECT FN_GET_CRS_STD_PRGR(#{crsCreCd},#{stdNo})) AS STD_RATIO  
+		      , IFNULL(( (SELECT SUM(STR.TOT_GET_SCORE) FROM tb_lec_exam_stare STR WHERE STR.EXAM_SN = A.EXAM_SN AND STR.RATE_YN = 'Y') /
+		            	(SELECT COUNT(A.STD_NO) FROM tb_std_std A, tb_usr_user_info B, tb_usr_login C    
+		      				WHERE  B.USER_NO = C.USER_NO   
+		      				AND A.USER_NO = B.USER_NO   
+		      				AND A.CRS_CRE_CD = #{crsCreCd}   
+		      				AND C.USER_STS = 'U'   
+		      				AND A.ENRL_STS IN ('S','C') )  
+		      		),0) AS AVG_SCORE  
+		       ,  IFNULL((SELECT SUM(STR.TOT_GET_SCORE) FROM tb_lec_exam_stare STR  
+		      				WHERE STR.EXAM_SN = A.EXAM_SN AND STR.STD_NO = #{stdNo} AND STR.RATE_YN = 'Y'  
+		      		),0)  AS MY_SCORE  
+		   FROM tb_lec_exam A 
+		  WHERE A.CRS_CRE_CD = #{crsCreCd}
+		  ]]>
 		<if test = 'sbjCd != null and sbjCd != ""'>
 			    AND A.SBJ_CD = IFNULL(FN_GET_NULL(#{sbjCd}),A.SBJ_CD)  
 		</if>

@@ -35,10 +35,6 @@
 	request.setAttribute("USER_NO",UserBroker.getUserNo((HttpServletRequest)pageContext.getRequest()));
 	request.setAttribute("USER_NAME",UserBroker.getUserName((HttpServletRequest)pageContext.getRequest()));
 	request.setAttribute("MANAGE_DOMAIN",Constants.MGR_SITE_DOMAIN);
-	request.setAttribute("IS_SSO", WebUtil.isSSO(request));
-	request.setAttribute("SSO_JOIN_URL", Constants.SSO_FRONT_DOMAIN+Constants.SSO_FRONT_JOIN_URL);
-	request.setAttribute("SSO_LOGOUT_URL", Constants.SSO_FRONT_DOMAIN+Constants.SSO_FRONT_LOGOUT_URL);
-	request.setAttribute("SSO_MANAGE_DOMAIN", Constants.SSO_MANAGE_DOMAIN);
 	if(StringUtil.nvl((String)session.getAttribute("CONTEXT_ROOT")).equals("")==false)
 		request.setAttribute("CONTEXT_PATH", "/"+(String)session.getAttribute("CONTEXT_ROOT"));
 	

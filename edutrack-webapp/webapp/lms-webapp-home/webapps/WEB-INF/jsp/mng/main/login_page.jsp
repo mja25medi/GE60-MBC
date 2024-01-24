@@ -147,22 +147,4 @@
 		        return '{' + results.join(', ') + '}';
 		}
 	 
-	// sso 로그인 처리
-	function ssoLogin(userId, userPass, key, idx) {
-		var map = {};
-		map.cmd = "securityPwd";
-		map.userId = userId;
-		map.userPass = userPass;
-		map.ssoKey = Base64.decode(key);
-		
-		$.getJSON("<c:url value="/mng/main"/>", map, function(resultVO){
-				var jsonObj = new Object();
-				jsonObj.login_id = userId;
-				jsonObj.login_pw = resultVO.encUserPass;
-// 				jsonObj.idx = ssoIdx;
-				jsonObj.idx = idx;
-				sendSSOJson("login", jsonObj, "/AdminLogin");
-		});
-	}
-	
 </script>

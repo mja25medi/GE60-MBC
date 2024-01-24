@@ -331,7 +331,6 @@
 				<edutrack.database.url>jdbc:mariadb://182.252.182.15:3306/ge60_lms?autoReconnect=true&amp;allowMultiQueries=true</edutrack.database.url>
 				<edutrack.database.user_name>ge60_user</edutrack.database.user_name>
 				<edutrack.database.password>lmspass</edutrack.database.password>	
-				
 			
 				<!--  언어 관련 설정 -->
 				<edutrack.language.support>ko/en/ja</edutrack.language.support>
@@ -364,8 +363,8 @@
 				<edutrack.server_type>windows</edutrack.server_type><!-- windows, unix -->
 				<edutrack.url></edutrack.url>
 				<edutrack.fileserver.url></edutrack.fileserver.url>
-				<edutrack.path.attachfiles>D:/EDUTRACK_GE60/DevelWAS/dongguk/WebRepository/attachfiles</edutrack.path.attachfiles>
-				<edutrack.path.contents>D:/EDUTRACK_GE60/DevelWAS/dongguk/WebRepository/contents</edutrack.path.contents>
+				<edutrack.path.attachfiles>D:/EDUTRACK_GE60/DevelWAS/ge60/demo/WebRepository/attachfiles</edutrack.path.attachfiles>
+				<edutrack.path.contents>D:/EDUTRACK_GE60/DevelWAS/ge60/demo/WebRepository/contents</edutrack.path.contents>
 
 				<!-- 메일 서버 정보 -->
 				<edutrack.mail.agent>JavaMail</edutrack.mail.agent> <!-- JavaMail,  ThunderMail-->
@@ -392,7 +391,7 @@
 				<edutrack.mail.thundermail.massmail.usercode>7f70404cec14c2cd2b52d23620968768</edutrack.mail.thundermail.massmail.usercode>
 
 				<!-- KISA Keyfile Path -->
-				<kisa.keyfile.path>D:/EDUTRACK_GE60/DevelWAS/dongguk</kisa.keyfile.path>
+				<kisa.keyfile.path>D:/EDUTRACK_GE60/DevelWAS/ge60/demo</kisa.keyfile.path>
 
 				<!--  Exception DB LOG USE  -->
 				<edutrack.dblog.exception>use</edutrack.dblog.exception>
@@ -408,8 +407,6 @@
 				<!--  Mediaplayer Configration -->
 				<edutrack.media.player>flowplayer</edutrack.media.player> <!-- flowplayer -->
 				<edutrack.flowplayer.key></edutrack.flowplayer.key> <!-- flowplayer 일때만 사용 -->
-				<edutrack.kollus.api.url>http://api.kr.kollus.com</edutrack.kollus.api.url><!-- kollus 일때만 사용 -->
-				<edutrack.kollus.player.url>http://v.kr.kollus.com</edutrack.kollus.player.url><!-- kollus 일때만 사용 -->
 
 				<!--  Webeditor  -->
 				<edutrack.webeditor.useyn>Y</edutrack.webeditor.useyn>
@@ -491,19 +488,19 @@
 			<id>production</id>
 			<properties>
 				<!--  기본 도메인 및 프로덕트 설정 -->
-				<edutrack.product>https://openwise.dongguk.ac.kr</edutrack.product>
-				<edutrack.product.domain>openwise.dongguk.ac.kr</edutrack.product.domain>
+				<edutrack.product>https://ge60.edutrack.kr</edutrack.product>
+				<edutrack.product.domain>ge60.edutrack.kr</edutrack.product.domain>
 <!-- 				<edutrack.product.domain>kedm.kr</edutrack.product.domain> -->
-				<edutrack.product.sub.domain.tutor>opentutor.dongguk.ac.kr</edutrack.product.sub.domain.tutor>
-				<edutrack.product.sub.domain.admin>openadmin.dongguk.ac.kr</edutrack.product.sub.domain.admin>
+				<edutrack.product.sub.domain.tutor>ge60tutor.edutrack.kr</edutrack.product.sub.domain.tutor>
+				<edutrack.product.sub.domain.admin>ge60admin.edutrack.kr</edutrack.product.sub.domain.admin>
 				<!--  서브도메인 서비스 : domain, 가상디렉토리 서비스 : context -->
 				<edutrack.product.service_type>domain</edutrack.product.service_type>
 				
-				<!--  Database 관련 설정 -->			
+				<!--  Database 관련 설정 -->		
 				<edutrack.database.db_type>maria</edutrack.database.db_type>
 				<edutrack.database.driver_class_name>org.mariadb.jdbc.Driver</edutrack.database.driver_class_name>
-				<edutrack.database.url>jdbc:mariadb://203.247.226.1:3306/oc_hrd?autoReconnect=true&amp;allowMultiQueries=true</edutrack.database.url><!-- db서버 설치 후 변경  -->
-				<edutrack.database.user_name>oc_user</edutrack.database.user_name>
+				<edutrack.database.url>jdbc:mariadb://182.252.182.15:3306/ge60_lms?autoReconnect=true&amp;allowMultiQueries=true</edutrack.database.url>
+				<edutrack.database.user_name>ge60_user</edutrack.database.user_name>
 				<edutrack.database.password>lmspass</edutrack.database.password>	
 
 				<!--  언어 관련 설정 -->
@@ -531,29 +528,26 @@
 				<jdbc.artifactId>ojdbc6</jdbc.artifactId>
 				<jdbc.version>11.2.0.3.0</jdbc.version>
 				<jdbc.jndiname>jdbc/edutrack_store</jdbc.jndiname>
-
+ 
 				<!-- Framework properties -->
 				<edutrack.server_type>unix</edutrack.server_type><!-- windows, unix -->
 				<edutrack.url></edutrack.url>
 				<edutrack.fileserver.url></edutrack.fileserver.url>
-				<edutrack.path.attachfiles>E:/data/web/openCampus/WebRepository/attachfiles</edutrack.path.attachfiles>
-				<edutrack.path.contents>E:/data/web/openCampus/WebRepository/contents</edutrack.path.contents>
+				<edutrack.path.attachfiles>/data/web/ge60/demo/WebRepository/attachfiles</edutrack.path.attachfiles>
+				<edutrack.path.contents>/data/web/ge60/demo/WebRepository/contents</edutrack.path.contents>
 
 				<!-- 메일 서버 정보 -->
 				<edutrack.mail.agent>JavaMail</edutrack.mail.agent> <!-- JavaMail,  ThunderMail-->
 
 				<!-- JavaMail 환경설정 -->
-<!-- 				<edutrack.mail.javamail.host>211.253.143.199</edutrack.mail.javamail.host> -->
+<!-- 				<edutrack.mail.javamail.host>210.101.173.178</edutrack.mail.javamail.host> -->
 <!-- 				<edutrack.mail.javamail.user>Nan</edutrack.mail.javamail.user> -->
-<!-- 				<edutrack.mail.javamail.pass>Nan</edutrack.mail.javamail.pass> -->
-				<!-- <edutrack.mail.javamail.host>mail.ocu.ac.kr</edutrack.mail.javamail.host>
-				<edutrack.mail.javamail.user>gkedcenter</edutrack.mail.javamail.user>
-				<edutrack.mail.javamail.pass>kedc4114!</edutrack.mail.javamail.pass>
-				<edutrack.mail.javamail.auth>false</edutrack.mail.javamail.auth>
-				<edutrack.mail.javamail.starttls.enable>false</edutrack.mail.javamail.starttls.enable> -->
-				<edutrack.mail.javamail.host>smtp-legacy.office365.com</edutrack.mail.javamail.host>
-				<edutrack.mail.javamail.user>service@mediopia.co.kr</edutrack.mail.javamail.user>
-				<edutrack.mail.javamail.pass>apeldhvldk1!</edutrack.mail.javamail.pass>
+<!-- 				<edutrack.mail.javamail.pass>Nan</edutrack.mail.javamail.pass> -->				
+				
+				<!-- <edutrack.mail.javamail.host>smtp.office365.com</edutrack.mail.javamail.host> -->
+				<edutrack.mail.javamail.host>smtp.gmail.com</edutrack.mail.javamail.host>
+				<edutrack.mail.javamail.user>jhim1975@gmail.com</edutrack.mail.javamail.user>
+				<edutrack.mail.javamail.pass>ttla okzb thsq ghpf</edutrack.mail.javamail.pass>
 				<edutrack.mail.javamail.port>587</edutrack.mail.javamail.port>
 				<edutrack.mail.javamail.auth>true</edutrack.mail.javamail.auth>
 				<edutrack.mail.javamail.starttls.enable>true</edutrack.mail.javamail.starttls.enable>
@@ -567,7 +561,7 @@
 				<edutrack.mail.thundermail.massmail.usercode>7f70404cec14c2cd2b52d23620968768</edutrack.mail.thundermail.massmail.usercode>
 
 				<!-- KISA Keyfile Path -->
-				<kisa.keyfile.path>E:/data/web/openCampus/key</kisa.keyfile.path>
+				<kisa.keyfile.path>/data/web/ge60/demo/key</kisa.keyfile.path>
 
 				<!--  Exception DB LOG USE  -->
 				<edutrack.dblog.exception>use</edutrack.dblog.exception>
@@ -582,9 +576,7 @@
 
 				<!--  Mediaplayer Configration -->
 				<edutrack.media.player>flowplayer</edutrack.media.player> <!-- flowplayer -->
-				<edutrack.flowplayer.key>$512206430871778</edutrack.flowplayer.key> <!-- flowplayer 일때만 사용 -->
-				<edutrack.kollus.api.url>http://api.kr.kollus.com</edutrack.kollus.api.url><!-- kollus 일때만 사용 -->
-				<edutrack.kollus.player.url>http://v.kr.kollus.com</edutrack.kollus.player.url><!-- kollus 일때만 사용 -->
+				<edutrack.flowplayer.key>$570880234408174</edutrack.flowplayer.key> <!-- flowplayer 일때만 사용 -->
 
 				<!--  Webeditor  -->
 				<edutrack.webeditor.useyn>Y</edutrack.webeditor.useyn>
@@ -609,12 +601,12 @@
 				<edutrack.inicis.testYn>N</edutrack.inicis.testYn>
 				
 				<!--  redis  -->
-				<edutrack.redis.server>76fccc16-ced5-49a9-9dfc-970381556a4b.internal.kr1.easycache.nhncloudservice.com</edutrack.redis.server>
-				<edutrack.redis.port>12000</edutrack.redis.port>
-				<edutrack.redis.check_yn>Y</edutrack.redis.check_yn><!-- 설치 후 변경  --> 
-				<!-- <edutrack.redis.check_yn>Y</edutrack.redis.check_yn> --> 
-				<edutrack.redis.namespace>edutrack_hrd</edutrack.redis.namespace><!-- 설치 후 변경  --> 
-				<edutrack.redis.password>0kaSs4Qs1evCduLPjcSEpLKA3RAmOTbz</edutrack.redis.password>
+				<edutrack.redis.server>182.252.182.15</edutrack.redis.server>
+<!-- 				<edutrack.redis.server>183.111.234.122</edutrack.redis.server> -->
+				<edutrack.redis.port>6379</edutrack.redis.port>
+				<edutrack.redis.check_yn>Y</edutrack.redis.check_yn>
+				<edutrack.redis.namespace>smhrd</edutrack.redis.namespace>
+				<edutrack.redis.password>smhrd@2023</edutrack.redis.password>
 
 				<!-- hrd 연동   -->
 				<edutrack.hrd.api.domain>https://emonapi-server.hrdkorea.or.kr</edutrack.hrd.api.domain>
@@ -626,7 +618,7 @@
 				<edutrack.hrd.api.score_url>/api/v2/score_hist_test</edutrack.hrd.api.score_url>
 				<edutrack.hrd.api.login_url>/api/v2/user_login_hist_test</edutrack.hrd.api.login_url>
 				<edutrack.hrd.api.user_url>/api/v2/user_hist_test</edutrack.hrd.api.user_url>
-				<edutrack.hrd.api.use_yn>Y</edutrack.hrd.api.use_yn>
+				<edutrack.hrd.api.use_yn>N</edutrack.hrd.api.use_yn>
 
 				<!-- 나이스 본인인증 모듈 연동 정보  -->
 				<edutrack.checkplus.site.code>BO442</edutrack.checkplus.site.code>
@@ -638,12 +630,12 @@
 				<!-- SNS kakao  -->
 				<edutrack.key.sns.kakao>33aad6b1f2806577d4d8368382c9d8fe</edutrack.key.sns.kakao>
 				<edutrack.secret.sns.kakao>gjil3epBgyejuLKASJra4maloipRxUrW</edutrack.secret.sns.kakao>
-				<edutrack.callback.sns.kakao>https://openwise.dongguk.ac.kr/home/user/kakaoLoginCallback</edutrack.callback.sns.kakao>
+				<edutrack.callback.sns.kakao>https://lms.smhrd.or.kr/home/user/kakaoLoginCallback</edutrack.callback.sns.kakao>
 
 				<!-- SNS naver  -->
 				<edutrack.key.sns.naver>VxUqJjF5yKzZkc61nb8I</edutrack.key.sns.naver>
 				<edutrack.secret.sns.naver>DD6WW2Tp3u</edutrack.secret.sns.naver>
-				<edutrack.callback.sns.naver>https://openwise.dongguk.ac.kr/home/user/naverLoginCallback</edutrack.callback.sns.naver>
+				<edutrack.callback.sns.naver>https://lms.smhrd.or.kr/home/user/naverLoginCallback</edutrack.callback.sns.naver>
 
 				<!-- 메타버스(빌리버) 모듈 연동 정보  -->
 				<edutrack.xrcloud.apiKey>06bd820b9dd3b95c3cc266f0370263ce0a0a49357cd6993bbfbc40e547c1769d</edutrack.xrcloud.apiKey>
@@ -707,7 +699,7 @@
 
 				<!-- Framework properties -->
 				<edutrack.server_type>windows</edutrack.server_type><!-- windows, unix -->
-				<edutrack.url>http://hrd.edutrack.kr</edutrack.url>
+				<edutrack.url>https://ge60.edutrack.kr</edutrack.url>
 				<edutrack.fileserver.url></edutrack.fileserver.url>
 				<edutrack.path.attachfiles>/data/web/ge60/demo/WebRepository/attachfiles</edutrack.path.attachfiles>
 				<edutrack.path.contents>/data/web/ge60/demo/WebRepository/contents</edutrack.path.contents>
@@ -735,7 +727,7 @@
 				<edutrack.mail.thundermail.massmail.usercode>74a1501762eadb9cc8063196836f0f4d</edutrack.mail.thundermail.massmail.usercode>
 
 				<!-- KISA Keyfile Path -->
-				<kisa.keyfile.path>/data/web/ge60</kisa.keyfile.path>
+				<kisa.keyfile.path>/data/web/ge60/demo</kisa.keyfile.path>
 
 				<!--  Exception DB LOG USE  -->
 				<edutrack.dblog.exception>use</edutrack.dblog.exception>
@@ -751,8 +743,6 @@
 				<!--  Mediaplayer Configration -->
 				<edutrack.media.player>flowplayer</edutrack.media.player> <!-- flowplayer  -->
 				<edutrack.flowplayer.key></edutrack.flowplayer.key> <!-- flowplayer 일때만 사용 -->
-				<edutrack.kollus.api.url>http://api.kr.kollus.com</edutrack.kollus.api.url><!-- kollus 일때만 사용 -->
-				<edutrack.kollus.player.url>http://v.kr.kollus.com</edutrack.kollus.player.url><!-- kollus 일때만 사용 -->
 
 				<!--  Webeditor  -->
 				<edutrack.webeditor.useyn>Y</edutrack.webeditor.useyn>
@@ -830,6 +820,7 @@
 			<id>log-debug</id>
 			<properties>
 				<!-- LOG 레벨 -->
+				<log.level.edutrack>debug</log.level.edutrack>
 				<log.level.uniedu>debug</log.level.uniedu>
 				<log.level.thirdparty>info</log.level.thirdparty>
 				<log.level.spring>info</log.level.spring>

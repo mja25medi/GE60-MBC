@@ -1,21 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/mng/common/page_init.jsp" %>
-<c:if test="${playerDiv eq 'kollus' }">
-<c:if test="${uldStsCd eq 'complete'}">
-	<iframe id='previewFrame' name='previewFrame' style="width:100%; height:100%" frameborder='0' scrolling='no' src='${playerUrl}/s?key=${mediaToken}'/>
-</c:if>
-<c:if test="${uldStsCd ne 'complete'}">
-	<div class="col-md-6">
-		<div class="well" style="margin-top:20px;line-height:30px;">
-			<spring:message code="library.message.contents.media.incompletate.conversion"/><br/>
-			<spring:message code="library.message.contents.media.not.play"/>
-		</div>
-		<div class="text-center">
-			<a href="javascript:window.close();" class="btn btn-default btn-sm"><spring:message code="button.close"/></a>
-		</div>
-	</div>
-</c:if>
-</c:if>
 <c:if test="${playerDiv eq 'common' }">
 	<c:choose>
 		<c:when test="${fileExt eq 'mp4' }">
@@ -387,15 +371,28 @@ $(document).ready(function() {
 </div>
 		</c:when>
 		<c:otherwise>
-	<div class="col-md-6">
+<%-- 	<div class="col-md-6">
 		<div class="well" style="margin-top:20px;line-height:30px;">
 			<spring:message code="library.message.contents.media.not.play"/>
 		</div>
 		<div class="text-center">
 			<a href="javascript:window.close();" class="btn btn-default btn-sm"><spring:message code="button.close"/></a>
 		</div>
-	</div>
-
+	</div> --%>
+<style type="text/css">
+	<!--
+		html,body {
+			height:100%;
+			overflow:hidden;
+		}
+		A:link    {color:#666666;text-decoration:none;font-size:9pt;}
+		A:visited {color:#666666;text-decoration:nonefont-size:9pt;}
+		A:active  {color:#666666;text-decoration:nonefont-size:9pt;}
+		A:hover   {color:#003399;text-decoration:underline;font-size:9pt;}
+		td {font-family: 돋움; font-size:9pt; color:#333333}
+	-->
+	</style>
+	<iframe src="${filePath}" id="contentsMain" name="contentsMain" marginheight="0" marginwidth="0" scrolling="no" width="100%" height="100%" frameborder="0" style="padding:0px;"></iframe>
 		</c:otherwise>
 	</c:choose>
 </c:if>

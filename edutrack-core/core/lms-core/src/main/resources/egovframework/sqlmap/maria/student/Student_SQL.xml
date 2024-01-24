@@ -2003,4 +2003,8 @@
 		SELECT COUNT(*) FROM TB_ORG_IDE_INFO WHERE IDE_URL = #{ideUrl} 
 	</select>
 	
+	<delete id="deleteCreateCourseStudent" parameterType="studentVO">
+		 DELETE FROM tb_std_Std  
+  		 WHERE CRS_CRE_CD = #{crsCreCd} AND ENRL_STS = #{enrlSts}
+    </delete>
 </mapper>

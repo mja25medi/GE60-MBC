@@ -15,7 +15,6 @@ import egovframework.edutrack.Constants;
 import egovframework.edutrack.comm.util.web.FileUtil;
 import egovframework.edutrack.comm.util.web.UserBroker;
 import egovframework.edutrack.comm.web.GenericController;
-import egovframework.edutrack.modules.kollus.util.KollusMediaTokenUtil;
 import egovframework.edutrack.modules.library.cnts.media.service.ClibMediaCntsService;
 import egovframework.edutrack.modules.library.cnts.media.service.ClibMediaCntsVO;
 import egovframework.edutrack.modules.org.info.service.OrgOrgInfoService;
@@ -60,26 +59,17 @@ public class ClibMediaCntsLectureController extends GenericController {
 		request.setAttribute("uldStsCd", vo.getUldStsCd());
 		request.setAttribute("playerDiv", vo.getPlayerDiv());
 
-		if("kollus".equals(vo.getPlayerDiv())) {
-			//-- Player가 콜루스 인 경우
-			//-- 미디어 토큰을 받아 온다.
-			String mediaToken = KollusMediaTokenUtil.getKollusMediaToken(orgInfoVO.getKollusKeyCd(),
-					vo.getMediaCntsKey(), "", "");
-			request.setAttribute("playerUrl", Constants.KOLLUS_PLAYER_URL);
-			request.setAttribute("mediaToken", mediaToken);
-		} else {
-			String ext = FileUtil.getFileExtention(vo.getFileNm());
-			String fileExt = "none";
-			if(Constants.MEDIA_FILE_MP3.contains(ext)) {
-				fileExt = "mp3";
-			} else if(Constants.MEDIA_FILE_MP4.contains(ext)) {
-				fileExt = "mp4";
-			}
-			request.setAttribute("filePath", "/contents"+vo.getFilePath());
-			request.setAttribute("fileName", vo.getFileNm());
-			request.setAttribute("fileExt", fileExt);
-			request.setAttribute("flowplayerKey", Constants.FLOWPLAYER_KEY);
+		String ext = FileUtil.getFileExtention(vo.getFileNm());
+		String fileExt = "none";
+		if(Constants.MEDIA_FILE_MP3.contains(ext)) {
+			fileExt = "mp3";
+		} else if(Constants.MEDIA_FILE_MP4.contains(ext)) {
+			fileExt = "mp4";
 		}
+		request.setAttribute("filePath", "/contents"+vo.getFilePath());
+		request.setAttribute("fileName", vo.getFileNm());
+		request.setAttribute("fileExt", fileExt);
+		request.setAttribute("flowplayerKey", Constants.FLOWPLAYER_KEY);
 		return "home/lecture/bookmark/media_cnts_preview_pop";
 	}
 }

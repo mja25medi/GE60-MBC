@@ -160,9 +160,6 @@
 	 */
 	function userWrite() {
 			var url = generateUrl("/mng/user/userInfo/addManagePop")
-			<c:if test="${IS_SSO}">
-			var url = generateUrl("/mng/user/userInfo/ssoListManagePop")
-			</c:if>
 			var addContent  = "<iframe id='addUserFrame' name='addUserFrame' width='100%' height='100%' "
 				+ "frameborder='0' scrolling='auto' src='"+url+"'/>";
 			modalBox.clear();

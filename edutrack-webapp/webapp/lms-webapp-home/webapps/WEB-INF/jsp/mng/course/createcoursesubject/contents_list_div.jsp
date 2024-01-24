@@ -77,7 +77,7 @@
 						</div>
 					</div>
                    <form id="contentsForm" name="contentsForm" class="form-inline" onsubmit="return false">
-                        <div class="table-responsive" >
+                        <div class="table-responsive" style="overflow-x:visible;" >
                             <table summary="게시물목록" style="margin-top:5px;" class="table table-bordered" id="stuPayTable">
                             
                                 <colgroup>
@@ -297,10 +297,24 @@
 	//목차 일괄 수정
 	function editContentsList(sbjCd, cnt) {
 		for(var i=0; i<cnt; i++) {
-			var startDay = $("#classDay_"+i).val(); 
+			var startDay = $("#classDay_"+i).val();
+			if(startDay == '') {
+				alert("날짜를 입력해주십시오")
+				return false;
+			}
 			var startTime = $("#startTime_"+i).val();
+			if(!fn_hourMinutes(startTime)){
+				return false;
+			};
 			var endDay = $("#classDay_"+i).val()
+			if(endDay == '') {
+				alert("날짜를 입력해주십시오")
+				return false;
+			}
 			var endTime = $("#endTime_"+i).val();
+			if(!fn_hourMinutes(endTime)){
+				return false;
+			};
 			$("#classStartTime_"+i).val(startDay + startTime);
 			$("#classEndTime_"+i).val(endDay + endTime);
 		}
@@ -450,5 +464,13 @@
 		modalBox.show();
 	}
 	
+	function fn_hourMinutes(time){
+		  var regExp = /^(([0-1][0-9])|(2[0-3])):[0-5][0-9]$/;
+		  if(!regExp.test(time)){
+		    alert("올바른 시간형식이 아닙니다.");
+		    return false;
+		  }
+		  return true;
+		}
 </script>
 

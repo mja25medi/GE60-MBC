@@ -88,7 +88,7 @@
                                         <img src="/tpl/003/img/class/icon_course_video.svg" alt="icon" title="Zoom">
                                         <img src="/tpl/003/img/class/icon_course_code.svg" alt="icon" title="코딩학습"> -->
                                     </td>
-                                    <c:if test="${createCourseVO.creTypeCd eq 'OF' || createCourseVO.creTypeCd eq 'BL' }">
+                                    <c:if test="${osVO.sbjType eq 'OF' || osVO.sbjType eq 'BL' }">
                                     <td class="time_setting" data-label="시간">
                                         <div class="form-inline">
                                             <input type="date" class="form-control md" name="classDay_${status.index}" id="classDay_${status.index }" value="<meditag:dateformat type="1" delimeter="-" property="${item.classStartTime}"/>" >
@@ -223,12 +223,30 @@ function editContentsList(sbjCd, cnt) {
 		}
 	}
 	
-	for(var i=0; i<cnt; i++) {
-		var startDttm = $("#classDay_"+i).val() + $("#startTime_"+i).val();
-		var endDttm = $("#classDay_"+i).val() + $("#endTime_"+i).val();
-		$("#classStartTime_"+i).val(startDttm);
-		$("#classEndTime_"+i).val(endDttm);
-	} 
+	<c:if test="${osVO.sbjType ne 'ON'}">
+		for(var i=0; i<cnt; i++) {
+			var startDay = $("#classDay_"+i).val();
+			if(startDay == '') {
+				alert("날짜를 입력해주십시오")
+				return false;
+			}
+			var startTime = $("#startTime_"+i).val();
+			if(!fn_hourMinutes(startTime)){
+				return false;
+			};
+			var endDay = $("#classDay_"+i).val()
+			if(endDay == '') {
+				alert("날짜를 입력해주십시오")
+				return false;
+			}
+			var endTime = $("#endTime_"+i).val();
+			if(!fn_hourMinutes(endTime)){
+				return false;
+			};
+			$("#classStartTime_"+i).val(startDay + startTime);
+			$("#classEndTime_"+i).val(endDay + endTime);
+		}
+	</c:if>
 	
 	$('#contentsForm').attr("action","/lec/cnts/editCreateContentsList");
 	$('#contentsForm').ajaxSubmit(function (resultDTO) {
@@ -244,5 +262,14 @@ function formatDate(date) {
 	var dt = date.substring(0,4)+"-"+date.substring(4,6)+"-"+date.substring(6,8);
 	return dt;
 }
+
+function fn_hourMinutes(time){
+	  var regExp = /^(([0-1][0-9])|(2[0-3])):[0-5][0-9]$/;
+	  if(!regExp.test(time)){
+	    alert("올바른 시간형식이 아닙니다.");
+	    return false;
+	  }
+	  return true;
+	}
 
 </script>

@@ -252,7 +252,6 @@
 		url['5'] = "/CourseCreateCourseTimetableManage.do?cmd=mainTimetable${AMPERSAND}timetableVO.crsCreCd="+ItemDTO.crsCreCd;
 		url['6'] = "/mng/lecture/exam/examMain?examVO.crsCreCd="+ItemDTO.crsCreCd;
 		url['7'] = "/mng/lecture/assignment/asmtMain?assignmentVO.crsCreCd="+ItemDTO.crsCreCd;
-		url['8'] = "/StudentSubjectEduResultManage.do?cmd=main${AMPERSAND}subjectEduResultVO.crsCreCd="+ItemDTO.crsCreCd;
 		url['9'] = "/LectureResearchManage.do?cmd=mainResearch${AMPERSAND}researchVO.crsCreCd="+ItemDTO.crsCreCd;
 		url['10'] = "/mng/std/student/listFormEduNoStudent?studentVO.crsCreCd="+ItemDTO.crsCreCd;
 		url['11'] = "/StudentCarApplicationManage.do?cmd=mainCarApplication${AMPERSAND}carApplicationVO.crsCreCd="+ItemDTO.crsCreCd;

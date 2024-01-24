@@ -326,14 +326,14 @@
 	<update id="quitClass" parameterType="attendanceVO">
 		UPDATE  tb_attend_class 
 		  SET
-			       CLASS_STAT_1 	= 'S'
-			    ,  CLASS_STAT_2 	= 'S'
-			    ,  CLASS_STAT_3 	= 'S'
-			    ,  CLASS_STAT_4 	= 'S'
-			    ,  CLASS_STAT_5 	= 'S'
-			    ,  CLASS_STAT_6 	= 'S'
-			    ,  CLASS_STAT_7 	= 'S'
-			    ,  CLASS_STAT_8 	= 'S'
+			       CLASS_STAT_1 	= #{classStat1}
+			    ,  CLASS_STAT_2 	= #{classStat2}
+			    ,  CLASS_STAT_3 	= #{classStat3}
+			    ,  CLASS_STAT_4 	= #{classStat4}
+			    ,  CLASS_STAT_5 	= #{classStat5}
+			    ,  CLASS_STAT_6 	= #{classStat6}
+			    ,  CLASS_STAT_7 	= #{classStat7}
+			    ,  CLASS_STAT_8 	= #{classStat8}
 			    ,  ENTER_FLAG		= #{enterFlag}
 			    ,  QUIT_TIME 		= #{quitTime}						
 		        ,  MOD_NO 			= #{modNo}									

@@ -85,14 +85,6 @@ public interface UsrUserInfoMapper{
 	 */
 	public UsrUserInfoVO selectForLogin(UsrUserInfoVO vo) ;
 	
-	/**
-	 * 사용자 회원 정보의 로그인용 상세 정보를 조회한다.
-	 * @param  UsrUserInfoVO 
-	 * @return UsrUserInfoVO
-	 * @
-	 */
-	public UsrUserInfoVO selectForSsoLogin(UsrUserInfoVO vo) ;
-
     /**
 	 * 사용자의 키 정보를 조회한다.
 	 * @param   

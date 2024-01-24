@@ -1,33 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/mng/common/page_init.jsp" %>
-<c:if test="${playerDiv eq 'kollus' }">
-	<mhtml:mng_html>
-		<mhtml:mng_head titleName="${MENUNAME}">
-			<style type="text/css">
-				html,body {
-					height: 100% !important;
-					overflow-y:hidden;
-				}
-			</style>
-		</mhtml:mng_head>
-		<body>
-			<c:if test="${uldStsCd eq 'complete'}">
-				<iframe id='previewFrame' name='previewFrame' style="width:100%; height:100%" frameborder='0' scrolling='no' src='${playerUrl}/s?key=${mediaToken}'/>
-			</c:if>
-			<c:if test="${uldStsCd ne 'complete'}">
-				<div class="col-md-6">
-					<div class="well" style="margin-top:20px;line-height:30px;">
-						<spring:message code="library.message.contents.media.incompletate.conversion"/><br/>
-						<spring:message code="library.message.contents.media.not.play"/>
-					</div>
-					<div class="text-center">
-						<a href="javascript:window.close();" class="btn btn-default btn-sm"><spring:message code="button.close"/></a>
-					</div>
-				</div>
-			</c:if>
-		</body>
-	</mhtml:mng_html>
-</c:if>
 
 <c:if test="${playerDiv eq 'common' }">
 	<c:choose>

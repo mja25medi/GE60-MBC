@@ -512,5 +512,11 @@ public interface StudentMapper {
 	 * @return  ProcessResultVO
 	 */
 	public abstract int selectCreIdeUrl(StudentVO iStudentVO);
+
+	/**
+	 * 수강상태코드가 D인 학생 삭제
+	 *
+	 */
+	public void deleteCreateCourseStudent(StudentVO svo);
 	
 }

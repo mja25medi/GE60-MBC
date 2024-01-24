@@ -135,7 +135,6 @@ public class CourseCreateCourseAttendanceController extends GenericController {
 	 			formatter.format(c.getTime());
 	 			dataArr[i] = formatter.format(c.getTime()).toString();
 	 			c.add(Calendar.DATE, 1);
-	 			System.out.println(formatter.format(c.getTime()));
 	 		}
 	 		searchPeriod += "~"+ period.format(c.getTime()).toString();
 		} else {
@@ -159,7 +158,6 @@ public class CourseCreateCourseAttendanceController extends GenericController {
 			for (int i=0; i<5; i++) {
 	 			dataArr[i] = formatter.format(c.getTime()).toString();
 	 			c.add(Calendar.DATE, 1);
-	 			System.out.println(formatter.format(c.getTime()));
 	 		}
 			searchPeriod += "~"+ period.format(c.getTime()).toString();
 		}

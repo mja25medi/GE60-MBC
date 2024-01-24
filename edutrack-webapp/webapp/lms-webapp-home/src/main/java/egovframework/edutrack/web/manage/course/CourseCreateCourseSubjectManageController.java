@@ -857,9 +857,9 @@ public class CourseCreateCourseSubjectManageController extends GenericController
 
 		ProcessResultVO<?> resultVO = contentsService.CreateContentsSort(vo);
 		if(resultVO.getResult() > 0) {
-			resultVO.setMessage(getMessage(request, "course.message.contents.category.sort.success"));
+			resultVO.setMessage("변경 완료하였습니다.");
 		}else{
-			resultVO.setMessage(getMessage(request, "course.message.contents.category.sort.failed"));
+			resultVO.setMessage("변경에 실패하였습니다.");
 		}
 
 		return JsonUtil.responseJson(response, resultVO);

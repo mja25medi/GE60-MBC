@@ -370,8 +370,6 @@ public class SecurityUtil {
 			|| Action.matches(".*/*readCmiData.*")
 			|| Action.matches(".*/*addCmiData.*")			
 			|| Action.matches(".*/*apiCallback.*")
-			|| Action.matches(".*/*ssoResult.*")
-			|| Action.matches(".*/*ssoLogin.*")
 			|| Action.matches(".*/*adminLogin.*")
 			|| Action.matches(".*/*jsonKnowList.*")
 			|| Action.matches(".*/*HrdApi.*")

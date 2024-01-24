@@ -27,8 +27,6 @@ import egovframework.edutrack.comm.util.web.UrlConnectUtil;
 import egovframework.edutrack.comm.util.web.UserBroker;
 import egovframework.edutrack.comm.util.web.ValidationUtils;
 import egovframework.edutrack.comm.web.GenericController;
-import egovframework.edutrack.modules.kollus.service.KollusResultVO;
-import egovframework.edutrack.modules.kollus.util.KollusMediaTokenUtil;
 import egovframework.edutrack.modules.library.cnts.ctgr.service.ClibCntsCtgrService;
 import egovframework.edutrack.modules.library.cnts.ctgr.service.ClibCntsCtgrVO;
 import egovframework.edutrack.modules.library.cnts.media.service.ClibMediaCntsService;
@@ -86,7 +84,6 @@ public class ClibMediaCntsHomeController extends GenericController {
 		orgInfoVO.setOrgCd(orgCd);
 		orgInfoVO = orgInfoService.view(orgInfoVO);
 		request.setAttribute("kollusUseYn", orgInfoVO.getKollusUseYn());
-		request.setAttribute("kollusPlayerUrl", Constants.KOLLUS_PLAYER_URL);
 
 
 		if("root".equals(vo.getCtgrCd())){
@@ -310,14 +307,7 @@ public class ClibMediaCntsHomeController extends GenericController {
 		int error = 0;
 		if(vo.getSharedCnt() == 0) {
 			//-- 공유가 안되어 있을 경우만 파일 삭제, 공유가 되어 잇는 경우는 파일은 삭제 하이 않음
-			if("kollus".equals(vo.getPlayerDiv())) {
-				//-- 콜루스 사용여부에 따라 파일을 삭제한다.
-				String args[] = new String[1];
-				args[0] = "access_token="+orgInfoVO.getKollusTokenCd();
-				String connectUrl = Constants.KOLLUS_API_URL+"/0/media/library/delete/"+vo.getUldFileKey();
-				KollusResultVO krVO = getKollusResult(UrlConnectUtil.getUrlConnect(connectUrl, args));
-				error = krVO.getError();
-			} else if("common".equals(vo.getPlayerDiv())) {
+			if("common".equals(vo.getPlayerDiv())) {
 				try {
 					//-- 일반 파일일 경우 파일 및 포더 삭제
 					FileUtil.delDirectory(Constants.CONTENTS_STORAGE_PATH + "\\" + orgCd+vo.getFilePath());
@@ -354,7 +344,6 @@ public class ClibMediaCntsHomeController extends GenericController {
 	public String addUploadForm(ClibMediaCntsVO vo, Map commandMap, ModelMap model,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		commonVOProcessing(vo, request);
-		String returnUrl = "home/library/cnts/media/kollus_upload";
 		String orgCd = UserBroker.getUserOrgCd(request);
 		String userNo = UserBroker.getUserNo(request);
 
@@ -363,19 +352,12 @@ public class ClibMediaCntsHomeController extends GenericController {
 		orgInfoVO.setOrgCd(orgCd);
 		orgInfoVO = orgInfoService.view(orgInfoVO);
 
-		if("Y".equals(orgInfoVO.getKollusUseYn())) {
-			request.setAttribute("kollusUseYn", orgInfoVO.getKollusUseYn());
-			request.setAttribute("kollusTokenCd", orgInfoVO.getKollusTokenCd());
-			request.setAttribute("kollusCtgrCd", orgInfoVO.getKollusCtgrCd());
-		} else {
-			String currentDate = DateTimeUtil.getCurrentString();
-			String filePath = "/mediacnts/"+userNo+"/"+currentDate;
-			request.setAttribute("filePath", filePath);
-			returnUrl = "home/library/cnts/media/common_upload";
-		}
+		String currentDate = DateTimeUtil.getCurrentString();
+		String filePath = "/mediacnts/"+userNo+"/"+currentDate;
+		request.setAttribute("filePath", filePath);
 	   	request.setAttribute("clibMediaCntsVO", vo);
 
-		return returnUrl;
+		return "home/library/cnts/media/common_upload";
 	}
 
 	/*
@@ -440,26 +422,17 @@ public class ClibMediaCntsHomeController extends GenericController {
 		request.setAttribute("uldStsCd", "complete");
 		request.setAttribute("playerDiv", vo.getPlayerDiv());
 		if("VOD".equals(vo.getCntsTypeCd())) {
-			if("kollus".equals(vo.getPlayerDiv())) {
-				//-- Player가 콜루스 인 경우
-				//-- 미디어 토큰을 받아 온다.
-				String mediaToken = KollusMediaTokenUtil.getKollusMediaToken(orgInfoVO.getKollusKeyCd(),
-						vo.getMediaCntsKey(), "", "");
-				request.setAttribute("playerUrl", Constants.KOLLUS_PLAYER_URL);
-				request.setAttribute("mediaToken", mediaToken);
-			} else {
-				String ext = FileUtil.getFileExtention(vo.getFileNm());
-				String fileExt = "none";
-				if(Constants.MEDIA_FILE_MP3.contains(ext)) {
-					fileExt = "mp3";
-				} else if(Constants.MEDIA_FILE_MP4.contains(ext)) {
-					fileExt = "mp4";
-				}
-				request.setAttribute("filePath", "/contents"+vo.getFilePath());
-				request.setAttribute("fileName", vo.getFileNm());
-				request.setAttribute("fileExt", fileExt);
-				request.setAttribute("flowplayerKey", Constants.FLOWPLAYER_KEY);
+			String ext = FileUtil.getFileExtention(vo.getFileNm());
+			String fileExt = "none";
+			if(Constants.MEDIA_FILE_MP3.contains(ext)) {
+				fileExt = "mp3";
+			} else if(Constants.MEDIA_FILE_MP4.contains(ext)) {
+				fileExt = "mp4";
 			}
+			request.setAttribute("filePath", "/contents"+vo.getFilePath());
+			request.setAttribute("fileName", vo.getFileNm());
+			request.setAttribute("fileExt", fileExt);
+			request.setAttribute("flowplayerKey", Constants.FLOWPLAYER_KEY);
 		}else if("CDN".equals(vo.getCntsTypeCd())) {
 		
 			String ext = FileUtil.getFileExtention(vo.getFileNm());
@@ -487,121 +460,6 @@ public class ClibMediaCntsHomeController extends GenericController {
 			request.setAttribute("orgInfoVO", orgInfoVO);
 		}
 		return "home/library/cnts/media/media_cnts_preview_pop";
-	}
-
-	/**
-	 * 콜루스 API 통하여 가져온 JsonString 갑을 VO에 담아 반환한다.
-	 * @param resultJsonString
-	 * @return
-	 */
-	private KollusResultVO getKollusResult(String resultJsonString) {
-		KollusResultVO krVO = new KollusResultVO();
-		JSONObject json = (JSONObject) JSONSerializer.toJSON(resultJsonString);
-	    int error = json.getInt( "error" );
-	    String message = "";
-	    if(error !=0) {
-	    	message = json.getString("message");
-	    }
-	    try {
-		    JSONObject result = json.getJSONObject("result");
-		    krVO.setError(error);
-		    krVO.setMessage(message);
-		    if(error == 0) {
-	    		Iterator iter = result.keys();
-	    		while(iter.hasNext()){
-	    			String key = (String)iter.next();
-	    			String value = result.getString(key);
-	    			krVO.addResult(key, value);
-	    		}
-		    }
-    	} catch (Exception e) {
-    		System.out.println("::::::::::::::::::::::::::>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "+message);
-    	}
-		return krVO;
-	}
-
-    /**
-	 * 콘텐츠 라이브러리 : 콜루스 API 통하여 UPLOAD 관련 정보를 받아 온다.
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping(value="/getUploadInfo")
-	public String getUploadInfo(ClibMediaCntsVO vo, Map commandMap, ModelMap model,
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		commonVOProcessing(vo, request);
-
-		String orgCd = UserBroker.getUserOrgCd(request);
-
-		String isAudioUpload = StringUtil.nvl(request.getParameter("is_audio_upload"),"0");
-
-		// 교육기관 정보를 가져온다.
-		OrgOrgInfoVO orgInfoVO = new OrgOrgInfoVO();
-		orgInfoVO.setOrgCd(orgCd);
-		orgInfoVO = orgInfoService.view(orgInfoVO);
-		request.setAttribute("kollusUseYn", orgInfoVO.getKollusUseYn());
-
-		//-- 콜루스 사용여부에 따라 파일 업도르 정보 가져온다.
-		String args[] = new String[3];
-		args[0] = "category_key="+orgInfoVO.getKollusCtgrCd();
-		args[1] = "access_token="+orgInfoVO.getKollusTokenCd();
-		args[2] = "is_audio_upload="+isAudioUpload;
-		String connectUrl = Constants.KOLLUS_API_URL+"/0/media_auth/upload/create_url";
-		KollusResultVO krVO = getKollusResult(UrlConnectUtil.getUrlConnect(connectUrl, args));
-
-	   	request.setAttribute("clibMediaCntsVO", vo);
-
-	   	return JsonUtil.responseJson(response, krVO);
-	}
-
-    /**
-	 * 콘텐츠 라이브러리 : KOLLUS에 업로드된 파일이 트렌스 코딩이 완료되면 Kollus에서 보내주는 Callback
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping(value="/indexUploadCallback")
-	public String indexUploadCallback(ClibMediaCntsVO vo, Map commandMap, ModelMap model,
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		commonVOProcessing(vo, request);
-
-		//String content_provider_key = request.getParameter("content_provider_key");
-		//String filename = request.getParameter("filename");
-		String upload_file_key = request.getParameter("upload_file_key");
-		String media_content_key = request.getParameter("media_content_key");
-		String channel_key = request.getParameter("channel_key");
-		String channel_name = request.getParameter("channel_name");
-		String profile_key = request.getParameter("profile_key");
-
-		//upload file key를 이용하여 콘텐츠 정보를 가져온다.
-		try {
-			ClibMediaCntsVO clibMediaCntsVO = new ClibMediaCntsVO();
-			clibMediaCntsVO.setUldFileKey(upload_file_key);
-			clibMediaCntsVO = clibMediaCntsService.viewByUploadFileKey(clibMediaCntsVO).getReturnVO();
-
-			if(!"CH".equals(clibMediaCntsVO.getUldStsCd())) {
-				clibMediaCntsVO.setMediaCntsKey(media_content_key);
-				clibMediaCntsVO.setChanlKey(channel_key);
-				clibMediaCntsVO.setChanlNm(channel_name);
-				clibMediaCntsVO.setProfileKey(profile_key);
-				clibMediaCntsVO.setUldStsCd("complete");
-
-				//-- 정보를 수정한다.
-				clibMediaCntsService.edit(clibMediaCntsVO);
-			}
-		} catch (Exception e) {
-			//-- 저장된 정보가 없을 경우 처리 로직 필요
-			//-- 저장된 콘텐츠 정보가 없거나 수정이 안되었을 경우 400 리턴함.
-			log.debug(":::::::::::::::::::::: =========================== Kollus challen upload callback error =================> "+e.getMessage());
-			response.setStatus(500);
-			return null;
-		}
-		response.setStatus(200);
-		return "home/library/cnts/media/kollus_upload_callback";
 	}
 
     /**

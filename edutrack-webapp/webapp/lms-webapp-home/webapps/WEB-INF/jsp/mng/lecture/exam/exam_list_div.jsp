@@ -48,13 +48,23 @@
 				</td>
 				<td style="text-align: center;">
 					<c:choose>
+						<c:when test="${item.semiExamYn eq 'N'}">
+								<spring:message code="lecture.message.exam.progress.ratio"/> ${item.stareCritPrgrRatio}% <spring:message code="lecture.message.exam.over"/>
+						</c:when>
+						<c:otherwise>
+							${item.sbjNm} 강의  ${item.stareLecCount}강 수강 후 
+						</c:otherwise>
+					</c:choose>
+					
+					
+					<%-- <c:choose>
 						<c:when test="${item.examStareTypeCd eq 'R'}">
 								<span>-</span>
 						</c:when>
 						<c:otherwise>
 							<spring:message code="lecture.message.exam.progress.ratio"/> ${item.stareCritPrgrRatio}% <spring:message code="lecture.message.exam.over"/>
 						</c:otherwise>
-					</c:choose>
+					</c:choose> --%>
 				</td>
 				<td class="text-center"><meditag:codename category="EXAM_TYPE_CD" code="${item.examTypeCd}"/></td>
 				<td class="text-center">

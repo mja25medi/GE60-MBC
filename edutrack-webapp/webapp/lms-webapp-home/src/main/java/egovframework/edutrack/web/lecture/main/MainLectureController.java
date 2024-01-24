@@ -264,6 +264,10 @@ public class MainLectureController
 			
 			int prpsRatio = Math.round((nowDayCnt/termDayCnt)*100);
 			request.setAttribute("prpsRatio", Math.min(100, prpsRatio));
+			
+			String nowDate = DateTimeUtil.getDateType(1, DateTimeUtil.getDate(),".");
+			request.setAttribute("nowDate", nowDate);
+			
 		}else {
 			mainLectureVO = mainLectureService.view(mainLectureVO).getReturnVO(); 
 		}

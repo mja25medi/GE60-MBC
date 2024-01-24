@@ -20,7 +20,6 @@ import egovframework.edutrack.comm.util.web.JsonUtil;
 import egovframework.edutrack.comm.util.web.StringUtil;
 import egovframework.edutrack.comm.util.web.UserBroker;
 import egovframework.edutrack.comm.web.GenericController;
-import egovframework.edutrack.modules.kollus.util.KollusMediaTokenUtil;
 import egovframework.edutrack.modules.library.share.ctgr.service.ClibShareCntsCtgrService;
 import egovframework.edutrack.modules.library.share.ctgr.service.ClibShareCntsCtgrVO;
 import egovframework.edutrack.modules.library.share.media.service.ClibShareMediaCntsService;
@@ -307,26 +306,17 @@ public class ClibShareCntsManageController extends GenericController {
 
 		request.setAttribute("playerDiv", vo.getPlayerDiv());
 
-		if("kollus".equals(vo.getPlayerDiv())) {
-			//-- Player가 콜루스 인 경우
-			//-- 미디어 토큰을 받아 온다.
-			String mediaToken = KollusMediaTokenUtil.getKollusMediaToken(orgInfoVO.getKollusKeyCd(),
-					vo.getMediaCntsKey(), "", "");
-			request.setAttribute("playerUrl", Constants.KOLLUS_PLAYER_URL);
-			request.setAttribute("mediaToken", mediaToken);
-		} else {
-			String ext = FileUtil.getFileExtention(vo.getFileNm());
-			String fileExt = "none";
-			if(Constants.MEDIA_FILE_MP3.contains(ext)) {
-				fileExt = "mp3";
-			} else if(Constants.MEDIA_FILE_MP4.contains(ext)) {
-				fileExt = "mp4";
-			}
-			request.setAttribute("filePath", "/contents"+vo.getFilePath());
-			request.setAttribute("fileName", vo.getFileNm());
-			request.setAttribute("fileExt", fileExt);
-			request.setAttribute("flowplayerKey", Constants.FLOWPLAYER_KEY);
+		String ext = FileUtil.getFileExtention(vo.getFileNm());
+		String fileExt = "none";
+		if(Constants.MEDIA_FILE_MP3.contains(ext)) {
+			fileExt = "mp3";
+		} else if(Constants.MEDIA_FILE_MP4.contains(ext)) {
+			fileExt = "mp4";
 		}
+		request.setAttribute("filePath", "/contents"+vo.getFilePath());
+		request.setAttribute("fileName", vo.getFileNm());
+		request.setAttribute("fileExt", fileExt);
+		request.setAttribute("flowplayerKey", Constants.FLOWPLAYER_KEY);
 		return "mng/library/share/media_cnts_preview_pop";
 	}
 
@@ -685,26 +675,17 @@ public class ClibShareCntsManageController extends GenericController {
 		request.setAttribute("uldStsCd", "complete");
 		request.setAttribute("playerDiv", vo.getPlayerDiv());
 		if("VOD".equals(vo.getCntsTypeCd())) {
-			if("kollus".equals(vo.getPlayerDiv())) {
-				//-- Player가 콜루스 인 경우
-				//-- 미디어 토큰을 받아 온다.
-				String mediaToken = KollusMediaTokenUtil.getKollusMediaToken(orgInfoVO.getKollusKeyCd(),
-						vo.getMediaCntsKey(), "", "");
-				request.setAttribute("playerUrl", Constants.KOLLUS_PLAYER_URL);
-				request.setAttribute("mediaToken", mediaToken);
-			} else {
-				String ext = FileUtil.getFileExtention(vo.getFileNm());
-				String fileExt = "none";
-				if(Constants.MEDIA_FILE_MP3.contains(ext)) {
-					fileExt = "mp3";
-				} else if(Constants.MEDIA_FILE_MP4.contains(ext)) {
-					fileExt = "mp4";
-				}
-				request.setAttribute("filePath", "/contents"+vo.getFilePath());
-				request.setAttribute("fileName", vo.getFileNm());
-				request.setAttribute("fileExt", fileExt);
-				request.setAttribute("flowplayerKey", Constants.FLOWPLAYER_KEY);
+			String ext = FileUtil.getFileExtention(vo.getFileNm());
+			String fileExt = "none";
+			if(Constants.MEDIA_FILE_MP3.contains(ext)) {
+				fileExt = "mp3";
+			} else if(Constants.MEDIA_FILE_MP4.contains(ext)) {
+				fileExt = "mp4";
 			}
+			request.setAttribute("filePath", "/contents"+vo.getFilePath());
+			request.setAttribute("fileName", vo.getFileNm());
+			request.setAttribute("fileExt", fileExt);
+			request.setAttribute("flowplayerKey", Constants.FLOWPLAYER_KEY);
 		}else if("CDN".equals(vo.getCntsTypeCd())) {
 		
 			String ext = FileUtil.getFileExtention(vo.getFileNm());

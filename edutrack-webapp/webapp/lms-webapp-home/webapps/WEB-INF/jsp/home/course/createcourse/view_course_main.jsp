@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/common/page_init.jsp" %>
 <%@page import="java.text.SimpleDateFormat"%>
+<jsp:useBean id="now" class="java.util.Date" />
+<fmt:formatDate value="${now}" pattern="yyyyMMddHHmmss" var="nowDate" />
 
                     <div class="course_detail">
                         <div class="detail_top">
@@ -55,7 +57,7 @@
 
                         <div class="btns right mt20">
                             <button class="btn gray2" onclick="location.href='javascript:addQna();' "><spring:message code="button.write.qna.nonMem"/></button>
-                            <c:if test="${item.enrlAplcYn ne 'N' }">                            
+                            <c:if test="${item.enrlAplcYn eq 'Y' }">                            
 	                            <c:choose>
 	                                  <c:when test="${item.eduPrice eq 0 or empty item.eduPrice}">
 	                                  		<button class="btn type4" onclick="addCourse('${item.crsCtgrCd}','${item.crsCd}','${item.crsCreCd}');"><spring:message code="course.title.createcourse.enroll"/></button>
