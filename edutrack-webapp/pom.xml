@@ -314,6 +314,37 @@
 	</properties>
 
 	<profiles>
+		<profile>
+			<!-- 개발 프로파일 -->
+			<id>local</id>
+			<properties>
+				<!--  기본 도메인 및 프로덕트 설정 -->
+				<edutrack.product>http://local.co.kr</edutrack.product>
+				<edutrack.url></edutrack.url>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<!-- 운영 프로파일 -->
+			<id>production</id>
+			<properties>
+				<!--  기본 도메인 및 프로덕트 설정 -->
+				<edutrack.product>https://ge60.edutrack.kr</edutrack.product>
+				<edutrack.url></edutrack.url>
+			</properties>
+
+		</profile>
+		<profile>
+			<!-- 통합 테스트 프로파일 -->
+			<id>devel</id>
+			<properties>
+				<!--  기본 도메인 및 프로덕트 설정 -->
+				<edutrack.product>https://ge60.edutrack.kr</edutrack.product>
+				<edutrack.url></edutrack.url>
+			</properties>
+		</profile>
 
 		<!-- 디버그레벨 로그 프로파일 -->
 		<profile>
