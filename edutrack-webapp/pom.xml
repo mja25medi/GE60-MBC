@@ -346,34 +346,6 @@
 			</properties>
 		</profile>
 
-		<!-- 디버그레벨 로그 프로파일 -->
-		<profile>
-			<id>log-debug</id>
-			<properties>
-				<!-- LOG 레벨 -->
-				<log.level.uniedu>debug</log.level.uniedu>
-				<log.level.thirdparty>info</log.level.thirdparty>
-				<log.level.spring>info</log.level.spring>
-				<log.level.jdbc>debug</log.level.jdbc>
-				<log.level.jdbc.param>trace</log.level.jdbc.param>
-				<log.level.root>debug</log.level.root>
-			</properties>
-		</profile>
-		<!-- 인포레벨 로그 프로파일 -->
-		<profile>
-			<id>log-info</id>
-			<properties>
-				<!-- LOG 레벨 -->
-				<log.level.edutrack>info</log.level.edutrack>
-				<log.level.thirdparty>info</log.level.thirdparty>
-				<log.level.spring>info</log.level.spring>
-				<log.level.jdbc>info</log.level.jdbc>
-				<log.level.jdbc.param>info</log.level.jdbc.param>
-				<log.level.root>info</log.level.root>
-			</properties>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-		</profile>
+
 	</profiles>
 </project>
