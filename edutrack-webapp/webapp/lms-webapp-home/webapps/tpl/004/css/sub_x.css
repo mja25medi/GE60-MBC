@@ -3,11 +3,8 @@
 /*@import "../../_css/board.css"; */
 @import "board.css";:root { --navy: hsl(208, 100%, 34%); --bluegreen: hsl(174, 100%, 34%); --red: hsl(11, 100%, 34%); --dark: hsla(210deg, 8%, 29%, 1); --gray8: hsla(0deg, 0%, 80%, 1); --gray9: hsla(0deg, 0%, 95%, 1); --gray7: hsla(0deg, 0%, 70%, 1); --gray6: hsla(0deg, 0%, 60%, 1); --gray4: hsla(0deg, 0%, 40%, 1); }
 /* 서브 레이아웃 */
-body { height: 100%; }
-#wrap { /* display: flex; 
-flex-direction: column; 
-height: 100%; */
-}
+/* body { height: 100%; } */
+#wrap { /* display: flex; flex-direction: column; height: 100%; */}
 .footer { margin-top: auto; }
 
 .subMenu .content .tabs li { background: var(--darkblue, hsl(208, 100%, 34%) ); }
@@ -312,7 +309,7 @@ table .alert dd { padding: 1em }
 
 /* No Content */
 .no_content .no_text { display: flex; flex-direction: column; justify-content: center; text-align: center; width: 100%; }
-.no_content .no_text i { width: 100%; display: inline-block; font-size: 3.5rem; color: hsl(198, 100%, 41%); margin-bottom: 1rem; }
+.no_content .no_text i { width: 100%; display: inline-block; font-size: 3.5rem; color: hsl(21 8% 50%); margin-bottom: 1rem; }
 .no_content { padding: 5rem 0 6rem; position: relative; display: flex; width: 100%; min-height: 32rem; margin-bottom: 3rem; align-items: center; justify-content: center; border-radius: 2rem; background-color: #f3f5f9; }
 .no_text .ico.icon-cont-none:before { -webkit-mask-image: url('../img/common/icon-cont-none.svg'); mask-image: url('../img/common/icon-cont-none.svg'); }
 .no_text .ico { display: inline-block; width: 2em; height: 2em; color: currentColor; }
@@ -387,27 +384,13 @@ h5.subtitle { font-size: 2.2rem; margin-bottom: 1.3rem; }
 .myCourseList .list_ul .list_li .item_txt { padding: 2rem 2.5rem; }
 .my_prog_rate .progress { margin-top: 1.8rem; height: 1.25rem; border-radius: 5rem; background: #D2D6DA; flex: 1; overflow: hidden; }
 .my_prog_rate .progress .bar { float: left; height: 100%; border-radius: 5rem; }
-.my_prog_rate .progress .bar.red_type { background: linear-gradient(90deg, rgb(243 174 141) 0%, rgb(239 115 44) 100%); }
+.my_prog_rate .progress .bar.red_type { background: linear-gradient(90deg, rgba(245,171,225,1) 0%, rgba(239,105,217,1) 100%); }
 .my_prog_rate .progress .bar.rainbow_type { background: linear-gradient(90deg, rgb(218, 70, 37) 0%, rgb(221, 115, 58) 20%, rgba(207, 194, 13, 0.884) 45%, rgb(84, 182, 19) 65%, rgb(71, 132, 190) 85%); }
 .my_prog_rate .prog_num { font-size: 1.4rem; margin-right: 1rem; color: #80848A; }
 .my_prog_rate .meta { font-size: 1.4rem; font-weight: 700; }
 .myCourseList .bottom_button { display: flex; flex-direction: row; flex-grow: 1; padding: 0 !important; border-top: 1px solid rgba(34, 36, 38, 0.1); }
 .myCourseList .bottom_button .go { display: block; padding: 0.75em 1em; font-size: 1.7rem; font-weight: 600; flex: 1; flex-basis: auto; color: #039be5; text-align: center; transition: all .4s; border-radius: 0 0 1.4rem 1.4rem; }
 .myCourseList .bottom_button .go:hover { background-color: #edfaff; }
-
-.myCourseList .grade_info { display: flex; flex-direction: column; margin-top: 1.5rem; }
-.myCourseList .grade_info li { display: flex; padding: 0.15rem 0 0.15rem 0.8rem; font-weight: 500; font-size: 1.5rem; }
-.myCourseList .grade_info li span { width: 60px; font-weight: 400; flex: 0 0 auto; margin-right: 1.5rem; color: #80848A; }
-.myCourseList .grade_info li.total {margin-top: 1rem; padding-top: .5rem; padding-bottom: .5rem; background-color:#f7f7f7; border-radius: 1rem;}
-.myCourseList .grade_info li.total,
-.myCourseList .grade_info li.total span {color: #0090D0; font-weight: 600;}
-.myCourseList .grade_info li.cer_info {font-weight: 600 !important; margin-top: 1rem; padding-top: .5rem; padding-bottom: .5rem; background-color:#f7f7f7; border-radius: 1rem;}
-.myCourseList .bottom_button { flex-grow:initial;}
-.myCourseList .bottom_button .go.disabled {color: #c0c0c0;}
-
-.myCourseList.finish.col4 > .list_ul .list_li {display: inline-flex;}
-.myCourseList.finish.col4 .list_ul .list_li .item {display: flex; width: 100%; flex-direction: column;}
-.myCourseList.finish.col4 .list_ul .list_li .item_txt {flex-grow: 1;}
 
 .table_list {color: #666; border-top: 2px solid #222;}
 .table_list ul.list {display: flex; border-bottom: 1px solid #e8e8e8;}
@@ -494,7 +477,7 @@ sub - 마이페이지
 .basket-total-price .estimated_price_area:before { right: 66.666666%; background-color: #616161; }
 .basket-total-price .estimated_price_area:after { right: 66.666666%;}
 .basket-total-price .total_price_area { width: 33.333333%; background-color: #fafafa; box-sizing: border-box; }
-.basket-total-price .total_price_area:before { right: 33.333333%; background: linear-gradient(45deg, rgb(243 174 141) 0%, rgb(239 115 44) 100%);} 
+.basket-total-price .total_price_area:before { right: 33.333333%; background: linear-gradient(145deg, rgb(241, 111, 207) 0%, rgb(241, 74, 214) 100%);} 
 .basket-total-price .total_price_area:after { right: 33.333333%;  }
 .basket-total-price .total_price_area:after { content: ''; display: block; position: absolute; top: 50%; margin: -15px -15px 0 0; line-height: 32px; text-align: center; width: 30px; height: 30px; color: #fff; font-size: 2.4rem; font-family: xeicon; content: "\e960"; }
 .basket-total-price .estimated_price_area:after { content: ''; display: block; position: absolute; top: 50%; margin: -15px -15px 0 0; line-height: 32px; text-align: center; width: 30px; height: 30px; color: #fff; font-size: 2rem; font-family: xeicon; content: "\e91a"; }

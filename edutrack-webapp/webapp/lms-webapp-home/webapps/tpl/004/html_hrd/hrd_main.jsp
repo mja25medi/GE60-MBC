@@ -10,7 +10,6 @@
         
 
         <main class="main">
-            
 
             <div id="content">
                 
@@ -77,97 +76,95 @@
             <div class="section section01">
                 <div class="container">
 
-                    
-                        <div class="boardList">
-                            <div class="title">
-                                <h2>공지사항</h2>
-                                <a href="#" class="more"><span class="sr_only">더보기</span><i class="xi-plus" aria-hidden="true"></i></a> 
-                            </div>
-                            <ul class="board-latest">
-                                <li><a href="#">
-                                    <span class="boardTxt">
-                                        <span class="notice">[특강]</span>
-                                        집콕클라쓰 멘토썸머특강
-                                    </span>
-                                    <span class="boardDate">2023.12.23</span>
-                                </a></li>
-                                <li><a href="#">
-                                    <span class="boardTxt">
-                                        <span class="notice">[공지]</span>
-                                        맞춤형멘토링 우수팀 인터뷰 1편
-                                    </span>
-                                    <span class="boardDate">2023.10.05</span>
-                                </a></li>
-                                <li><a href="#">
-                                    <span class="boardTxt">
-                                        <span class="notice">[특강]</span>
-                                        학습법특강(선배라떼 질의응답 특강)
-                                    </span>
-                                    <span class="boardDate">2023.08.16</span>
-                                </a></li>
-                                <li><a href="#">
-                                    <span class="boardTxt">
-                                        <span class="notice">[공지]</span>
-                                        2023-1학기 원격강좌 수강 안내
-                                    </span>
-                                    <span class="boardDate">2023.08.16</span>
-                                </a></li>
-                                
-                            </ul>                            
-                        </div>  
-                        
-                        <div class="iconList">
-                            <ul class="list_group">
-                                <li>
-                                    <h2 class="list_tit">분류별 <br>공개강좌</h2> 
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <img src="../img/main/sect02_icon01.svg" alt="인문과학 아이콘">
-                                        <p class="card_tit">인문과학</p>                                        
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <img src="../img/main/sect02_icon02.svg" alt="사회과학 아이콘">
-                                        <p class="card_tit">사회과학</p>                                       
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <img src="../img/main/sect02_icon03.svg" alt="공학 아이콘">
-                                        <p class="card_tit">공학</p>                                        
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <img src="../img/main/sect02_icon04.svg" alt="자연과학 아이콘">
-                                        <p class="card_tit">자연과학</p>                                        
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <img src="../img/main/sect02_icon05.svg" alt="교육학 아이콘">
-                                        <p class="card_tit">교육학</p>                                        
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <img src="../img/main/sect02_icon06.svg" alt="의약학 아이콘">
-                                        <p class="card_tit">의약학</p>                                        
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <img src="../img/main/sect02_icon07.svg" alt="예술체육 아이콘">
-                                        <p class="card_tit">예술체육</p>                                        
-                                    </a>
-                                </li>
-                            </ul>
-                                                     
+                    <div class="boardList">
+                        <div class="title">
+                            <h2>공지사항</h2>
+                            <a href="#" class="more"><span class="sr_only">더보기</span><i class="xi-plus" aria-hidden="true"></i></a> 
                         </div>
+                        <ul class="board-latest">
+                            <li><a href="#">
+                                <span class="boardTxt">
+                                    <span class="notice">[특강]</span>
+                                    집콕클라쓰 멘토썸머특강
+                                </span>
+                                <span class="boardDate">2023.12.23</span>
+                            </a></li>
+                            <li><a href="#">
+                                <span class="boardTxt">
+                                    <span class="notice">[공지]</span>
+                                    맞춤형멘토링 우수팀 인터뷰 1편
+                                </span>
+                                <span class="boardDate">2023.10.05</span>
+                            </a></li>
+                            <li><a href="#">
+                                <span class="boardTxt">
+                                    <span class="notice">[특강]</span>
+                                    학습법특강(선배라떼 질의응답 특강)
+                                </span>
+                                <span class="boardDate">2023.08.16</span>
+                            </a></li>
+                            <li><a href="#">
+                                <span class="boardTxt">
+                                    <span class="notice">[공지]</span>
+                                    2023-1학기 원격강좌 수강 안내
+                                </span>
+                                <span class="boardDate">2023.08.16</span>
+                            </a></li>
+                            
+                        </ul>                            
+                    </div>  
                     
-
+                    <div class="iconList">
+                        <ul class="list_group">
+                            <li>
+                                <h2 class="list_tit">분류별 <br>공개강좌</h2> 
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <img src="../img/main/sect02_icon01.svg" alt="인문과학 아이콘">
+                                    <p class="card_tit">인문과학</p>                                        
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <img src="../img/main/sect02_icon02.svg" alt="사회과학 아이콘">
+                                    <p class="card_tit">사회과학</p>                                       
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <img src="../img/main/sect02_icon03.svg" alt="공학 아이콘">
+                                    <p class="card_tit">공학</p>                                        
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <img src="../img/main/sect02_icon04.svg" alt="자연과학 아이콘">
+                                    <p class="card_tit">자연과학</p>                                        
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <img src="../img/main/sect02_icon05.svg" alt="교육학 아이콘">
+                                    <p class="card_tit">교육학</p>                                        
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <img src="../img/main/sect02_icon06.svg" alt="의약학 아이콘">
+                                    <p class="card_tit">의약학</p>                                        
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <img src="../img/main/sect02_icon07.svg" alt="예술체육 아이콘">
+                                    <p class="card_tit">예술체육</p>                                        
+                                </a>
+                            </li>
+                        </ul>
+                                                    
+                    </div>
+                    
                 </div>
             </div>
            
@@ -329,7 +326,6 @@
                                     </div>
                                 </a>
                             </li>
-                           
                         </ul>                           
 
                     </div>
@@ -401,10 +397,19 @@
         <!-- 팝업 보기 -->
         <!-- <div class="popup-wrap on">
             <div class="inner-box">
-                <ul id="slides">
-                    <li><a href="#0"><img src="../img/popup01.jpg"></a></li>
-                    <li><a href="#0"><img src="../img/popup02.jpg"></a></li>
-                    <li><a href="#0"><img src="../img/popup03.jpg"></a></li>
+                <div class="head-box">
+                    <a href="#0">오늘 하루 열지 않기 <i class="xi-close"></i></a>
+                </div>
+                <ul id="slides-main">
+                    <li>
+                        <iframe id="iframe1" src="iframe_main_popup.jsp"></iframe>
+                    </li>
+                    <li>
+                        <iframe id="iframe1" src="iframe_main_popup2.jsp"></iframe>
+                    </li>
+                    <li>
+                        <iframe id="iframe1" src="iframe_main_popup3.jsp"></iframe>
+                    </li>
                 </ul>
             </div>
             <div class="popup-overlay"></div>
@@ -412,26 +417,36 @@
         <div class="popup-btn-box">
             <a href="#0" class="popup-close"><i class="xi-close-min"></i></a>
             <a href="#0" class="popup-open"><i class="xi-library-books-o"></i><label class="ui blue small circular label">3</label></a>
-        </div>
+        </div> -->
+
         <script type="text/javascript">
             $(document).ready(function() {
-                var slider = $('#slides').slick({
+                var slider = $('#slides-main').slick({
                     arrows: true,
                     autoplay: true,
                     slidesToShow: 2,
                     slidesToScroll: 1,
-                    responsive: [{
-                        breakpoint: 786,
-                        settings: {
+                    responsive: [
+                        { 
+                            breakpoint: 950,
+                            settings: {
+                            slidesToShow: 1
+                            }
+                        },
+                        { 
+                            breakpoint: 480,
+                            settings: {
                             slidesToShow: 1,
-                            arrows: false,
+                            arrows: true,
                             dots: true
+                            }
                         }
-                    }]
+
+                    ]
                 });
             });
         </script>
-        -->
+       
     </div>
 </body>
 

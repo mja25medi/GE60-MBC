@@ -137,17 +137,18 @@ div.tstyle_list .xi-lock { color: #222; font-size: 2rem; display: inline-block; 
 
 }:root { --bluenavy: hsl(231deg, 48%, 48%); --green: hsl(152deg, 48%, 48%); }
 /* button */
-.btn.type1, .btn3.type1 { background: var(--darkblue, hsl(231deg, 48%, 48%)) ; color: #fff; border-color: var(--darkblue, hsl(231deg, 48%, 48%)) ; }
+.btn.type1, .btn3.type1 { background: #eb7d34; border: 1px solid #eb7d34; color: #fff;  }
+.btn.type1:hover, .btn3.type1:hover {background: #d86316 !important; border: 1px solid #d86316 !important;} 
 /* #244883 */
 .btn.type1:hover { background: var(--bluenavy, hsl(231deg, 48%, 28%)) ; border-color: var(--bluenavy, hsl(231deg, 48%, 28%)) ; }
-.btn.type2 { background: #282E3E; color: #fff; border-color: #282E3E; }
-.btn.type2:hover { background: #14171f; border: 1px solid #14171f; }
-.btn.type3 { background: #3d4968; color: #fff; border-color: #3d4968; }
-.btn.type3:hover { background: #2a3248; border: 1px solid #2a3248; }
+.btn.type2 { background: #939393; color: #fff; border-color: #939393; }
+.btn.type2:hover { background: #4b4b4b; border: 1px solid #4b4b4b; }
+.btn.type3 { background: #939393; color: #fff; border-color: #939393; }
+.btn.type3:hover { background: #4b4b4b; border: 1px solid #4b4b4b; }
 .btn.type4 { background: #6f645d; color: #fff; border-color: #6f645d; }
 .btn.type4:hover { background: #EA5717; border: 1px solid #EA5717; }
-.btn.type6 { background: #9966ff; color: #fff; border-color: #9966ff; }
-.btn.type6:hover { background: #7a4dd4; border: 1px solid #7a4dd4; }
+.btn.type6 { background: #705e53; color: #fff; border-color: #705e53; }
+.btn.type6:hover { background: #eb7d34; border: 1px solid #eb7d34; }
 .btn.gray2, .btn3.gray2 { background: #4D4D4D; color: #fff; border-color: #4D4D4D; }
 .btn.gray2:hover { background: #343434; border: 1px solid #343434; }
 .btns { display: flex; justify-content: center; }

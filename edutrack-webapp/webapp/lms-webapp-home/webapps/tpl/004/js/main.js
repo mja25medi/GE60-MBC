@@ -29,17 +29,13 @@ $(document).ready(function () {
     })
     
     
-    
 	//리스트 sort
     clickAC(".sort button");    
-
     
    $(".section02 .select .title").on("click", function () {
         active(this, "active")
     })      
 
-   
-  
     
     $('.slider_list').slick({
         infinite: true,
@@ -82,7 +78,6 @@ $(document).ready(function () {
     });
     
 
-
     /********** main best lecture **********/
     $('.section03 .best_list').slick({
       infinite: true,
@@ -96,7 +91,7 @@ $(document).ready(function () {
           {
             breakpoint: 950,
             settings: {
-              dots: true,
+
               slidesToShow: 3
             }
           },
@@ -115,6 +110,15 @@ $(document).ready(function () {
             }
           }
       ]
-  });
+    });
+  
+    /********** popupBox **********/
+    $('.popup-close').unbind('click').bind('click', function(e) {
+      $('.popup-wrap, .popup-close').hide();
+    });
+    $('.popup-open').on('click', function() {
+        $('.popup-wrap, .popup-close').css('display', 'flex');
+        $('#slides').get(0).slick.setPosition()
+    });
 })
 

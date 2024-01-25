@@ -38,7 +38,7 @@ header
 ======================================================================================= */
 header {position: fixed; top: 0; width: 100%; display: flex; justify-content: space-between; align-items: center;padding: 1.75rem 3rem; border-bottom: 1px solid rgba(149, 160, 183, 0.25); background: #fff; z-index: 9;}
 header h1.logo {flex: 1;}
-header h1.logo a {display: block; width: 19.5rem; height: 2.8rem; background: url(../img/common/logo.svg) 0 0/contain no-repeat;}
+header h1.logo a {display: block; width: 19.5rem; height: 3.8rem; background: url(../img/common/logo.svg) 0 0/contain no-repeat;}
 header .util{display: inline-flex; align-items: center;}
 header .util .form-select {min-width: 25rem; margin-right: 2rem;}
 header .util button {position: relative; display: inline-flex; align-items: center; width: 4rem; height: 4rem; margin-left: .75rem; font-size: 2.25rem; color: #fff; border-radius: 100%; background: #C9C9C9; transition: 0.2s;}
@@ -57,7 +57,7 @@ container
 .lnb .inner {height: 100%; padding: 3.5rem 0; overflow-x: auto;}
 .lnb .profile {margin-bottom: 3rem; padding: 0 3rem;}
 .lnb .profile .name {margin-bottom: .5rem; font-size: 2rem; font-weight: 500; color: #fff;}
-.lnb .profile .name strong {color: #46C6FF;}
+.lnb .profile .name strong {color: #fffc46;}
 .lnb .profile .meta {color: rgba(255, 255, 255, .5);}
 .lnb .mo_util {display: none; flex-direction: column; margin: 0 3rem;}
 .lnb .mo_util .form-select {width: 100%; border: none;}

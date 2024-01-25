@@ -83,7 +83,7 @@ table td .btn:hover {text-decoration: none !important;}
 .prog_rate ul li .meta {margin-right: 2rem; font-weight: 700;}
 .prog_rate ul li .progress {height: 1.25rem; border-radius: 5rem; background: #D2D6DA; flex: 1; overflow: hidden;}
 .prog_rate ul li .progress .bar {float: left; height: 100%; border-radius: 5rem;}
-.prog_rate ul li .progress .bar.red_type {background: linear-gradient(90deg, rgba(245,171,225,1) 0%, rgba(239,105,217,1) 100%);}
+.prog_rate ul li .progress .bar.red_type {background: linear-gradient(90deg, rgb(243 174 141) 0%, rgb(239 115 44) 100%);}
 .prog_rate ul li .progress .bar.blue_type {background: linear-gradient(90deg, rgba(123,203,239,1) 0%, rgba(43,152,200,1) 100%);}
 .test_part {display: flex; flex-direction: column; flex: 1;}
 .test_part h3 {padding-bottom: 1.5rem;}
