@@ -435,7 +435,7 @@
 <!-- 				<edutrack.redis.server>183.111.234.122</edutrack.redis.server> -->
 				<edutrack.redis.port>6379</edutrack.redis.port>
 				<edutrack.redis.check_yn>Y</edutrack.redis.check_yn>
-				<edutrack.redis.namespace>smhrd</edutrack.redis.namespace>
+				<edutrack.redis.namespace>ge60_demo</edutrack.redis.namespace>
 				<edutrack.redis.password>smhrd@2023</edutrack.redis.password>
 
 				<!-- hrd 연동   -->
@@ -771,7 +771,7 @@
 <!-- 				<edutrack.redis.server>183.111.234.122</edutrack.redis.server> -->
 				<edutrack.redis.port>6379</edutrack.redis.port>
 				<edutrack.redis.check_yn>Y</edutrack.redis.check_yn>
-				<edutrack.redis.namespace>smhrd</edutrack.redis.namespace>
+				<edutrack.redis.namespace>ge60_demo</edutrack.redis.namespace>
 				<edutrack.redis.password>smhrd@2023</edutrack.redis.password>
 				
 				<!-- hrd 연동   -->
