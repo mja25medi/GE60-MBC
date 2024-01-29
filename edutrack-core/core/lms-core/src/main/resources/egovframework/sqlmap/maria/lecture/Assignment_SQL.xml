@@ -214,9 +214,15 @@
 		        ,  A.MOD_NO																										
 		        ,  A.MOD_DTTM	
 		       	, (SELECT FN_GET_CRS_STD_PRGR(#{crsCreCd},#{stdNo})) AS STD_RATIO  																										
-		        , CASE WHEN DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 						
-		             BETWEEN A.ASMT_START_DTTM AND A.EXT_SEND_DTTM  							
-                     THEN 'Y' ELSE 'N' END AS CONN_YN							
+		        , CASE 
+		        	 WHEN DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 						
+		             	  BETWEEN A.ASMT_START_DTTM AND A.EXT_SEND_DTTM  							
+                     THEN 'Y' 
+                     WHEN 	DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') < A.ASMT_START_DTTM							
+                     THEN 'NO'
+                     WHEN 	DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') > A.EXT_SEND_DTTM  							
+                     THEN 'NN'
+                     END AS CONN_YN							
                 , CASE WHEN A.EXT_SEND_DTTM < DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')  
 		             THEN 'Y' ELSE 'N' END AS RSLT_YN  
         	     , IFNULL(( (SELECT SUM(SEND.SCORE) FROM tb_lec_asmt_send SEND WHERE SEND.ASMT_SN = A.ASMT_SN AND SEND.RATE_YN = 'Y') /				

@@ -34,8 +34,8 @@
     		padding: 0;
 		}
 
-		.print_wrap .print_box > img { left: 0%!important; width: 21cm!important; height: 29.7cm!important; }
-		.print_wrap .print_box .table_wrap { left:0%!important; width: 21cm!important; height: 29.7cm!important; }
+		.print_wrap .print_box > img { width: 21cm!important; height: 29.7cm!important; }
+		.print_wrap .print_box .table_wrap {position:absolute; top:0; width: 21cm!important; height: 29.7cm!important; }
 		
 	</style>
 

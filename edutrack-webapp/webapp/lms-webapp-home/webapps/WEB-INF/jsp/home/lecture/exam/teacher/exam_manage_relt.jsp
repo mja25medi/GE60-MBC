@@ -207,13 +207,13 @@
                                     <td data-label="평가/결과">
                                     	<c:choose>
 											<c:when test="${vo.examTypeCd eq 'OFF'}">
-												<div class="input-group" style="width:120px;">
+												<div class="input-group" >
 													<input type='text' name='score' onkeyup="isChkMaxNumber(this,'100')"  onblur="isChkScore(this,100);" style='width:80px;  text-align:right;size=7' maxlength="6" class="input-sm inputNumber">
-													<button onclick="addScore(${status.index})"class="btn3 type1 sm"><spring:message code="button.add"/></button>
+													<button onclick="addScore(${status.index})"class="btn type3"><spring:message code="button.add"/></button>
 												</div>
 											</c:when>
 											<c:when test="${item.stareCnt > 0 && not empty item.endDttm && not empty item.stareAnss}">
-												<button onclick="javascript:editRate('${item.stdNo}')"class="btn3 type1"><spring:message code="lecture.title.exam.rate"/></button> 
+												<button onclick="javascript:editRate('${item.stdNo}')"class="btn type3"><spring:message code="lecture.title.exam.rate"/></button> 
 											</c:when>
 											<c:otherwise>
 												-

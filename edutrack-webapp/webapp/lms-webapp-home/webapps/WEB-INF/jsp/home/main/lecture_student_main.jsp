@@ -51,35 +51,56 @@
 	        <h3>학습진도율</h3>
 	        <ul>
 	            <li>
-	                <span class="header">나의 진도율</span><span class="meta">${mainLectureVO.prgrRatio }%</span>
-	                <div class="progress">
-	                    <div class="bar red_type" style="width: ${mainLectureVO.prgrRatio }%;"></div>
-	                </div>
+	                <c:choose>
+	                	<c:when test="${createCourseVO.creTypeCd eq 'OF' }"><!-- 오프라인 과정일 경우 등록한 시간표에 맞춰서 진도율 계산 --></c:when>
+	                	<c:otherwise> 
+			                <span class="header">나의 진도율</span><span class="meta">${mainLectureVO.prgrRatio }%</span>  	                
+			                <div class="progress">
+			                    <div class="bar red_type" style="width: ${mainLectureVO.prgrRatio }%;"></div>
+			                </div>
+	                	</c:otherwise>
+	                </c:choose>
 	            </li>
 	            <li>
 	                <span class="header">권장 진도율</span>
 	                <span class="meta">
-	                	<c:choose>
-							<c:when test="${termDayCnt < 0 }">
-								0%
-							</c:when>
-							<c:when test="${createCourseVO.enrlStartDttm > nowDate }"> <!-- 교육기간 시작 이전 -->
-								0%
-							</c:when>
-							<c:otherwise>
-								${prpsRatio}%
-							</c:otherwise>
-						</c:choose>	
+	                <c:choose>
+	                	<c:when test="${createCourseVO.creTypeCd eq 'ON' }"> <!-- 온라인 과정일 경우 고정 -->80%</c:when>
+	                	<c:when test="${createCourseVO.creTypeCd eq 'BL' }"><!-- 혼합 과정일 경우 고정 -->80%</c:when> 
+	                	<c:otherwise> 
+	                	<!-- 오프라인 과정일 경우 기존 계산 -->	
+	                		<c:choose>
+								<c:when test="${termDayCnt < 0 }">
+									0%
+								</c:when>
+								<c:when test="${createCourseVO.enrlStartDttm > nowDate }"> <!-- 교육기간 시작 이전 -->
+									0%
+								</c:when>
+								<c:otherwise>
+									${prpsRatio}%
+								</c:otherwise>
+							</c:choose>	
+	                	</c:otherwise>
+	                </c:choose>
+
 	                </span>
 	                <div class="progress">
-                 	     <c:choose>
-							<c:when test="${termDayCnt < 0 }">
-								<div class="bar blue_type" style="width: 0%;"></div>
-							</c:when>
-							<c:otherwise>
-								<div class="bar blue_type" style="width: ${prpsRatio }%;"></div>
-							</c:otherwise>
-						</c:choose>	
+		                <c:choose>
+		                	<c:when test="${createCourseVO.creTypeCd eq 'ON' }"><div class="bar blue_type" style="width: 80%;"></div></c:when>
+		                	<c:when test="${createCourseVO.creTypeCd eq 'BL' }"><div class="bar blue_type" style="width: 80%;"></div></c:when> 
+		                	<c:otherwise> 
+		                		<!-- 오프라인 과정일 경우 기존 계산 -->	
+		                 	     <c:choose>
+									<c:when test="${termDayCnt < 0 }">
+										<div class="bar blue_type" style="width: 0%;"></div>
+									</c:when>
+									<c:otherwise>
+										<div class="bar blue_type" style="width: ${prpsRatio }%;"></div>
+									</c:otherwise>
+								</c:choose>	
+		                	</c:otherwise>
+		                </c:choose>
+
 	                </div>
 
 	            </li>

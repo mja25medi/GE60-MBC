@@ -306,7 +306,7 @@ public class CourseCreateCourseAttendanceController extends GenericController {
 				sheet.mergeCells(17, rowNum, 24, rowNum); 
 				sheet.mergeCells(25, rowNum, 32, rowNum);
 				sheet.mergeCells(33, rowNum, 47, rowNum);
-				sheet.addCell(ExcelUtil.createText(1, rowNum, "center", "메디오피아테크"));
+				sheet.addCell(ExcelUtil.createText(1, rowNum, "center", "(사)스마트인재개발원"));
 				sheet.addCell(ExcelUtil.createText(9, rowNum, "center", "훈련과정명"));
 				sheet.addCell(ExcelUtil.createText(17, rowNum, "center", ccvo.getCrsCreNm()+"("+ccvo.getCreTerm()+") 회차 "));
 				sheet.addCell(ExcelUtil.createText(25, rowNum, "center", "훈련기간"));

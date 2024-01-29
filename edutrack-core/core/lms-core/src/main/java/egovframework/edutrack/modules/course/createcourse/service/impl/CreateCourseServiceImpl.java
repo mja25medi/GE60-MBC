@@ -673,6 +673,29 @@ public class CreateCourseServiceImpl extends EgovAbstractServiceImpl implements 
 		setDateConvert(iCreateCourseVO);
 		//--- 과정 정보 변경
 		createCourseMapper.updateCreateCourse(iCreateCourseVO);
+		
+		iCreateCourseVO = createCourseMapper.selectCreateCourse(iCreateCourseVO);
+		// 오프라인 교육일 삭제 후 재등록
+		  if(iCreateCourseVO.getCreTypeCd().equals("OF") || iCreateCourseVO.getCreTypeCd().equals("BL")) {
+			  AttendanceVO avo = new AttendanceVO();
+			  avo.setCrsCreCd(iCreateCourseVO.getCrsCreCd());
+			  avo.setRegNo(iCreateCourseVO.getRegNo());
+			  avo.setModNo(iCreateCourseVO.getModNo());
+			  attendanceMapper.deleteAttendDttm(avo);
+			  
+			  LocalDateTime startDay = DateTimeUtil.parseDttmToLocalDateTime(iCreateCourseVO.getEnrlStartDttm());
+			  LocalDateTime endDay = DateTimeUtil.parseDttmToLocalDateTime(iCreateCourseVO.getEnrlEndDttm());
+			  while(!startDay.isAfter(endDay)) {
+				  if(!isWeekend(startDay)) {
+					  //yyyyMMddHHmm01 형태로 저장
+					  avo.setAttendDttm(startDay.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")));
+					  System.out.println(isWeekend(startDay));
+					  System.out.println(startDay);
+					  attendanceMapper.insertAttendDttm(avo);
+				  }
+				  startDay = startDay.plusDays(1);
+			  }
+		  }
 		sysFileService.bindFileUpdate(iCreateCourseVO, new NestedQrFileHandler());
 		resultVO.setReturnVO(iCreateCourseVO);
 		resultVO.setResultSuccess();

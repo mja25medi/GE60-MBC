@@ -69,11 +69,25 @@
 	                        </ul>
 	                        <ul class="list">
 	                            <li class="head"><label><spring:message code="lecture.title.assignment.duration"/></label></li>
-	                            <li>${assignmentVO.asmtStartDttm} ${assignmentVO.asmtStartHour}:${assignmentVO.asmtStartMin} ~ ${assignmentVO.asmtEndDttm} ${assignmentVO.asmtEndHour}:${assignmentVO.asmtEndMin}</li>
+	                            <li>
+	                            	<c:if test="${assignmentVO.asmtSvcCd eq 'CODE'}">
+	                            		-
+	                            	</c:if>
+	                            	<c:if test="${assignmentVO.asmtSvcCd eq 'GEN'}">
+	                            		  ${assignmentVO.asmtStartDttm} ${assignmentVO.asmtStartHour}:${assignmentVO.asmtStartMin} ~ ${assignmentVO.asmtEndDttm} ${assignmentVO.asmtEndHour}:${assignmentVO.asmtEndMin}
+	                            	</c:if>	
+	                            </li>
 	                        </ul>
 	                        <ul class="list">
 	                            <li class="head"><label><spring:message code="lecture.title.assignment.delaydate"/></label></li>
-	                            <li>${assignmentVO.extSendDttm} ${assignmentVO.extSendHour}:${assignmentVO.extSendMin}</li>
+	                            <li>
+	                            <c:if test="${assignmentVO.asmtSvcCd eq 'CODE'}">
+	                            	-
+	                            </c:if>
+	                            <c:if test="${assignmentVO.asmtSvcCd eq 'GEN'}">
+	                            	${assignmentVO.extSendDttm} ${assignmentVO.extSendHour}:${assignmentVO.extSendMin}
+	                            </c:if>
+	                            </li>
 	                            <c:if test="${assignmentVO.asmtTypeCd eq 'ON'}">
 								<li class="head"><label><spring:message code="lecture.title.assignment.send.cnt"/></label></li>
 	                            <li>${assignmentVO.asmtLimitCnt} <spring:message code="common.title.times.postfix"/></li>
@@ -207,8 +221,11 @@
 													<button class="btn3 type1 sm" onclick='addScore("${status.index}")' style="cursor:pointer"><spring:message code="button.add"/></button>
 												</div>
 											</c:if>
-											<c:if test="${item.sendCnt > 0 && assignmentVO.asmtTypeCd ne 'OFF'}">
+											<c:if test="${item.sendCnt > 0 && assignmentVO.asmtTypeCd ne 'OFF' && assignmentVO.asmtSvcCd eq 'CODE'}">
 												<button onclick="javascript:editCodeRate('${item.stdNo}')" class="btn3 type1 sm"><spring:message code="button.rate"/></button>
+											</c:if>
+											<c:if test="${item.sendCnt > 0 && assignmentVO.asmtTypeCd ne 'OFF' && assignmentVO.asmtSvcCd eq 'GEN'}">
+												<button onclick="javascript:editRate('${item.stdNo}')" class="btn3 type1 sm"><spring:message code="button.rate"/></button>
 											</c:if>
 	                                    </td>
                                 	</tr>
@@ -237,7 +254,7 @@
                    	<meditag:paging pageInfo="${pageInfo}" funcName="listStudent" name="lect"/>
                	</div>
 			<!-- </div> -->
-						
+		
 
 <script type="text/javascript">
 
@@ -493,11 +510,11 @@
 	 */
 	function editRate(stdNo) {
 		var addContent  = "<iframe id='addRateFrame' name='addRateFrame' width='100%' height='100%' "
-			+ "frameborder='0' scrolling='auto' src='<c:url value="/lec/assignment/editFormRatePop"/>"
+			+ "frameborder='0' scrolling='no' src='<c:url value="/lec/assignment/editFormRatePop"/>"
 			+ "?crsCreCd=${assignmentVO.crsCreCd}&amp;asmtSn=${assignmentVO.asmtSn}&amp;stdNo="+stdNo+"'/>";
 		parent.modalBox.clear();
 		parent.modalBox.addContents(addContent);
-		parent.modalBox.resize(1500, 900);
+		parent.modalBox.resize(1400, 800);
 		parent.modalBox.setTitle("<spring:message code="lecture.title.assignment.rate"/>");
 		parent.modalBox.show();
 	}
@@ -695,13 +712,12 @@
 	 * 학습자 평가(코딩학습의 경우)
 	 */
 	function editCodeRate(stdNo) {
-
 		var addContent  = "<iframe id='addRateFrame' name='addRateFrame' width='100%' height='100%' "
-			+ "frameborder='0' scrolling='none' src='<c:url value="/lec/assignment/rateCodeAsmtFormPop"/>"
+			+ "frameborder='0' scrolling='no' src='<c:url value="/lec/assignment/rateCodeAsmtFormPop"/>"
 			+ "?crsCreCd=${assignmentVO.crsCreCd}&asmtSn=${assignmentVO.asmtSn}&stdNo="+stdNo+"'/>";
 		modalBox.clear();
 		modalBox.addContents(addContent);
-		modalBox.resize(1200, 800);
+		modalBox.resize(1400, 800);
 		modalBox.setTitle("<spring:message code="lecture.title.assignment.rate"/>");
 		modalBox.show();
 	}

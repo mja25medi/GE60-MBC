@@ -86,4 +86,13 @@ public interface AttendanceMapper {
 	 * 외출하기(사용자)
 	 */
 	public int outClass(AttendanceVO vo)  ;
+
+	/**
+	 * 교육 출석 기간 삭제
+	 */
+	public int deleteAttendDttm(AttendanceVO avo);
+
+	public int countAttend(AttendanceVO avo);
+
+	public void batchAttend(AttendanceVO avo);
 }

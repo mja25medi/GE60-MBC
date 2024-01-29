@@ -109,7 +109,7 @@
 				                            		<c:when test="${sbjVO.sbjType eq 'OFF'}"> <!-- 오프라인일때 -->
 				                            			<c:choose>
 				                            				<c:when test="${nowTime > contentsItem.classStartTime and nowTime < contentsItem.classEndTime}"><!-- 강의시간내일때 -->
-						                            			<button type="button" class="primary ${btnDisabled}" onclick="checkDayLimit('${contentsItem.sbjCd}','${contentsItem.unitCd}','${contentsItem.prgrRatio}','${contentsItem.cntsTypeCd}')">학습하기</button>			                            						                            				
+						                            			<button type="button" class="primary ${btnDisabled}" onclick="checkDayLimit('${contentsItem.sbjCd}','${contentsItem.unitCd}','${contentsItem.prgrRatio}','${contentsItem.cntsTypeCd}','','')">학습하기</button>			                            						                            				
 				                            				</c:when>
 				                            				<c:when test="${nowTime > contentsItem.classEndTime}"><!-- 강의시간 이후 일때 -->
 				                            					<button type="button" class="primary ${btnDisabled}" onclick="checkDayLimit('${contentsItem.sbjCd}','${contentsItem.unitCd}','${contentsItem.prgrRatio}','${contentsItem.cntsTypeCd}','','Y')">복습하기</button>
@@ -121,14 +121,14 @@
 				                            			</c:choose>
 				                            		</c:when>
 				                            		<c:otherwise> <!-- 온라인일때 -->
-					                            		<button type="button" class="primary" onclick="checkDayLimit('${contentsItem.sbjCd}','${contentsItem.unitCd}','${contentsItem.prgrRatio}','${contentsItem.cntsTypeCd}')">학습하기</button>				                            			
+					                            		<button type="button" class="primary" onclick="checkDayLimit('${contentsItem.sbjCd}','${contentsItem.unitCd}','${contentsItem.prgrRatio}','${contentsItem.cntsTypeCd}','','')">학습하기</button>				                            			
 				                            		</c:otherwise>
 				                            	</c:choose>
 			                            	</c:when>
 			                            	<c:when test="${contentsItem.cntsTypeCd eq 'CODING_T'}">
 			                            		 <c:choose>
  			                            			<c:when test="${nowTime > contentsItem.classStartTime and nowTime < contentsItem.classEndTime}"> <!-- 강의시간내 -->
-														<button type="button" class="primary ${btnDisabled}" onclick="checkDayLimit('${contentsItem.sbjCd}','${contentsItem.unitCd}','${contentsItem.prgrRatio}','${contentsItem.cntsTypeCd}','${contentsItem.asmtSn}')">학습하기</button>
+														<button type="button" class="primary ${btnDisabled}" onclick="checkDayLimit('${contentsItem.sbjCd}','${contentsItem.unitCd}','${contentsItem.prgrRatio}','${contentsItem.cntsTypeCd}','${contentsItem.asmtSn}','')">학습하기</button>
  			                            			</c:when>
  			                            			<c:when test="${nowTime < contentsItem.classStartTime}"> <!-- 강의시간 이전 -->
  			                            			</c:when>
@@ -181,7 +181,7 @@
 					                            		<c:if test="${not empty contentsItem.unitFilePath}"> <!-- 콘텐츠 연결이 있을때만 버튼 노출 --> 
 						                            		<c:choose>
 						                            			<c:when test="${nowDate < createCourseVO.enrlStartDttm }">	<!-- 수강기간 이전일 경우 disabled -->
-						                            				<button type="button" class="primary disabled" title="학습하기" onclick="checkDayLimit('${contentsItem.sbjCd}','${contentsItem.unitCd}','${contentsItem.prgrRatio}','${contentsItem.cntsTypeCd}')">학습하기</button>
+						                            				<button type="button" class="primary disabled" title="학습하기" onclick="checkDayLimit('${contentsItem.sbjCd}','${contentsItem.unitCd}','${contentsItem.prgrRatio}','${contentsItem.cntsTypeCd}','','')">학습하기</button>
 						                            			</c:when>
 						                            			<c:otherwise>
 						                            				<c:choose>
@@ -189,7 +189,7 @@
 						                            						<button type="button" class="primary" title="복습하기" onclick="checkDayLimit('${contentsItem.sbjCd}','${contentsItem.unitCd}','${contentsItem.prgrRatio}','${contentsItem.cntsTypeCd}','','Y')">복습하기</button>
 						                            					</c:when>
 						                            					<c:otherwise>
-						                            						<button type="button" class="primary ${btnDisabled}" title="학습하기" onclick="checkDayLimit('${contentsItem.sbjCd}','${contentsItem.unitCd}','${contentsItem.prgrRatio}','${contentsItem.cntsTypeCd}')">학습하기</button>
+						                            						<button type="button" class="primary ${btnDisabled}" title="학습하기" onclick="checkDayLimit('${contentsItem.sbjCd}','${contentsItem.unitCd}','${contentsItem.prgrRatio}','${contentsItem.cntsTypeCd}','','')">학습하기</button>
 						                            					</c:otherwise>
 						                            				</c:choose>
 						                            			</c:otherwise>
@@ -363,7 +363,7 @@
 	
 	function checkDayLimit(sbjCd, unitCd, prgrRatio, cntsTypeCd, asmtSn , review) {
 		if(prgrRatio == 100){	
-			viewContents(sbjCd, unitCd);
+			viewContents(sbjCd, unitCd, review, cntsTypeCd, asmtSn);
 		}else{
 			$.ajax({
 				url : '/lec/bookmark/getTotalBookmarkInfo'

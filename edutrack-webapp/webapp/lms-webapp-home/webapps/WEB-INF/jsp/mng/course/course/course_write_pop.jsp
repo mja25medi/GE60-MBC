@@ -12,6 +12,10 @@
 	<input type="hidden" name="thumbFileSn" value="${vo.thumbFileSn }"/>
 	<input type="hidden" name="attachFileSns" id="attachFileSns" value="${vo.attachFileSns}" />
 	<input type="hidden" name="eduTeam" id="eduTeam" value="${vo.eduTeam }"/>
+	<input type="hidden" name="nopLimitYn" id="nopLimitYn" value="${vo.nopLimitYn }"/>
+	<input type="hidden" name="cpltHandlType" id="cpltHandlType" value="AT"/> <!-- 24.01.22 임종혁부장. 자동처리만 나오게 요청 -->
+	<input type="hidden" name="certIssueYn" id="certIssueYn" value="Y"/> <!-- 개인 발급 가능 -->
+
 	<c:if test="${gubun eq 'A'}">
 		<input type="hidden" name="eduTm" id="eduTm"/>
 		<input type="hidden" name="oflnEduTm" id="oflnEduTm"/>
@@ -19,9 +23,9 @@
 	<table summary="<spring:message code="course.title.course.manage"/>" class="table table-striped table-bordered">
 		<colgroup>
 			<col style="width:20%"/>
-			<col style="width:30%"/>
+			<col style="width:25%"/>
 			<col style="width:20%"/>
-			<col style="width:30%"/>
+			<col style="width:35%"/>
 		</colgroup>
 		<tr>
 			<th scope="row"><span style="color:red;">* </span><label for="crsNm"><spring:message code="course.title.course.name"/></label></th>
@@ -37,16 +41,64 @@
 				</div>
 			</td>
 		</tr>
-		<tr>
-			<th scope="row"><span style="color:red;">* </span><label for="simsaCode">심사코드</label></th>
-			<td colspan="3">
-				<input type="text" dispName="심사코드" maxlength="50" isNull="N" lenCheck="50"  name="simsaCode" value="${vo.simsaCode }" class="form-control input-sm" id="simsaCode"/>
+		<tr >
+			<th scope="row"><span style="color:red;">* </span><spring:message code="course.title.course.opermthd"/></th>
+			<td>
+				<c:choose>
+					<c:when test="${gubun eq 'E'}">
+						<%-- <input type="hidden" name="crsOperType" value="${courseVO.crsOperType}"/> --%>
+						<select name="crsSvcType" id="crsSvcType" class="form-control input-sm"  onchange="selectBoxChange(this.id, this.value);">
+							<c:forEach var="item" items="${crsSvcEditList}" varStatus="status">
+							<option value="${item.codeCd}" <c:if test="${vo.crsSvcType eq item.codeCd}">selected</c:if> >${item.codeNm}</option>
+							</c:forEach>				
+						</select>
+					</c:when>
+					<c:otherwise>
+						<select name="crsSvcType" id="crsSvcType" class="form-control input-sm" onChange="selectBoxChange(this.id, this.value);">
+							<c:forEach var="item" items="${crsSvcEditList}" varStatus="status">
+							<option value="${item.codeCd}" <c:if test="${vo.crsSvcType eq item.codeCd}">selected</c:if> >${item.codeNm}</option>
+							</c:forEach>				
+						</select>
+					</c:otherwise>
+				</c:choose>
 			</td>
-		</tr>
-		<tr>
-			<th scope="row"><span style="color:red;">* </span><label for="tracseId">훈련과정 ID</label></th>
-			<td colspan="3">
-				<input type="text" dispName="훈련과정 ID" maxlength="50" isNull="N" lenCheck="50"  name="tracseId" value="${vo.tracseId }" class="form-control input-sm" id="tracseId"/>
+			
+			<th scope="row"><span style="color:red;">* </span><spring:message code="course.title.course.crstype"/></th>
+			<td>
+				<div style="float:left">
+				<c:if test="${gubun eq 'A'}">
+				<select name="crsOperMthd" id="crsOperMthd" class="form-control input-sm"  onChange="selectBoxChange(this.id, this.value);">
+					<c:forEach var="item" items="${crsOperMthdList}" varStatus="status">
+					<option value="${item.codeCd}" <c:if test="${vo.crsOperMthd eq item.codeCd}">selected</c:if> >${item.codeNm}</option>
+					</c:forEach>				
+				</select>
+				</c:if>
+				<c:if test="${gubun eq 'E'}">
+				<!-- 과목 (온라인,오프라인) 지정 후 과정유형이 변경되면 서비스에 결함이 발생할 수 있어 select box 를 disabled 함. (수정시..) -->
+				<!-- 예를 들오 온라인 과정에 온라인 과목이 지정되어있는데  오프라인으로 변경되면 서비스 장애가 발생할 수 있음.-->
+				<select name="crsOperMthd" id="crsOperMthd" class="form-control input-sm"  onChange="selectBoxChange(this.id, this.value);" disabled>  
+					<c:forEach var="item" items="${crsOperMthdList}" varStatus="status">
+					<option value="${item.codeCd}" <c:if test="${vo.crsOperMthd eq item.codeCd}">selected</c:if> >${item.codeNm}</option>
+					</c:forEach>				
+				</select>
+				</c:if>
+				</div>
+				<div id="enrlNopArea" style="float:left:display:hidden;">
+					<span style="float:left;margin-left:10px;margin-right:5px;padding-top:5px;">교육인원</span>
+					<input type="text" style="width:45px;float:left;text-align:right;" dispName="<spring:message code="course.title.course.stdcnt"/>" maxlength="10"  isNull="Y" name="eduNop" value="${vo.eduNop }" class="inputNumber form-control input-sm" id="eduNop" onkeyup="isChkNumber(this)"/>
+					<span style="float:left;line-height:30px;padding-left:5px;"><spring:message code="common.title.cnt.user"/></span>
+				</div>
+			</td>
+			
+		</tr>		
+		<tr id="hrdNetArea" style="display:hidden;">
+			<th scope="row"><span style="color:red;">* </span><label for="simsaCode">HRD 심사코드</label></th>
+			<td>
+				<input type="text" dispName="심사코드" maxlength="50" isNull="Y" lenCheck="50"  name="simsaCode" value="${vo.simsaCode }" class="form-control input-sm" id="simsaCode"/>
+			</td>
+			<th scope="row"><span style="color:red;">* </span><label for="tracseId">HRD 훈련과정 ID</label></th>
+			<td>
+				<input type="text" dispName="훈련과정 ID" maxlength="50" isNull="Y" lenCheck="50"  name="tracseId" value="${vo.tracseId }" class="form-control input-sm" id="tracseId"/>
 			</td>
 		</tr>
 		<tr >
@@ -160,53 +212,6 @@
 				</c:choose>
 				</c:if>
 			</td>
-			<th scope="row"><span style="color:red;">* </span><label for="eduNop"><spring:message code="course.title.course.stdcnt"/></label></th>
-			<td>
-				<%-- <input type="text" style="width:60px;text-align:right;" dispName="<spring:message code="course.title.course.stdcnt"/>" maxlength="10" isNull="N" name="eduNop" value="${courseVO.eduNop }" class="inputNumber form-control input-sm" id="eduNop" onkeyup="isChkNumber(this)"/> --%>
-				<div style="float:left">
-				<%-- <select name="nopLimitYn" id="nopLimitYn" style="width:120px;" onChange="chgNopLimitYn();" class="form-control input-sm">
-				<c:forEach var="item" items="${nopLimitList}">
-					<c:set var="selected" value=""/>
-					<c:if test="${courseVO.nopLimitYn eq  item.codeCd}">
-						<c:set var="selected" value="selected"/>
-					</c:if>
-					<c:set var="codeName" value="${item.codeNm}"/>
-					<c:forEach var="lang" items="${item.codeLangList}">
-						<c:if test="${lang.langCd eq LOCALEKEY}"><c:set var="codeName" value="${lang.codeNm}"/></c:if>
-					</c:forEach>
-					<option value="${item.codeCd}" ${selected}>${codeName}</option>
-				</c:forEach>
-				</select> --%>
-				</div>
-				<div id="enrlNopArea" style="float:left:display:hidden;">
-					<input type="text" style="width:60px;float:left;text-align:right;" dispName="<spring:message code="course.title.course.stdcnt"/>" maxlength="10"  isNull="Y" name="eduNop" value="${vo.eduNop }" class="inputNumber form-control input-sm" id="eduNop" onkeyup="isChkNumber(this)"/>
-					<span style="float:left;line-height:30px;padding-left:5px;"><spring:message code="common.title.cnt.user"/></span>
-				</div>
-			</td>
-		</tr>
-		
-		<tr >
-			<th scope="row"><span style="color:red;">* </span><spring:message code="course.title.course.opermthd"/></th>
-			<td>
-				<c:choose>
-					<c:when test="${gubun eq 'E'}">
-						<%-- <input type="hidden" name="crsOperType" value="${courseVO.crsOperType}"/> --%>
-						<select name="crsSvcType" id="crsSvcType" class="form-control input-sm">
-							<c:forEach var="item" items="${crsSvcEditList}" varStatus="status">
-							<option value="${item.codeCd}" <c:if test="${courseVO.crsSvcType eq item.codeCd}">selected</c:if> >${item.codeNm}</option>
-							</c:forEach>				
-						</select>
-					</c:when>
-					<c:otherwise>
-						<select name="crsSvcType" id="crsSvcType" class="form-control input-sm" onChange="chkHandlType()">
-							<c:forEach var="item" items="${crsSvcEditList}" varStatus="status">
-							<option value="${item.codeCd}" <c:if test="${courseVO.crsSvcType eq item.codeCd}">selected</c:if> >${item.codeNm}</option>
-							</c:forEach>				
-						</select>
-					</c:otherwise>
-				</c:choose>
-			</td>
-			
 			<th scope="row"><label for="cpltScore"><spring:message code="course.title.course.completescore"/></label></th>
 			<td>
 				<input type="text" style="width:60px;float:left;text-align:right;" dispName="<spring:message code="course.title.course.completescore"/>" maxlength="3" maxValue="100" isNull="Y" name="cpltScore" value="${vo.cpltScore }" class="inputNumber form-control input-sm" id="cpltScore" onkeyup="isChkMaxNumber(this,100)"/>
@@ -214,31 +219,16 @@
 			</td>
 		</tr>
 		
+
+		
 		<tr >
 			<%-- <th scope="row"><label for="eduTarget"><spring:message code="course.title.course.target"/></label></th>
 			<td>
 				<input type="text" style="width:96%;" dispName="<spring:message code="course.title.course.target"/>" maxlength="50" isNull="Y" name="eduTarget" value="${vo.eduTarget}" class="form-control input-sm" id="eduTarget"/>
 			</td> --%>
-			<th scope="row"><span style="color:red;">* </span><spring:message code="course.title.course.crstype"/></th>
-			<td>
-				<c:if test="${gubun eq 'A'}">
-				<select name="crsOperMthd" id="crsOperMthd" class="form-control input-sm">
-					<c:forEach var="item" items="${crsOperMthdList}" varStatus="status">
-					<option value="${item.codeCd}" <c:if test="${vo.crsOperMthd eq item.codeCd}">selected</c:if> >${item.codeNm}</option>
-					</c:forEach>				
-				</select>
-				</c:if>
-				<c:if test="${gubun eq 'E'}">
-				<select name="crsOperMthd" id="crsOperMthd" class="form-control input-sm">
-					<c:forEach var="item" items="${crsOperMthdList}" varStatus="status">
-					<option value="${item.codeCd}" <c:if test="${vo.crsOperMthd eq item.codeCd}">selected</c:if> >${item.codeNm}</option>
-					</c:forEach>				
-				</select>
-				</c:if>
-			</td>
 			
 			<th scope="row"><label for="eduPrice"><spring:message code="course.title.course.edufee"/></label></th>
-			<td>
+			<td colspan="3">
 				<div class="input-group">
 				<c:if test="${sessionScope.MNTRYPOS eq 'PR'}">
 					<span style="float:left;line-height:30px;padding-left:5px;">${sessionScope.MNTRYUNIT}</span>
@@ -250,32 +240,7 @@
 				</div>
 			</td>
 		</tr>
-		
-		<tr >
-			<%-- <th scope="row"><span style="color:red;">* </span><spring:message code="course.title.course.enrollconfirm"/></th>
-			<td>
-				<select name="enrlCertMthd" id="enrlCertMthd" class="form-control input-sm">
-					<c:forEach var="item" items="${enrlCertMthdList}" varStatus="status">
-					<option value="${item.codeCd}" <c:if test="${vo.enrlCertMthd eq item.codeCd}">selected</c:if> >${item.codeNm}</option>
-					</c:forEach>				
-				</select>
-			</td> --%>
-			<th scope="row"><span style="color:red;">* </span><spring:message code="course.title.course.completehandle"/></th>
-			<td>
-				<select name="cpltHandlType" id="cpltHandlType" class="form-control input-sm">
-					<c:forEach var="item" items="${cpltHandlTypeList}" varStatus="status">
-						<c:if test="${item.codeCd eq 'AT'}"> <!-- 24.01.22 임종혁부장. 자동처리만 나오게 요청 -->
-							<option value="${item.codeCd}" <c:if test="${vo.cpltHandlType eq item.codeCd}">selected</c:if> >${item.codeNm}</option>
-						</c:if>
-					</c:forEach>				
-				</select>
-			</td>
-			<th scope="row"><span style="color:red;">* </span><spring:message code="course.title.course.certificate"/></th>
-			<td>
-				<label style="font-weight: normal;"><input type="radio" style="border:0" name="certIssueYn" value="Y" id="certIssueYnY" <c:if test="${vo.certIssueYn eq 'Y'}">checked</c:if>/> <spring:message code="course.title.course.certificate.person"/></label>
-				<label style="font-weight: normal;"><input type="radio" style="border:0" name="certIssueYn" value="N" id="certIssueYnN" <c:if test="${vo.certIssueYn ne 'Y'}">checked</c:if>/> <spring:message code="course.title.course.certificate.admin"/></label>
-			</td>
-		</tr>
+
 		<c:if test="${gubun eq 'A'}">
 		<tr id="oflnEduPlaceOnOf" style="display:none">
 			<th scope="row"><label for="oflnEduPlace"><spring:message code="course.title.course.place"/></label></th>
@@ -422,6 +387,9 @@
             });
         });       
 		
+		selectBoxChange($("#crsSvcType").attr('id'), $("#crsSvcType").val());
+		selectBoxChange($("#crsOperMthd").attr('id'), $("#crsOperMthd").val());
+			
 		
 		ItemVO.orgCd = "${USER_ORGCD}";
 		ItemVO.attachImagesJson = '${vo.attachImagesJson}';
@@ -435,6 +403,10 @@
 			"editorHeight"		:	"330px",
 			"attachments"		:	$.parseJSON(ItemVO.attachImagesJson)
 		});
+		
+		
+		
+		
 	});
 	
 
@@ -558,9 +530,21 @@
 			alert('<spring:message code="course.message.course.alert.nodupchek"/>');
 			return;
 		}
-		if($('#eduNop').val() == '') {
-			alert('수강인원이 입력되지 않았습니다.');
-			return;
+		if($("#crsSvcType").val() == "R" ) {
+			if($("#simsaCode").val() == ""){
+				alert('HRD-NET 심사코드를 입력해 주세요.');
+				return;
+			}
+			if($("#tracseId").val() == ""){
+				alert('HRD-NET 훈련과정 ID를 입력해 주세요.');
+				return;
+			}
+		}
+		if($("#crsOperMthd").val() != "ON" ) {
+			if($('#eduNop').val() == '') {
+				alert('수강인원이 입력되지 않았습니다.');
+				return;
+			}
 		}
 		if("BL" == $("#crsOperMthd").val()){
 			$("#eduTm").val($("#eduTm_tempBl").val());
@@ -706,4 +690,31 @@
 		}
 		return true;
 	}
+	var selectBoxChange = function(id, val) {
+		//교육구분
+		if(id == "crsSvcType") {
+			if(val =="R") { // 국비지원 
+				$("#hrdNetArea").show();
+			} else {
+				$("#hrdNetArea").hide();
+			}
+		}
+		//교육구분 (오프라인, 혼합과정인 경우 교육인원을 등록 폼을 보여준다. )
+		if(id == "crsOperMthd") {
+			if(val !="ON") { // 오프라인, 혼합과정인  
+				$("#enrlNopArea").show();
+				$("#nopLimitYn").val("N");
+			} else {
+				$("#enrlNopArea").hide();
+				$("#eduNop").val("");
+				$("#nopLimitYn").val("Y");
+				
+			}
+		}
+		
+		
+		
+		
+	}	
+	
 </script>

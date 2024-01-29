@@ -49,8 +49,11 @@
 									</c:when>
 									<c:when test="${item.asmtTypeCd eq 'OFF' && item.score <= 0}"> <!-- 오프라인 과제, 채점 완료되지 않은 경우--> 
 									</c:when>
-									<c:when test="${item.asmtTypeCd eq 'ON' && (item.score > 0 || item.sendCnt >= item.asmtLimitCnt || item.connYn ne 'Y')}"> <!-- 채점이 완료 or 제한 제출 횟수를 넘음 or 제출기간이 아닐 때--> 
+									<c:when test="${item.asmtTypeCd eq 'ON' && (item.score > 0 || item.sendCnt >= item.asmtLimitCnt || item.connYn eq 'NN')}"> <!-- 채점이 완료 or 제한 제출 횟수를 넘음 or 제출기간 이후 일때--> 
 										<button type="button" class="secondary" onclick="addAsmtSend('${item.asmtSn}')"><spring:message code="button.view.result"/></button>
+									</c:when>
+									<c:when test="${item.asmtTypeCd eq 'ON' && item.connYn eq 'NO'}"> <!-- 제출기간전 일때--> 
+										<button type="button" class="primary" onclick="alert('과제 제출 기간이 아닙니다.')"><spring:message code="button.send.asmt"/></button>
 									</c:when>
 									<c:when test="${item.asmtTypeCd eq 'ON' && item.sendCritPrgrRatio > item.stdRatio}"> <!-- 온라인 과제이며 응시 가능 진도율보다 작을 때--> 
 										<button type="button" class="primary" onclick="alert('<spring:message code="lecture.message.asmt.send.alert.answer.ratio" arguments="${item.sendCritPrgrRatio}"/>')"><spring:message code="button.send.asmt"/></button>

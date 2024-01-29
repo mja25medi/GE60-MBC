@@ -409,4 +409,60 @@
 		      AND USER_NO = #{userNo}
 	</update>
 	
+	 <delete id="deleteAttendDttm" parameterType="attendanceVO">
+		 DELETE FROM tb_attend_period		
+		 WHERE CRS_CRE_CD = #{crsCreCd}			
+    </delete>
+    
+	<select id="countAttend" parameterType="attendanceVO" resultType="int">
+		SELECT count(*)
+		FROM tb_attend_class
+		WHERE CRS_CRE_CD = #{crsCreCd} 
+	</select>
+	
+	<insert id="batchAttend" parameterType="attendanceVO">
+		INSERT INTO tb_attend_class(
+		  		CRS_CRE_CD,
+		  		ATTEND_DTTM,
+		  		USER_NO,
+		  		USER_NM,
+		  		CLASS_STAT_1,
+		  		CLASS_STAT_2,
+		  		CLASS_STAT_3,
+		  		CLASS_STAT_4,
+		  		CLASS_STAT_5,
+		  		CLASS_STAT_6,
+		  		CLASS_STAT_7,
+		  		CLASS_STAT_8,
+		  		MOD_NO,
+		  		MOD_DTTM
+		  ) VALUES (
+		  		#{crsCreCd},
+		  		#{attendDttm},
+		  		#{userNo},
+		  		( SELECT FN_GET_USER_NAME(#{userNo}) FROM DUAL),
+		  		IFNULL(NULLIF(CLASS_STAT_1, ''), 'F'),
+		  		IFNULL(NULLIF(CLASS_STAT_2, ''), 'F'),
+		  		IFNULL(NULLIF(CLASS_STAT_3, ''), 'F'),
+		  		IFNULL(NULLIF(CLASS_STAT_4, ''), 'F'),
+		  		IFNULL(NULLIF(CLASS_STAT_5, ''), 'F'),
+		  		IFNULL(NULLIF(CLASS_STAT_6, ''), 'F'),
+		  		IFNULL(NULLIF(CLASS_STAT_7, ''), 'F'),
+		  		IFNULL(NULLIF(CLASS_STAT_8, ''), 'F'),
+		  		#{modNo},
+		  		DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		  ) ON DUPLICATE KEY UPDATE
+		  		CLASS_STAT_1 	= IFNULL(NULLIF(CLASS_STAT_1, ''), 'F'),
+		  		CLASS_STAT_2 	= IFNULL(NULLIF(CLASS_STAT_2, ''), 'F'),
+		  		CLASS_STAT_3 	= IFNULL(NULLIF(CLASS_STAT_3, ''), 'F'),
+		  		CLASS_STAT_4 	= IFNULL(NULLIF(CLASS_STAT_4, ''), 'F'),
+		  		CLASS_STAT_5 	= IFNULL(NULLIF(CLASS_STAT_5, ''), 'F'),
+		  		CLASS_STAT_6 	= IFNULL(NULLIF(CLASS_STAT_6, ''), 'F'),
+		  		CLASS_STAT_7 	= IFNULL(NULLIF(CLASS_STAT_7, ''), 'F'),
+		  		CLASS_STAT_8 	= IFNULL(NULLIF(CLASS_STAT_8, ''), 'F'),
+		  		MOD_NO = #{modNo},
+		  		MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+	</insert>
+	
+	
 </mapper>	

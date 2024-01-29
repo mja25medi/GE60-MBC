@@ -21,6 +21,8 @@ import egovframework.edutrack.comm.util.web.JsonUtil;
 import egovframework.edutrack.comm.util.web.StringUtil;
 import egovframework.edutrack.comm.util.web.UserBroker;
 import egovframework.edutrack.comm.web.GenericController;
+import egovframework.edutrack.modules.course.attendance.service.AttendanceService;
+import egovframework.edutrack.modules.course.attendance.service.AttendanceVO;
 import egovframework.edutrack.modules.course.contents.service.ContentsService;
 import egovframework.edutrack.modules.course.contents.service.ContentsVO;
 import egovframework.edutrack.modules.course.course.service.CourseService;
@@ -101,6 +103,9 @@ public class CourseCreateCourseManageController extends GenericController{
 	
 	@Autowired @Qualifier("assignmentService")
 	private AssignmentService 			assignmentService;
+	
+	@Autowired @Qualifier("attendanceService")
+	private AttendanceService	attendanceService;
 	
 
 	private static final String CREATE_COURSE_MAIN		= "create_course_main";
@@ -385,8 +390,16 @@ public class CourseCreateCourseManageController extends GenericController{
 		
 		String orgCd = UserBroker.getUserOrgCd(request);
 		vo.setOrgCd(orgCd);
-
+		
+		AttendanceVO avo = new AttendanceVO();
+		avo.setCrsCreCd(vo.getCrsCreCd());
+		int count = attendanceService.countAttend(avo);
 		ProcessResultVO<CreateCourseVO> resultVO = new ProcessResultVO<CreateCourseVO>();
+		if(count > 0) {
+			resultVO.setResultFailed();
+			resultVO.setMessage("출석한 수강생이 있어 변경이 불가 합니다");
+			return JsonUtil.responseJson(response, resultVO);
+		}
 		try {
 			resultVO = createCourseService.editCreateCourse(vo);
 			resultVO.setMessage(getMessage(request, "course.message.createcourse.edit.success"));

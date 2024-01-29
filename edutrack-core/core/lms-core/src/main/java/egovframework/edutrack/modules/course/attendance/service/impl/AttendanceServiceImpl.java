@@ -2,6 +2,7 @@ package egovframework.edutrack.modules.course.attendance.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -28,6 +29,7 @@ import egovframework.edutrack.modules.course.contents.service.ContentsVO;
 import egovframework.edutrack.modules.course.createcourse.service.CreateCourseVO;
 import egovframework.edutrack.modules.course.createcourse.service.impl.CreateCourseMapper;
 import egovframework.edutrack.modules.student.student.service.StudentVO;
+import egovframework.edutrack.modules.student.student.service.impl.StudentMapper;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import jxl.Workbook;
 import jxl.write.WritableSheet;
@@ -39,6 +41,13 @@ public class AttendanceServiceImpl extends EgovAbstractServiceImpl implements At
 	/** Mapper */
 	@Resource(name="attendanceMapper")
 	private AttendanceMapper 		attendanceMapper;
+	
+	/** Mapper */
+	@Resource(name="createCourseMapper")
+	private CreateCourseMapper 		createCourseMapper;
+	
+	@Resource(name="studentMapper")
+	private StudentMapper 		studentMapper;
 
 	@Override
 	public void insertAttendDttm(AttendanceVO avo) throws Exception{
@@ -631,7 +640,7 @@ public class AttendanceServiceImpl extends EgovAbstractServiceImpl implements At
 			sheet.mergeCells(17, rowNum, 24, rowNum); 
 			sheet.mergeCells(25, rowNum, 32, rowNum);
 			sheet.mergeCells(33, rowNum, 47, rowNum);
-			sheet.addCell(ExcelUtil.createText(1, rowNum, "center", "메디오피아테크"));
+			sheet.addCell(ExcelUtil.createText(1, rowNum, "center", "(사)스마트인재개발원"));
 			sheet.addCell(ExcelUtil.createText(9, rowNum, "center", "훈련과정명"));
 			sheet.addCell(ExcelUtil.createText(17, rowNum, "center", ccvo.getCrsCreNm()+"("+ccvo.getCreTerm()+") 회차 "));
 			sheet.addCell(ExcelUtil.createText(25, rowNum, "center", "훈련기간"));
@@ -701,4 +710,46 @@ public class AttendanceServiceImpl extends EgovAbstractServiceImpl implements At
 		
 	}
 
+	@Override
+	public int countAttend(AttendanceVO avo) {
+		int count = attendanceMapper.countAttend(avo);
+		return count;
+	}
+
+	/**
+	 * 기간 지난 출석일 결석처리 배치
+	 *
+	 * @return  ProcessResultVO
+	 */
+	@Override
+	public void batchAttend(AttendanceVO vo) throws Exception {
+		
+		List<CreateCourseVO> cList = createCourseMapper.listCreateCourse(null);
+		for(int k=0; k<cList.size(); k++) {
+			String crsCreCd = cList.get(k).getCrsCreCd();
+			
+			AttendanceVO avo = new AttendanceVO();
+			avo.setCrsCreCd(crsCreCd);
+			List<AttendanceVO> pList = attendanceMapper.listPeriod(avo);
+			
+			StudentVO svo = new StudentVO();
+			svo.setCrsCreCd(crsCreCd);
+			List<StudentVO> sList = studentMapper.listStudentPaymentInfoManage(svo);
+			
+			LocalDateTime today = LocalDateTime.now();
+			for(int i=0; i<pList.size(); i++) {
+				LocalDateTime enrlDay = DateTimeUtil.parseDttmToLocalDateTime(pList.get(i).getAttendDttm());
+				if(today.compareTo(enrlDay) > 0) { //기간이 지났을 경우
+					String fday = enrlDay.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+				
+					avo.setAttendDttm(fday+"000001");
+					for (int j=0; j<sList.size(); j++) {
+						avo.setUserNo(sList.get(j).getUserNo());
+						attendanceMapper.batchAttend(avo);
+					}
+					
+				}
+			}
+		}
+	}
 }

@@ -140,6 +140,7 @@
 		$("button[name=cert_button]").empty();
 		$("button[name=cert_button]").append("<i class='xi-check' aria-hidden='true'></i> 인증완료");
 		certificated = true;
+		goNextStep();
 	}
 	
 	window.failCert = function(errorCode) {

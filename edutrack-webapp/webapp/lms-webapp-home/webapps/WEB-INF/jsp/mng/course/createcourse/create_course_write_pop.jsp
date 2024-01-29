@@ -19,7 +19,13 @@
 				<select name="crsCreNm_0" id="crsCreNm_0" class="form-control input-sm" onchange="selectBoxChange(this.value);">
 					<option value="">과정선택</option>
 					<c:forEach items="${courseList}" var="courseList">
-						<option value="${courseList.crsCd}" value2="${courseList.crsNm}" value3="${courseList.creCrsCnt + 1}" value4="${courseList.crsOperMthd}" value5="${courseList.eduPrice }">${courseList.crsNm}</option>
+						<option value="${courseList.crsCd}" 
+								value2="${courseList.crsNm}" 
+								value3="${courseList.creCrsCnt + 1}" 
+								value4="${courseList.crsOperMthd}" 
+								value5="${courseList.eduPrice }"
+								value6="${courseList.eduTm}"
+								value7="${courseList.cpltScore}">${courseList.crsNm}</option>
 					</c:forEach>
 				</select>
 			</td>
@@ -201,7 +207,7 @@
 			
 		</tr>
 		<tr>
-			<th scope="row"><span style="color:red;">* </span>강의실</th>
+			<th scope="row"><span style="color:red;">* </span>과정구분</th>
 			<td>
 				<select name="creTypeCd_0" id="creTypeCd_0" class="form-control input-sm" style="float:left;width: 70%;margin-right: 5px;" onchange="offEduPlace()" disabled>
 					<option value="">과정유형을 선택하세요</option>
@@ -210,7 +216,8 @@
 					<option value="BL">혼합</option>						
 				</select>
 			</td>
-			<td colspan="2">
+			<th scope="row">강의실</th>
+			<td>
 				<select name="oflnEduPlace_0" id="oflnEduPlace_0" class="form-control input-sm" style="display: none;" >
 					<option value="">장소를 선택하세요.</option>
 					<c:forEach var="roomList" items="${lecRoomList}">
@@ -822,6 +829,8 @@
 		$("#creTerm_0").val($("#crsCreNm_0 > option:selected").attr("value3"));
 		$("#creTypeCd_0").val($("#crsCreNm_0 > option:selected").attr("value4"));
 		$("#eduPrice_0").val($("#crsCreNm_0 > option:selected").attr("value5"));
+		$("#onlnEduTm_0").val($("#crsCreNm_0 > option:selected").attr("value6"));
+		$("#cpltScore_0").val($("#crsCreNm_0 > option:selected").attr("value7"));
 		//오프라인 강의실 박스
 	    var operType = $("#creTypeCd_0").val();
 	    if (operType == 'OF' || operType == 'BL') {

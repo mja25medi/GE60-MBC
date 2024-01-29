@@ -475,7 +475,7 @@ public class EduResultServiceImpl
 	
 	@Override
 	public void listExcelDownloadForMngStd(EduResultVO vo, CreateCourseVO ccvo ,OutputStream os) throws Exception {
-		List<EduResultVO> resultList = eduResultMapper.listStudentScore(vo);
+		List<EduResultVO> resultList = eduResultMapper.listExelStudentScore(vo);
 		try {
 			int rowNum = 0;
 

@@ -200,6 +200,7 @@
 						</select>
 					</td>
 					<c:if test="${vo.creTypeCd ne 'ON' }">
+					<th scope="row">강의실</th>
 					<td colspan="2">
 						<select name="oflnEduPlace_0" id="oflnEduPlace_0" class="form-control input-sm">
 							<option value="">장소를 선택하세요.</option>

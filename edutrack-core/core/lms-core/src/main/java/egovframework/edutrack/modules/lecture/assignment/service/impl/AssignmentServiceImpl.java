@@ -1166,7 +1166,7 @@ public class AssignmentServiceImpl extends EgovAbstractServiceImpl implements As
 			assignmentSubMapper.saveAsmtSubScore(vo);
 			resultVO.setReturnVO(vo);
 			resultVO.setResult(1);
-			resultVO.setMessage("저장되었습니다.");
+			resultVO.setMessage("저장되었습니다.\n 평가 완료 버튼을 눌러야 최종 점수가 저장됩니다.");
 		} catch (Exception e) {
 			e.printStackTrace();
 			resultVO.setResult(-1);

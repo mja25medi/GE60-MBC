@@ -64,15 +64,9 @@
         </div><!--//myCourseList-->
 
         <div class="board_pager">
-            <span class="inner">
-                <a href="" class="page_first" title="첫페이지"><i class="xi-angle-left-min"></i><span class="sr_only">첫페이지</span></a>
-                <a href="" class="page_prev" title="이전페이지"><i class="xi-angle-left-min"></i><span class="sr_only">이전페이지</span></a>
-                <a href="" class="page_now" title="1페이지"><strong>1</strong></a>
-                <a href="" class="page_none" title="2페이지">2</a>
-                <a href="" class="page_none" title="3페이지">3</a>
-                <a href="" class="page_next" title="다음페이지"><i class="xi-angle-right-min"></i><span class="sr_only">다음페이지</span></a>
-                <a href="" class="page_last" title="마지막페이지"><i class="xi-angle-right-min"></i><span class="sr_only">마지막페이지</span></a>
-            </span>
+           <span class="inner">
+               <meditag:paging pageInfo="${pageInfo}" funcName="listEndScore" name="front"/>
+           </span>
         </div>
         <!-- //board_pager -->
            

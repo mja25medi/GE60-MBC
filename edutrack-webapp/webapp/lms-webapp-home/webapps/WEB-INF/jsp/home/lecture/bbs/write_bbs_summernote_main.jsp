@@ -22,7 +22,10 @@
 				
                 <div class="learn_top">
                     <div class="left_title">
-                        <h3>과목 공지사항</h3>
+                        <h3>
+                        	<c:if test="${param.bbsCd eq 'NOTICE' }">과목 공지사항</c:if>
+                        	<c:if test="${param.bbsCd eq 'PDS' }">과목 자료실</c:if>
+                        </h3>
                     </div>
                 </div>
                  <div class="segment">

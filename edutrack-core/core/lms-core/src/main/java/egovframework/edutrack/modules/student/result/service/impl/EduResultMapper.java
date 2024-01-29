@@ -80,6 +80,14 @@ public interface EduResultMapper {
 	public List<EduResultVO> listStudentScore(EduResultVO iEduResultVO) ;
 	
 	/**
+	 * 수강생 수료 처리를 위한 수강생 목록 조회 
+	 * 엑셀 다운드르용 tb_std_edu_rslt 조건 수정
+	 * @return ProcessReslutListVO
+	 */
+	
+	public List<EduResultVO> listExelStudentScore(EduResultVO iEduResultVO) ;
+	
+	/**
 	 * 프로시저를 이용한 자동 점수 등록
 	 * 
 	 * 

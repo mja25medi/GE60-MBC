@@ -82,5 +82,14 @@ public interface AttendanceService {
 	 */
 	public abstract void excelDownloadAttendList(AttendanceVO vo, CreateCourseVO ccvo,
 			ServletOutputStream outputStream) throws Exception;
+
+	public abstract int countAttend(AttendanceVO avo);
+
+	/**
+	 * 기간이 지난 경우 
+	 *
+	 * @return  ProcessResultVO
+	 */
+	void batchAttend(AttendanceVO vo) throws Exception;
 	
 }

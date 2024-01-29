@@ -225,7 +225,7 @@
 						parent.ItemVO1.motpPass 	= 'S';
 					} 
 					
-					// motp부분
+					//스마트인재개발원이전 motp부분
 					/* if(typeof parent.ItemVO1 == 'undefined'){
 						for (var i = 0; i < parent.frames.length; i++) {
 							if(typeof parent.frames[i].ItemVO1 != 'undefined'){
