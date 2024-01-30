@@ -760,7 +760,7 @@
 		       , B.CRS_TERM
 		       , B.CRS_NM
 		       , B.THUMB_FILE_SN
-		       , B.EDU_NOP
+		       ,  IFNULL(FN_GET_NULL(B.EDU_NOP),0) AS EDU_NOP
 		       , ( SELECT COUNT(*) 
 		             FROM tb_std_std 
 		            WHERE CRS_CRE_CD = A.CRS_CRE_CD 

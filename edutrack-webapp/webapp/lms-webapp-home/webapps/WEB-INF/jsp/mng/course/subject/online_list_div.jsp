@@ -76,7 +76,10 @@
 													${item.sbjNm}
 													<a href="javascript:sbjEdit('${item.sbjCd}');" ><i class="fa fa-cog"></i></a>
 												</td>
-												<td class="text-center">${item.sbjType}</td>
+												<td class="text-center">
+													<c:if test="${item.sbjType eq 'OF'}">오프라인</c:if>
+													<c:if test="${item.sbjType eq 'ON'}">온라인</c:if>
+												</td>
 												<td class="text-center">${item.useYn}</td>
 												<td class="text-center">${item.contentsCnt}</td>
 												<td class="text-center">

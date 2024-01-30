@@ -36,9 +36,9 @@
     		padding: 0;
 		}
 
-		.print_wrap .print_box > img { left: 0%!important; width: 21cm!important; height: 29.7cm!important; }
-		.print_wrap .print_box .table_wrap { left:0%!important; width: 21cm!important; height: 29.7cm!important; }
-		
+	.print_wrap .print_box .table_wrap .table_box {position: absolute; top:5%; height: 80%;}
+	.print_wrap .print_box .icon_box {width: 882px;}
+	
 	</style>
 </head>
 <%-- <c:if test="${msie6 eq 'Y'}">

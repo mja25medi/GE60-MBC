@@ -360,7 +360,15 @@ public class CourseCourseManageController extends GenericController {
         List<SysCodeVO> enrlCertMthdList = sysCodeMemService.getSysCodeList("ENRL_CERT_MTHD", UserBroker.getLocaleKey(request));
         List<SysCodeVO> cpltHandlTypeList = sysCodeMemService.getSysCodeList("CPLT_HANDL_TYPE", UserBroker.getLocaleKey(request));
         List<SysCodeVO> crsSvcEditList = sysCodeMemService.getSysCodeList("CRS_SVC_TYPE", UserBroker.getLocaleKey(request));
-                		
+            
+        if(!Constants.HRD_API_USE_YN.equals("Y")) {
+        	//HRD 사용하지 않을 경우에는 국비지원 과정이 뜨지 않도록 작업
+        	for(int i=0; i<crsSvcEditList.size();i++) {
+        		if(crsSvcEditList.get(i).getCodeCd().equals("R")) {
+        			crsSvcEditList.remove(i);
+        		}
+        	}
+        }
 		request.setAttribute("nopLimitList", nopLimitList);
 		request.setAttribute("crsOperMthdList", crsOperMthdList);
 		request.setAttribute("enrlCertMthdList", enrlCertMthdList);

@@ -838,7 +838,7 @@
 	/* 수료증출력 */	
 	function printCerti(crsCreCd,stdNo) {
 		var url = "/mng/std/student/viewPrintCerti?crsCreCd="+crsCreCd+"&stdNo="+stdNo;
-		var option = "width=640, toolbar=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no";
+		var option = "width=400, toolbar=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no";
 		var reportWin = window.open(url,'reportWin', option);
 		reportWin.focus();
 	}

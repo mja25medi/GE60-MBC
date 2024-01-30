@@ -221,8 +221,8 @@
 		// 콘텐츠 타입 체크박스 활성화
 		$("input:radio[name ='cntsTypeCd']:input[value='${vo.cntsTypeCd}']").trigger("click");
 		
-		// 코딩강의 or 코딩 실습 ZOOM URL 활성화
-		<c:if test="${vo.cntsTypeCd eq 'CODING_L' or vo.cntsTypeCd eq 'CODING_T'}">
+		// 코딩 실습인 경우 코딩과제 경로 추가
+		<c:if test="${vo.cntsTypeCd eq 'CODING_T'}">
 			$("#codingUrlTr").css("display", "");
 		</c:if>
 		

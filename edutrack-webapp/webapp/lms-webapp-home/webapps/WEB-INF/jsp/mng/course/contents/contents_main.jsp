@@ -112,13 +112,14 @@
 												<label style="font-weight: normal;margin-right:20px;">
 													<input type="radio" name="cntsTypeCd" id="cntsTypeCd5" value="CODING_L" onclick="cntsTypeChk()" /> 코딩강의
 												</label>
-												<label style="font-weight: normal;margin-right:20px;">
-													<input type="radio" name="cntsTypeCd" id="cntsTypeCd6" value="CODING_T" onclick="cntsTypeChk()" /> 코딩실습
-												</label>
-												<label style="font-weight: normal;margin-right:20px;">
-													<input type="radio" name="cntsTypeCd" id="cntsTypeCd7" value="META" onclick="cntsTypeChk()" /> 메타버스 강의
-												</label>												
-												
+												<c:if test="${osVO.sbjType ne 'ON'}">
+													<label style="font-weight: normal;margin-right:20px;">
+														<input type="radio" name="cntsTypeCd" id="cntsTypeCd6" value="CODING_T" onclick="cntsTypeChk()" /> 코딩실습
+													</label>
+													<label style="font-weight: normal;margin-right:20px;">
+														<input type="radio" name="cntsTypeCd" id="cntsTypeCd7" value="META" onclick="cntsTypeChk()" /> 메타버스 강의
+													</label>												
+												</c:if>
 												</div>
 											</td>
 										</tr>

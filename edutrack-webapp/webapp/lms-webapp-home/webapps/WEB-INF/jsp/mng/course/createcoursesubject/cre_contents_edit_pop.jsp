@@ -25,7 +25,9 @@
 								<li id="tabBox2"><a href="javascript:tabBox('2')">VOD</a></li>
 								<li class="active" id="tabBox1"><a href="javascript:tabBox('1')">CDN</a></li>
 								<li id="tabBox3"><a href="javascript:tabBox('3')">영상링크</a></li>
-								<li id="tabBox5"><a href="javascript:tabBox('5')">코딩과제</a></li>
+								<c:if test="${createOnlineSubjectVO.sbjType ne 'ON' }">
+									<li id="tabBox5"><a href="javascript:tabBox('5')">코딩과제</a></li>
+								</c:if>
 								<li id="tabBox4"><a href="javascript:tabBox('4')">콘텐츠파일</a></li>
 							</ul>
 						</div>
@@ -132,13 +134,13 @@
 												</div>
 											</td>
 										</tr>
-										<tr id="codingUrlTr"  style="display: none;">
+										<tr id="codingUrlTr" style="display: none;">
 											<td style="padding:2px;">
 												<label for="asmtSn">코딩과제 경로</label>
 											</td>
 											<td colspan="2" style="padding:2px;">
 												<div class="input-group" style="width:100%">
-													<input type="text" style="background-color:#f3f3f3"  name="asmtSn" value="${vo.asmtSn }" readonly="true" class="form-control input-sm" id="asmtSn" />
+													<input type="text" style="background-color:#f3f3f3" name="asmtSn" value="${vo.asmtSn }" readonly="true" class="form-control input-sm" id="asmtSn" />
 													<span class="input-group-addon" onclick="delPath('asmtSn')" style="cursor:pointer;width:50px;">
 														<i class="glyphicon glyphicon-remove"></i>
 													</span>
@@ -246,8 +248,8 @@
 		// 콘텐츠 타입 체크박스 활성화
 		$("input:radio[name ='cntsTypeCd']:input[value='${vo.cntsTypeCd}']").trigger("click");
 		
-		// 코딩강의 or 코딩 실습 ZOOM URL 활성화
-		<c:if test="${vo.cntsTypeCd eq 'CODING_L' or vo.cntsTypeCd eq 'CODING_T'}">
+		// 코딩 실습 코딩과제 경로 활성
+		<c:if test="vo.cntsTypeCd eq 'CODING_T'}">
 			$("#codingUrlTr").css("display", "");
 		</c:if>
 		
@@ -394,7 +396,7 @@
 	   	case "CODING_L" : 	
 	   		$("#metaTr").css("display", "none");
 	   		$("#codingUrlTr").css("display", "none");
-	   		
+
     		break;	
 	   	case "META" : 	
 	   		$("#metaTr").css("display", "");

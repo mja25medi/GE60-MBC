@@ -706,7 +706,7 @@
 				$("#nopLimitYn").val("N");
 			} else {
 				$("#enrlNopArea").hide();
-				$("#eduNop").val("");
+				$("#eduNop").val("0");
 				$("#nopLimitYn").val("Y");
 				
 			}

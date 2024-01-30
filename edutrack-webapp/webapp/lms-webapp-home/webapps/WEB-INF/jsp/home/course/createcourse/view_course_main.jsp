@@ -56,7 +56,9 @@
                         </div>
 
                         <div class="btns right mt20">
-                            <button class="btn gray2" onclick="location.href='javascript:addQna();' "><spring:message code="button.write.qna.nonMem"/></button>
+                        	<c:if test="${empty sessionScope.USERNO}">
+                            	<button class="btn gray2" onclick="location.href='javascript:addQna();' "><spring:message code="button.write.qna.nonMem"/></button>
+                            </c:if>
                             <c:if test="${item.enrlAplcYn eq 'Y' }">                            
 	                            <c:choose>
 	                                  <c:when test="${item.eduPrice eq 0 or empty item.eduPrice}">
