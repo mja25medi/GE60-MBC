@@ -20,24 +20,6 @@
 	
     	<script src="/app/js/Context.js"></script>
 	    <script defer src="/js/common.js"></script>
-	    
-	    <!-- Summernote Editor -->
-	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/summernote-lite.css" />
-	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/plugin/math/katex.min.css" />
-	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/css/emoji.css" />
-	
-		<!-- Summernote Editor -->
-	    <script src="/tpl/${COLOR_TPL}/js/summernote/summernote-lite.js"></script>
-	    <script src="/tpl/${COLOR_TPL}/js/summernote/lang/summernote-ko-KR.js"></script>
-	    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/math/katex.min.js"></script>
-	    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/math/summernote-math.js"></script>
-	    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/js/config.js"></script>
-	    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/js/tam-emoji.js"></script>
-		<script src="/tpl/${COLOR_TPL}/js/summernote/plugin/uploadcare.js"></script>
-		    
-	    
-	    
-	    
 	    <script defer src="/tpl/${COLOR_TPL}/js/common_function.js"></script>
 	    <script defer src="/tpl/${COLOR_TPL}/js/common_util.js"></script>
 	    <script src="/tpl/${COLOR_TPL}/js/common_conf.js"></script>
@@ -59,6 +41,16 @@
 	<meditag:js src="/libs/daumeditor/js/editor.js"/>
 	<script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
 	<meditag:js src="/js/common_daumeditor.js"/>
+</c:if><c:if test="${not empty summernote}">
+	<!-- include libraries(jQuery, bootstrap, fontawesome) -->
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+	<!-- include summernote css/js-->
+	<meditag:css href="libs/summernote/summernote.css"/>
+	<meditag:css href="css/summernote_custom.css"/>
+	<meditag:js src="/libs/summernote/summernote.js"/>
+	<meditag:js src="/libs/summernote/lang/summernote-ko-KR.js"/>
+	<meditag:js src="/libs/summernote/lang/summernote-ja-JP.js"/>
+	<meditag:js src="/js/common_summernote.js"/>
 </c:if><c:if test="${not empty uploadify}">
 	<meditag:css href="css/uploadify.css"/>
 	<meditag:js src="/js/jquery/jquery.uploadify.v2.1.4.min.js"/>
@@ -103,13 +95,6 @@
 	<meditag:js src="/js/jquery/jquery.cookie.js"/>
 	<meditag:js src="/js/jquery/jquery.hotkeys.js"/>
 	<meditag:js src="/js/jquery/jquery.jstree.js"/>
-</c:if><c:if test="${playerDiv eq 'kollus' }">
-	<style type="text/css">
-	html,body {
-		height: 100% !important;
-		overflow-y:hidden;
-	}
-	</style>
 </c:if><c:if test="${playerDiv eq 'examPaper' }">
 <style type="text/css">
         #layer_fixed

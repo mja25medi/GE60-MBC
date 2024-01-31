@@ -18,8 +18,10 @@
                         <li id="tabBox2"><a href="javascript:tabBox('2')">VOD</a></li>
                         <li class="active"  id="tabBox1"><a href="javascript:tabBox('1')">CDN</a></li>
                         <li id="tabBox3"><a href="javascript:tabBox('3')">영상링크</a></li>
+                        <!-- 
                         <li id="tabBox5"><a href="javascript:tabBox('5')">코딩과제</a></li>
                         <li id="tabBox4"><a href="javascript:tabBox('4')">콘텐츠파일</a></li>
+                         -->
                     </ul>
                     <div class="panel-body" id="leftWorkArea" style="border-top:0px;">
 
@@ -73,6 +75,7 @@
 	                                                    <input type="radio" name="cntsTypeCd" id="cntsTypeCd3" value="MLINK" onclick="cntsTypeChk()"/>
 	                                                    <label for="cntsTypeCd3">영상링크</label>
 	                                                </span>
+	                                                <!-- 
 	                                                <span class="custom-input ml5">
 	                                                    <input type="radio"  name="cntsTypeCd" id="cntsTypeCd5" value="CODING_L" onclick="cntsTypeChk()" /> 
 	                                                    <label for="cntsTypeCd5">코딩강의</label>
@@ -87,6 +90,7 @@
 		                                                    <label for="cntsTypeCd7">메타버스 강의</label>
 		                                                </span>
 	                                                </c:if>
+	                                                 -->
 	                                            </div>
 	                                        </div>             
 	                                    </div>

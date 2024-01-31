@@ -32,22 +32,6 @@
 	    <script defer src="/tpl/${COLOR_TPL}/js/common_function.js"></script>
 		<meditag:js src="/js/jquery/jquery.form.js"/>
 		<script src="/tpl/${COLOR_TPL}/js/iframeResizer.min.js"></script>
-
-    <!-- Summernote Editor -->
-    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/summernote-lite.css" />
-    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/plugin/math/katex.min.css" />
-    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/css/emoji.css" />
-
-	<!-- Summernote Editor -->
-    <script src="/tpl/${COLOR_TPL}/js/summernote/summernote-lite.js"></script>
-    <script src="/tpl/${COLOR_TPL}/js/summernote/lang/summernote-ko-KR.js"></script>
-    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/math/katex.min.js"></script>
-    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/math/summernote-math.js"></script>
-    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/js/config.js"></script>
-    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/js/tam-emoji.js"></script>
-	<script src="/tpl/${COLOR_TPL}/js/summernote/plugin/uploadcare.js"></script>
-
-
 	    
 	    <script src="/tpl/${COLOR_TPL}/js/common_conf.js"></script>
 		<script src="/tpl/${COLOR_TPL}/js/common_util.js"></script>
@@ -69,6 +53,31 @@
 	<meditag:js src="/libs/daumeditor/js/editor.js"/>
 	<script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
 	<meditag:js src="/js/common_daumeditor.js"/>
+</c:if><c:if test="${not empty summernote}">
+ 	  <!--  <link href="/libs/bootstrap-3.3.5/css/bootstrap.css" rel="stylesheet">
+       <script src="/libs/bootstrap-3.3.5/js/bootstrap.js"></script>
+	
+		<link rel="stylesheet" href="/tpl/002/css/summernote.min.css" />	
+		include summernote css/js
+		<link rel="stylesheet" href="/libs/summernote/summernote.css" type="text/css" />
+		<link rel="stylesheet" href="/css/summernote_custom.css" type="text/css" />
+		<script type="text/JavaScript" src="/libs/summernote/summernote.js"></script>
+		<script type="text/JavaScript" src="/libs/summernote/lang/summernote-ko-KR.js"></script>
+		<script type="text/JavaScript" src="/libs/summernote/lang/summernote-ja-JP.js"></script> -->
+		<script type="text/JavaScript" src="/js/common_summernote.js"></script>
+			<!-- Summernote Editor -->
+	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/summernote-lite.css" />
+	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/plugin/math/katex.min.css" />
+	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/css/emoji.css" />
+	
+		<!-- Summernote Editor -->
+	    <script src="/tpl/${COLOR_TPL}/js/summernote/summernote-lite.js"></script>
+	    <script src="/tpl/${COLOR_TPL}/js/summernote/lang/summernote-ko-KR.js"></script>
+	    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/math/katex.min.js"></script>
+	    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/math/summernote-math.js"></script>
+	    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/js/config.js"></script>
+	    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/js/tam-emoji.js"></script>
+		<script src="/tpl/${COLOR_TPL}/js/summernote/plugin/uploadcare.js"></script>
 </c:if><c:if test="${not empty uploadify}">
 	<meditag:css href="css/uploadify.css"/>
 	<meditag:js src="/js/jquery/jquery.uploadify.v2.1.4.min.js"/>
@@ -115,13 +124,6 @@
 	<meditag:js src="/js/jquery/jquery.cookie.js"/>
 	<meditag:js src="/js/jquery/jquery.hotkeys.js"/>
 	<meditag:js src="/js/jquery/jquery.jstree.js"/>
-</c:if><c:if test="${playerDiv eq 'kollus' }">
-	<style type="text/css">
-	html,body {
-		height: 100% !important;
-		overflow-y:hidden;
-	}
-	</style>
 </c:if><c:if test="${playerDiv eq 'examPaper' }">
 <style type="text/css">
         #layer_fixed
@@ -140,31 +142,25 @@
 </c:if><c:if test="${playerDiv eq 'common' }">	
 	<c:choose>
 		<c:when test="${fileExt eq 'mp4' }">
-	<!-- 1. skin -->
-	<link rel="stylesheet" href="/libs/flowplayer/skin/minimalist.css">
-	<style type="text/css">
-		/* site specific styling */
-		body {
-			font: 12px "Myriad Pro", "Lucida Grande", "Helvetica Neue", sans-serif;
-			text-align: center;
-			padding-top: 1%;
-			color: #999;
-			background-color: #333333;
-		}
 
-		/* custom player skin */
-		.flowplayer { width: 100%; background-color: #222; background-size: cover; max-width: 1000px; }
-		.flowplayer .fp-controls {background-color: rgba(0, 0, 0, 0.4)}/* 소리 조절 보여주기*/
-		<c:if test="${bookmarkDTO.prgrRatio < 100}">
-   		/* 학습 상태가 complete 가 아니면 seek를 하지 못하도록 함 */
-		.flowplayer .fp-buffer, .flowplayer .fp-progress {  cursor: default; }/* Disable seeking */
-		</c:if>
-		/*.flowplayer { background-image: url("https://farm4.staticflickr.com/3169/2972817861_73ae53c2e5_b.jpg")}*/
-		/*.flowplayer { background-image: url("3.jpg")}*/
-	</style>
+		<link rel="stylesheet" href="/libs/flowplayer7/skin/skin.css">
+		<style type="text/css">
+			/* custom player skin */
+				/* custom player skin */
+				.flowplayer { width: 100%; background-color: #222; background-size: cover; max-width: 1000px; }
+				.flowplayer .fp-controls {background-color: rgba(0, 0, 0, 0.4)}/* 소리 조절 보여주기*/
+				<c:if test="${bookmarkDTO.prgrRatio < 100}">
+		   		/* 학습 상태가 complete 가 아니면 seek를 하지 못하도록 함 */
+				.flowplayer .fp-buffer, .flowplayer .fp-progress {  cursor: default; }/* Disable seeking */
+				</c:if>
+				#lecQnaForm {padding-bottom: 30px;}
+				.vod_header .top_inner .title {padding-left: 308px;}
+				.vod_header {margin-top: -24px;}
+		</style>
+		<!-- 2. flowplayer -->
+		<script src="/libs/flowplayer7/flowplayer.js"></script>
+		<script src="/libs/flowplayer7/hls.light.min.js"></script>
 
-	<!-- 2. flowplayer -->
-	<script src="/libs/flowplayer/flowplayer.min.js"></script>
 		</c:when>
 		<c:when test="${fileExt eq 'mp3' }">
 	<link href="/libs/jplayer/skin/blue.monday/css/jplayer.blue.monday.min.css" rel="stylesheet" type="text/css" />

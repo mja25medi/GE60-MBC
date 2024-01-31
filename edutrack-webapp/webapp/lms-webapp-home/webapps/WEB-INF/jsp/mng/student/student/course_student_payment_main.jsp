@@ -41,7 +41,7 @@
 						<div style="float:right">
 							<a href="javascript:excelDownload()" class="btn btn-primary btn-sm"><i class="fa fa-file-excel-o fa-fw"></i>엑셀다운로드</a>
 							<a href="javascript:excelUpload()" class="btn btn-primary btn-sm"><i class="fa fa-file-excel-o fa-fw"></i>IDE 엑셀업로드</a>
-							<a href="javascript:uptIde()" class="btn btn-default btn-sm">IDE부여</a>
+							<!--  <a href="javascript:uptIde()" class="btn btn-default btn-sm">IDE부여</a> -->
 							<button class="btn btn-success btn-sm" onclick="studentWrite()" ><spring:message code="button.write.student"/></button>
 						</div><br/>
 					</div>

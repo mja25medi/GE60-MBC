@@ -26,7 +26,7 @@
 					<div class="col-md-6 col-sm-6 text-right">
 						<div class="form-group">
 							<a href="javascript:excelUpload()" class="btn btn-primary btn-sm"><i class="fa fa-file-excel-o fa-fw"></i>IDE 엑셀업로드</a>
-							<a href="javascript:uptIde()" class="btn btn-default btn-sm">IDE부여</a>
+							<!-- <a href="javascript:uptIde()" class="btn btn-default btn-sm">IDE부여</a>  -->
 							<c:if test="${MSG_SMS eq 'Y' }">
 							<a href="javascript:messageForm('SMS')" class="btn btn-info btn-sm"><spring:message code="button.sms"/> </a>
 							</c:if>

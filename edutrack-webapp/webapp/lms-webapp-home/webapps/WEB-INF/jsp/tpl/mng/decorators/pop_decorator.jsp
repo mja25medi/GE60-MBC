@@ -121,42 +121,22 @@
 	<meditag:js src="/js/jquery/jquery.hotkeys.js"/>
 	<meditag:js src="/js/jquery/jquery.jstree.js"/>
 </c:if>
-<c:if test="${playerDiv eq 'kollus' }">
-	<style type="text/css">
-	html,body {
-		height: 100% !important;
-		overflow-y:hidden;
-	}
-	</style>
-</c:if> 
 <c:if test="${playerDiv eq 'common' }">	
 	<c:choose>
 		<c:when test="${fileExt eq 'mp4' }">
-	<!-- 1. skin -->
-	<link rel="stylesheet" href="/libs/flowplayer/skin/minimalist.css">
-	<style type="text/css">
-		/* site specific styling */
-		body {
-			font: 12px "Myriad Pro", "Lucida Grande", "Helvetica Neue", sans-serif;
-			text-align: center;
-			padding-top: 1%;
-			color: #999;
-			background-color: #333333;
-		}
+		<link rel="stylesheet" href="/libs/flowplayer7/skin/skin.css">
+		<style type="text/css">
+			/* custom player skin */
+				.flowplayer { width: 100%; background-color: #222; background-size: cover; max-width: 1000px; }
+				.flowplayer.fp-controls {background-color: rgba(0, 0, 0, 0.4)}/* 소리 조절 보여주기*/
+				#lecQnaForm {padding-bottom: 30px;}
+				.vod_header .top_inner .title {padding-left: 308px;}
+				.vod_header {margin-top: -24px;}
+		</style>
+		<!-- 2. flowplayer -->
+		<script src="/libs/flowplayer7/flowplayer.js"></script>
+		<script src="/libs/flowplayer7/hls.light.min.js"></script>
 
-		/* custom player skin */
-		.flowplayer { width: 100%; background-color: #222; background-size: cover; max-width: 1000px; }
-		.flowplayer .fp-controls {background-color: rgba(0, 0, 0, 0.4)}/* 소리 조절 보여주기*/
-		<c:if test="${bookmarkDTO.prgrRatio < 100}">
-   		/* 학습 상태가 complete 가 아니면 seek를 하지 못하도록 함 */
-		.flowplayer .fp-buffer, .flowplayer .fp-progress {  cursor: default; }/* Disable seeking */
-		</c:if>
-		/*.flowplayer { background-image: url("https://farm4.staticflickr.com/3169/2972817861_73ae53c2e5_b.jpg")}*/
-		/*.flowplayer { background-image: url("3.jpg")}*/
-	</style>
-
-	<!-- 2. flowplayer -->
-	<script src="/libs/flowplayer/flowplayer.min.js"></script>
 		</c:when>
 		<c:when test="${fileExt eq 'mp3' }">
 	<link href="/libs/jplayer/skin/blue.monday/css/jplayer.blue.monday.min.css" rel="stylesheet" type="text/css" />

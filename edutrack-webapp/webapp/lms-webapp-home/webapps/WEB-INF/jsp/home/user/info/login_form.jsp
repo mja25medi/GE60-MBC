@@ -41,12 +41,14 @@
                                         </li>
                                     </ul>
                                 </div>
+                                <!-- 
                                 <div class="ui horizontal divider">간편 로그인</div>
 
                                 <div class="btns-join center mt0">
                                     <a href="#0" class="btn kakao" onClick="javascript:joinKakao()">카카오 아이디로 로그인</a>
                						<a href="#0" class="btn naver" onClick="javascript:joinNaver()">네이버 아이디로 로그인</a>                         
                                 </div>
+                                 -->
                             </div>
 
                         </div>
