@@ -219,7 +219,7 @@
 												</label>
 												<!-- <label style="font-weight: normal;margin-right:20px;">
 													<input type="radio" name="cntsTypeCd" id="cntsTypeCd4" value="FILE" onclick="cntsTypeChk()" /> HTML파일
-												</label> -->
+												</label>
 												<label style="font-weight: normal;margin-right:20px;">
 													<input type="radio" name="cntsTypeCd" id="cntsTypeCd5" value="CODING_L" onclick="cntsTypeChk()" /> 코딩강의
 												</label>
@@ -229,7 +229,7 @@
 												<label style="font-weight: normal;margin-right:20px;">
 													<input type="radio" name="cntsTypeCd" id="cntsTypeCd7" value="META" onclick="cntsTypeChk()" /> 메타버스 강의
 												</label>												
-												
+												 -->
 												</div>
 											</td>
 										</tr>
