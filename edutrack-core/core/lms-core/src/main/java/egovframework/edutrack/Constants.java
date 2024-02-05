@@ -16,7 +16,6 @@ public class Constants {
 
 	// System Name
 	public final static String	SYSTEM_NAME				= webContext.getString("edutrack.name");
-	// test
 
 	// LMS Data path 환경
 	public final static String	LMS_DATA_CONTEXT		= webContext.getString("edutrack.context");
