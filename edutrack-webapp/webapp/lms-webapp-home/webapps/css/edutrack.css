@@ -303,3 +303,8 @@ label {
 .menu-group-lvl3 {
 	padding-left:45px;
 }
+
+select[readonly] {
+	  background-color: #ddd;
+	  pointer-events: none;
+}
