@@ -118,7 +118,7 @@ $(document).ready(function () {
     });
     $('.popup-open').on('click', function() {
         $('.popup-wrap, .popup-close').css('display', 'flex');
-        $('#slides').get(0).slick.setPosition()
+       $('#slides-main').get(0).slick.setPosition()
     });
 })
 
