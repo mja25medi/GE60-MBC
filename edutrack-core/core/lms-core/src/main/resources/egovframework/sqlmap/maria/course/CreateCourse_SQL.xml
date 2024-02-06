@@ -206,7 +206,9 @@
 		  <include refid="selectColumnQuery" />
 		  FROM tb_crs_cre_crs	A
 		  	INNER JOIN tb_crs_crs B
-		  		ON A.CRS_CD = B.CRS_CD 
+		  		ON A.CRS_CD = B.CRS_CD
+		  	INNER JOIN tb_crs_crs_ctgr D  
+		  	    ON B.CRS_CTGR_CD = D.CRS_CTGR_CD  	 
 		  	LEFT OUTER JOIN tb_crs_cre_crs_qr C
 		  		ON C.CRS_CRE_CD = A.CRS_CRE_CD
 		  WHERE 1=1
@@ -233,6 +235,12 @@
 				</if>
 		     	<if test = 'creTerm != null and creTerm != ""'>
 					AND A.CRE_TERM like CONCAT('%', IFNULL(#{creTerm},''), '%')
+				</if>
+				<if test = 'crsCtgrCd != null and crsCtgrCd != ""'>
+					AND 
+					<foreach collection="crsCtgrArr" item="item" separator="OR" open="(" close=")"  index="index">
+						D.CRS_CTGR_PATH like CONCAT('%', #{item}, '%')
+					</foreach>
 				</if>
 				<if test = 'creOperTypeCd != null and creOperTypeCd == "E" '>
 		       		AND A.CRE_OPER_TYPE_CD = #{creOperTypeCd}  
@@ -1494,7 +1502,7 @@
 			 AND C.CRS_CTGR_PATH LIKE CONCAT('%/', #{crsCtgrCd}, '%')
 			</if>
 			<if test = "searchValue != null and searchValue != ''">
-			 AND CONCAT(A.CRS_CRE_NM,B.CRS_NM) like CONCAT('%', #{searchValue}, '%')
+			 AND CONCAT(A.CRS_CRE_NM,B.CRS_NM, C.CRS_CTGR_NM,B.META_TAG) like CONCAT('%', #{searchValue}, '%')
 			</if>
 
 		<![CDATA[
@@ -1513,7 +1521,7 @@
 			 AND C.CRS_CTGR_PATH LIKE CONCAT('%/', #{crsCtgrCd}, '%')
 			</if>
 			<if test = "searchValue != null and searchValue != ''">
-			 AND CONCAT(A.CRS_CRE_NM,B.CRS_NM, C.CRS_CTGR_NM) like CONCAT('%', #{searchValue}, '%')
+			 AND CONCAT(A.CRS_CRE_NM,B.CRS_NM, C.CRS_CTGR_NM,B.META_TAG) like CONCAT('%', #{searchValue}, '%')
 			</if>
 		<!-- <![CDATA[
 		     AND ( B.CRS_OPER_TYPE = 'S' OR (A.ENRL_END_DTTM >= DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
