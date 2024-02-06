@@ -192,7 +192,7 @@
 				<tr>
 					<th scope="row">과정구분</th>
 					<td>
-						<select name="creTypeCd" id="creTypeCd" class="form-control input-sm" style="float:left;width: 70%;margin-right: 5px;" disabled>
+						<select name="creTypeCd" id="creTypeCd" class="form-control input-sm" style="float:left;width: 70%;margin-right: 5px;" readonly>
 							<option value="">과정구분을 선택하세요</option>
 							<option value="ON" <c:if test="${vo.creTypeCd eq 'ON' }">selected</c:if>>온라인</option>
 							<option value="OF" <c:if test="${vo.creTypeCd eq 'OF' }">selected</c:if>>오프라인</option>

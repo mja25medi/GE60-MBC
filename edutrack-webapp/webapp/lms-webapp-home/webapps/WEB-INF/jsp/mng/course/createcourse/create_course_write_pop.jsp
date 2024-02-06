@@ -209,7 +209,7 @@
 		<tr>
 			<th scope="row"><span style="color:red;">* </span>과정구분</th>
 			<td>
-				<select name="creTypeCd_0" id="creTypeCd_0" class="form-control input-sm" style="float:left;width: 70%;margin-right: 5px;" onchange="offEduPlace()" disabled>
+				<select name="creTypeCd_0" id="creTypeCd_0" class="form-control input-sm" style="float:left;width: 70%;margin-right: 5px;" onchange="offEduPlace()" readonly>
 					<option value="">과정유형을 선택하세요</option>
 					<option value="ON">온라인</option>
 					<option value="OF">오프라인</option>
