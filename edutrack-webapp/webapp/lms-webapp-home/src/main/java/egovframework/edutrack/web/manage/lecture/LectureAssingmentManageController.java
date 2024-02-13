@@ -134,10 +134,14 @@ public class LectureAssingmentManageController extends GenericController {
         List<SysCodeVO> regYnList = sysCodeMemService.getSysCodeList("REG_YN", UserBroker.getLocaleKey(request));
 
 		//-- 개설 과정 연결 과목 목록을 가져온다.
-		CreateCourseSubjectVO createCourseSubjectVO = new CreateCourseSubjectVO();
-		createCourseSubjectVO.setCrsCreCd(crsCreCd);
+//		CreateCourseSubjectVO createCourseSubjectVO = new CreateCourseSubjectVO();
+//		createCourseSubjectVO.setCrsCreCd(crsCreCd);
 
-		List<CreateCourseSubjectVO> subjectList = createCourseSubjectService.listSubject(createCourseSubjectVO).getReturnList();
+//		List<CreateCourseSubjectVO> subjectList = createCourseSubjectService.listSubject(createCourseSubjectVO).getReturnList();
+
+        CreateOnlineSubjectVO  createOnlineSubjectVO = new CreateOnlineSubjectVO();
+		createOnlineSubjectVO.setCrsCreCd(crsCreCd);
+		List<CreateOnlineSubjectVO> subjectList = createCourseSubjectService.listOnlineSubject(createOnlineSubjectVO).getReturnList();
 		request.setAttribute("subjectList", subjectList);
 
 		request.setAttribute("gubun", "A");
@@ -241,6 +245,12 @@ public class LectureAssingmentManageController extends GenericController {
 		List<CreCrsDeclsVO> creCrsDeclsList = creCrsDeclsService.list(creCrsDeclsVO).getReturnList();
 		request.setAttribute("creCrsDeclsList", creCrsDeclsList);
 
+	    CreateOnlineSubjectVO  createOnlineSubjectVO = new CreateOnlineSubjectVO();
+		createOnlineSubjectVO.setCrsCreCd(vo.getCrsCreCd());
+		List<CreateOnlineSubjectVO> subjectList = createCourseSubjectService.listOnlineSubject(createOnlineSubjectVO).getReturnList();
+		request.setAttribute("subjectList", subjectList);
+		
+		
 		request.setAttribute("gubun", "E");
 		request.setAttribute("fileupload", "Y");
 		return "mng/lecture/assignment/asmt_write_pop";

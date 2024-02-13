@@ -77,52 +77,7 @@
                                         <ul class="dbody">
                                         <!-- 정보 입력 시작 -->
 										<c:forEach items="${userInfoCfgList}" var="cfgItem" varStatus="status">
-										<c:if test="${cfgItem.fieldNm eq 'USERID' }">
-										<c:set var="useUserid" value="${cfgItem.useYn }"/>
-										<c:set var="requiredUserid" value="${cfgItem.requiredYn }"/>
-										<c:if test="${cfgItem.requiredYn eq 'Y'}"><c:set var="isNull" value="N" /></c:if>
-										<c:if test="${cfgItem.requiredYn eq 'N'}"><c:set var="isNull" value="Y" /></c:if>
-                                            <li class="first" <c:if test="${cfgItem.useYn eq 'N'}">style="display:none;"</c:if>>
-                                                <div class="row">
-                                                    <label for="idInput" class="form-label col-sm-2">아이디
-				                                        <c:if test="${cfgItem.requiredYn eq 'Y'}">
-				                                        	<i class="icon_star" aria-hidden="true"></i>
-				                                        </c:if>
-			                                        </label>
-                                                    <div class="col-sm-10">
-                                                        <div class="form-row">
-                                                           <input class="form-control w50" type="text" name="userId" id="userId" value="" placeholder="아이디를 입력하세요" onchange="resetIdCheck()"> <%-- onkeydown="inputUserId()"  --%>
-			                                               <button type="button" id="idChkButton" class="btn gray2 ml5" onclick="idDupCheck();">중복확인</button>
-                                                        </div>
-                                                        <!-- <small class="note">
-                                                            <span class="fcBlue">사용가능한 아이디 입니다.</span>
-                                                            <span class="fcRed">이미 가입된 아이디 입니다.</span>
-                                                        </small> -->
-                                                    </div>
-                                                </div>
-                                            </li>     
-                                            <li id="pw">
-                                                <div class="row">
-                                                    <label for="pwInput" class="form-label col-sm-2">비밀번호<i class="icon_star" aria-hidden="true"></i></label>
-                                                    <div class="col-sm-10">
-                                                        <div class="form-row">
-                                                            <input class="form-control w50" type="password" name="userPass" id="userPass" maxlength="16" value="" autocomplete="off">
-                                                        </div> 
-                                                        <small class="note">* 비밀번호는 최소 8자리, 특수문자+숫자+영문 조합입니다.</small>                                               
-                                                    </div>
-                                                </div> 
-                                            </li>    
-                                            <li id="pwChk">
-                                                <div class="row">   
-                                                    <label for="pwInputConfirm" class="form-label col-sm-2">새비밀번호                                                        <i class="icon_star" aria-hidden="true"></i></label>
-                                                    <div class="col-sm-10">
-                                                        <div class="form-row">
-                                                            <input class="form-control w50" type="password" name="userPassChk" id="userPassChk" maxlength="16" value=""  placeholder="" autocomplete="off">
-                                                        </div>                                                       
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            </c:if>
+
                                             <c:if test="${cfgItem.fieldNm eq 'USERNM' }">
 											<c:set var="useUsernm" value="${cfgItem.useYn }"/>
 											<c:set var="requiredUsernm" value="${cfgItem.requiredYn }"/>
@@ -326,169 +281,11 @@ function cancel_join(){
 	location.href = "/home/user/joinCancel";
 }
 
-/*id 검증*/
-function validateId(){
-	var userId = $("#userId").val();
-	if(userId == "") {
-		alert("<spring:message code="user.message.userinfo.input.userid"/>");
-		return false;
-	}
-
-	var count = 0;  //한글 및 특수 문자 검증
-	var num =0;     //숫자 포함 검증
-	var chr = 0;    //영문자 포함 검증
-
-	////////////////////////////////////////////////////////////
-	////////////////// id 길이 체크 ////////////////////////////
-	////////////////////////////////////////////////////////////
-	if((userId.length < 6) || (userId.length > 12) ){
-		alert("<spring:message code="user.message.userinfo.validation.alert.userid.length2"/>");
-		$("#userId").val("");
-		$("#userId").focus();
-		return false;
-	}
-
-
-	////////////////////////////////////////////////////////
-	//////////// 특수문자 검사  ////////////////////////////
-	////////////////////////////////////////////////////////
-	for (i=0;i<userId.length;i++){
-		ls_one_char = userId.charAt(i);
-		if(ls_one_char.search(/[0-9|a-z|A-Z]/) == -1) {
-			count++;
-		}//end of if
-	} // end of for
-
-	if(count!=0) {
-	  	alert("<spring:message code="user.message.userinfo.validation.alert.userid.digit"/>");
-		$("#userId").val("");
-		$("#userId").focus();
-		return false;
-	} //특수문자가 발견될경우 return;
-
-	/////////////////////////////////////////////////////////
-	//////////////// 영문자 숫자 혼용 검증 //////////////////
-	/////////////////////////////////////////////////////////
-	for (i=0;i<userId.length;i++){
-		ls_one_char = userId.charAt(i);
-	  	if(ls_one_char.search(/[0-9]/) == -1) {
-			num++;
-		}//end of if
-		if(ls_one_char.search(/[a-z|A-Z]/) == -1) {
-			chr++;
-		}
-	} // end of for
-
-	if(num == 0 || chr == 0) {
-		alert("<spring:message code="user.message.userinfo.validation.alert.userid.char"/>");
-		$("#userId").val("");
-		$("#userId").focus();
-		return false;
-	} //혼용이 아닐경우 false return
-	return true;
-}
 
 function validateEmail() {
 	return !(isEmpty($("#email_id").val()) || isEmpty($("#email_domain_text").val()));
 }
 
-//비밀번호 적합성 체크
-function validatePass() {
-	if (validateUserPass() && validateUserPassChk()) {
-		return true;
-	} else {
-		return false;
-	}
-}
-
-function checkPassword(pwd){
-	  // 비밀번호 포맷 확인(영문, 특수문자, 숫자 포함 8자 이상, 16자 이하)
-	  if(!/^(?=.*[a-zA-Z])(?=.*\d)(?=.*\W).{8,16}$/.test(pwd)){
-	    return false;
-	  }
-	  return true;
-}
-
-//비밀번호 적합성 체크
-function validateUserPass() {
-	if(isEmpty($("#userPass").val())) {
-		$("#userPassInfo span.sec").hide();
-		$("#userPassInfo #invalidInputUserPassMsg").show();
-		alert("비밀번호를 입력 해주세요.");
-		return false;
-	}
-	
-	$("#userPassInfo span.sec").hide();
-	if(!checkPassword($("#userPass").val())){
-		alert("비밀번호는 영문과 특수문자 숫자를 포함하며 8자 이상, 16자 이하 이어야 합니다.");
-		$("#userPassInfo #invalidInputUserPassMsg").show();
-		$("#userPass").val("");
-		return false;
-	} else {
-		$("#userPassInfo #inputUserPassMsg").show();
-	}
-	
-	$("#userPassChkInfo span.sec").hide();
-	if(isEmpty($("#userPassChk").val())) {
-		alert("비밀번호 확인 란을 입력해주세요.");
-		return false;
-	}
-	
-	if($("#userPass").val() != $("#userPassChk").val()) {
-		$("#userPassChkInfo #invalidInputUserPassChkMsg").show();
-		alert("비밀번호가 일치하지 않습니다.");
-		return false;
-	} else {
-		$("#userPassChkInfo #inputUserPassChkMsg").show();
-	}
-	
-	return true;
-}
-
-//비밀번호 적합성 체크
-function validateUserPassChk() {
-	$("#userPassChkInfo span.sec").hide();
-	if(isEmpty($("#userPassChk").val())) {
-		$("#userPassChkInfo #invalidInputUserPassChkMsg").show();			
-		return false;
-	}
-	
-	if($("#userPass").val() != $("#userPassChk").val()) {
-		$("#userPassChkInfo #invalidInputUserPassChkMsg").show();
-		return false;
-	} else {
-		$("#userPassChkInfo #inputUserPassChkMsg").show();
-	}
-	
-	return true;
-}
-
-function inputUserId() {
-	$('#idCheck').val('N');
-	$("#userIdInfo span.sec").hide();
-}
-
-// ID 중복 체크
-function idDupCheck() {
-	if(validateId()){
-		var userId = $("#userId").val();
-		$.getJSON( 
-			"/home/user/userIdCheck",
-			{"userId" : userId },			// params
-			function(data) {
-				$("#idCheck").val(data.isUseable);
-				if(data.isUseable == 'Y') {
-					$("#idChkButton").hide();
-					alert("<spring:message code="home.user.ableinputidmessage1"/>");
-				} else {
-					alert("<spring:message code="home.user.disableinputidmessage1"/>");
-				}
-			}
-		);
-	} else {
-		alert("올바른 형식이 아닙니다.");
-	}
-}
 
 function emailDupCheck() {
 	if(validateEmail()){
@@ -600,29 +397,7 @@ $('#btn_ok').bind("click keydown",function(event) {
 	if($M.Check.Event.isClickEnter(event)) {
 		event.preventDefault();
 		
-		if( $('#idCheck').val() == 'N' ) {
-			alert("<spring:message code="user.message.userinfo.nodupchek"/>");
-			return;
-		}
-		
-			if(isEmpty($("#userPass").val())) {
-				alert("<spring:message code="user.message.userinfo.alert.input.password"/>");
-				$("#userPass").focus();
-				return;
-			}
-	
-			if(isEmpty($("#userPassChk").val())) {
-				alert("<spring:message code="user.message.userinfo.alert.input.password2"/>");
-				$("#userPassChk").focus();
-				return;
-			}
-			
-			if(!validatePass()) return ;
-	
-			if( $('#userPass').val() != $('#userPassChk').val() ) {
-				alert("<spring:message code="user.message.userinfo.notmatch.password"/>");
-				return;
-			}
+
 		<c:if test="${useEmail eq 'Y' && requiredEmail eq 'Y' }">
 			if(isEmpty($("#email_id").val()) || isEmpty($("#email_domain_text").val()) ){
 				alert("<spring:message code="user.message.login.search.alert.input.email"/>");

@@ -114,7 +114,7 @@
                                             </li>    
                                             <li id="pwChk">
                                                 <div class="row">   
-                                                    <label for="pwInputConfirm" class="form-label col-sm-2">새비밀번호                                                        <i class="icon_star" aria-hidden="true"></i></label>
+                                                    <label for="pwInputConfirm" class="form-label col-sm-2">비밀번호 확인                                                        <i class="icon_star" aria-hidden="true"></i></label>
                                                     <div class="col-sm-10">
                                                         <div class="form-row">
                                                             <input class="form-control w50" type="password" name="userPassChk" id="userPassChk" maxlength="16" value=""  placeholder="" autocomplete="off">

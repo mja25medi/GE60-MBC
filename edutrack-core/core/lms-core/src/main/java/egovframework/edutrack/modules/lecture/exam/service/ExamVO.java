@@ -15,6 +15,7 @@ public class ExamVO
 	private String	examCts;			// NCLOB,
 	private String  semiExamYn;				
 	private String	examTypeCd;		// VARCHAR2(10 BYTE),
+	private String	examUseCd;		// VARCHAR2(10 BYTE),
 	private String	examTypeNm;
 	private String	examStareTypeCd;	// VARCHAR2(10 BYTE),
 	private String	examStareTypeNm;
@@ -56,6 +57,7 @@ public class ExamVO
 
 	private String sbjCd;			//과목코드:VARCHAR2(10)
 	private String sbjNm;			//과목이름:VARCHAR2(50)
+	private String	unitCd;			//차시코드:VARCHAR2(12 BYTE)
 
 	private Integer declsNo;
 	private String 	strQstnNo;		//문제 번호 배열
@@ -833,5 +835,21 @@ public class ExamVO
 	public void setStdNoObjArr(String[] stdNoObjArr) {
 		this.stdNoObjArr = stdNoObjArr;
 	}
-	
+
+	public String getUnitCd() {
+		return unitCd;
+	}
+
+	public void setUnitCd(String unitCd) {
+		this.unitCd = unitCd;
+	}
+
+	public String getExamUseCd() {
+		return examUseCd;
+	}
+
+	public void setExamUseCd(String examUseCd) {
+		this.examUseCd = examUseCd;
+	}
+
 }

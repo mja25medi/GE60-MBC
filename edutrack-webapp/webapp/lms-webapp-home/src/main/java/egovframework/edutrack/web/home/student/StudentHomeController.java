@@ -460,7 +460,7 @@ public class StudentHomeController
 			vo.setEnrlStartDttm(startDttm);
 			vo.setEnrlEndDttm(endDttm);
 			vo.setAuditEndDttm(auditEndDttm);
-			vo.setEnrlSts("S");
+			vo.setEnrlSts("E"); //학습자가 0원 짜리 과정을 수강신청하면 무조건 “수강신청” 상태로 저장 되도록 한다.
 		}
 		//-- 과정의 결제가 필요한 경우 처리
 		if(createCourseVO.getEduPrice() > 0) {

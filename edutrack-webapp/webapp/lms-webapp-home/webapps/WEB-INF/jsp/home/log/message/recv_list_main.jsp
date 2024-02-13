@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/jsp/common/page_init.jsp" %>
-<script defer src="/tpl/003/js/common.js"></script>	
+<script defer src="/tpl/${COLOR_TPL}/js/common.js"></script>	
 				<div class="content" id="cntsDiv"></div>
 
 <script type="text/javascript">

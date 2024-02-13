@@ -39,7 +39,7 @@
 				<td style="text-align: center;">
 					<c:choose>
 						<c:when test="${item.examStareTypeCd eq 'R'}">
-							<meditag:dateformat type="1" delimeter="." property="${item.examStartDttm}"/> <meditag:dateformat type="7" delimeter="." property="${item.examStartDttm}"/> ~ <meditag:dateformat type="1" delimeter="." property="${item.examEndDttm}"/> <meditag:dateformat type="7" delimeter="." property="${item.examEndDttm}"/>
+							${item.examStartDttm} ${item.examStartHour}:${item.examStartMin } ~ ${item.examEndDttm} ${item.examEndHour}:${item.examEndMin }
 						</c:when>
 						<c:otherwise>
 						<span>-</span>

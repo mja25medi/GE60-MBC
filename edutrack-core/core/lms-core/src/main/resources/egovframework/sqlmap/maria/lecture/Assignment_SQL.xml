@@ -11,10 +11,12 @@
 		SELECT	A.CRS_CRE_CD																												
 		        ,  A.ASMT_SN																													
 		        ,  A.SBJ_CD																													
+		        ,  A.UNIT_CD																													
 		        ,  (SELECT FN_GET_SBJ_NAME(A.SBJ_CD)) AS SBJ_NM																		
 		        ,  A.ASMT_TITLE																												
 		        ,  A.ASMT_CTS																													
 		        ,  A.ASMT_TYPE_CD																												
+		        ,  A.ASMT_USE_CD																												
 		        ,  A.ASMT_SVC_CD																												
 		        ,  (SELECT FN_GET_CODE_NAME('ASMT_TYPE_CD', A.ASMT_TYPE_CD)) AS ASMT_TYPE_NM											
 		        ,  A.ASMT_SELECT_TYPE_CD        																								
@@ -63,10 +65,12 @@
 		SELECT  A.CRS_CRE_CD																											
 		        ,  A.ASMT_SN																												
 		        ,  A.SBJ_CD																												
+		        ,  A.UNIT_CD																													
 		        ,  (SELECT FN_GET_SBJ_NAME(A.SBJ_CD)) AS SBJ_NM																	
 		        ,  A.ASMT_TITLE																											
 		        ,  A.ASMT_CTS																												
 		        ,  A.ASMT_TYPE_CD	
+		        ,  A.ASMT_USE_CD	
 		        ,  A.ASMT_SVC_CD																											
 		        ,  (SELECT FN_GET_CODE_NAME('ASMT_TYPE_CD', A.ASMT_TYPE_CD)) AS ASMT_TYPE_NM										
 		        ,  A.ASMT_SELECT_TYPE_CD        																							
@@ -121,9 +125,11 @@
 		        	CRS_CRE_CD												
 		        ,  ASMT_SN													
 		        ,  SBJ_CD													
+		        ,  UNIT_CD																													
 		        ,  ASMT_TITLE												
 		        ,  ASMT_CTS												
 		        ,  ASMT_TYPE_CD		
+		        ,  ASMT_USE_CD		
 		        ,  ASMT_SVC_CD										
 		        ,  ASMT_SELECT_TYPE_CD										
 		        ,  ASMT_START_DTTM											
@@ -140,9 +146,11 @@
 		           #{crsCreCd}			
 				,  #{asmtSn}
 		        ,  #{sbjCd}													
+		        ,  #{unitCd}													
 		        ,  #{asmtTitle}												
 		        ,  #{asmtCts}												
 		        ,  #{asmtTypeCd}												
+		        ,  #{asmtUseCd}												
 		        ,  #{asmtSvcCd}												
 		        ,  #{asmtSelectTypeCd}										
 		        ,  #{asmtStartDttm}											
@@ -161,10 +169,12 @@
 	<update id="update" parameterType="assignmentVO">
 		<!-- 과제 정보 수정 -->
 		UPDATE  tb_lec_asmt 												
-		      SET  SBJ_CD 				= #{sbjCd}								
+		      SET  SBJ_CD 				= #{sbjCd}	
+		        ,  UNIT_CD 				= #{unitCd}								
 		        ,  ASMT_TITLE 			= #{asmtTitle}							
 		        ,  ASMT_CTS 			= #{asmtCts}								
 		        ,  ASMT_TYPE_CD 		= #{asmtTypeCd}							
+		        ,  ASMT_USE_CD 			= #{asmtUseCd}							
 		        ,  ASMT_SVC_CD 			= #{asmtSvcCd}							
 		        ,  ASMT_SELECT_TYPE_CD = #{asmtSelectTypeCd}      				
 		        ,  ASMT_START_DTTM 	= #{asmtStartDttm}          				
@@ -188,13 +198,15 @@
 	
 	<select id="listStd" parameterType="assignmentVO" resultType="assignmentVO">
 		<![CDATA[
-		SELECT	A.CRS_CRE_CD																									
+		SELECT A.CRS_CRE_CD																									
 		        ,  A.ASMT_SN																										
 		        ,  A.SBJ_CD																										
+		        ,  A.UNIT_CD																										
 		        ,  (SELECT FN_GET_SBJ_NAME(A.SBJ_CD)) AS SBJ_NM															
 		        ,  A.ASMT_TITLE																									
 		        ,  A.ASMT_CTS																										
 		        ,  A.ASMT_TYPE_CD																									
+		        ,  A.ASMT_USE_CD																									
 		        ,  A.ASMT_SVC_CD																									
 		        ,  (SELECT FN_GET_CODE_NAME('ASMT_TYPE_CD', A.ASMT_TYPE_CD)) AS ASMT_TYPE_NM								
 		        ,  A.ASMT_SELECT_TYPE_CD        																					
@@ -246,10 +258,18 @@
 		       AND  B.STD_NO    	= #{stdNo}			      		     	
 		     	)
 		    WHERE  A.CRS_CRE_CD	= #{crsCreCd}																						
+		    ]]>		      		
 		      AND  A.REG_YN 		= 'Y'	
-		      AND  A.ASMT_SVC_CD NOT IN ('CODE')																						
+		      AND  A.ASMT_SVC_CD NOT IN ('CODE')		
+		      <if test = "sbjCd != null and sbjCd != ''">
+		    	 AND  A.SBJ_CD	= #{sbjCd}
+			  </if> 																								
+		      <if test = "unitCd != null and unitCd != ''">
+		    	 AND  A.UNIT_CD	= #{unitCd}
+			  </if> 																								
+		      																				
 		    ORDER  BY ASMT_END_DTTM DESC, ASMT_START_DTTM DESC, A.ASMT_SN 			
-		    ]]>  												
+  												
 	</select>
 	
 	<select id="selectAsmtStatus" parameterType="assignmentVO" resultType="egovMap">
@@ -260,10 +280,12 @@
 		 SELECT	A.CRS_CRE_CD																									
 		        ,  A.ASMT_SN																										
 		        ,  A.SBJ_CD																										
+		        ,  A.UNIT_CD																										
 		        ,  (SELECT FN_GET_SBJ_NAME(A.SBJ_CD)) AS SBJ_NM															
 		        ,  A.ASMT_TITLE																									
 		        ,  A.ASMT_CTS																										
 		        ,  A.ASMT_TYPE_CD																									
+		        ,  A.ASMT_USE_CD																									
 		        ,  A.ASMT_SVC_CD																									
 		        ,  (SELECT FN_GET_CODE_NAME('ASMT_TYPE_CD', A.ASMT_TYPE_CD)) AS ASMT_TYPE_NM								
 		        ,  A.ASMT_SELECT_TYPE_CD        																					
@@ -312,10 +334,12 @@
 		SELECT	A.CRS_CRE_CD																									
 		        ,  A.ASMT_SN																										
 		        ,  A.SBJ_CD																										
+		        ,  A.UNIT_CD																										
 		        ,  (SELECT FN_GET_SBJ_NAME(A.SBJ_CD)) AS SBJ_NM															
 		        ,  A.ASMT_TITLE																									
 		        ,  A.ASMT_CTS																										
 		        ,  A.ASMT_TYPE_CD																									
+		        ,  A.ASMT_USE_CD																									
 		        ,  A.ASMT_SVC_CD																									
 		        ,  (SELECT FN_GET_CODE_NAME('ASMT_TYPE_CD', A.ASMT_TYPE_CD)) AS ASMT_TYPE_NM								
 		        ,  A.ASMT_SELECT_TYPE_CD        																					

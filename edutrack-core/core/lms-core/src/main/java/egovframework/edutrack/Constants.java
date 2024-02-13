@@ -34,9 +34,6 @@ public class Constants {
 	public final static String	MSG_EMAIL				= framework.getString("framework.message.email");
 	public final static String	MSG_NOTE				= framework.getString("framework.message.note");
 
-	// 문자 발송 에이전트 설정
-	public final static String	MSG_SMS_AGENT					= framework.getString("framework.sms.agent");
-	
 	// 메시지 표시 관련 설정
 	public final static String	MSG_SMS_ADDR			= framework.getString("framework.message.sms.addr");
 	public final static String	MSG_SMS_NAME			= framework.getString("framework.message.sms.name");

@@ -57,6 +57,8 @@ import egovframework.edutrack.modules.lecture.assignment.service.AssignmentSubVO
 import egovframework.edutrack.modules.lecture.assignment.service.AssignmentVO;
 import egovframework.edutrack.modules.lecture.bookmark.service.BookmarkService;
 import egovframework.edutrack.modules.lecture.bookmark.service.BookmarkVO;
+import egovframework.edutrack.modules.lecture.exam.service.ExamService;
+import egovframework.edutrack.modules.lecture.exam.service.ExamVO;
 import egovframework.edutrack.modules.lecture.main.service.MainLectureService;
 import egovframework.edutrack.modules.lecture.main.service.MainLectureVO;
 import egovframework.edutrack.modules.library.cnts.media.service.ClibMediaCntsService;
@@ -168,6 +170,9 @@ public class BookmarkLectureController
 	
 	@Autowired @Qualifier("assignmentService")
 	private AssignmentService			assignmentService;
+	
+	@Autowired @Qualifier("examService")
+	private ExamService				examService;
 	
 	private final static String GPT_URL = Constants.framework.getString("framework.gpt.call.url");
 	private final static String GPT_VERSION = Constants.framework.getString("framework.gpt.version");
@@ -549,6 +554,22 @@ public class BookmarkLectureController
 		List<BookmarkVO> bookmarkList = null;
 		bookmarkList = bookmarkService.listBookmark(vo).getReturnList();
 		request.setAttribute("bookmarkList", bookmarkList);
+		
+		//과제목록
+		AssignmentVO AssVo = new AssignmentVO();
+		AssVo.setCrsCreCd(crsCreCd);
+		AssVo.setStdNo(stdNo);
+		AssVo.setSbjCd(vo.getSbjCd());
+		AssVo.setUnitCd(vo.getUnitCd());
+		ProcessResultListVO<AssignmentVO> AssignmentList = assignmentService.listAssignmentStd(AssVo);
+		request.setAttribute("assignmentListVO", AssignmentList.getReturnList());
+		
+		//시험 목록 가져오기
+		ExamVO examVO = new ExamVO(); 
+		examVO.setCrsCreCd(crsCreCd);
+		examVO.setSbjCd(vo.getSbjCd());
+		examVO.setUnitCd(vo.getUnitCd());
+		request.setAttribute("examListVO", examService.listExamStd(examVO).getReturnList());
 
 		//-- 학습자인 경우 Bookmark 정보 생성
 		if("STU".equals(classUserType)) {

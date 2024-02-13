@@ -43,7 +43,7 @@
 										<c:when test="${item.examStareTypeCd eq 'R' }">
 											<li>
 												<strong><spring:message code="lecture.title.exam.duration"/></strong>
-                                      		 	<meditag:dateformat type="8" delimeter="." property="${item.examStartDttm}"/>~<meditag:dateformat type="8" delimeter="." property="${item.examEndDttm}"/>
+                                      		 	${item.examStartDttm} ${item.examStartHour }:${item.examStartMin } ~ ${item.examEndDttm} ${item.examEndHour }:${item.examEndMin }
 											</li>
 											<c:if test="${item.semiExamYn eq  'Y'}">
 												<li><strong>응시 기준 강의 수 : </strong>${item.sbjNm} ${item.stareLecCount} 강</li>

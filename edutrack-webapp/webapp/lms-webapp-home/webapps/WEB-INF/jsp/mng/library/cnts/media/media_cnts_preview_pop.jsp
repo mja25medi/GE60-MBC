@@ -24,8 +24,13 @@
 		var sourcesSrc = "";
 		<c:if test="${mediaStreamUse eq 'use'}">
 			<c:if test="${cntsTypeCd eq 'VOD'}">
+				<c:if test="${mediaStreamHls ne ''}">
 				sourcesType = "application/x-mpegurl";
 				sourcesSrc = "${mediaStreamUrl}/${filePath}/${fileName}/${mediaStreamHls}";
+				</c:if>
+				<c:if test="${mediaStreamHls eq ''}">
+				sourcesSrc = "${mediaStreamUrl}/${filePath}/${fileName}";
+				</c:if>
 			</c:if>		
 			<c:if test="${cntsTypeCd ne 'VOD' && cntsTypeCd ne 'CDN'}">
 				sourcesSrc = "${filePath}/${fileName}";

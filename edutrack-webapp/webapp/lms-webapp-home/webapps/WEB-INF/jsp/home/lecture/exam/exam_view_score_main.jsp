@@ -14,9 +14,15 @@
 							<thead>
 								<tr>
 									<th scope="col">과정명</th>
-									<th scope="col" width="15%">시험</th>
-									<th scope="col" width="15%">진행단계평가</th>
-									<th scope="col" width="10%">과제</th>
+									<c:if test="${stdScoreList[0].prgrRatio ne 0 }"><th scope="col">진도</th></c:if>
+									<c:if test="${stdScoreList[0].examRatio ne 0 }"><th scope="col">시험</th></c:if>
+									<c:if test="${stdScoreList[0].semiExamRatio ne 0 }"><th scope="col">진행단계평가</th></c:if>
+									<c:if test="${stdScoreList[0].asmtRatio ne 0 }"><th scope="col">과제</th></c:if>
+									<c:if test="${stdScoreList[0].etcRatio ne 0 }"><th scope="col">${stdScoreList[0].etcNm }</th></c:if>
+									<c:if test="${stdScoreList[0].etcRatio2 ne 0 }"><th scope="col">${stdScoreList[0].etcNm2 }</th></c:if>
+									<c:if test="${stdScoreList[0].etcRatio3 ne 0 }"><th scope="col">${stdScoreList[0].etcNm3 }</th></c:if>
+									<c:if test="${stdScoreList[0].etcRatio4 ne 0 }"><th scope="col">${stdScoreList[0].etcNm4 }</th></c:if>
+									<c:if test="${stdScoreList[0].etcRatio5 ne 0 }"><th scope="col">${stdScoreList[0].etcNm5 }</th></c:if>
 									<th scope="col" width="10%">총점</th>
 									<th scope="col" width="10%">수료여부</th>
 									<th scope="col" width="15%">이의제기</th>
@@ -32,14 +38,26 @@
 									<fmt:formatNumber type="number"  value = "${item.examScore}" pattern = "0.0" var = "examScore"/>
 									<fmt:formatNumber type="number"  value = "${item.semiExamScore}" pattern = "0.0" var = "semiExamScore"/>
 									<fmt:formatNumber type="number"  value = "${item.asmtScore}" pattern = "0.0" var = "asmtScore"/>
+									<fmt:formatNumber type="number"  value = "${item.prgrScore}" pattern = "0.0" var = "prgrScore"/>
+									<fmt:formatNumber type="number"  value = "${item.etcScore}" pattern = "0.0" var = "etcScore"/>
+									<fmt:formatNumber type="number"  value = "${item.etcScore2}" pattern = "0.0" var = "etcScore2"/>
+									<fmt:formatNumber type="number"  value = "${item.etcScore3}" pattern = "0.0" var = "etcScore3"/>
+									<fmt:formatNumber type="number"  value = "${item.etcScore4}" pattern = "0.0" var = "etcScore4"/>
+									<fmt:formatNumber type="number"  value = "${item.etcScore5}" pattern = "0.0" var = "etcScore5"/>
 									<fmt:formatNumber type="number"  value = "${item.totScore}" pattern = "0.0" var = "totScore"/>
 									<c:set var="isOpen" value="${openDate < nowDate }" />
 									<tr>
 										<td scope="row" class="title" data-label="과정명" style="text-align: center;">${item.crsCreNm }</td>
 											<c:if test="${isOpen == true}">
-												<td data-label="시험">${examScore}점</td>
-												<td data-label="진행단계평가">${semiExamScore}점</td>
-												<td data-label="과제">${asmtScore}점</td>
+												<c:if test="${item.prgrRatio ne 0 }"><td data-label="진도">${prgrScore }점</td></c:if>
+												<c:if test="${item.examRatio ne 0 }"><td data-label="시험">${examScore }점</td></c:if>
+												<c:if test="${item.semiExamRatio ne 0 }"><td data-label="진행단계평가">${semiExamScore}점</td></c:if>
+												<c:if test="${item.asmtRatio ne 0 }"><td data-label="과제">${asmtScore }점</td></c:if>
+												<c:if test="${item.etcRatio ne 0 }"><td data-label="${item.etcNm}">${etcScore}점</td></c:if>
+												<c:if test="${item.etcRatio2 ne 0 }"><td data-label="${item.etcNm2}">${etcScore2}점</td></c:if>
+												<c:if test="${item.etcRatio3 ne 0 }"><td data-label="${item.etcNm3}">${etcScore3}점</td></c:if>
+												<c:if test="${item.etcRatio4 ne 0 }"><td data-label="${item.etcNm4}">${etcScore4}점</td></c:if>
+												<c:if test="${item.etcRatio5 ne 0 }"><td data-label="${item.etcNm5}">${etcScore5}점</td></c:if>
 												<td data-label="총점">${totScore }점</td>
 											</c:if>
 											<c:if test="${isOpen == false}">

@@ -74,7 +74,7 @@
 	 */
 	function writeAsmt() {
 		var addContent  = "<iframe id='addAssignmentFrame' name='addAssignmentFrame' width='100%' height='100%' "
-			+ "frameborder='0' scrolling='no' src='<c:url value="/mng/lecture/assignment/addAsmtPop"/>"
+			+ "frameborder='0' scrolling='auto' src='<c:url value="/mng/lecture/assignment/addAsmtPop"/>"
 			+ "?crsCreCd="+ItemDTO.crsCreCd+"'/>";
 		parent.modalBox.clear();
 		parent.modalBox.addContents(addContent);
@@ -88,7 +88,7 @@
 	 */
 	function editAsmt(asmtSn) {
 		var addContent  = "<iframe id='addAssignmentFrame' name='addAssignmentFrame' width='100%' height='100%' "
-			+ "frameborder='0' scrolling='no' src='<c:url value="/mng/lecture/assignment/editAsmtPop"/>"
+			+ "frameborder='0' scrolling='auto' src='<c:url value="/mng/lecture/assignment/editAsmtPop"/>"
 			+ "?crsCreCd="+ItemDTO.crsCreCd+"&amp;asmtSn="+asmtSn+"'/>";
 		parent.modalBox.clear();
 		parent.modalBox.addContents(addContent);

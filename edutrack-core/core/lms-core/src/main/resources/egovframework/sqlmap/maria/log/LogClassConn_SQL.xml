@@ -33,4 +33,9 @@
 		        ,  #{endDt} AS END_DT																								
 	</select>
 
+	<delete id="delClassConLog" parameterType="logClassConnVO">
+		 DELETE FROM tb_log_class_conn_log
+  		 WHERE CRS_CRE_CD = #{crsCreCd}
+    </delete>
+	
 </mapper>

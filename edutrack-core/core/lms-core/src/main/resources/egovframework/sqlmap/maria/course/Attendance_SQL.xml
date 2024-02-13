@@ -95,7 +95,20 @@
 			       max(A.col_4_7) as col_4_7, 
 			       max(A.col_4_8) as col_4_8,
 			       A.totalDay,
-			       IF((A.realDay - A.absentDay - truncate(((A.lateDay + A.leftDay + A.outDay)/3), 0)) < 0, 0, (A.realDay - A.absentDay - truncate(((A.lateDay + A.leftDay + A.outDay)/3), 0))) as realDay,
+			       IF((A.realDay 
+					- IF(IF(max(A.col_0_1) = 'S' or max(A.col_0_1) = '-', 1, 0) + IF(max(A.col_0_2) = 'S' or max(A.col_0_2) = '-', 1, 0) + IF(max(A.col_0_3) = 'S' or max(A.col_0_3) = '-', 1, 0) + IF(max(A.col_0_4) = 'S' or max(A.col_0_4) = '-', 1, 0) + IF(max(A.col_0_5) = 'S' or max(A.col_0_5) = '-', 1, 0) + IF(max(A.col_0_6) = 'S' or max(A.col_0_6) = '-', 1, 0) + IF(max(A.col_0_7) = 'S' or max(A.col_0_7) = '-', 1, 0) + IF(max(A.col_0_8) = 'S' or max(A.col_0_8) = '-', 1, 0) < 4, 1, 0) 
+					- IF(IF(max(A.col_1_1) = 'S' or max(A.col_1_1) = '-', 1, 0) + IF(max(A.col_1_2) = 'S' or max(A.col_1_2) = '-', 1, 0) + IF(max(A.col_1_3) = 'S' or max(A.col_1_3) = '-', 1, 0) + IF(max(A.col_1_4) = 'S' or max(A.col_1_4) = '-', 1, 0) + IF(max(A.col_1_5) = 'S' or max(A.col_1_5) = '-', 1, 0) + IF(max(A.col_1_6) = 'S' or max(A.col_1_6) = '-', 1, 0) + IF(max(A.col_1_7) = 'S' or max(A.col_1_7) = '-', 1, 0) + IF(max(A.col_1_8) = 'S' or max(A.col_1_8) = '-', 1, 0) < 4, 1, 0)
+					- IF(IF(max(A.col_2_1) = 'S' or max(A.col_2_1) = '-', 1, 0) + IF(max(A.col_2_2) = 'S' or max(A.col_2_2) = '-', 1, 0) + IF(max(A.col_2_3) = 'S' or max(A.col_2_3) = '-', 1, 0) + IF(max(A.col_2_4) = 'S' or max(A.col_2_4) = '-', 1, 0) + IF(max(A.col_2_5) = 'S' or max(A.col_2_5) = '-', 1, 0) + IF(max(A.col_2_6) = 'S' or max(A.col_2_6) = '-', 1, 0) + IF(max(A.col_2_7) = 'S' or max(A.col_2_7) = '-', 1, 0) + IF(max(A.col_2_8) = 'S' or max(A.col_2_8) = '-', 1, 0) < 4, 1, 0)
+					- IF(IF(max(A.col_3_1) = 'S' or max(A.col_3_1) = '-', 1, 0) + IF(max(A.col_3_2) = 'S' or max(A.col_3_2) = '-', 1, 0) + IF(max(A.col_3_3) = 'S' or max(A.col_3_3) = '-', 1, 0) + IF(max(A.col_3_4) = 'S' or max(A.col_3_4) = '-', 1, 0) + IF(max(A.col_3_5) = 'S' or max(A.col_3_5) = '-', 1, 0) + IF(max(A.col_3_6) = 'S' or max(A.col_3_6) = '-', 1, 0) + IF(max(A.col_3_7) = 'S' or max(A.col_3_7) = '-', 1, 0) + IF(max(A.col_3_8) = 'S' or max(A.col_3_8) = '-', 1, 0) < 4, 1, 0)
+					- IF(IF(max(A.col_4_1) = 'S' or max(A.col_4_1) = '-', 1, 0) + IF(max(A.col_4_2) = 'S' or max(A.col_4_2) = '-', 1, 0) + IF(max(A.col_4_3) = 'S' or max(A.col_4_3) = '-', 1, 0) + IF(max(A.col_4_4) = 'S' or max(A.col_4_4) = '-', 1, 0) + IF(max(A.col_4_5) = 'S' or max(A.col_4_5) = '-', 1, 0) + IF(max(A.col_4_6) = 'S' or max(A.col_4_6) = '-', 1, 0) + IF(max(A.col_4_7) = 'S' or max(A.col_4_7) = '-', 1, 0) + IF(max(A.col_4_8) = 'S' or max(A.col_4_8) = '-', 1, 0) < 4, 1, 0)
+					- A.absentDay - truncate(((A.lateDay + A.leftDay + A.outDay)/3), 0)) < 0, 0, 
+					(A.realDay 
+					- IF(IF(max(A.col_0_1) = 'S' or max(A.col_0_1) = '-', 1, 0) + IF(max(A.col_0_2) = 'S' or max(A.col_0_2) = '-', 1, 0) + IF(max(A.col_0_3) = 'S' or max(A.col_0_3) = '-', 1, 0) + IF(max(A.col_0_4) = 'S' or max(A.col_0_4) = '-', 1, 0) + IF(max(A.col_0_5) = 'S' or max(A.col_0_5) = '-', 1, 0) + IF(max(A.col_0_6) = 'S' or max(A.col_0_6) = '-', 1, 0) + IF(max(A.col_0_7) = 'S' or max(A.col_0_7) = '-', 1, 0) + IF(max(A.col_0_8) = 'S' or max(A.col_0_8) = '-', 1, 0) < 4, 1, 0) 
+					- IF(IF(max(A.col_1_1) = 'S' or max(A.col_1_1) = '-', 1, 0) + IF(max(A.col_1_2) = 'S' or max(A.col_1_2) = '-', 1, 0) + IF(max(A.col_1_3) = 'S' or max(A.col_1_3) = '-', 1, 0) + IF(max(A.col_1_4) = 'S' or max(A.col_1_4) = '-', 1, 0) + IF(max(A.col_1_5) = 'S' or max(A.col_1_5) = '-', 1, 0) + IF(max(A.col_1_6) = 'S' or max(A.col_1_6) = '-', 1, 0) + IF(max(A.col_1_7) = 'S' or max(A.col_1_7) = '-', 1, 0) + IF(max(A.col_1_8) = 'S' or max(A.col_1_8) = '-', 1, 0) < 4, 1, 0)
+					- IF(IF(max(A.col_2_1) = 'S' or max(A.col_2_1) = '-', 1, 0) + IF(max(A.col_2_2) = 'S' or max(A.col_2_2) = '-', 1, 0) + IF(max(A.col_2_3) = 'S' or max(A.col_2_3) = '-', 1, 0) + IF(max(A.col_2_4) = 'S' or max(A.col_2_4) = '-', 1, 0) + IF(max(A.col_2_5) = 'S' or max(A.col_2_5) = '-', 1, 0) + IF(max(A.col_2_6) = 'S' or max(A.col_2_6) = '-', 1, 0) + IF(max(A.col_2_7) = 'S' or max(A.col_2_7) = '-', 1, 0) + IF(max(A.col_2_8) = 'S' or max(A.col_2_8) = '-', 1, 0) < 4, 1, 0)
+					- IF(IF(max(A.col_3_1) = 'S' or max(A.col_3_1) = '-', 1, 0) + IF(max(A.col_3_2) = 'S' or max(A.col_3_2) = '-', 1, 0) + IF(max(A.col_3_3) = 'S' or max(A.col_3_3) = '-', 1, 0) + IF(max(A.col_3_4) = 'S' or max(A.col_3_4) = '-', 1, 0) + IF(max(A.col_3_5) = 'S' or max(A.col_3_5) = '-', 1, 0) + IF(max(A.col_3_6) = 'S' or max(A.col_3_6) = '-', 1, 0) + IF(max(A.col_3_7) = 'S' or max(A.col_3_7) = '-', 1, 0) + IF(max(A.col_3_8) = 'S' or max(A.col_3_8) = '-', 1, 0) < 4, 1, 0)
+					- IF(IF(max(A.col_4_1) = 'S' or max(A.col_4_1) = '-', 1, 0) + IF(max(A.col_4_2) = 'S' or max(A.col_4_2) = '-', 1, 0) + IF(max(A.col_4_3) = 'S' or max(A.col_4_3) = '-', 1, 0) + IF(max(A.col_4_4) = 'S' or max(A.col_4_4) = '-', 1, 0) + IF(max(A.col_4_5) = 'S' or max(A.col_4_5) = '-', 1, 0) + IF(max(A.col_4_6) = 'S' or max(A.col_4_6) = '-', 1, 0) + IF(max(A.col_4_7) = 'S' or max(A.col_4_7) = '-', 1, 0) + IF(max(A.col_4_8) = 'S' or max(A.col_4_8) = '-', 1, 0) < 4, 1, 0)
+					- A.absentDay - truncate(((A.lateDay + A.leftDay + A.outDay)/3), 0))) as realDay,
 			       A.absentDay,
 			       A.lateDay,
 			       A.leftDay,
@@ -106,41 +119,41 @@
 			              B.USER_NO ,
 			              -- S(출석:○) F(결석:×) T(지각:◎) O(외출:◇) L(조퇴:▲) 
 			              <foreach collection="clsAttendDttm" item="item" open="" close="" separator="" index="index">
-			                  IF(DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = #{item} ,D.CLASS_STAT_1,'-') AS COL_#{index}_1,
-							  IF(DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = #{item} ,D.CLASS_STAT_2,'-') AS COL_#{index}_2,
-							  IF(DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = #{item} ,D.CLASS_STAT_3,'-') AS COL_#{index}_3,
-							  IF(DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = #{item} ,D.CLASS_STAT_4,'-') AS COL_#{index}_4,
-							  IF(DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = #{item} ,D.CLASS_STAT_5,'-') AS COL_#{index}_5,
-							  IF(DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = #{item} ,D.CLASS_STAT_6,'-') AS COL_#{index}_6,
-							  IF(DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = #{item} ,D.CLASS_STAT_7,'-') AS COL_#{index}_7,
-							  IF(DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = #{item} ,D.CLASS_STAT_8,'-') AS COL_#{index}_8, 
+			                  IF(DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = DATE_FORMAT(#{item},'%Y%m%d') ,D.CLASS_STAT_1,'-') AS COL_#{index}_1,
+							  IF(DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = DATE_FORMAT(#{item},'%Y%m%d') ,D.CLASS_STAT_2,'-') AS COL_#{index}_2,
+							  IF(DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = DATE_FORMAT(#{item},'%Y%m%d') ,D.CLASS_STAT_3,'-') AS COL_#{index}_3,
+							  IF(DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = DATE_FORMAT(#{item},'%Y%m%d') ,D.CLASS_STAT_4,'-') AS COL_#{index}_4,
+							  IF(DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = DATE_FORMAT(#{item},'%Y%m%d') ,D.CLASS_STAT_5,'-') AS COL_#{index}_5,
+							  IF(DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = DATE_FORMAT(#{item},'%Y%m%d') ,D.CLASS_STAT_6,'-') AS COL_#{index}_6,
+							  IF(DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = DATE_FORMAT(#{item},'%Y%m%d') ,D.CLASS_STAT_7,'-') AS COL_#{index}_7,
+							  IF(DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = DATE_FORMAT(#{item},'%Y%m%d') ,D.CLASS_STAT_8,'-') AS COL_#{index}_8, 
 						   </foreach>
 			              C.ATTEND_DTTM,
 			              (SELECT COUNT(*) FROM tb_attend_period WHERE CRS_CRE_CD=#{crsCreCd} AND DATE_FORMAT(ATTEND_DTTM,'%Y%m%d') IN
 			              <foreach collection="clsAttendDttm" item="item" open="(" close=")" separator=",">
 								#{item}
 						  </foreach>) as totalDay,
-			              (SELECT COUNT(*) FROM tb_attend_class WHERE USER_NO=B.USER_NO AND (CLASS_STAT_1='S' AND CLASS_STAT_2='S' AND CLASS_STAT_3='S' AND CLASS_STAT_4='S' AND CLASS_STAT_5='S' AND CLASS_STAT_6='S' AND CLASS_STAT_7='S' AND CLASS_STAT_8='S')
+			              (SELECT COUNT(*) FROM tb_attend_class WHERE USER_NO=B.USER_NO AND CRS_CRE_CD = #{crsCreCd} AND (CLASS_STAT_1='S' OR CLASS_STAT_2='S' OR CLASS_STAT_3='S' OR CLASS_STAT_4='S' OR CLASS_STAT_5='S' OR CLASS_STAT_6='S' OR CLASS_STAT_7='S' OR CLASS_STAT_8='S')
 			              AND DATE_FORMAT(ATTEND_DTTM,'%Y%m%d') IN
 			              <foreach collection="clsAttendDttm" item="item" open="(" close=")" separator=",">
 								#{item}
 						  </foreach>) as realDay,
-			              (SELECT COUNT(*) FROM tb_attend_class WHERE USER_NO=B.USER_NO AND (CLASS_STAT_1='F' AND CLASS_STAT_2='F' AND CLASS_STAT_3='F' AND CLASS_STAT_4='F' AND CLASS_STAT_5='F' AND CLASS_STAT_6='F' AND CLASS_STAT_7='F' AND CLASS_STAT_8='F')
+			              (SELECT COUNT(*) FROM tb_attend_class WHERE USER_NO=B.USER_NO AND CRS_CRE_CD = #{crsCreCd} AND (CLASS_STAT_1='F' AND CLASS_STAT_2='F' AND CLASS_STAT_3='F' AND CLASS_STAT_4='F' AND CLASS_STAT_5='F' AND CLASS_STAT_6='F' AND CLASS_STAT_7='F' AND CLASS_STAT_8='F')
 			              AND DATE_FORMAT(ATTEND_DTTM,'%Y%m%d') IN
 			              <foreach collection="clsAttendDttm" item="item" open="(" close=")" separator=",">
 								#{item}
 						  </foreach>) as absentDay,
-			              (SELECT COUNT(*) FROM tb_attend_class WHERE USER_NO=B.USER_NO AND (CLASS_STAT_1='T' OR CLASS_STAT_2='T' OR CLASS_STAT_3='T' OR CLASS_STAT_4='T' OR CLASS_STAT_5='T' OR CLASS_STAT_6='T' OR CLASS_STAT_7='T' OR CLASS_STAT_8='T')
+			              (SELECT COUNT(*) FROM tb_attend_class WHERE USER_NO=B.USER_NO AND CRS_CRE_CD = #{crsCreCd} AND (CLASS_STAT_1='T' OR CLASS_STAT_2='T' OR CLASS_STAT_3='T' OR CLASS_STAT_4='T' OR CLASS_STAT_5='T' OR CLASS_STAT_6='T' OR CLASS_STAT_7='T' OR CLASS_STAT_8='T')
 			              AND DATE_FORMAT(ATTEND_DTTM,'%Y%m%d') IN
 			              <foreach collection="clsAttendDttm" item="item" open="(" close=")" separator=",">
 								#{item}
 						  </foreach>) as lateDay,
-			              (SELECT COUNT(*) FROM tb_attend_class WHERE USER_NO=B.USER_NO AND (CLASS_STAT_1='L' OR CLASS_STAT_2='L' OR CLASS_STAT_3='L' OR CLASS_STAT_4='L' OR CLASS_STAT_5='L' OR CLASS_STAT_6='L' OR CLASS_STAT_7='L' OR CLASS_STAT_8='L')
+			              (SELECT COUNT(*) FROM tb_attend_class WHERE USER_NO=B.USER_NO AND CRS_CRE_CD = #{crsCreCd} AND (CLASS_STAT_1='L' OR CLASS_STAT_2='L' OR CLASS_STAT_3='L' OR CLASS_STAT_4='L' OR CLASS_STAT_5='L' OR CLASS_STAT_6='L' OR CLASS_STAT_7='L' OR CLASS_STAT_8='L')
 			              AND DATE_FORMAT(ATTEND_DTTM,'%Y%m%d') IN
 			              <foreach collection="clsAttendDttm" item="item" open="(" close=")" separator=",">
 								#{item}
 						  </foreach>) as leftDay,
-			              (SELECT COUNT(*) FROM tb_attend_class WHERE USER_NO=B.USER_NO AND (CLASS_STAT_1='O' OR CLASS_STAT_2='O' OR CLASS_STAT_3='O' OR CLASS_STAT_4='O' OR CLASS_STAT_5='O' OR CLASS_STAT_6='O' OR CLASS_STAT_7='O' OR CLASS_STAT_8='O')
+			              (SELECT COUNT(*) FROM tb_attend_class WHERE USER_NO=B.USER_NO AND CRS_CRE_CD = #{crsCreCd} AND (CLASS_STAT_1='O' OR CLASS_STAT_2='O' OR CLASS_STAT_3='O' OR CLASS_STAT_4='O' OR CLASS_STAT_5='O' OR CLASS_STAT_6='O' OR CLASS_STAT_7='O' OR CLASS_STAT_8='O')
 			              AND DATE_FORMAT(ATTEND_DTTM,'%Y%m%d') IN
 			              <foreach collection="clsAttendDttm" item="item" open="(" close=")" separator=",">
 								#{item}
@@ -156,7 +169,7 @@
 						  </foreach>
 			            LEFT OUTER JOIN TB_ATTEND_CLASS D 
 			                ON D.CRS_CRE_CD = A.CRS_CRE_CD 
-			              AND D.ATTEND_DTTM = C.ATTEND_DTTM 
+			              AND DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = DATE_FORMAT(C.ATTEND_DTTM,'%Y%m%d')
 			              AND D.USER_NO = A.USER_NO 
 			        WHERE A.CRS_CRE_CD = #{crsCreCd}
 			          GROUP BY B.USER_NO , 
@@ -186,7 +199,7 @@
 			B.QUIT_TIME
 		FROM TB_ATTEND_PERIOD A
 		LEFT JOIN TB_ATTEND_CLASS B ON A.CRS_CRE_CD = B.CRS_CRE_CD
-				AND A.ATTEND_DTTM = B.ATTEND_DTTM AND B.USER_NO=#{userNo}
+				AND DATE_FORMAT(A.ATTEND_DTTM, '%Y%m%d')= DATE_FORMAT(B.ATTEND_DTTM, '%Y%m%d') AND B.USER_NO=#{userNo}
 		WHERE DATE_FORMAT(A.ATTEND_DTTM, '%Y%m%d') = DATE_FORMAT(#{attendDttm}, '%Y%m%d')
 			AND A.CRS_CRE_CD = #{crsCreCd}
 	</select>

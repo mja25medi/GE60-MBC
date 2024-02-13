@@ -20,6 +20,7 @@ public class AssignmentVO  extends DefaultVO {
 	private String  asmtCts;
 	private String  asmtTypeCd;
 	private String	asmtTypeNm;
+	private String  asmtUseCd;
 	private String  asmtSelectTypeCd;
 	private String	asmtSelectTypeNm;
 	private String  asmtStartDttm;
@@ -39,6 +40,7 @@ public class AssignmentVO  extends DefaultVO {
 	private int		sendCnt;
 	private String	strQstnSn ;
 	private String	sbjCd;
+	private String	unitCd;
 	private String	ctgrCd;
 	private String	userNm;
 	private String	stdNo;
@@ -435,6 +437,18 @@ public class AssignmentVO  extends DefaultVO {
 
 	public void setRateDttm(String rateDttm) {
 		this.rateDttm = rateDttm;
+	}
+	public String getUnitCd() {
+		return unitCd;
+	}
+	public void setUnitCd(String unitCd) {
+		this.unitCd = unitCd;
+	}
+	public String getAsmtUseCd() {
+		return asmtUseCd;
+	}
+	public void setAsmtUseCd(String asmtUseCd) {
+		this.asmtUseCd = asmtUseCd;
 	}
 
 }

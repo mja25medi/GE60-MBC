@@ -74,7 +74,7 @@
 				</select>
 				</c:if>
 				<c:if test="${gubun eq 'E'}">
-				<!-- 과목 (온라인,오프라인) 지정 후 과정유형이 변경되면 서비스에 결함이 발생할 수 있어 select box 를 disabled 함. (수정시..) -->
+				<!-- 과목 (온라인,오프라인) 지정 후 과정유형이 변경되면 서비스에 결함이 발생할 수 있어 select box 를 readonly 함. (수정시..) -->
 				<!-- 예를 들오 온라인 과정에 온라인 과목이 지정되어있는데  오프라인으로 변경되면 서비스 장애가 발생할 수 있음.-->
 				<select name="crsOperMthd" id="crsOperMthd" class="form-control input-sm"  onChange="selectBoxChange(this.id, this.value);" readonly>  
 					<c:forEach var="item" items="${crsOperMthdList}" varStatus="status">

@@ -39,7 +39,7 @@
                         </ul>
                         <ul class="list">
                             <li class="head"><label>시험기간</label></li>
-                            <li class="examTypeR">${examVO.examStartDttm} ${examVO.examStartHour }:${examVO.examStartMin } ~ ${examVO.examEndDttm} ${examVO.examEndHour }:${examVO.examEndMin }
+                            <li class="examTypeR"><meditag:dateformat type="1" delimeter="." property="${examVO.examStartDttm}"/> ${examVO.examStartHour }:${examVO.examStartMin } ~ <meditag:dateformat type="1" delimeter="." property="${examVO.examEndDttm}"/> ${examVO.examEndHour }:${examVO.examEndMin }
                             <li class="examTypeS"><spring:message code="lecture.message.exam.msg.duration.sangsi"/></li>
                         </ul>
                         <ul class="list">

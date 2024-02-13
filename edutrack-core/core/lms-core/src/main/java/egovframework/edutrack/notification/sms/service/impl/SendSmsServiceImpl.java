@@ -96,9 +96,18 @@ public class SendSmsServiceImpl
 	private String[] splitPhoneNoWhidCheck(String phoneNo) {
 		String[] seperate = null;
 		try {
-			seperate = phoneNo.split("-");
-			for (int i = 0; i < 3; i++) {
-				Integer.parseInt(seperate[i]);
+			if(phoneNo.indexOf("-") > -1) {
+				seperate = phoneNo.split("-");
+				for (int i = 0; i < 3; i++) {
+					Integer.parseInt(seperate[i]);
+				}
+			} else {
+				if(phoneNo.length() >= 11) {
+					seperate = new String[3];
+					seperate[0] = StringUtil.substring(phoneNo, 0, 3);
+					seperate[1] = StringUtil.substring(phoneNo, 3, 7);
+					seperate[2] = StringUtil.substring(phoneNo, phoneNo.length()-4, phoneNo.length());
+				}
 			}
 		} catch (Exception ex) {
 			throw new MessageNotificationException("잘못된 유형의 전화번호입니다. : " + phoneNo);

@@ -140,16 +140,13 @@ public class CourseCreateCourseAttendanceController extends GenericController {
 		} else {
 			// 2. 검색이 있을경우 검색어 기준으로 그 주의 월화수목금을 아래 변수에 세팅
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-			
 			Calendar c = Calendar.getInstance();
+			if(searchDate.contains(".")) {
+				c.setTime(period.parse(searchDate));
+			} else {
+				c.setTime(formatter.parse(searchDate));
+			}
 			
-			int y = Integer.parseInt(searchDate.substring(0,4));		
-			int m = Integer.parseInt(searchDate.substring(5,7))-1;		
-			int d = Integer.parseInt(searchDate.substring(8,10));
-			
-			c.set(Calendar.YEAR, y);
-			c.set(Calendar.MONTH, m); 
-			c.set(Calendar.DATE, d);
 			
 			int wk = Integer.parseInt(getWeek(c));
 			c.set(Calendar.WEEK_OF_MONTH, wk);

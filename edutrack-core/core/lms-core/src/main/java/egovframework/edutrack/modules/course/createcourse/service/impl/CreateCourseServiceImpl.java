@@ -42,6 +42,8 @@ import egovframework.edutrack.modules.course.decls.service.impl.CreCrsDeclsMappe
 import egovframework.edutrack.modules.course.subject.service.impl.SubjectOnlineMapper;
 import egovframework.edutrack.modules.lecture.bbs.service.LecBbsVO;
 import egovframework.edutrack.modules.lecture.bbs.service.impl.LecBbsMapper;
+import egovframework.edutrack.modules.log.classconn.service.LogClassConnVO;
+import egovframework.edutrack.modules.log.classconn.service.impl.LogClassConnMapper;
 import egovframework.edutrack.modules.org.info.service.OrgOrgInfoVO;
 import egovframework.edutrack.modules.org.info.service.impl.OrgOrgInfoMapper;
 import egovframework.edutrack.modules.student.student.service.StudentVO;
@@ -184,6 +186,10 @@ public class CreateCourseServiceImpl extends EgovAbstractServiceImpl implements 
 	
 	@Resource(name="attendanceMapper")
 	private AttendanceMapper 		attendanceMapper;
+	
+	@Resource(name="logClassConnMapper")
+	private LogClassConnMapper 		logClassConnMapper;
+	
 
 	/**
 	 * 개설 과정 목록 조회
@@ -776,6 +782,11 @@ public class CreateCourseServiceImpl extends EgovAbstractServiceImpl implements 
 		StudentVO svo = new StudentVO();
 		svo.setEnrlSts("D");
 		svo.setCrsCreCd(iCreateCourseVO.getCrsCreCd());
+		List<StudentVO> sList = studentMapper.listStudent(svo);
+		for(int i=0; i<sList.size(); i++) {
+			studentMapper.deleteStudentEduRslt(sList.get(i));
+		}
+		
 		studentMapper.deleteCreateCourseStudent(svo);
 		
 		//-- 개설된 과정의 분반을 삭제한다.
@@ -783,6 +794,10 @@ public class CreateCourseServiceImpl extends EgovAbstractServiceImpl implements 
 		creCrsDeclsVO.setCrsCreCd(iCreateCourseVO.getCrsCreCd());
 		creCrsDeclsMapper.deleteAll(creCrsDeclsVO);
 		
+		//-- 강의실 접속 로그 삭제
+		LogClassConnVO lccvo = new LogClassConnVO();
+		lccvo.setCrsCreCd(iCreateCourseVO.getCrsCreCd());
+		logClassConnMapper.delClassConLog(lccvo);
 		//-- 개설과정 QR 정보 삭제
 		createCourseMapper.deleteCreateCourseQr(iCreateCourseVO);
 		

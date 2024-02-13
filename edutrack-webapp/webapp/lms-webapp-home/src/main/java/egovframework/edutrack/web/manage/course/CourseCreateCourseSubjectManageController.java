@@ -827,6 +827,23 @@ public class CourseCreateCourseSubjectManageController extends GenericController
 	}
 	
 	/**
+	 * 교재 목차 조회
+	 *
+	 * @return ProcessResultVO
+	 */
+	@RequestMapping(value="/listCreCnts")
+	public String listCreCnts( CreateOnlineSubjectVO vo, Map commandMap, ModelMap model,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		commonVOProcessing(vo, request);
+		//교재 목차
+		ContentsVO cntVO = new ContentsVO();
+		cntVO.setCrsCreCd(vo.getCrsCreCd());
+		cntVO.setSbjCd(vo.getSbjCd());
+		ProcessResultListVO<ContentsVO> result = contentsService.listCreateContents(cntVO);
+		return JsonUtil.responseJson(response, result);
+	}
+	
+	/**
 	 * 하위 컨텐츠 목록 조회
 	 * @param request
 	 * @return

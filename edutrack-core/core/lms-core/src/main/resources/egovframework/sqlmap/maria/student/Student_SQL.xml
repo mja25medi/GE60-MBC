@@ -2007,4 +2007,10 @@
 		 DELETE FROM tb_std_Std  
   		 WHERE CRS_CRE_CD = #{crsCreCd} AND ENRL_STS = #{enrlSts}
     </delete>
+    
+    <delete id="deleteStudentEduRslt" parameterType="studentVO">
+		 DELETE FROM tb_std_edu_rslt  
+  		 WHERE STD_NO = #{stdNo}
+    </delete>
+    
 </mapper>

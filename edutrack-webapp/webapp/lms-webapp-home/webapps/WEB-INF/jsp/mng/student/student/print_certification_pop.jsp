@@ -1,13 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/jsp/common/page_init.jsp" %>
-<c:url var="img_base" value="/tpl/003/img/" />
+<c:url var="img_base" value="/tpl/${COLOR_TPL}/img/" />
 <html>
 <head>
 	<title>수료증</title>
-	<link rel="stylesheet" href="/tpl/003/css/hrd_common.css">
-	<link rel="stylesheet" href="/tpl/003/css/sub.css">
-	<link rel="stylesheet" href="/tpl/003/css/contents.css">
-	<link rel="stylesheet" href="/tpl/003/fonts/xeicon.css">
+	<link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/hrd_common.css">
+	<link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/sub.css">
+	<link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/contents.css">
+	<link rel="stylesheet" href="/tpl/${COLOR_TPL}/fonts/xeicon.css">
 	
 	<script type="text/javascript">
 	<c:if test="${msie6 eq 'Y'}">

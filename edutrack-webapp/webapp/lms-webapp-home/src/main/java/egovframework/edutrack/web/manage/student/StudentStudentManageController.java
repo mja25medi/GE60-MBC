@@ -614,7 +614,7 @@ public class StudentStudentManageController extends GenericController {
 	 *
 	 * @return  ProcessResultVO
 	 */
-	/*@RequestMapping(value="/editConfirmStudent")
+	@RequestMapping(value="/editConfirmStudent")
 	public String editConfirmStudent(StudentVO vo, Map commandMap, ModelMap model,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		commonVOProcessing(vo, request);
@@ -671,7 +671,7 @@ public class StudentStudentManageController extends GenericController {
 			Map<String, Object> argu = new HashMap<String, Object>();
 			argu.put("Name",userInfoVO.getUserNm());
 			argu.put("UserID", userInfoVO.getUserId());
-			argu.put("CourseName", createCourseVO.getCrsCreNm()+" ["+createCourseVO.getCreYear()+"/"+createCourseVO.getCreTerm()+"]");
+			argu.put("CourseName", createCourseVO.getCrsCreNm()+" ["+createCourseVO.getCreTerm()+"]");
 			argu.put("CourseDuration", createCourseVO.getEnrlStartDttm()+"~"+createCourseVO.getEnrlEndDttm());
 			argu.put("SendDate", DateTimeUtil.getCurrentString("yy.MM.dd"));
 			orgEmailTplService.decorator(orgCd, "EM011", argu, message);
@@ -688,14 +688,14 @@ public class StudentStudentManageController extends GenericController {
 			resultVO.setMessage(getMessage(request, "student.message.student.confirm.msg", argsMessage));
 		}
 		return JsonUtil.responseJson(response, resultVO);
-	}*/
+	}
 
 	/**
 	 * 수강 신청 취소 처리
 	 *
 	 * @return  ProcessResultVO
 	 */
-	/*@RequestMapping(value="/editCancelStudent")
+	@RequestMapping(value="/editCancelStudent")
 	public String editCancelStudent( StudentVO vo, Map commandMap, ModelMap model,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		commonVOProcessing(vo, request);
@@ -738,7 +738,7 @@ public class StudentStudentManageController extends GenericController {
 				Map<String, Object> argu = new HashMap<String, Object>();
 				argu.put("Name",userInfoVO.getUserNm());
 				argu.put("UserID", userInfoVO.getUserId());
-				argu.put("CourseName", createCourseVO.getCrsCreNm()+" ["+createCourseVO.getCreYear()+"/"+createCourseVO.getCreTerm()+"]");
+				argu.put("CourseName", createCourseVO.getCrsCreNm()+" ["+createCourseVO.getCreTerm()+"]");
 				argu.put("CourseDuration", createCourseVO.getEnrlStartDttm()+"~"+createCourseVO.getEnrlEndDttm());
 				argu.put("SendDate", DateTimeUtil.getCurrentString("yy.MM.dd"));
 				orgEmailTplService.decorator(orgCd, "EM013", argu, message);
@@ -753,7 +753,7 @@ public class StudentStudentManageController extends GenericController {
 			resultVO.setMessage(getMessage(request, "student.message.student.cancel.failed"));
 		}
 		return JsonUtil.responseJson(response, resultVO);
-	}*/
+	}
 
 	/**
 	 * 수강 신청 삭제 처리

@@ -27,4 +27,10 @@ public interface LogClassConnMapper {
 	 */
 	
 	public LogClassConnVO selectAutoDate(LogClassConnVO VO)  ;
+
+	/**
+	 * 삭제 회차 로그 데이터 삭제한다
+	 * @return
+	 */
+	public void delClassConLog(LogClassConnVO lccvo);
 }

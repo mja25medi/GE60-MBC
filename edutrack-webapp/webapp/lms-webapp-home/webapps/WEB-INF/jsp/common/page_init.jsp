@@ -31,6 +31,7 @@
 /><c:set var="ctx" value="${pageContext.request.contextPath}"
 /><c:set var="VIEWAUTH" value="${sessionScope.VIEWAUTH}"
 /><c:set var="CREAUTH" value="${sessionScope.CREAUTH}"/><%
+pageContext.setAttribute("crlf","\n");
 String LOCALEKEY = UserBroker.getLocaleKey((HttpServletRequest)pageContext.getRequest());
 String AJAXMESSAGE = Constants.AJAX_MESSAGE_USE;
 request.setAttribute("LOCALEKEY", LOCALEKEY);

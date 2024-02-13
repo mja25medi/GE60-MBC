@@ -66,12 +66,12 @@
 									<ul class="list">
 										<li class="head"><label>시험기간</label></li>
 										<li>
-											${examVO.examStartDttm} ${examVO.examStartHour }:${examVO.examStartMin } ~ ${examVO.examEndDttm} ${examVO.examEndHour }:${examVO.examEndMin }
+											<meditag:dateformat type="1" delimeter="." property="${examVO.examStartDttm}"/> ${examVO.examStartHour }:${examVO.examStartMin } ~ <meditag:dateformat type="1" delimeter="." property="${examVO.examEndDttm}"/> ${examVO.examEndHour }:${examVO.examEndMin }
 									 	</li>
 									</ul>
 									<ul class="list">
 										<li class="head"><label>결과확인일</label></li>
-										<li>${examVO.rsltCfrmDttm} ${examVO.rsltCfrmHour }:${examVO.rsltCfrmMin }</li>
+										<li><meditag:dateformat type="1" delimeter="." property="${examVO.rsltCfrmDttm}"/> ${examVO.rsltCfrmHour }:${examVO.rsltCfrmMin }</li>
 									</ul>
 								</c:if>
 							</c:if>

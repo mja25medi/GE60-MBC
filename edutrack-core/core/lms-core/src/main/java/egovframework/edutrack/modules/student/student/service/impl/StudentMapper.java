@@ -518,5 +518,11 @@ public interface StudentMapper {
 	 *
 	 */
 	public void deleteCreateCourseStudent(StudentVO svo);
+
+	/**
+	 * 수강상태코드가 D인 학생 성적 삭제
+	 *
+	 */
+	public void deleteStudentEduRslt(StudentVO studentVO);
 	
 }

@@ -198,6 +198,26 @@ function messageForm(msgDivCd) {
 	parent.modalBox.show();
 }
 
+/* 수강생 승인 */
+function editConfirmStudent(stdNo) {
+	
+	$('#stdNo').val(stdNo);
+	
+	if(confirm("선택하신 수강생을 승인 하시겠습니까?")){
+		processStd("editConfirmStudent");
+	}
+}
+
+/* 수강생 승인취소 */
+function editCancelStudent(stdNo) {
+	
+	$('#stdNo').val(stdNo);
+	
+	if(confirm("선택하신 수강생을 승인 취소 하시겠습니까?")){
+		processStd("editCancelStudent");
+	}
+}
+
 /* 수강생 삭제 */
 function deleteStudent(stdNo) {
 	
@@ -242,6 +262,17 @@ function process(cmd) {
 
 	$('#stuPayForm').attr("action", "/mng/course/std/" +cmd);
 	$('#stuPayForm').ajaxSubmit(processCallback);
+	
+}
+
+/**
+ * 서브밋 처리
+ */
+function processStd(cmd) {
+
+	$('#stuPayForm').attr("action", "/mng/std/student/" +cmd);
+	$('#stuPayForm').ajaxSubmit(processCallback);
+	
 }
 
 /**

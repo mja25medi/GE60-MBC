@@ -208,7 +208,7 @@ public class StudentServiceImpl extends EgovAbstractServiceImpl implements Stude
 		}
 		
 		studentVO.setDeclsNo(1);
-		studentVO.setEnrlSts("S");
+		studentVO.setEnrlSts("E"); //승인대기
 		studentVO.setEnrlStartDttm(viewCreateCourse.getEnrlStartDttm());
 		studentVO.setEnrlEndDttm(viewCreateCourse.getEnrlEndDttm());
 		studentVO.setAuditEndDttm(viewCreateCourse.getAuditEndDttm());

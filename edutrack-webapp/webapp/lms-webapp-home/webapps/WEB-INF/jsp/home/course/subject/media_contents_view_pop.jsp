@@ -71,8 +71,13 @@ $(document).ready(function() {
 	
 	<c:if test="${mediaStreamUse eq 'use'}">
 		<c:if test="${cntsTypeCd eq 'VOD'}">
-			sourcesType = "application/x-mpegurl";
-			sourcesSrc = "${mediaStreamUrl}${orgCntsPath}${filePath}/${fileName}/${mediaStreamHls}";
+			<c:if test="${mediaStreamHls ne ''}">
+				sourcesType = "application/x-mpegurl";
+				sourcesSrc = "${mediaStreamUrl}${orgCntsPath}${filePath}/${fileName}/${mediaStreamHls}";
+			</c:if>
+			<c:if test="${mediaStreamHls eq ''}">
+				sourcesSrc = "${mediaStreamUrl}${orgCntsPath}${filePath}/${fileName}";
+			</c:if>
 		</c:if>		
 		<c:if test="${cntsTypeCd ne 'VOD' && cntsTypeCd ne 'CDN'}">
 			sourcesSrc = "${filePath}/${fileName}";

@@ -37,7 +37,14 @@
                                         </div>
                                     </div>
                                     <div class="bottom_button">
-                                        <button class="go" onclick="javascript:goLecture('${item.crsCreCd}','${item.stdNo}')">학습하기</button>
+	                                    <c:choose>
+	                                    	<c:when test="${item.enrlSts eq 'E'}">
+	                                    		<button class="go">수강신청(승인대기중)</button>
+	                                    	</c:when>
+	                                    	<c:otherwise>
+	                                    		<button class="go" onclick="javascript:goLecture('${item.crsCreCd}','${item.stdNo}')">학습하기</button>
+	                                    	</c:otherwise>
+	                                    </c:choose>
                                     </div>                                        
                                 </div>
                             </li>

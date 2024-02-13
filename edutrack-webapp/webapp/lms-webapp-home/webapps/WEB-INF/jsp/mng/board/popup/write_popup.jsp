@@ -21,10 +21,10 @@
 												<input type="text" maxlength="100" isNull="N" name="title" dispName="<spring:message code="common.title.title"/>" value="${vo.title }" class="form-control input-sm"/>
 										    </td>
 										</tr>
-									    <tr >
+									    <tr>
 											<th scope="row"><spring:message code="board.title.popup.opentype"/></th>
 											<td>
-												<select name="popupTypeCd" id="popupTypeCd" class="form-control input-sm">
+												<select name="popupTypeCd" id="popupTypeCd" class="form-control input-sm" onchange="changeType()">
 													<c:forEach items="${popupTypeList}" var="item">
 														<c:set var="codeName" value="${item.codeNm}"/>
 														<c:forEach var="lang" items="${item.codeLangList}">
@@ -40,8 +40,8 @@
 												<label style="font-weight: normal; margin-left:10px;"><input type="radio" name="useYnWww" value="N" <c:if test="${vo.useYnWww eq 'N' }">checked="chekced"</c:if>><spring:message code="common.title.useyn_n"/></label>
 											</td>
 									    </tr>
-				
-										<tr >
+										
+										<tr class="popType">
 											<th scope="row" width="15%"><spring:message code="board.title.popup.width"/></th>
 											<td >
 												<input type="text" style="width:50px;text-align:right;float:left" maxlength="4" dispName="<spring:message code="board.title.popup.width"/>" isNull="N" lenCheck="100" dataType="number" name="xSize" value="${vo.xSize}" class="form-control input-sm inputSpecial inputNumber" onkeyup="isChkNumber(this)"/>
@@ -149,6 +149,8 @@
 													'type'		: 'file' }
 							}
 						});
+		
+		changeType();
 	});
 	
 	function goList() {
@@ -199,6 +201,16 @@
 
 	function uploderclick(str) {
 		$("#"+str).click();
+	}
+	
+	function changeType() {
+		var itemType = $("#popupTypeCd > option:selected").val();
+		if(itemType == "PWIN"){
+			$(".popType").show();
+			changeEmpl();
+		}else{
+			$(".popType").hide();
+		}
 	}
 
 </script>

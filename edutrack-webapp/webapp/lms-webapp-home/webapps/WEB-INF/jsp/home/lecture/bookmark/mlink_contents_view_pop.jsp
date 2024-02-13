@@ -80,6 +80,13 @@
 
 			$('.inbox-lecture').sidebar({dimPage: false, closable: false, exclusive: true, context: '.vod_content'})
 			.sidebar('attach events', '.lecture-button', 'toggle')
+			
+			$('.inbox-exam').sidebar({dimPage: false, closable: false, exclusive: true, context: '.vod_content'})
+			.sidebar('attach events', '.exam-button', 'toggle')
+	
+			$('.inbox-report').sidebar({dimPage: false, closable: false, exclusive: true, context: '.vod_content'})
+			.sidebar('attach events', '.report-button', 'toggle')
+	
 		});
 		
 		$(document).on("click","#qnaSave",function(){
@@ -292,6 +299,10 @@
 			location.href = "/lec/bookmark/viewContents"+"?sbjCd="+sbjCd+"&unitCd="+unitCd+"&deviceType=${param.deviceType}&browserType=${param.browserType}";
 		}
 		
+		function goList(url){
+			opener.location.href = url;
+			self.close();
+		}
 		
 	</script>
 </head>
@@ -309,6 +320,8 @@
                 <div class="group_btn">
                     <button type="button" class="btn-line inquiry-button">문의하기</button>
                     <button type="button" class="btn-line lecture-button">목차열기</button>
+                    <button type="button" class="btn-line exam-button">시험목록열기</button>
+                    <button type="button" class="btn-line report-button">과제목록열기</button>
                     <c:if test="${CLASSUSERTYPE eq 'STU' }">
                 		<button onclick="onunloadFunction()" id="closeBtn" type="button" class="btn-line lecture-button">학습종료</button>
 					</c:if>
@@ -379,6 +392,74 @@
 	                    </div>
                     </c:forEach>
                 </div>
+            </div>
+            <div class="ui right wide sidebar inbox-exam">
+                <!------------ 시험목록 ------------>
+                <c:if test="${CLASSUSERTYPE eq 'STU'}">
+	                <c:forEach items="${examListVO }" var="item" varStatus="status">
+	                <div class="course_list" style="padding: 3%;">
+	                	<div class="item step02">
+							<div class="title">
+		                    	<h5>   
+	                  		        <a href="javascript:void(0);" onclick="goList('/lec/main/goMenuPage?mcd=MC10000022')">	                            
+	                            		<span>${item.examTitle }</span>
+	                            	</a>
+	                            </h5>            
+	                            <div class="prog_rate">
+	                                <ul>
+	                                    <li style="font-size:16px; display: block;">
+	                                        <span class="header" style="width: 100%;">시험 날짜</span>
+	                                        <span class="meta">${item.examStartDttm} ${item.examStartHour }:${item.examStartMin }~</span>
+	                                    </li>
+	                                    <li style="font-size:16px; display: unset;">
+	                                        <span class="meta" style="margin-right: 5px;">${item.examEndDttm} ${item.examEndHour }:${item.examEndMin }</span>(${item.examStareTm}분)
+	                                    </li>
+	                                </ul>
+	                            </div>
+		                    </div> 
+	                    </div>   
+	                    </div>            
+                	</c:forEach>        
+	                <c:if test="${empty examListVO }">
+	                	<div class="table_list" id="" style="border-bottom: 2px solid #222;">
+							<p style="text-align: center; margin: 50px;">등록된 시험이 없습니다.</p>
+						</div>
+		            </c:if>
+	            </c:if>
+            </div>
+            <div class="ui right wide sidebar inbox-report">
+                <!------------과제목록 ------------>
+                <c:if test="${CLASSUSERTYPE eq 'STU'}">
+	                <c:forEach items="${assignmentListVO }" var="item" varStatus="status">
+	                <div class="course_list" style="padding: 3%;">
+	                	<div class="item step02">
+							<div class="title">
+		                    	<h5>   
+	                  		        <a href="javascript:void(0);" onclick="goList('/lec/main/goMenuPage?mcd=MC10000025')">	                            
+	                            		<span>${item.asmtTitle }</span>
+	                            	</a>
+	                            </h5>            
+	                            <div class="prog_rate">
+	                                <ul>
+	                                    <li style="font-size:16px; display: unset;">
+	                                        <span class="header" style="width: 100%;">과제 기간</span>
+	                                        <span class="meta">${item.asmtStartDttm}~</span>
+	                                    </li>
+	                                    <li style="font-size:16px; display: unset;">
+	                                        <span class="meta">${item.asmtEndDttm}</span>
+	                                    </li>
+	                                </ul>
+	                            </div>
+		                    </div> 
+	                    </div>   
+	                    </div>            
+                	</c:forEach>        
+	                <c:if test="${empty assignmentListVO }">
+	                	<div class="table_list" id="" style="border-bottom: 2px solid #222;">
+							<p style="text-align: center; margin: 50px;">등록된 과제가 없습니다.</p>
+						</div>
+		            </c:if>
+	            </c:if>
             </div>
         </div>
     </div>

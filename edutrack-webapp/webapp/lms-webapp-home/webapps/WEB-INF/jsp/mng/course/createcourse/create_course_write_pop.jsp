@@ -254,7 +254,7 @@
 						<div class="input-group">
 							<span style="float:left;margin-right:5px;padding-top:5px;"><label for="asmtRatio_0"><spring:message code="course.title.course.ratio.asmt"/></label></span>
 							<input type="text" style="text-align:right;width:50px;" maxlength="3" name="asmtRatio_0" id="asmtRatio_0" class="inputNumber form-control input-sm" value="${courseVO.asmtRatio}" onkeyup="isChkMaxNumber(this,100);sumTotal('0');"/>
-							&nbsp&nbsp&nbsp<button id="addEtc"><spring:message code="button.plus"/></button>
+							&nbsp&nbsp&nbsp<button id="addEtc" style="display: none;"><spring:message code="button.plus"/></button>
 						</div>
 					</li>
 					<%-- <li style="float:left;margin-right:20px;height:35px;">
@@ -836,9 +836,11 @@
 	    if (operType == 'OF' || operType == 'BL') {
 	      $('#oflnEduPlace_0').show();
 	      $('#qrInput').show();
+	      $("#addEtc").show();
 	    } else {
 	      $('#oflnEduPlace_0').hide();
 	      $('#qrInput').hide();
+	      $("#addEtc").hide();
 	    }
 		
 	}

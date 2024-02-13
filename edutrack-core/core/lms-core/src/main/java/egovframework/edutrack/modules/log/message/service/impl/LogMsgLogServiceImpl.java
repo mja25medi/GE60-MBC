@@ -473,11 +473,7 @@ public class LogMsgLogServiceImpl
 		for (LogMsgLogVO message : listMessage) {
 			// 첨부파일을 이곳에서 연결시킨다.
 			sysFileService.getFile(message, new MessageFileHandler());
-			if(Constants.MSG_SMS_AGENT.equals("PPURIO")) {
-				// 뿌리오 문자 API 연동 기능 영역
-			} else {
-				this.sendMessage(message);
-			}
+			this.sendMessage(message);
 		}
 
 		//log.info("메시지 전송 처리를 완료했습니다.");

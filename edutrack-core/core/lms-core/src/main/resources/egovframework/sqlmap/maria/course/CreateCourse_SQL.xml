@@ -206,9 +206,9 @@
 		  <include refid="selectColumnQuery" />
 		  FROM tb_crs_cre_crs	A
 		  	INNER JOIN tb_crs_crs B
-		  		ON A.CRS_CD = B.CRS_CD
+		  		ON A.CRS_CD = B.CRS_CD 
 		  	INNER JOIN tb_crs_crs_ctgr D  
-		  	    ON B.CRS_CTGR_CD = D.CRS_CTGR_CD  	 
+		  	    ON B.CRS_CTGR_CD = D.CRS_CTGR_CD 
 		  	LEFT OUTER JOIN tb_crs_cre_crs_qr C
 		  		ON C.CRS_CRE_CD = A.CRS_CRE_CD
 		  WHERE 1=1
@@ -1146,7 +1146,7 @@
 			 AND B.CRS_CD = #{crsCd}
 		</if>	
 		      AND C.USER_NO = #{userNo}  
-		      AND C.ENRL_STS NOT IN ( 'D' ,'E')
+		      AND C.ENRL_STS NOT IN ( 'D')
 	    <if test = "enrlSts != null and enrlSts != ''">
 		    <if test = "enrlSts == 'ing'">
 		      AND C.ENRL_STS in ('S', 'C', 'F')  

@@ -51,6 +51,8 @@ import egovframework.edutrack.modules.opencourse.course.service.OpenCrsVO;
 import egovframework.edutrack.modules.org.menu.service.OrgMenuVO;
 import egovframework.edutrack.modules.student.result.service.EduResultService;
 import egovframework.edutrack.modules.student.result.service.EduResultVO;
+import egovframework.edutrack.modules.student.student.service.StudentService;
+import egovframework.edutrack.modules.student.student.service.StudentVO;
 import egovframework.edutrack.modules.system.code.service.SysCodeVO;
 import egovframework.edutrack.modules.system.config.service.SysCfgService;
 import egovframework.edutrack.modules.system.config.service.SysCfgVO;
@@ -113,6 +115,9 @@ public class CreateCourseHomeController extends GenericController {
 	
 	@Autowired @Qualifier("usrUserInfoService")
 	private UsrUserInfoService userInfoService;
+	
+	@Autowired @Qualifier("studentService")
+	private StudentService studentService;
 
 	/**
 	 * 개설 과정 리스트
@@ -163,6 +168,9 @@ public class CreateCourseHomeController extends GenericController {
 		cvo.setCreTypeCd(vo.getCrsOperMthd());
 		cvo.setSortKey(vo.getSortKey());
 		cvo.setMngType(UserBroker.getUserType(request));
+		cvo.setCrsCtgrCd(vo.getCrsCtgrCd());
+		cvo.setCrsCtgrArr(vo.getCrsCtgrArr());
+		
 		
 		ProcessResultListVO<CreateCourseVO> createCourseList = createCourseService.listCreateCoursePageing(cvo, cvo.getCurPage(), cvo.getListScale(), true);
 		List<CreateCourseVO >resultList = createCourseList.getReturnList();
@@ -323,6 +331,12 @@ public class CreateCourseHomeController extends GenericController {
 		teacherVO.setTchType("TEACHER");
 		List<TeacherVO> teacherList = createCourseTeacherService.listTeacher(teacherVO).getReturnList();
 		request.setAttribute("teacherList", teacherList);
+		
+		StudentVO svo = new StudentVO();
+		svo.setUserNo(userNo);
+		svo.setCrsCreCd(vo.getCrsCreCd());
+		svo = studentService.isEnroll(svo).getReturnVO();
+		request.setAttribute("stdYn", svo.getStdYn());
 		
 		returnUrl="home/course/createcourse/view_course_main";
 		

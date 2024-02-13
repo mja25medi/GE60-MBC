@@ -2,6 +2,8 @@ package egovframework.edutrack.modules.student.result.service.impl;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -492,20 +494,49 @@ public class EduResultServiceImpl
 			
 			rowNum++;
 			rowNum++;
+			
+			ArrayList<String> ratioList = new ArrayList<String>();
+			if(ccvo.getPrgrRatio() != 0) {
+				ratioList.add("진도");
+			}
+			if(ccvo.getAsmtRatio() != 0) {
+				ratioList.add("과제");
+			}
+			if(ccvo.getSemiExamRatio() != 0) {
+				ratioList.add("진행단계평가");
+			}
+			if(ccvo.getExamRatio() != 0) {
+				ratioList.add("시험");
+			}
+			if(ccvo.getEtcRatio() != 0) {
+				ratioList.add(ccvo.getEtcNm());
+			}
+			if(ccvo.getEtcRatio2() != 0) {
+				ratioList.add(ccvo.getEtcNm2());
+			}
+			if(ccvo.getEtcRatio3() != 0) {
+				ratioList.add(ccvo.getEtcNm3());
+			}
+			if(ccvo.getEtcRatio4() != 0) {
+				ratioList.add(ccvo.getEtcNm4());
+			}
+			if(ccvo.getEtcRatio5() != 0) {
+				ratioList.add(ccvo.getEtcNm5());
+			}
+			
 			sheet.addCell(ExcelUtil.createHeader(0,rowNum,"이름(ID)"));
-			sheet.addCell(ExcelUtil.createHeader(1,rowNum,"시험"));
-			sheet.addCell(ExcelUtil.createHeader(2,rowNum,"과제"));
-			sheet.addCell(ExcelUtil.createHeader(3,rowNum,"진도"));
-			sheet.addCell(ExcelUtil.createHeader(4,rowNum,"진행단게평가"));
-			sheet.addCell(ExcelUtil.createHeader(5,rowNum,"합계"));
+			for(int i=0; i<ratioList.size(); i++) {
+				sheet.addCell(ExcelUtil.createHeader(i+1,rowNum, ratioList.get(i)));
+			}
+			
+			sheet.addCell(ExcelUtil.createHeader(ratioList.size()+1, rowNum,"합계"));
 
 			//-- 셀의 넓이 조절
 			sheet.setColumnView(0, 20);
-			sheet.setColumnView(1, 15);
-			sheet.setColumnView(2, 15);
-			sheet.setColumnView(3, 15);
-			sheet.setColumnView(4, 15);
-			sheet.setColumnView(5, 15);
+			for(int i=0; i<ratioList.size(); i++) {
+				sheet.setColumnView(i+1, 15);
+			}
+			sheet.setColumnView(ratioList.size()+1, 15);
 
 			//-- 셀의 높이 조절
 			sheet.setRowView(rowNum, 400);
@@ -513,13 +544,42 @@ public class EduResultServiceImpl
 			for(int i=0; i<resultList.size(); i++){
 				rowNum++;
 				EduResultVO result = resultList.get(i);
+				
+				ArrayList<String> scoreList = new ArrayList<String>();
+				if(ccvo.getPrgrRatio() != 0) {
+					scoreList.add(result.getPrgrScore()+"점");
+				}
+				if(ccvo.getAsmtRatio() != 0) {
+					scoreList.add(result.getAsmtScore()+"점");
+				}
+				if(ccvo.getSemiExamRatio() != 0) {
+					scoreList.add(result.getSemiExamScore()+"점");
+				}
+				if(ccvo.getExamRatio() != 0) {
+					scoreList.add(result.getExamScore()+"점");
+				}
+				if(ccvo.getEtcRatio() != 0) {
+					scoreList.add(result.getEtcScore()+"점");
+				}
+				if(ccvo.getEtcRatio2() != 0) {
+					scoreList.add(result.getEtcScore2()+"점");
+				}
+				if(ccvo.getEtcRatio3() != 0) {
+					scoreList.add(result.getEtcScore3()+"점");
+				}
+				if(ccvo.getEtcRatio4() != 0) {
+					scoreList.add(result.getEtcScore4()+"점");
+				}
+				if(ccvo.getEtcRatio5() != 0) {
+					scoreList.add(result.getEtcScore5()+"점");
+				}
 
 				sheet.addCell(ExcelUtil.createText(0,rowNum,"left",result.getUserNm() + "(" + result.getUserId() + ")"));
-				sheet.addCell(ExcelUtil.createText(1,rowNum,"left",result.getExamScore() + "점"));
-				sheet.addCell(ExcelUtil.createText(2,rowNum,"left",result.getAsmtScore() + "점"));
-				sheet.addCell(ExcelUtil.createText(3,rowNum,"left",result.getPrgrScore() + "점"));
-				sheet.addCell(ExcelUtil.createText(4,rowNum,"left",result.getSemiExamScore() + "점"));
-				sheet.addCell(ExcelUtil.createText(5,rowNum,"left",result.getTotScore() + "점"));
+				for(int j=0; j<scoreList.size(); j++) {
+					sheet.addCell(ExcelUtil.createText(j+1,rowNum,"left",scoreList.get(j)));
+				}
+				
+				sheet.addCell(ExcelUtil.createText(scoreList.size()+1,rowNum,"left",result.getTotScore() + "점"));
 				sheet.setRowView(rowNum, 300);
 			}
 			if(resultList.size() == 0){

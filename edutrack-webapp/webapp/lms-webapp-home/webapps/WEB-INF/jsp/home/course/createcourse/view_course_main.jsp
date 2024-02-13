@@ -61,6 +61,9 @@
                             </c:if>
                             <c:if test="${item.enrlAplcYn eq 'Y' }">                            
 	                            <c:choose>
+	                            	  <c:when test="${stdYn eq 'Y' }">
+	                            	  		<button class="btn type4" onclick="location.href='/home/main/goMenuPage?mcd=MC00000051'"><spring:message code="course.title.createcourse.enroll"/>완료</button>
+	                            	  </c:when>
 	                                  <c:when test="${item.eduPrice eq 0 or empty item.eduPrice}">
 	                                  		<button class="btn type4" onclick="addCourse('${item.crsCtgrCd}','${item.crsCd}','${item.crsCreCd}');"><spring:message code="course.title.createcourse.enroll"/></button>
 	                                  </c:when>
@@ -199,7 +202,32 @@ function goList() {
 
 function addCourse(crsCtgrCd,crsCd,crsCreCd){
 	if(confirm("수강신청 하시겠습니까?")){
-		location.href='/home/student/enrollCourseMain?crsCtgrCd='+crsCtgrCd+'&crsCd='+crsCd+'&crsCreCd='+crsCreCd;
+		$.ajax({
+			url : '/home/student/enrollCourseMain'
+			,data : {
+				'crsCtgrCd': crsCtgrCd,
+				'crsCd': crsCd,
+				'crsCreCd' : crsCreCd
+			}
+			, method: "post"
+			, dataType: 'json'
+			, async: false
+			, success : function(resultVO) {
+				if(resultVO.result > 0){
+					alert(resultVO.message);
+					location.href ='/home/main/goMenuPage?mcd=MC00000051';//수강신청	
+				}else{
+					alert(resultVO.message);	
+				}
+			}
+			,error : function(request,status,error) {
+				if(confirm("로그인 후 이용 가능합니다. 로그인 페이지로 이동하시겠습니까?") == true) {
+					location.href = "/home/main/goMenuPage?mcd=HM04001000"
+				} else {
+					
+				};
+			}
+		});
 	}else{
 		alert("수강신청을 취소하였습니다.");
 	}

@@ -17,7 +17,7 @@
 		</colgroup>
 		<tr >
 			<th scope="row"><lable for="asmtTypeCd"><spring:message code="lecture.title.assignment.type"/></lable></th>
-			<td>
+			<td colspan="3">
 				<c:if test="${gubun eq 'A'}">
 					<select name="asmtTypeCd" id="asmtTypeCd" class="form-control input-sm" onclick="changeAsmtType()">
 						<c:forEach var="item" items="${asmtTypeCdList}" varStatus="status">
@@ -30,6 +30,49 @@
 				</c:if>
 			</td>
 		</tr>
+		<tr >
+			<th scope="row"><lable for="asmtTypeCd">과제용도</lable></th>
+			<td colspan="3">
+					<table>
+					<colgroup>
+						<col style="width:100%"/>
+					</colgroup>
+					<tr>
+						<td>
+						<label style="font-weight:normal; float: left;">
+							<input type="radio" name="asmtUseCd" id="asmtUseCd_A" value="CRECRS" onclick="asmtCtl()" <c:if test="${empty assignmentVO.asmtUseCd   or assignmentVO.asmtUseCd eq 'CRECRS'}">checked</c:if> />회차용
+						</label>
+						<label style="font-weight:normal;margin-left:10px; float: left;">
+							<input type="radio" name="asmtUseCd" id="asmtUseCd_B" value="UNIT" onclick="asmtCtl()" <c:if test="${assignmentVO.asmtUseCd eq 'UNIT'}">checked</c:if>/>과목차시용
+						</label>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							<div class="sendCritPrgrDiv" style="float:left;line-height:30px;display: none;">
+								<span style="float:left;line-height:30px;"> 제출가능 진도율 : </span>	
+								<input type="text" style="float:left;width:50px;text-align:right;" dispName="제출가능 진도율" maxlength="9" isNull="N" lenCheck="9" name="sendCritPrgrRatio" value="${vo.sendCritPrgrRatio }" onfocus="this.select()" id="sendCritPrgrRatio" class="inputSpecial inputNumber form-control input-sm" onkeyup="isChkNumber(this)"/>
+								<span style="float:left;line-height:30px;">%</span>
+							</div>
+							<div class="sbjDiv" style="float:left;line-height:30px;display: none;">
+							<span style="float:left;line-height:30px;"> 강의 : </span>	
+							<select name="sbjCd" id="sbjCd" class="form-control input-sm" style="float:left; width: auto;" onChange="listCnts()">
+								<c:forEach var="item" items="${subjectList}" varStatus="status">
+									<option value="${item.sbjCd }" <c:if test="${item.sbjCd eq examVO.sbjCd}">selected</c:if>>${item.sbjNm}</option>
+								</c:forEach>				
+							</select>
+							</div>
+							<div class="unitDiv" style="float:left;line-height:30px;display: none;">
+								<span style="float:left;line-height:30px;margin-left:10px;"> 차시 : </span>
+								<select name="unitCd" id="unitCd" class="form-control input-sm" style="float:left; width: auto;"></select>
+							</div>
+						</td>
+					</tr>
+										
+					</table>	
+			</td>
+		</tr>		
 		<tr>
 			<th scope="row"><lable for="asmtSvcCd">서비스유형</lable></th>
 			<td>
@@ -115,11 +158,7 @@
 				<input type="text" style="float:left;width:50px;text-align:right;" dispName="<spring:message code="lecture.title.assignment.send.cnt"/>" maxlength="9" isNull="N" lenCheck="9" name="asmtLimitCnt" value="${vo.asmtLimitCnt }" onfocus="this.select()" id="asmtLimitCnt" class="inputSpecial inputNumber form-control input-sm" onkeyup="isChkNumber(this)"/>
 				<span style="float:left;line-height:30px;"><spring:message code="common.title.times.postfix"/></span>
 			</td>
-			<th scope="row"><lable for="asmtLimitCnt">제출가능 진도율</lable></th>
-			<td >
-				<input type="text" style="float:left;width:50px;text-align:right;" dispName="제출가능 진도율" maxlength="9" isNull="N" lenCheck="9" name="sendCritPrgrRatio" value="${vo.sendCritPrgrRatio }" onfocus="this.select()" id="sendCritPrgrRatio" class="inputSpecial inputNumber form-control input-sm" onkeyup="isChkNumber(this)"/>
-				<span style="float:left;line-height:30px;">%</span>
-			</td>
+
 		</tr>
 		<tr>
 			<th scope="row"><spring:message code="common.title.atachfile"/></th>
@@ -190,6 +229,10 @@
 		changeAsmtType();
 		changeAsmtSvcType();
 		$("#regYn").val("${vo.regYn}");
+		
+		asmtCtl();
+		listCnts();
+
 	});
 
 	function uploderclick(str) {
@@ -238,6 +281,14 @@
 			f["asmtTitle"].focus();
 			return;
 		}
+		var asmtUseCd = $('input[name="asmtUseCd"]:checked').val();	
+		if(asmtUseCd == 'UNIT'){	//과목 차시 시험일 경우
+			if(f["unitCd"].value == '') {
+				alert("차시를 선택해 주세요.");
+				$("#unitCd").focus();
+				return;
+			}
+		} 
 		if(svcType != "CODE"){
 			var asmtStartDttm = chgDate(f["asmtStartDttm"].value);
 			var asmtEndDttm = chgDate(f["asmtEndDttm"].value);
@@ -407,6 +458,15 @@
 
 		var extSendHour = chgDate(f["extSendHour"].value);  //과제 제출일 시''
 		var extSendMin = chgDate(f["extSendMin"].value);   //과제 제출일 분''
+		
+		var asmtUseCd = $('input[name="asmtUseCd"]:checked').val();	
+		if(asmtUseCd == 'UNIT'){	//과목 차시 시험일 경우
+			if(f["unitCd"].value == '') {
+				alert("차시를 선택해 주세요.");
+				$("#unitCd").focus();
+				return;
+			}
+		} 
 
 		if(asmtStartHour==""){
 			alert("<spring:message code="lecture.message.assignment.alert.input.starthour"/>" );
@@ -535,4 +595,61 @@
 		f["extSendHour"].value = f["asmtEndHour"].value;
 		f["extSendMin"].value = f["asmtEndMin"].value;
 	}
+	// 과제 용도 설정
+	function asmtCtl(){
+		var asmtUseCd = $('input[name="asmtUseCd"]:checked').val();
+		switch(asmtUseCd){
+    	case "UNIT" : 	
+	   		$(".sendCritPrgrDiv").css("display", "none");
+			$(".sbjDiv").css("display", "");
+	   		$(".unitDiv").css("display", "");
+   		break;
+	   	case "CRECRS" :
+	   		$(".sendCritPrgrDiv").css("display", "");
+			$(".sbjDiv").css("display", "none");
+	   		$(".unitDiv").css("display", "none");
+    		break;
+		}					
+
+	}	
+	/**
+	 * 컨텐츠 목록 조회
+	 */
+	function listCnts() {
+		var f = document.assignmentForm;;
+		var crsCreCd = '${assignmentVO.crsCreCd}';
+		var sbjCd = f["sbjCd"].value;
+		var selectBox = document.getElementById("unitCd");
+		var len = selectBox.length;
+		for(var i=len ; i >= 0; i--) {
+			selectBox.options[0] = null;
+		}
+		new_option = new Option("차시를 선택하세요.", "");
+		selectBox.options.add(new_option);
+		$.getJSON( cUrl("/mng/course/createCourse/subject/listCreCnts"),		// url
+				{ 
+				  "sbjCd"	  : sbjCd,
+				  "crsCreCd"  : crsCreCd
+				},			// params
+				listCntsCallback				// callback function
+			);
+	}
+	/**
+	 * 컨텐츠 목록 조회 Callback
+	 */
+	function listCntsCallback(ProcessResultListDTO) {
+		var selectBox = document.getElementById("unitCd");
+		var len = selectBox.length;
+		var unitCd = '${assignmentVO.unitCd}';
+		var contentsList = ProcessResultListDTO.returnList;
+		for (var i=0; i<contentsList.length; i++) {
+			var item = contentsList[i];
+			new_option = new Option(item.unitNm, item.unitCd);
+			selectBox.options.add(new_option);
+			if(item.unitCd == unitCd) {
+				selectBox.options[i+1].selected = "selected";
+			}
+		}
+		
+	}	
 </script>

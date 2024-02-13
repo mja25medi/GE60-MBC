@@ -27,15 +27,15 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <link rel="stylesheet" href="/libs/flowplayer7/skin/skin.css">
 <meditag:css href="tpl/bootstrap/bower_components/bootstrap/dist/css/bootstrap.min.css"/>
-<link rel="stylesheet" href="/tpl/003/fonts/xeicon.min.css"> 
-<link rel="stylesheet" href="/tpl/003/css/hrd_common.css">
-<link rel="stylesheet" href="/tpl/003/css/webfonts.css">
-<link rel="stylesheet" href="/tpl/003/css/board.css">
-<link rel="stylesheet" href="/tpl/003/css/contents.css">
-<link rel="stylesheet" href="/tpl/003/css/class_layout.css">
-<link rel="stylesheet" href="/tpl/003/css/class_content.css">
-<link rel="stylesheet" href="/tpl/003/js/codemirror/lib/codemirror.css">
-<link rel="stylesheet" href="/tpl/003/js/codemirror/theme/darcula.css">
+<link rel="stylesheet" href="/tpl/${COLOR_TPL}/fonts/xeicon.min.css"> 
+<link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/hrd_common.css">
+<link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/webfonts.css">
+<link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/board.css">
+<link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/contents.css">
+<link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/class_layout.css">
+<link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/class_content.css">
+<link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/codemirror/lib/codemirror.css">
+<link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/codemirror/theme/darcula.css">
 
 <style type="text/css">
 	/* custom player skin */
@@ -46,7 +46,7 @@
 </style>
 
 <meditag:js src="/js/jquery/jquery-1.11.1.min.js"/>
-<script src="/tpl/003/js/sidebar.min.js"></script>
+<script src="/tpl/${COLOR_TPL}/js/sidebar.min.js"></script>
 <meditag:js src="/js/jquery/jquery.form.js"/>
 <meditag:js	src="/app/js/Context.js" />
 <meditag:js src="/js/modaldialog.js"/>
@@ -54,15 +54,15 @@
 
 <script src="/libs/flowplayer7/flowplayer.js"></script>
 <script src="/libs/flowplayer7/hls.light.min.js"></script>
-<script src="/tpl/003/jquery/jquery-3.2.1.min.js"></script>
-<script src="/tpl/003/js/func.min.js"></script>
-<script src="/tpl/003/js/common.js"></script>
-<script src="/tpl/003/js/class.js"></script>
-<script src="/tpl/003/js/iframeResizer.min.js"></script>
-<script src="/tpl/003/js/sidebar.min.js"></script>
+<script src="/tpl/${COLOR_TPL}/jquery/jquery-3.2.1.min.js"></script>
+<script src="/tpl/${COLOR_TPL}/js/func.min.js"></script>
+<script src="/tpl/${COLOR_TPL}/js/common.js"></script>
+<script src="/tpl/${COLOR_TPL}/js/class.js"></script>
+<script src="/tpl/${COLOR_TPL}/js/iframeResizer.min.js"></script>
+<script src="/tpl/${COLOR_TPL}/js/sidebar.min.js"></script>
 <script src="/js/common.js"></script>
 <script src="/js/jquery/jquery.form.js"></script>
-<script src="/tpl/003/js/pdfobject.js"></script>
+<script src="/tpl/${COLOR_TPL}/js/pdfobject.js"></script>
 
 </head>
 <body>
@@ -107,9 +107,16 @@ $(document).ready(function() {
 	
 	if(mediaStreamUse == "use"){
 		sourcesType = "application/x-mpegurl";
-		<c:if test="${cntsTypeCd ne 'CDN'}">
-			sourcesSrc = "${mediaStreamUrl}${orgCntsPath}${filePath}/${fileName}${mediaStreamHls}";
+		<c:if test="${mediaStreamHls ne ''}">
+			sourcesType = "application/x-mpegurl";
+			<c:if test="${cntsTypeCd ne 'CDN'}">
+				sourcesSrc = "${mediaStreamUrl}${orgCntsPath}${filePath}/${fileName}/${mediaStreamHls}";
+			</c:if>
 		</c:if>
+		<c:if test="${mediaStreamHls eq ''}">
+		sourcesSrc = "${mediaStreamUrl}${orgCntsPath}${filePath}/${fileName}";
+		</c:if>		
+
 	}
    
 	modalBox = new $M.ModalDialog({

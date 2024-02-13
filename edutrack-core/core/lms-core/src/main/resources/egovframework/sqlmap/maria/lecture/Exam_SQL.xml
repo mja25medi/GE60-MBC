@@ -5,11 +5,14 @@
 	<sql id="selectQuery">
 	<![CDATA[
 		SELECT A.CRS_CRE_CD  
+			  , A.SBJ_CD
+			  , A.UNIT_CD
 		      , A.EXAM_SN  
 		      , A.EXAM_TITLE  
 		      , A.EXAM_CTS  
 		      , A.SEMI_EXAM_YN
 		      , A.EXAM_TYPE_CD  
+		      , A.EXAM_USE_CD  
 		      , A.EXAM_STARE_TYPE_CD  
 		      , A.EXAM_START_DTTM  
 		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_START_DTTM,'%H')) AS EXAM_START_HOUR  
@@ -100,11 +103,14 @@
 	 * @param vo.regYn (등록여부)  -->
 		<![CDATA[
 		SELECT A.CRS_CRE_CD  
+			  , A.SBJ_CD
+			  , A.UNIT_CD
 		      , A.EXAM_SN  
 		      , A.EXAM_TITLE  
 		      , A.EXAM_CTS  
 		      , A.SEMI_EXAM_YN
 		      , A.EXAM_TYPE_CD  
+		      , A.EXAM_USE_CD  
 		      , A.EXAM_STARE_TYPE_CD  
 		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_START_DTTM,'%Y-%m-%d')) as EXAM_START_DTTM
 		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_START_DTTM,'%H')) AS EXAM_START_HOUR  
@@ -184,6 +190,9 @@
 		<if test = 'sbjCd != null and sbjCd != ""'>
 			    AND A.SBJ_CD = IFNULL(FN_GET_NULL(#{sbjCd}),A.SBJ_CD)  
 		</if>
+		<if test = 'unitCd != null and unitCd != ""'>
+			    AND A.UNIT_CD = #{unitCd}
+		</if>
 		
 		<!-- 진행단계평가 구분제거 -->
 		<!-- <if test = 'semiExamYn != null and semiExamYn != ""and semiExamYn == "Y"'>
@@ -205,7 +214,9 @@
 		      , A.EXAM_CTS  
 		      , A.SEMI_EXAM_YN  
 		      , A.SBJ_CD 
+		      , A.UNIT_CD 
 		      , A.EXAM_TYPE_CD  
+		      , A.EXAM_USE_CD  
 		      , A.EXAM_STARE_TYPE_CD  
 		      , A.EXAM_START_DTTM  
 		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_START_DTTM,'%H')) AS EXAM_START_HOUR  
@@ -295,8 +306,14 @@
 		   	)
 		  WHERE A.CRS_CRE_CD = #{crsCreCd}  
 		    AND A.REG_YN = 'Y'  
-		    ORDER BY A.EXAM_STARE_TYPE_CD ASC, A.EXAM_END_DTTM DESC, STARE_CRIT_PRGR_RATIO ASC
 		    ]]>
+		<if test = 'sbjCd != null and sbjCd != ""'>
+			    AND A.SBJ_CD = #{sbjCd} 
+		</if>
+		<if test = 'unitCd != null and unitCd != ""'>
+			    AND A.UNIT_CD = #{unitCd}
+		</if>
+		    ORDER BY A.EXAM_STARE_TYPE_CD ASC, A.EXAM_END_DTTM DESC, STARE_CRIT_PRGR_RATIO ASC
 	</select>
 	
 	<insert id="insertExam" parameterType="examVO">
@@ -305,10 +322,12 @@
 		        CRS_CRE_CD  
 		      , EXAM_SN  
 		      , SBJ_CD  
+		      , UNIT_CD
 		      , EXAM_TITLE  
 		      , EXAM_CTS  
 		      , SEMI_EXAM_YN
 		      , EXAM_TYPE_CD  
+		      , EXAM_USE_CD  
 		      , EXAM_STARE_TYPE_CD  
 		      , EXAM_START_DTTM  
 		      , EXAM_END_DTTM  
@@ -335,10 +354,12 @@
 		        #{crsCreCd}  
 		      , #{examSn}  
 		      , #{sbjCd}  
+		      , #{unitCd}
 		      , #{examTitle}  
 		      , #{examCts}  
 		      , #{semiExamYn}
 		      , #{examTypeCd}  
+		      , #{examUseCd}  
 		      , #{examStareTypeCd}  
 		      , #{examStartDttm}  
 		      , #{examEndDttm}  
@@ -368,10 +389,12 @@
 		<!-- 시험의 정보를 수정하고 결과를 반환한다. -->
 		UPDATE tb_lec_exam	  
 		    SET SBJ_CD = #{sbjCd}  
+		      , UNIT_CD = #{unitCd}  
 		      , EXAM_TITLE = #{examTitle}  
 		      , EXAM_CTS = #{examCts}  
 		      , SEMI_EXAM_YN = #{semiExamYn}  
 		      , EXAM_TYPE_CD = #{examTypeCd}  
+		      , EXAM_USE_CD = #{examUseCd}  
 		      , EXAM_STARE_TYPE_CD = #{examStareTypeCd}  
 		      , EXAM_START_DTTM = #{examStartDttm}  
 		      , EXAM_END_DTTM = #{examEndDttm}  
@@ -419,6 +442,7 @@
 		      , A.EXAM_CTS  
 		      , A.SEMI_EXAM_YN  
 		      , A.EXAM_TYPE_CD  
+		      , A.EXAM_USE_CD  
 		      , A.EXAM_STARE_TYPE_CD  
 		      , A.EXAM_START_DTTM  
 		      , (SELECT FN_GET_DATE_FORMAT(A.EXAM_START_DTTM,'%H')) AS EXAM_START_HOUR  
