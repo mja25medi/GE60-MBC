@@ -736,8 +736,8 @@
 				<edutrack.ajax.message>nouse</edutrack.ajax.message>
 
 				<!--  Media Server -->
-				<edutrack.media.streaming.use>nouse</edutrack.media.streaming.use>
-				<edutrack.media.streaming.url>https://vod.edutrack.kr</edutrack.media.streaming.url>
+				<edutrack.media.streaming.use>use</edutrack.media.streaming.use>
+				<edutrack.media.streaming.url>https://ge60vod.edutrack.kr:444/demo</edutrack.media.streaming.url>
 				<edutrack.media.streaming.hls>master.m3u8</edutrack.media.streaming.hls>
 
 				<!--  Mediaplayer Configration -->
