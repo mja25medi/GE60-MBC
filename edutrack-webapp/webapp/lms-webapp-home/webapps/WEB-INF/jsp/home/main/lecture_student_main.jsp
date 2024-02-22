@@ -152,7 +152,7 @@
 	<div class="segment-row">
 		<div class="segment">
 			<div class="board_top">
-                <h4>과정 공지사항</h4>
+                <h4>과목 공지사항</h4>
             </div>
             <c:if test="${not empty creNoticeList }">
 	            <div class="res_tbl_wrap">

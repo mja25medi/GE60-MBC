@@ -28,6 +28,9 @@ import egovframework.edutrack.modules.course.attendance.service.AttendanceVO;
 import egovframework.edutrack.modules.course.contents.service.ContentsVO;
 import egovframework.edutrack.modules.course.createcourse.service.CreateCourseVO;
 import egovframework.edutrack.modules.course.createcourse.service.impl.CreateCourseMapper;
+import egovframework.edutrack.modules.lecture.bookmark.service.BookmarkVO;
+import egovframework.edutrack.modules.student.result.service.EduResultService;
+import egovframework.edutrack.modules.student.result.service.EduResultVO;
 import egovframework.edutrack.modules.student.student.service.StudentVO;
 import egovframework.edutrack.modules.student.student.service.impl.StudentMapper;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -48,6 +51,9 @@ public class AttendanceServiceImpl extends EgovAbstractServiceImpl implements At
 	
 	@Resource(name="studentMapper")
 	private StudentMapper 		studentMapper;
+	
+	@Resource
+	private EduResultService eduResultService;
 
 	@Override
 	public void insertAttendDttm(AttendanceVO avo) throws Exception{
@@ -746,6 +752,17 @@ public class AttendanceServiceImpl extends EgovAbstractServiceImpl implements At
 					for (int j=0; j<sList.size(); j++) {
 						avo.setUserNo(sList.get(j).getUserNo());
 						attendanceMapper.batchAttend(avo);
+						
+						//-- 자동 성적 처리 :
+						EduResultVO eduResultVO = new EduResultVO();
+						eduResultVO.setCrsCreCd(crsCreCd);
+						eduResultVO.setStdNo(sList.get(j).getStdNo());
+
+						BookmarkVO iBookmarkVO = new BookmarkVO();
+						iBookmarkVO.setScoreCategory("BOOKMARK");
+						iBookmarkVO.setScoreSaveType("START");
+
+						eduResultService.addEduResultSp(eduResultVO, iBookmarkVO);
 					}
 					
 				}

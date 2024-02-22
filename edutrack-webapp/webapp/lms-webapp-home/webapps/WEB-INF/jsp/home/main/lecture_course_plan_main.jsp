@@ -48,20 +48,20 @@
                             </li>
                         </ul>
                         <ul class="list">
-                            <li class="head"><label>기수명</label></li>
-                            <li>${createCourseVO.creTerm }</li>
+                            <li class="head"><label>회차</label></li>
+                            <li>${createCourseVO.creTerm }회차</li>
                             <li class="head"><label>1일 수강 제한</label></li>
                             <li>
                             <c:if test="${empty createCourseVO.dayStudyLimit}">-</c:if>
                             <c:if test="${not empty createCourseVO.dayStudyLimit}">${createCourseVO.dayStudyLimit }차시</c:if>
                             </li>
                         </ul>
-                        <ul class="list">
+                    <%--     <ul class="list">
                             <li class="head"><label>학습정원</label></li>
                             <li>${createCourseVO.eduNop }명</li>
                             <li class="head"><label>학습방법</label></li>
                             <li><meditag:codename code="${createCourseVO.crsOperType}" category="CRS_OPER_TYPE" /></li>
-                        </ul>
+                        </ul> --%>
                         <ul class="list">
                             <li class="head"><label>학습개요</label></li>
                             <c:if test="${empty courseVO.crsDesc }">

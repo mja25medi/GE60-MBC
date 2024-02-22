@@ -25,6 +25,8 @@ import egovframework.edutrack.comm.util.web.UserBroker;
 import egovframework.edutrack.comm.util.web.ValidationUtils;
 import egovframework.edutrack.modules.course.course.service.CourseVO;
 import egovframework.edutrack.modules.course.course.service.impl.CourseMapper;
+import egovframework.edutrack.modules.course.creCrsResh.service.CreCrsReshVO;
+import egovframework.edutrack.modules.course.creCrsResh.service.impl.CreCrsReshMapper;
 import egovframework.edutrack.modules.course.createcourse.service.CreateCourseVO;
 import egovframework.edutrack.modules.course.createcourse.service.impl.CreateCourseMapper;
 import egovframework.edutrack.modules.lecture.bookmark.service.BookmarkVO;
@@ -75,6 +77,9 @@ public class StudentServiceImpl extends EgovAbstractServiceImpl implements Stude
 	
 	@Resource
 	private UsrUserInfoMapper usrUserInfoMapper;
+	
+	@Resource
+	private CreCrsReshMapper creCrsReshMapper;
 	
 	/**
 	 * 수강 신청 목록 조회
@@ -497,28 +502,19 @@ public class StudentServiceImpl extends EgovAbstractServiceImpl implements Stude
 	 */
 	public ProcessResultVO<StudentVO> deleteCourseStudent(StudentVO iStudentVO)  throws Exception {
 
-
-		String returnMsg = "";
 		StudentVO studentVO = new StudentVO();
 		studentVO.setCrsCreCd(iStudentVO.getCrsCreCd());
 		studentVO.setStdNo(iStudentVO.getStdNo());
 		studentVO.setEnrlSts("D");
-
 		studentService.deleteStudentForHrdApi(studentVO);
-
-		studentVO = studentMapper.selectStudentInfo(studentVO);
-		returnMsg += "/"+studentVO.getUserNo();
 	
-
 		//진도율 삭제
 		BookmarkVO bookmarkVO = new BookmarkVO();
 		bookmarkVO.setStdNo(iStudentVO.getStdNo());
 		bookmarkMapper.deleteBookmarkStdNo(bookmarkVO);
 
-
 		ProcessResultVO<StudentVO> processResultVO = new ProcessResultVO<StudentVO>();
 		processResultVO.setResultSuccess();
-		processResultVO.setMessage(returnMsg);
 		processResultVO.setResult(1);
 		return processResultVO;
 	}

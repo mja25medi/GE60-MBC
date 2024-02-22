@@ -63,7 +63,7 @@ public class CourseCourseManageController extends GenericController {
 		commonVOProcessing(vo, request);
 		request.setAttribute("vo", vo);
 		request.setAttribute("paging", "Y");
-		request.setAttribute("summernote", "Y");
+		//request.setAttribute("summernote", "Y");
 
 		return "mng/course/course/course_main";
 	}

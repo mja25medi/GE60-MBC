@@ -179,6 +179,8 @@ public class AssignmentLectureController extends GenericController {
 
 		commonVOProcessing(vo, request);
 
+		String crsCreCd = vo.getCrsCreCd();
+		
 		//과제 유형
 		List<SysCodeVO> asmtTypeList = codeMemService.getSysCodeList("ASMT_TYPE_CD");
 		request.setAttribute("asmtTypeList", asmtTypeList);
@@ -195,6 +197,11 @@ public class AssignmentLectureController extends GenericController {
 		List<SysCodeVO> asmtServiceCdList = codeMemService.getSysCodeList("ASMT_SVC_CD", UserBroker.getLocaleKey(request));
 		request.setAttribute("asmtServiceCdList", asmtServiceCdList);
 		
+	   CreateOnlineSubjectVO  createOnlineSubjectVO = new CreateOnlineSubjectVO();
+		createOnlineSubjectVO.setCrsCreCd(crsCreCd);
+		List<CreateOnlineSubjectVO> subjectList = createCourseSubjectService.listOnlineSubject(createOnlineSubjectVO).getReturnList();
+		request.setAttribute("subjectList", subjectList);
+	
 		request.setAttribute("gubun", "A");
 		request.setAttribute("vo", vo);
 		request.setAttribute("fileupload", "Y");
@@ -350,6 +357,12 @@ public class AssignmentLectureController extends GenericController {
 		//등록여부
 		List<SysCodeVO> regTypeList = codeMemService.getSysCodeList("REG_YN");
 		request.setAttribute("regTypeList", regTypeList);
+		
+		CreateOnlineSubjectVO  createOnlineSubjectVO = new CreateOnlineSubjectVO();
+		createOnlineSubjectVO.setCrsCreCd(vo.getCrsCreCd());
+		List<CreateOnlineSubjectVO> subjectList = createCourseSubjectService.listOnlineSubject(createOnlineSubjectVO).getReturnList();
+		request.setAttribute("subjectList", subjectList);
+		
 		request.setAttribute("vo", assignmentService.viewAssignment(vo).getReturnVO());
 		request.setAttribute("gubun", "E");
 		request.setAttribute("fileupload", "Y");

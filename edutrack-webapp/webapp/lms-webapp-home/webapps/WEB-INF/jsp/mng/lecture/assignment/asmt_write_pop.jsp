@@ -30,7 +30,7 @@
 				</c:if>
 			</td>
 		</tr>
-		<tr >
+		<tr class='online_exam' >
 			<th scope="row"><lable for="asmtTypeCd">과제용도</lable></th>
 			<td colspan="3">
 					<table>
@@ -549,6 +549,8 @@
 			$("#sendCritPrgrRatio").attr("disabled",true);
 			$("#regYn").val("Y");
 			$("#regYnArea").show();
+			$(".online_exam").hide();
+			
 		} else {
 			$("#asmtSvcCd").attr("disabled",false);
 			$("#asmtSelectTypeCd").attr("disabled",false);
@@ -556,6 +558,7 @@
 			$("#sendCritPrgrRatio").attr("disabled",false);
 			$("#regYnArea").hide();
 			$("#regYn").val("N");
+			$(".online_exam").show();
 		}
 	}
 	function changeAsmtSvcType() {
@@ -573,6 +576,7 @@
 			$("#extSendDttm").attr("disabled",true);
 			$("#extSendHour").attr("disabled",true);
 			$("#extSendMin").attr("disabled",true);
+			$(".online_exam").hide();
 		} else {
 			$("#asmtSelectTypeCd").attr("disabled",false);
 			$("#asmtLimitCnt").attr("disabled",false);
@@ -586,6 +590,7 @@
 			$("#extSendDttm").attr("disabled",false);
 			$("#extSendHour").attr("disabled",false);
 			$("#extSendMin").attr("disabled",false);
+			$(".online_exam").show();
 		}
 	}
 

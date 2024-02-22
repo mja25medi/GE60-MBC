@@ -243,8 +243,14 @@
 						<td><input type="text" class="form-control form-mediumItem inputNumber"  maxlength="2" id="desSum" name="desSum" value="${vo.desCnt * vo.desPnt }" readonly="readonly"/></td>
 					</tr>
 					<tr>
+						<td>나머지 배점 <input type="checkbox" name="divYn" id="divYn" value="${vo.divYn}" <c:if test="${vo.divYn eq 'Y'}">checked</c:if> onclick="changeDivPnt()"/></td>
+						<td></td>
+						<td></td>
+						<td><input type="text" class="form-control form-mediumItem inputNumber"  maxlength="2" id="divPnt" name="divPnt" value="${vo.divPnt}" readonly="readonly"/></td>
+					</tr>
+					<tr>
 						<td colspan="3">총합</td>
-						<td><input type="text" class="form-control form-mediumItem" id="examRateTotScore" value="${(vo.selCnt * vo.selPnt) + (vo.shortCnt * vo.shortPnt) + (vo.desCnt * vo.desPnt) }" readonly="readonly"/></td>
+						<td><input type="text" class="form-control form-mediumItem" id="examRateTotScore" value="${(vo.selCnt * vo.selPnt) + (vo.shortCnt * vo.shortPnt) + (vo.desCnt * vo.desPnt) + vo.divPnt }" readonly="readonly"/></td>
 					</tr>
 				</table>
 			</td>
@@ -674,6 +680,8 @@
 		var shortPnt = parseInt(isNull($("#shortPnt").val()) ? 0 : $("#shortPnt").val());
 		var desCnt   = parseInt(isNull($("#desCnt").val()) ? 0 : $("#desCnt").val()); 
 		var desPnt   = parseInt(isNull($("#desPnt").val()) ? 0 : $("#desPnt").val());
+		var divPnt   = parseInt(isNull($("#divPnt").val()) ? 0 : $("#divPnt").val());
+		
 		
 		var selSum = parseInt(isNull($("#selSum").val()) ? 0 : $("#selSum").val());
 		var shortSum = parseInt(isNull($("#shortSum").val()) ? 0 : $("#shortSum").val());
@@ -683,7 +691,7 @@
 		var returnFlag = true;
 		
 		//if((selCnt * selPnt) + (shortCnt * shortPnt) + (desCnt * desPnt) > 100 || (selSum + shortSum + desSum) > 100  || examRateTotScore > 100){
-		if((selCnt * selPnt) + (shortCnt * shortPnt) + (desCnt * desPnt) > 100){
+		if((selCnt * selPnt) + (shortCnt * shortPnt) + (desCnt * desPnt) + divPnt > 100){
 			if(isNotNull(obj)){//jquery 이벤트 this 여부
 				obj.value = 0;//초기화
 			}else{//전송 전 체크
@@ -693,6 +701,7 @@
 				$("#shortPnt").val(0);
 				$("#desCnt").val(0);
 				$("#desPnt").val(0);
+				$("#divPnt").val(0);
 			}
 			alert("총합이 100을 초과해서는 안됩니다.");
 			returnFlag = false;
@@ -715,12 +724,13 @@
 		shortPnt = parseInt(isNull($("#shortPnt").val()) ? 0 : $("#shortPnt").val());       
 		desCnt   = parseInt(isNull($("#desCnt").val()) ? 0 : $("#desCnt").val());           
 		desPnt   = parseInt(isNull($("#desPnt").val()) ? 0 : $("#desPnt").val()); 
+		divPnt   = parseInt(isNull($("#divPnt").val()) ? 0 : $("#divPnt").val()); 
 		
 		$("#selSum").val(selCnt * selPnt);
 		$("#shortSum").val(shortCnt * shortPnt);
 		$("#desSum").val(desCnt * desPnt);
 		
-		$("#examRateTotScore").val( (selCnt * selPnt) + (shortCnt * shortPnt) + (desCnt * desPnt));
+		$("#examRateTotScore").val( (selCnt * selPnt) + (shortCnt * shortPnt) + (desCnt * desPnt) + divPnt );
 		return returnFlag;	
 	}
 		
@@ -802,4 +812,31 @@
 		}
 		
 	}
+	
+	function changeDivPnt() {
+	    var divYnCheckbox = document.getElementById('divYn');
+	    var is_checked = divYnCheckbox.checked;
+	    var selSum = parseFloat(document.getElementById("examRateTotScore").value);
+	    var divYnValue = is_checked ? "Y" : "N";
+	    var divPntValue = is_checked ? (100 - selSum) : 0;
+
+	    if (is_checked) {
+	        if (selSum === 0) {
+	            alert("문항과 배점을 지정 후 선택가능합니다.");
+	            divYnCheckbox.checked = false;
+	            return;
+	        } else if (selSum === 100) {
+	            alert("총합이 100일 경우 선택 할 수 없습니다.");
+	            divYnCheckbox.checked = false;
+	            return;
+	        }
+	    }
+
+	    $("#divYn").val(divYnValue);
+	    $("#divPnt").val(divPntValue);
+	    getExamQstnTotScore(); 
+	}
+
+
+
 </script>

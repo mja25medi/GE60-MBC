@@ -38,6 +38,56 @@
 									                                
                                 </div>
                             </li>
+                            <li class="examOptDiv">
+                                <div class="row" >
+                                    <label for="conType" class="form-label col-sm-2">과제용도</label>
+                                    <div class="col-sm-10">
+                                        <div class="form-row">
+                                            <div class="ra_inline">
+                                                <span class="custom-input">
+                                                    <input type="radio" name="asmtUseCd" id="asmtUseCd_A" value="CRECRS" onclick="asmtCtl()" <c:if test="${empty assignmentVO.asmtUseCd   or assignmentVO.asmtUseCd eq 'CRECRS'}">checked</c:if> />
+                                                    <label for="asmtUseCd_A">회차용</label>
+                                                </span>
+                                                <span class="custom-input ml5">
+                                                    <input type="radio" name="asmtUseCd" id="asmtUseCd_B" value="UNIT" onclick="asmtCtl()" <c:if test="${assignmentVO.asmtUseCd eq 'UNIT'}">checked</c:if>/>
+                                                    <label for="asmtUseCd_B">과목차시용</label>
+                                                </span>
+                                            </div>
+                                        </div>             
+                                    </div>
+                                </div>
+                            </li>
+                             <li class="examOptDiv semiExamYn_Y">
+                                <div class="row">
+									<label for="rateSelect" class="form-label col-sm-2">강의</label>
+										<div class="col-sm-4">
+											<div class="form-row">
+											<select name="sbjCd" id="sbjCd" class="form-select" onChange="listCnts()">
+												<c:forEach var="item" items="${subjectList}" varStatus="status">
+													<option value="${item.sbjCd }"<c:if test="${item.sbjCd eq examVO.sbjCd}">selected</c:if>>${item.sbjNm}</option>
+												</c:forEach>
+											</select>
+											<div class="unitDiv">
+												<span> 차시 : </span> 
+												<select name="unitCd" id="unitCd" class="form-select" style="width: auto;"></select>
+											</div>
+										</div>
+									</div>
+								</div>
+							</li>
+                            <li class="examOptDiv semiExamYn_N">
+                                <div class="row">
+									 <label for="rateSelect" class="form-label col-sm-2">제출가능진도율</label>
+									 <div class="col-sm-4">
+                                        <div class="form-row">
+                                            <div class="input_btn">
+											<input type="text" style="float:left;width:50px;text-align:right;" dispName="제출가능 진도율" maxlength="9" isNull="N" lenCheck="9" name="sendCritPrgrRatio" value="${vo.sendCritPrgrRatio }" onfocus="this.select()" id="sendCritPrgrRatio" class="inputSpecial inputNumber form-control input-sm" onkeyup="isChkNumber(this)"/>
+											<label>%이상</label>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </li>
                             <li>
                                 <div class="row">
                                     <label for="asmtSvcCd" class="form-label col-sm-2">서비스유형</label>
@@ -149,15 +199,6 @@
                                             </div>
                                         </div>             
                                     </div>
-                                    <label for="sendCritPrgrRatio" class="form-label col-sm-2">제출가능 진도율</label>
-                                    <div class="col-sm-4">
-                                        <div class="form-row">
-                                            <div class="input_btn">
-                                                <input type="text" dispName="제출가능 진도율" maxlength="9" isNull="N" lenCheck="9" name="sendCritPrgrRatio" value="${assignmentVO.sendCritPrgrRatio }" onfocus="this.select()" id="sendCritPrgrRatio" class="form-control sm" onkeyup="isChkNumber(this)"/>
-                                                <label>%</label>
-                                            </div>
-                                        </div>             
-                                    </div>
                                 </div>
                             </li>
                             <li>
@@ -248,6 +289,7 @@
 		changeAsmtType();
 		changeAsmtSvcType();
 		$("#regYn").val("${vo.regYn}");
+		listCnts();
 	});
 
 	function uploderclick(str) {
@@ -276,6 +318,14 @@
 			f["asmtTitle"].focus();
 			return;
 		}
+		var asmtUseCd = $('input[name="asmtUseCd"]:checked').val();	
+		if(asmtUseCd == 'UNIT'){	//과목 차시 시험일 경우
+			if(f["unitCd"].value == '') {
+				alert("차시를 선택해 주세요.");
+				$("#unitCd").focus();
+				return;
+			}
+		} 
 		var svcType = $("#asmtSvcCd > option:selected").val();
 		if(svcType != "CODE"){
 		if(validate(document.assignmentForm) ==false) return ;
@@ -480,6 +530,7 @@
 			$("#asmtSelectTypeCd").attr("disabled",true);
 			$("#asmtLimitCnt").attr("disabled",true);
 			$("#sendCritPrgrRatio").attr("disabled",true);
+			$(".examOptDiv").hide();
 			$("#regYnArea").show();
 		} else {
 			$("#asmtSvcCd").attr("disabled",false);
@@ -487,8 +538,11 @@
 			$("#asmtLimitCnt").attr("disabled",false);
 			$("#sendCritPrgrRatio").attr("disabled",false);
 			$("#regYnArea").hide();
+			$(".examOptDiv").show();
 			$("#regYn").val("N");
+			asmtCtl();
 		}
+			changeAsmtSvcType()
 	}
 	
 	function changeAsmtSvcType() {
@@ -506,6 +560,9 @@
 			$("#extSendDttm").attr("disabled",true);
 			$("#extSendHour").attr("disabled",true);
 			$("#extSendMin").attr("disabled",true);
+			$("#sbjCd").attr("disabled",true);
+			$("#unitCd").attr("disabled",true);
+			$(".examOptDiv").hide();
 		} else {
 			$("#asmtSelectTypeCd").attr("disabled",false);
 			$("#asmtLimitCnt").attr("disabled",false);
@@ -519,6 +576,10 @@
 			$("#extSendDttm").attr("disabled",false);
 			$("#extSendHour").attr("disabled",false);
 			$("#extSendMin").attr("disabled",false);
+			$("#sbjCd").attr("disabled",false);
+			$("#unitCd").attr("disabled",false);
+			$(".examOptDiv").show();
+			asmtCtl();
 		}
 	}
 
@@ -552,4 +613,59 @@
 			}
 		}
 	}
+		// 과제 용도 설정
+	function asmtCtl(){
+		var asmtUseCd = $('input[name="asmtUseCd"]:checked').val();
+		switch(asmtUseCd){
+    	case "UNIT" : 	
+			$(".semiExamYn_Y").css("display", "");
+			$(".semiExamYn_N").css("display", "none");
+   			break;
+	   	case "CRECRS" :
+	   		$(".semiExamYn_N").css("display", "");
+			$(".semiExamYn_Y").css("display", "none");
+    		break;
+		}					
+
+	}	
+	/**
+	 * 컨텐츠 목록 조회
+	 */
+	function listCnts() {
+		var f = document.assignmentForm;;
+		var crsCreCd = '${assignmentVO.crsCreCd}';
+		var sbjCd = f["sbjCd"].value;
+		var selectBox = document.getElementById("unitCd");
+		var len = selectBox.length;
+		for(var i=len ; i >= 0; i--) {
+			selectBox.options[0] = null;
+		}
+		new_option = new Option("차시를 선택하세요.", "");
+		selectBox.options.add(new_option);
+		$.getJSON( cUrl("/mng/course/createCourse/subject/listCreCnts"),		// url
+				{ 
+				  "sbjCd"	  : sbjCd,
+				  "crsCreCd"  : crsCreCd
+				},			// params
+				listCntsCallback				// callback function
+			);
+	}
+	/**
+	 * 컨텐츠 목록 조회 Callback
+	 */
+	function listCntsCallback(ProcessResultListDTO) {
+		var selectBox = document.getElementById("unitCd");
+		var len = selectBox.length;
+		var unitCd = '${assignmentVO.unitCd}';
+		var contentsList = ProcessResultListDTO.returnList;
+		for (var i=0; i<contentsList.length; i++) {
+			var item = contentsList[i];
+			new_option = new Option(item.unitNm, item.unitCd);
+			selectBox.options.add(new_option);
+			if(item.unitCd == unitCd) {
+				selectBox.options[i+1].selected = "selected";
+			}
+		}
+		
+	}	
 </script>

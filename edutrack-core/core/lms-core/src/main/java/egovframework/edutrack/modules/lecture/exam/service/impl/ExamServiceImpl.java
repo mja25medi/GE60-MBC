@@ -405,15 +405,10 @@ public class ExamServiceImpl extends EgovAbstractServiceImpl implements ExamServ
 					vo.setRsltCfrmMin("0"+vo.getRsltCfrmMin());
 				}
 				//-- 시간 관련 처리
-				String examStartDttm = StringUtil.ReplaceAll(vo.getExamStartDttm(),".","");
-				if(examStartDttm.length() <= 8) examStartDttm = examStartDttm+vo.getExamStartHour()+vo.getExamStartMin()+"01";
-				String examEndDttm = StringUtil.ReplaceAll(vo.getExamEndDttm(),".","");
-				if(examEndDttm.length() <=8) examEndDttm = examEndDttm+vo.getExamEndHour()+vo.getExamEndMin()+"59";
+				String examStartDttm = StringUtil.dateNumber(vo.getExamStartDttm())+vo.getExamStartHour()+vo.getExamStartMin()+"01";
+				String examEndDttm = StringUtil.dateNumber(vo.getExamEndDttm())+vo.getExamEndHour()+vo.getExamEndMin()+"59";
 				String rsltCfrmDttm = "";
-				if(StringUtil.isNotNull(vo.getRsltCfrmDttm())) {
-					rsltCfrmDttm = StringUtil.ReplaceAll(vo.getRsltCfrmDttm(),".","");
-					if(rsltCfrmDttm.length() <=8 ) rsltCfrmDttm = rsltCfrmDttm+vo.getRsltCfrmHour()+vo.getRsltCfrmMin()+"59";
-				}
+				if(StringUtil.isNotNull(vo.getRsltCfrmDttm())) rsltCfrmDttm = StringUtil.dateNumber(vo.getRsltCfrmDttm())+vo.getRsltCfrmHour()+vo.getRsltCfrmMin()+"59";
 				
 				vo.setExamStartDttm(examStartDttm);
 				vo.setExamEndDttm(examEndDttm);
@@ -537,6 +532,9 @@ public class ExamServiceImpl extends EgovAbstractServiceImpl implements ExamServ
 		int examShortAnswerPnt 			= examVO.getShortPnt();
 		int examDescriptionAnswerPnt 	= examVO.getDesPnt();
 		
+		int divPnt 						= examVO.getDivPnt();
+		String divYn 					= StringUtil.nvl(examVO.getDivYn(),"");
+		
 		if(examSelectCnt > 0) {
 			vo.setSearchKey("QSTN");
 			vo.setSearchValue("SK");
@@ -578,6 +576,9 @@ public class ExamServiceImpl extends EgovAbstractServiceImpl implements ExamServ
 			}
 		}
 		
+		if (divYn.equals("Y")) {
+			mergeExamList.get(mergeExamList.size()-1).setQstnScore(mergeExamList.get(mergeExamList.size()-1).getQstnScore() + divPnt);
+		}
 		
 		resultList.setResult(1);
 		resultList.setReturnList(mergeExamList);
@@ -962,11 +963,11 @@ public class ExamServiceImpl extends EgovAbstractServiceImpl implements ExamServ
 			}
 			stareAnss +="@#";
 			if(examQuestionVO.getQstnType().equals("D")){//단답형
-				qstnScores += "@#"+examShortAnswerPnt;
+				qstnScores += "@#"+questionList.get(i).getQstnScore();
 			}else if(examQuestionVO.getQstnType().equals("J")){//서술형
-				qstnScores += "@#"+examDescriptionAnswerPnt;
+				qstnScores += "@#"+questionList.get(i).getQstnScore();
 			}else if(examQuestionVO.getQstnType().equals("S") || examQuestionVO.getQstnType().equals("K")) {//선택형,진위형
-				qstnScores += "@#"+examSelectPnt;
+				qstnScores += "@#"+questionList.get(i).getQstnScore();
 			}else {
 				qstnScores += "@#";
 			}

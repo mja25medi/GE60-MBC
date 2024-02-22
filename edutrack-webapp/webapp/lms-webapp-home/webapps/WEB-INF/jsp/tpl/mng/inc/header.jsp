@@ -25,9 +25,7 @@ page import="java.util.List"%>
 	List<SysMenuVO> sysMenuList = menuService.getMngMenuList(authGrpCd);
 	request.setAttribute("sysMenuList",sysMenuList);
 	
-	String orgCd = UserBroker.getUserOrgCd(request);
-	OrgOrgInfoService orgOrgInfoService = WebApplicationContextUtils.getWebApplicationContext(session.getServletContext()).getBean(OrgOrgInfoService.class);
-	String hrdApiUseCheck = orgOrgInfoService.getHrdApiUseYn(orgCd);
+	String hrdApiUseCheck = Constants.HRD_API_USE_YN;
 	request.setAttribute("hrdApiUseCheck",hrdApiUseCheck);
 	
 %>

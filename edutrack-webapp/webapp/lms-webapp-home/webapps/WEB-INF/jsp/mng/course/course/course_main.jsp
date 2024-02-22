@@ -73,7 +73,7 @@
 								</colgroup>
 								<thead>
 									<tr>
-										<th scope="col">순서</th>
+										<th scope="col"><spring:message code="common.title.no"/></th>
 										<th scope="col"><spring:message code="course.title.course.code"/></th>
 										<th scope="col"><spring:message code="course.title.course.category"/></th>
 										<th scope="col"><spring:message code="course.title.course.name"/></th>
@@ -233,7 +233,6 @@
 		} else {
 			useYn = "";
 		}
-
 		$('#courseList')
 			.load(cUrl("/mng/course/course/listCourse"),
 				{ 

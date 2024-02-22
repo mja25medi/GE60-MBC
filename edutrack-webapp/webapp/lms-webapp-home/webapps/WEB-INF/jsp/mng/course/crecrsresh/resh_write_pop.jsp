@@ -6,7 +6,7 @@
 	<form id="creCrsReshForm" name="creCrsReshForm" onsubmit="return false">
 	<input type="hidden" name="crsCreCd" value="${vo.crsCreCd }"/>
 	<input type="hidden" name="useYn" value="${vo.useYn }"/>
-	<input type="hidden" name="ansrCnt" id="ansrCnt" value="${vo.ansrCnt }"/>
+	<input type="hidden" name="stdAnsrCnt" id="stdAnsrCnt" value="${vo.stdAnsrCnt }"/>
 	<table summary="<spring:message code="course.title.resh.manage"/>"  class="table table-bordered wordbreak">
 		<colgroup>
 			<col style="width:25%"/>
@@ -161,7 +161,7 @@
 	}
 
 	function remove() {
-		if($("#ansrCnt").val() > 0 ) {
+		if($("#stdAnsrCnt").val() > 0 ) {	//ENRL_STS가 D가 아닌 수강생들의 참여 수
 			alert("<spring:message code="course.message.resh.alert.delete"/>");
 			return;
 		}

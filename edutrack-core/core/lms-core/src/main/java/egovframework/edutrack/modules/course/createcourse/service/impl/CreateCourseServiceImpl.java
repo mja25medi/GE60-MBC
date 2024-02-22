@@ -788,6 +788,11 @@ public class CreateCourseServiceImpl extends EgovAbstractServiceImpl implements 
 		}
 		
 		studentMapper.deleteCreateCourseStudent(svo);
+
+		//-- 담임,튜터 삭제
+		TeacherVO tchVO = new TeacherVO();
+		tchVO.setCrsCreCd(iCreateCourseVO.getCrsCreCd());
+		createCourseTeacherMapper.deleteTeacherAll(tchVO);
 		
 		//-- 개설된 과정의 분반을 삭제한다.
 		CreCrsDeclsVO creCrsDeclsVO = new CreCrsDeclsVO();

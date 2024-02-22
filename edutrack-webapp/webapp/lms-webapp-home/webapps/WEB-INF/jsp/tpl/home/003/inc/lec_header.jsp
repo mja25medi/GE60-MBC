@@ -75,7 +75,7 @@ page import="java.util.Map"%>
 	String tarYear = StringUtil.nvl(request.getParameter("tarYear"),DateTimeUtil.getYear());
 	Map<String, Object> userInfo = new Hashtable<String, Object>();
 	//-- 학습중인과정, 준비중인 과정 목록 가져오기
-	System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> user type : "+userType);
+	//System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> user type : "+userType);
 		userInfo.put("userNo", UserBroker.getUserNo(request));
 	if(userType.contains("TEACHER") || userType.contains("TUTOR") || userType.contains("TCH")) {
 		//-- 강사나 투터의 경우 운영중인 과정
@@ -120,7 +120,14 @@ page import="java.util.Map"%>
 		        </select>
 		        <button type="button" class="active" onclick="goMenuPage();"><img src="/tpl/003/img/class/icon_util_home.svg" alt="icon" /><span class="sr-only">홈</span></button>
 		        <button type="button" onclick="viewRecvMsgPop('','');"><img src="/tpl/003/img/class/icon_util_msg.svg" alt="icon" /><span class="sr-only">쪽지</span><label class="count">${msgCnt}</label></button>
-		        <button type="button" onclick="location.href='/home/main/goMenuPage?mcd=MC00000051';"><img src="/tpl/003/img/class/icon_util_out.svg" alt="icon" /><span class="sr-only">나가기</span></button>
+		        <c:choose>
+		        	<c:when  test="${authGrpCd eq 'TCH' || 'TEACHER'}">
+				        <button type="button" onclick="logout();"><img src="/tpl/003/img/class/icon_util_out.svg" alt="icon" /><span class="sr-only">나가기</span></button>
+		        	</c:when>
+		        	<c:otherwise>
+				        <button type="button" onclick="location.href='/home/main/goMenuPage?mcd=MC00000051';"><img src="/tpl/003/img/class/icon_util_out.svg" alt="icon" /><span class="sr-only">나가기</span></button>
+		        	</c:otherwise>
+		        </c:choose>
 		    </div>
 		</header>
 		

@@ -515,7 +515,8 @@
 	<select id="checkDayLimit" parameterType="bookmarkVO" resultType="bookmarkVO">
 		<!-- 과정의 최종 학습일자를 검색한다. -->
 		<![CDATA[
-		SELECT CASE WHEN (SELECT DAY_STUDY_LIMIT FROM tb_crs_cre_crs TCCC WHERE CRS_CRE_CD = #{crsCreCd} ) <= 
+		SELECT CASE WHEN (SELECT DAY_STUDY_LIMIT FROM tb_crs_cre_crs TCCC WHERE CRS_CRE_CD = #{crsCreCd}) = 0 	THEN 'Y' 
+					WHEN (SELECT DAY_STUDY_LIMIT FROM tb_crs_cre_crs TCCC WHERE CRS_CRE_CD = #{crsCreCd} ) <= 
 						 (SELECT COUNT(*) FROM tb_lec_bookmark TLB WHERE STD_NO = #{stdNo} 
 						 											 AND SBJ_CD = #{sbjCd} 
 						 											 AND SUBSTR(STUDY_DTTM,1,8) = DATE_FORMAT(NOW(), '%Y%m%d') 
@@ -539,7 +540,8 @@
 	<select id="selectBookmarkInfo" parameterType="bookmarkVO" resultType="bookmarkVO">
 		<!-- 진행단계평가 및 북마크 정보 조회. -->
 		<![CDATA[
-		SELECT CASE WHEN (SELECT DAY_STUDY_LIMIT FROM tb_crs_cre_crs TCCC WHERE CRS_CRE_CD = #{crsCreCd} ) <= 
+		SELECT CASE WHEN (SELECT DAY_STUDY_LIMIT FROM tb_crs_cre_crs TCCC WHERE CRS_CRE_CD = #{crsCreCd}) = 0 	THEN 'Y' 
+					WHEN (SELECT DAY_STUDY_LIMIT FROM tb_crs_cre_crs TCCC WHERE CRS_CRE_CD = #{crsCreCd} ) <= 
 						 (SELECT COUNT(*) FROM tb_lec_bookmark TLB WHERE STD_NO = #{stdNo} 
 						 											 AND SBJ_CD = #{sbjCd} 
 						 											 AND SUBSTR(STUDY_DTTM,1,8) = DATE_FORMAT(NOW(), '%Y%m%d') 

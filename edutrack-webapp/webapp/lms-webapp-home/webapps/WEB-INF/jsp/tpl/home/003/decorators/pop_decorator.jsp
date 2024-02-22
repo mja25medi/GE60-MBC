@@ -95,13 +95,6 @@
 	<meditag:js src="/js/jquery/jquery.cookie.js"/>
 	<meditag:js src="/js/jquery/jquery.hotkeys.js"/>
 	<meditag:js src="/js/jquery/jquery.jstree.js"/>
-</c:if><c:if test="${playerDiv eq 'kollus' }">
-	<style type="text/css">
-	html,body {
-		height: 100% !important;
-		overflow-y:hidden;
-	}
-	</style>
 </c:if><c:if test="${playerDiv eq 'examPaper' }">
 <style type="text/css">
         #layer_fixed

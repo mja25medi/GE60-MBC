@@ -79,7 +79,7 @@ page import="java.util.Map"%>
 	String tarYear = StringUtil.nvl(request.getParameter("tarYear"),DateTimeUtil.getYear());
 	Map<String, Object> userInfo = new Hashtable<String, Object>();
 	//-- 학습중인과정, 준비중인 과정 목록 가져오기
-	System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> user type : "+userType);
+	//System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> user type : "+userType);
 	if(userType.contains("TEACHER") || userType.contains("TUTOR")) {
 		//-- 강사나 투터의 경우 운영중인 과정
 		userInfo.put("userNo", UserBroker.getUserNo(request));
@@ -165,7 +165,7 @@ page import="java.util.Map"%>
 					</c:if>
 					<c:if test="${not empty sessionScope.USERNO}">
                     <div class="logout">
-                        <span class="welcome"><span class="text"><strong>${USERNAME}</strong>님</span> <em class="badge">3</em></span>
+                        <span class="welcome"><span class="text"><strong>${USERNAME}</strong>님</span> <em class="badge"  style="cursor: pointer;" onclick="viewRecvMsg();">${msgCnt }</em></span>
                         <ul class="nav">
                             <li><a href="<c:url value="/home/user/logout" />" class=""><span><spring:message code="common.title.link.logout"/></span></a></li>
                             <li><a href="<c:url value="/home/main/goMenuPage?mcd=${editMyinfoMcd}"/>" class=""><span><spring:message code="common.title.link.myinfo"/></span></a></li>
@@ -253,9 +253,20 @@ page import="java.util.Map"%>
     <!-- //gnb_area -->
 </header>
 <script type="text/javascript">
+var modalBox = null;
+$(document).ready(function() {
+	modalBox = new $M.ModalDialog({
+		"modalid" : "modal1",
+		"nomargin" : false //m_large
+	});
+});
 function topCourseSearch() {
 	var searchValue = $("#searchValue").val();
 	document.location.href = cUrl("/home/course/listSearchCourseFullMain")+"?mcd=${searchFullMcd}${AMPERSAND}searchValue="+searchValue;
+}
+
+function viewRecvMsg() {
+	document.location.href = cUrl("/home/message/listRecvMain")
 }
 </script>
 

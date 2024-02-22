@@ -54,6 +54,9 @@
 
 <script src="/libs/flowplayer7/flowplayer.js"></script>
 <script src="/libs/flowplayer7/hls.light.min.js"></script>
+<!-- 배속 기능 -->
+<script src="/libs/flowplayer7/flowplayer.speed-menu.min.js"></script>
+
 <script src="/tpl/${COLOR_TPL}/jquery/jquery-3.2.1.min.js"></script>
 <script src="/tpl/${COLOR_TPL}/js/func.min.js"></script>
 <script src="/tpl/${COLOR_TPL}/js/common.js"></script>
@@ -63,7 +66,7 @@
 <script src="/js/common.js"></script>
 <script src="/js/jquery/jquery.form.js"></script>
 <script src="/tpl/${COLOR_TPL}/js/pdfobject.js"></script>
-
+<script src="/tpl/${COLOR_TPL}/js/jquery-resizable.js"></script>
 </head>
 <body>
 <iframe id='edutrackAPIFrame' name='edutrackAPIFrame' style="height:0;width:0;border:0;border:none;visibility:hidden;display:block;" src="<c:url value="/jsp/bookmark/study_edutrack_adapter.jsp"/>" onload="onloadApiFrame()"></iframe>
@@ -142,6 +145,7 @@ $(document).ready(function() {
 					src: sourcesSrc
 	            }
 	        ],
+	        speeds: [0.5, 1, 2]
 	    }
 	});
 	parent.playerType = "mp4";
@@ -274,14 +278,7 @@ $(document).on("click","#qnaSave",function(){
 		api.bind("ready", function() {
 			mediaTotalTime  = api.video.duration;
 			$("#mediaTotalTime").html(Math.round(Math.floor(mediaTotalTime / 60))+":"+ Math.round(Math.floor(mediaTotalTime % 60))); 
-			if(credit == 'no-credit') {
-				setShowControl();
-			} else {
-				if(prgrRatio < 100)
-					setHideControl();
-				else
-					setShowControl();
-			}
+			setShowControl();	//스마트인재개발원은 복습이 아닌 일반 학습하기일 때도 컨트롤 바 노출
 			if(seekTime > 0) {
 				var st = confirm("<spring:message code="lecture.message.contents.learn.continue"/>");
 				if(st){

@@ -264,7 +264,14 @@
 						<span style="float:left;text-align:right;line-height:30px;">차</span>
 					</td>
 				</tr> --%>				
-				
+				<tr>
+					<th scope="row"><label for="dayStudyLimit">진도제한</label></th>
+					<td colspan="3">
+						<p style="margin: 5px 5px;float: left;">하루 최대</p>
+						<input type="text" maxlength="50" isNull="N" lenCheck="50"  name="dayStudyLimit" value="${vo.dayStudyLimit }" class="form-control input-sm" id="dayStudyLimit" style="float: left;width: 20%"  onkeyup="isChkNumber(this)"/>
+						<p style="margin: 5px 5px;float: left;">차시까지만 수강 가능</p>
+					</td>
+				</tr>
 				<tr>
 					<th scope="row"><label for="eduPrps"><spring:message code="course.title.course.scoreratio"/> (%)</label></th>
 					<td colspan="3">
@@ -567,6 +574,11 @@
 			}
 		}
 		
+		if($("#dayStudyLimit").val() == '') {
+			alert('<spring:message code="course.message.createcourse.input.daystudylimit"/>');
+			$("#dayStudyLimit").focus();
+			return false;
+		}
 		
 		var cpltScore = parseInt(nvlNumber($("#cpltScore").val()),10);
 		var cpltPrgrRate = parseInt(nvlNumber($("#cpltPrgrRate").val()),10);

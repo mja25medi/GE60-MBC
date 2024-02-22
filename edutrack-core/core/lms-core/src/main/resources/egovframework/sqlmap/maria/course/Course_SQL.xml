@@ -550,7 +550,7 @@
 		  FROM TB_CRS_CRS A, TB_CRS_CRS_CTGR B							
 		  WHERE A.ORG_CD = B.ORG_CD		
 		     AND A.CRS_CTGR_CD = B.CRS_CTGR_CD  
-		     AND A.CRS_SVC_TYPE = 'R'
+		     AND A.CRS_SVC_TYPE = 'S'
 		     <if test = "crsCtgrCd != null and crsCtgrCd != ''">
 			AND B.CRS_CTGR_PATH LIKE CONCAT('%/', #{crsCtgrCd}, '%' )
 		</if>

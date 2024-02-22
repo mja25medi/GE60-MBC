@@ -167,31 +167,31 @@ function addBasket(crsCreCd) {
 }
 
 function addSingleBasket(crsCreCd) {
-
-	$.ajax({
-		url : '/home/student/addBasket'
-		,data : {
-			'crsCreCd' : crsCreCd
-		}
-		, method: "post"
-		, dataType: 'json'
-		, async: false
-		, success : function(resultVO) {
-			if(resultVO.result > 0){
-				location.href = "/home/student/enrollPayBasketMain?crsCreCd="+crsCreCd;//수강신청	
-				return;
-			}else{
-				alert(resultVO.message);	
+	if('${USERNO}' == null || '${USERNO}' == ""){
+		location.href = "/home/main/goMenuPage?mcd=HM04001000"
+		alert("로그인 후 신청 가능합니다.");
+	}else{
+		$.ajax({
+			url : '/home/student/addBasket'
+			,data : {
+				'crsCreCd' : crsCreCd
 			}
-		}
-		,error : function(request,status,error) {
-			if(confirm("로그인 후 이용 가능합니다. 로그인 페이지로 이동하시겠습니까?") == true) {
-				location.href = "/home/main/goMenuPage?mcd=HM04001000"
-			} else {
-				
-			};
-		}
-	});
+			, method: "post"
+			, dataType: 'json'
+			, async: false
+			, success : function(resultVO) {
+				if(resultVO.result > 0){
+					location.href = "/home/student/enrollPayBasketMain?crsCreCd="+crsCreCd;//수강신청	
+					return;
+				}else{
+					alert(resultVO.message);	
+				}
+			}
+			,error : function(request,status,error) {
+				alert("수강신청 항목 담기에 실패하였습니다. 새로고침 후 다시 이용바랍니다.");
+			}
+		});
+	}
 }
 
 
@@ -201,35 +201,15 @@ function goList() {
 }
 
 function addCourse(crsCtgrCd,crsCd,crsCreCd){
-	if(confirm("수강신청 하시겠습니까?")){
-		$.ajax({
-			url : '/home/student/enrollCourseMain'
-			,data : {
-				'crsCtgrCd': crsCtgrCd,
-				'crsCd': crsCd,
-				'crsCreCd' : crsCreCd
-			}
-			, method: "post"
-			, dataType: 'json'
-			, async: false
-			, success : function(resultVO) {
-				if(resultVO.result > 0){
-					alert(resultVO.message);
-					location.href ='/home/main/goMenuPage?mcd=MC00000051';//수강신청	
-				}else{
-					alert(resultVO.message);	
-				}
-			}
-			,error : function(request,status,error) {
-				if(confirm("로그인 후 이용 가능합니다. 로그인 페이지로 이동하시겠습니까?") == true) {
-					location.href = "/home/main/goMenuPage?mcd=HM04001000"
-				} else {
-					
-				};
-			}
-		});
+	if('${USERNO}' == null || '${USERNO}' == ""){
+		location.href = "/home/main/goMenuPage?mcd=HM04001000"
+		alert("로그인 후 신청 가능합니다.");
 	}else{
-		alert("수강신청을 취소하였습니다.");
+		if(confirm("수강신청 하시겠습니까?")){
+			location.href='/home/student/enrollCourseMain?crsCtgrCd='+crsCtgrCd+'&crsCd='+crsCd+'&crsCreCd='+crsCreCd;
+		}else{
+			alert("수강신청을 취소하였습니다.");
+		}
 	}
 }
 

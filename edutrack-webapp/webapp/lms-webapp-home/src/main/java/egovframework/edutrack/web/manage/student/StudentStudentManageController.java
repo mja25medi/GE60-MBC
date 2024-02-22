@@ -883,8 +883,8 @@ public class StudentStudentManageController extends GenericController {
 			Map<String, Object> argu = new HashMap<String, Object>();
 			argu.put("Name",userInfoVO.getUserNm());
 			argu.put("UserID", userInfoVO.getUserId());
-			argu.put("CourseName", createCourseVO.getCrsCreNm()+" ["+createCourseVO.getCreTerm()+"]");
-			argu.put("CourseDuration", createCourseVO.getEnrlStartDttm()+"~"+createCourseVO.getEnrlEndDttm());
+			argu.put("CourseName", viewCreateCourseVO.getCrsCreNm()+" ["+viewCreateCourseVO.getCreTerm()+"]");
+			argu.put("CourseDuration", viewCreateCourseVO.getEnrlStartDttm()+"~"+viewCreateCourseVO.getEnrlEndDttm());
 			argu.put("SendDate", DateTimeUtil.getCurrentString("yy.MM.dd"));
 			orgEmailTplService.decorator(orgCd, emailTplCd, argu, message);
 

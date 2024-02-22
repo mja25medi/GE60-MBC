@@ -227,7 +227,14 @@
 			</td>
 		
 		</tr>
-
+		<tr>
+			<th scope="row"><span style="color:red;">* </span><label for="dayStudyLimit_0">진도제한</label></th>
+			<td colspan="3">
+				<p style="margin: 5px 5px;float: left;">하루 최대</p>
+				<input type="text" maxlength="50" isNull="N" lenCheck="50"  name="dayStudyLimit_0" value="${createCourseVO.dayStudyLimit }" class="form-control input-sm" id="dayStudyLimit_0" style="float: left;width: 20%"  onkeyup="isChkNumber(this)"/>
+				<p style="margin: 5px 5px;float: left;">차시까지만 수강 가능</p>
+			</td>
+		</tr>
 		<tr>
 			<th scope="row"><span style="color:red;">* </span><label for="eduPrps"><spring:message code="course.title.course.scoreratio"/> (%)</label></th>
 			<td colspan="3">
@@ -346,6 +353,7 @@
 	<input type="hidden" name="etcRatio3" id="etcRatio3"/>
 	<input type="hidden" name="etcRatio4" id="etcRatio4"/>
 	<input type="hidden" name="etcRatio5" id="etcRatio5"/>
+	<input type="hidden" name="dayStudyLimit" id="dayStudyLimit" value="${vo.dayStudyLimit }"/>
 	<input type="hidden" name="etcNm" id="etcNm" value="${vo.etcNm }"/>
 	<input type="hidden" name="etcNm2" id="etcNm2" value="${vo.etcNm2 }"/>
 	<input type="hidden" name="etcNm3" id="etcNm3" value="${vo.etcNm3 }"/>
@@ -640,6 +648,11 @@
 			return false;
 		} */
 
+		if($("#dayStudyLimit_"+str).val() == '') {
+			alert('<spring:message code="course.message.createcourse.input.daystudylimit"/>');
+			$("#dayStudyLimit_"+str).focus();
+			return false;
+		}
  
  		var prgrRatio = parseInt(nvlNumber($("#prgrRatio_"+str).val()),10);
 		var attdRatio = parseInt(nvlNumber($("#attdRatio_"+str).val()),10);
@@ -711,6 +724,7 @@
 		$("#etcNm3").val($("#etcNm3_"+str).val());
 		$("#etcNm4").val($("#etcNm4_"+str).val());
 		$("#etcNm5").val($("#etcNm5_"+str).val());
+		$("#dayStudyLimit").val($("#dayStudyLimit_"+str).val());
 		$("#onlnEduTm").val($("#onlnEduTm_"+str).val());
 		$("#oflnEduTm").val($("#oflnEduTm_"+str).val());
 		$("#oflnEduPlace").val($("#oflnEduPlace_"+str).val());

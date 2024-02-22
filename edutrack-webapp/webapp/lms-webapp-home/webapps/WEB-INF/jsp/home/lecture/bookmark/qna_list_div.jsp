@@ -21,7 +21,7 @@
 		                    </ul>
 		                    <ul class="list">
 		                        <li class="head"><label>내용</label></li>
-		                        <li style="white-space:pre;">${item.qnaCts}</li>
+		                        <li>${item.qnaCts}</li>
 		                    </ul>
 		                    <ul class="list">
 		                        <li class="head"><label>등록일</label></li>

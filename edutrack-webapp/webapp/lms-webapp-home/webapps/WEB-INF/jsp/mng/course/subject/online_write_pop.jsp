@@ -222,16 +222,16 @@
 				</div>
 			</td>
 		</tr> --%>
-		<tr>
+	<%-- 	<tr>
 			<th scope="row"><label for="dayStudyLimit">진도제한</label></th>
 			<td colspan="3">
-				<%-- <input type="hidden" maxlength="50" isNull="N" lenCheck="50" name="dayStudyLimit" value="8" class="form-control input-sm" id="dayStudyLimit" />
-				<p style="margin: 5px 5px;float: left;">하루 최대 8차시까지 수강 가능</p>  ${vo.dayStudyLimit } --%>
+				<input type="hidden" maxlength="50" isNull="N" lenCheck="50" name="dayStudyLimit" value="8" class="form-control input-sm" id="dayStudyLimit" />
+				<p style="margin: 5px 5px;float: left;">하루 최대 8차시까지 수강 가능</p>  ${vo.dayStudyLimit }
 				<p style="margin: 5px 5px;float: left;">하루 최대</p>
 				<input type="text" maxlength="50" isNull="N" lenCheck="50"  name="dayStudyLimit" value="${vo.dayStudyLimit }" class="form-control input-sm" id="dayStudyLimit" style="float: left;width: 20%"  onkeyup="isChkNumber(this)"/>
 				<p style="margin: 5px 5px;float: left;">차시까지만 수강 가능</p>
 			</td>
-		</tr>
+		</tr> --%>
 		
 		<tr>
 			<th scope="row"><label for="tchDesc">강의계획서</label></th>
@@ -428,12 +428,12 @@
 	}
 	
 	// 최대 수강 8차시 제한
-	$("#dayStudyLimit").change(function(){
+/* 	$("#dayStudyLimit").change(function(){
 		if($("#dayStudyLimit").val() > 8){
 			alert("하루 최대 8차시까지 가능합니다.");
 			$("#dayStudyLimit").val("");
 			$("#dayStudyLimit").focus();
 			return;
 		}
-	});
+	}); */
 </script>

@@ -145,49 +145,14 @@
 	<script type="text/javascript">
 	
 	$(document).ready(function() {
-		/* popupNotice(); */
+		getCookiePopupNotice();
 		chkGrpIdVerified();
 	})
-	//--------------- 팝업 공지사항 관련 처리 ------------------------------------------------------------------------------
-	<c:forEach items="${popupNoticeList}" var="item">
-	<c:if test="${item.popupTypeCd eq 'PBOX'}">
-	var noticePopBox${item.popupSn};
-	</c:if>
-	</c:forEach>
-
-	function popupNotice() {
-<c:forEach items="${popupNoticeList}" var="item">
-	<c:if test="${item.scrollYn eq 'Y'}">
-		<c:set var="scrollYnNm" value="yes"/>
-	</c:if>
-	<c:if test="${item.scrollYn eq 'N'}">
-		<c:set var="scrollYnNm" value="no"/>
-	</c:if>
-
-		if(getCookiePopupNotice('PN${item.popupSn}') != 'No') {
-			var url = generateUrl("/home/brd/popup/indexReadPop2",{"popupSn":"${item.popupSn}"});
-	<c:if test="${item.popupTypeCd eq 'PBOX'}">
-			noticePopBox${item.popupSn} = new $M.ModalDialog({
-				"modalid" : "noticeModal${item.popupSn}",
-				"nomargin" : true
-			});
-			var addContent  = "<iframe id='popupFrame' name='popupFrame' width='100%' height='100%' "
-				+ "frameborder='0' scrolling='auto' src='"+url+"'/>";
-			noticePopBox${item.popupSn}.clear();
-			noticePopBox${item.popupSn}.addContents(addContent);
-			noticePopBox${item.popupSn}.resize("${item.xSize}","${item.ySize}");
-			noticePopBox${item.popupSn}.move("${item.xPos}","${item.yPos}");
-			noticePopBox${item.popupSn}.show();
-			
-			
-			
-			
-	</c:if>
-	<c:if test="${item.popupTypeCd eq 'PWIN'}">
-			var noticePopBox${item.popupSn} = window.open(url, 'pnBox${item.popupSn}','width=${item.xSize}, height=${item.ySize+25}, top=${item.yPos}, left=${item.xPos}, scrollbars=auto');
-	</c:if>
-		}
-</c:forEach>
+	
+	function closePop(){
+	setCookiePopupNotice('popupNotice','done',1);
+	$('.popup-wrap').css("display","none"); 
+	$('.popup-close').css("display","none"); 
 	}
 
 	function setCookiePopupNotice( name, value, expiredays ) {
@@ -196,23 +161,18 @@
 		document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";"
 	}
 
-	function getCookiePopupNotice( name ) {
-		var nameOfCookie = name + "=";
-		var x = 0;
-		while ( x <= document.cookie.length ) {
-			var y = (x+nameOfCookie.length);
-			if ( document.cookie.substring( x, y ) == nameOfCookie ) {
-				if ( (endOfCookie=document.cookie.indexOf( ";", y )) == -1 )
-					endOfCookie = document.cookie.length;
-				return unescape( document.cookie.substring( y, endOfCookie ) );
-			}
-			x = document.cookie.indexOf( " ", x ) + 1;
-			if ( x == 0 )
-				break;
+	function getCookiePopupNotice(  ) {
+		var cookiedata = document.cookie;
+		if ( cookiedata.indexOf("popupNotice=done") < 0 ){
+			$('.popup-wrap').show();
 		}
-		return "";
+		else {
+			$('.popup-wrap').hide();
+			$('.popup-close').hide();
+			
+		}
 	}
-	//--------------- 팝업 공지사항 관련 처리 끝 ------------------------------------------------------------------------------
+	
 	function chkGrpIdVerified() {
 		var verifiedId = '${sessionScope.verifiedId}';
 		if(verifiedId == "false") {
@@ -222,7 +182,9 @@
 	}
 	
 	function initVerfiyPop() {
-		var addContent  = '<c:url value="/home/user/initVerifyPop2"/>';
+		var url = '<c:url value="/home/user/initVerifyPop2"/>';
+		var addContent  = "<iframe id='viewListFrame' name='viewListFrame' width='100%' height='100%' "
+         	+ "frameborder='0' scrolling='auto' src='"+url+"'/>";
 		modalBox.clear();
 		modalBox.addContents(addContent);
 		modalBox.setTitle("본인인증 및 비밀번호 변경");

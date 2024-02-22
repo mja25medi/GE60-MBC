@@ -2,12 +2,12 @@
 <%@ include file="/WEB-INF/jsp/mng/common/page_init.jsp" %>
 <c:set var="courseList" value="${courseList}"/>
 <c:set var="pageInfo" value="${pageInfo}"/>
-<c:set var="courseVO" value="${vo}"/>
+<c:set var="courseVO" value="${courseVO}"/>
 
 						<table summary='<spring:message code="course.title.course.manage"/>' class="table table-bordered wordbreak">
 							<colgroup>
-								<col style="width:auto;"/>
-								<col style="width:110px"/>
+								<col style="width:60px"/>
+								<col style="width:auto;min-width:90px;"/>
 								<col style="width:auto"/>
 								<col style="width:auto;min-width:90px;"/>
 								<col style="width:auto;min-width:110px;"/>
@@ -16,7 +16,7 @@
 							</colgroup>
 							<thead>
 								<tr>
-									<th scope="col">순서</th>
+									<th scope="col"><spring:message code="common.title.no"/></th>
 									<th scope="col">
 									<c:choose>
 										<c:when test="${fn:startsWith(courseVO.sortKey,'CRS_CD') == true}">

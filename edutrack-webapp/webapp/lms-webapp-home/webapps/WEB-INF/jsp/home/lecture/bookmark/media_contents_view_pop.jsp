@@ -57,6 +57,8 @@
 <!-- 2. flowplayer -->
 <script src="/libs/flowplayer7/flowplayer.js"></script>
 <script src="/libs/flowplayer7/hls.light.min.js"></script>
+<!-- 배속 기능 -->
+<script src="/libs/flowplayer7/flowplayer.speed-menu.min.js"></script>
 
 
     <script src="/tpl/003/jquery/jquery-3.2.1.min.js"></script>
@@ -161,6 +163,7 @@ $(document).ready(function() {
 					src: sourcesSrc
 	            }
 	        ],
+	        speeds: [0.5, 1, 2]
 	    }
 	});
 	parent.playerType = "mp4";
@@ -290,14 +293,7 @@ $(document).on("click","#qnaSave",function(){
 		api.bind("ready", function() {
 			mediaTotalTime  = api.video.duration;
 			$("#mediaTotalTime").html(Math.round(Math.floor(mediaTotalTime / 60))+":"+ Math.round(Math.floor(mediaTotalTime % 60))); 
-			if(credit == 'no-credit') {
-				setShowControl();
-			} else {
-				if(prgrRatio < 100)
-					setHideControl();
-				else
-					setShowControl();
-			}
+			setShowControl();	//스마트인재개발원은 복습이 아닌 일반 학습하기일 때도 컨트롤 바 노출
 			if(seekTime > 0) {
 				var st = confirm("<spring:message code="lecture.message.contents.learn.continue"/>");
 				if(st){
@@ -415,11 +411,14 @@ function goUnitCd(unitCd,type,prgrRatio) {
 		return false;
 	}
 	
+	onunloadFunction();
+	
 	var sbjCd = '${contentsVO.sbjCd}';
 	location.href = "/lec/bookmark/viewContents"+"?sbjCd="+sbjCd+"&unitCd="+unitCd+"&deviceType=${param.deviceType}&browserType=${param.browserType}";
 }
 
 function goList(url){
+	onunloadFunction();
 	opener.location.href = url;
 	self.close();
 }

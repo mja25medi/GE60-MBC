@@ -4,9 +4,9 @@
 <c:url var="img_base" value="/img/home" />
 
 <div class="join_cont">
-	<div class="h2_center">
+	<!-- <div class="h2_center">
 		<h5 class="title_h2">수강신청결과</h5>
-	</div>
+	</div> -->
 
 	<div class="join_area join_complete">
 		<h5 class="title_h2">

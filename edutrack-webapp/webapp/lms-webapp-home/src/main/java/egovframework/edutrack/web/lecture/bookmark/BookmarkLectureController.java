@@ -748,12 +748,17 @@ public class BookmarkLectureController
 					filePath = clibShareMediaCntsVO.getFilePath();
 				}
 	
+				if(clibShareMediaCntsVO.getCntsTypeCd().equals("VOD")) {
+					ext = FileUtil.getFileExtention(clibShareMediaCntsVO.getFilePath());
+					filePath = "/contents"+clibShareMediaCntsVO.getFilePath();
+				}
 				String fileExt = "none";
 				if(Constants.MEDIA_FILE_MP3.contains(ext)) {
 					fileExt = "mp3";
 				} else if(Constants.MEDIA_FILE_MP4.contains(ext)) {
 					fileExt = "mp4";
 				}
+				
 				request.setAttribute("filePath", filePath);
 				request.setAttribute("fileName", clibShareMediaCntsVO.getFileNm());
 				request.setAttribute("fileExt", fileExt);

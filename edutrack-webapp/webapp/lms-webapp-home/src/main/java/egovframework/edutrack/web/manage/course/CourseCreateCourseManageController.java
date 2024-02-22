@@ -458,10 +458,10 @@ public class CourseCreateCourseManageController extends GenericController{
 		} else if (ccVO.getSbjCnt() > 0) {
 			resultVO.setResult(-1);
 			resultVO.setMessage(getMessage(request, "course.message.createcourse.alert.delete2").replace("\\n\\n", "\r\n"));
-		} else if (ccVO.getTchCnt() > 0) {
+		} /*else if (ccVO.getTchCnt() > 0) {
 			resultVO.setResult(-1);
 			resultVO.setMessage(getMessage(request, "course.message.createcourse.alert.delete3").replace("\\n\\n", "\r\n"));
-		} else {
+		} */else {
 			try {
 				resultVO = createCourseService.deleteCreateCourse(vo);
 				resultVO.setMessage(getMessage(request, "course.message.createcourse.delete.success"));

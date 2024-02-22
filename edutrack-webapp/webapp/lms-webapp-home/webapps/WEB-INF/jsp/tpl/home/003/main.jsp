@@ -174,6 +174,9 @@
     	<c:if test="${popupCnt > 0 }">
 	        <div class="popup-wrap on">
 	            <div class="inner-box">
+		           <div class="head-box">
+	                    <a href="javascript:closePop()">오늘 하루 열지 않기 <i class="xi-close"></i></a>
+	                </div>
 	                <ul id="slides-main">
 	                <c:forEach items="${popupNoticeList}" var="item" varStatus="status">
 	                    <li>
@@ -184,11 +187,11 @@
 	            </div>
 	            <div class="popup-overlay"></div>
 	        </div>
-        </c:if>
         <div class="popup-btn-box">
             <a href="#0" class="popup-close"><i class="xi-close-min"></i></a>
             <a href="#0" class="popup-open"><i class="xi-library-books-o"></i><label class="ui blue small circular label">${popupCnt}</label></a>
         </div>
+        </c:if>
         
         
 <script type="text/javascript">

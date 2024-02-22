@@ -80,6 +80,25 @@
                                     </div>
                                 </div>
                             </li>
+                           <li class="examOptDiv">
+                                <div class="row" >
+                                    <label for="conType" class="form-label col-sm-2">평가용도</label>
+                                    <div class="col-sm-10">
+                                        <div class="form-row">
+                                            <div class="ra_inline">
+                                                <span class="custom-input">
+                                                    <input type="radio" name="examUseCd" id="examUseCd_A" value="CRECRS" onclick="examChk()" <c:if test="${empty examVO.examUseCd   or examVO.examUseCd eq 'CRECRS'}">checked</c:if>/>
+                                                    <label for="examUseCd_A">회차용</label>
+                                                </span>
+                                                <span class="custom-input ml5">
+                                                    <input type="radio" name="examUseCd" id="examUseCd_B" value="UNIT" onclick="examChk()" <c:if test="${examVO.examUseCd eq 'UNIT'}">checked</c:if>/>
+                                                    <label for="examUseCd_B">과목차시용</label>
+                                                </span>
+                                            </div>
+                                        </div>             
+                                    </div>
+                                </div>
+                            </li>
                             <li>
                                 <div class="row">
                                     <label for="titleInput" class="form-label col-sm-2"><spring:message code="lecture.title.exam.name"/></label>
@@ -165,22 +184,26 @@
                             </li>
                             <li class="online_exam semiExamYn_Y">
                                 <div class="row">
-										 <label for="rateSelect" class="form-label col-sm-2">강의</label>
-									   <div class="col-sm-4">
-                                        <div class="form-row">
-                                        <select name="sbjCd" id="sbjCd" class="form-select">
-										<c:forEach var="item" items="${onlineSubjectList}" varStatus="status">
-										<option value="${item.sbjCd }" <c:if test="${item.sbjCd eq examVO.sbjCd}">selected</c:if>>${item.sbjNm}</option>
-										</c:forEach>				
+									<label for="rateSelect" class="form-label col-sm-2">강의</label>
+										<div class="col-sm-4">
+											<div class="form-row">
+											<select name="sbjCd" id="sbjCd" class="form-select" onChange="listCnts()">
+												<c:forEach var="item" items="${onlineSubjectList}" varStatus="status">
+													<option value="${item.sbjCd }"<c:if test="${item.sbjCd eq examVO.sbjCd}">selected</c:if>>${item.sbjNm}</option>
+												</c:forEach>
 											</select>
-                                            <div class="input_btn">
-											<input type="text"  dispName="<spring:message code="lecture.title.exam.answer.ratio"/>" maxlength="3" isNull="N" lenCheck="3" name="stareLecCount" id="stareLecCount" value="${vo.stareLecCount }" onfocus="this.select()" class="form-control md" onkeyup="isChkMaxNumber(this,100)"/>
-											<span style="float:left;line-height:30px;"> 강 수강 후</span>
+											<div class="input_btn lecCntDiv" style="display: none;">
+												<input type="text" maxlength="3" isNull="N" lenCheck="3" name="stareLecCount" id="stareLecCount" value="${vo.stareLecCount }" onfocus="this.select()" class="form-control sm" onkeyup="isChkMaxNumber(this,100)" /> 
+												<span class="custom-input">강 수강 후</span>
+											</div>
+											<div class="unitDiv" style="display: none;">
+												<span> 차시 : </span> 
+												<select name="unitCd" id="unitCd" class="form-select" style="width: auto;"></select>
 											</div>
 										</div>
 									</div>
-                                </div>
-                            </li>
+								</div>
+							</li>
                             <li class="online_exam semiExamYn_N" style="display: none;">
                                 <div class="row">
 									 <label for="rateSelect" class="form-label col-sm-2">응시가능진도율</label>
@@ -267,10 +290,22 @@
                                                             
                                                         </tr>
                                                         <tr>
+                                                            <td scope="row" data-label="종류">
+                                                                <span class="custom-input">
+                                                               		<input type="checkbox" name="divYn" id="divYn" value="${vo.divYn}" <c:if test="${vo.divYn eq 'Y'}">checked</c:if> onclick="changeDivPnt()"/>
+                                                               		<label for="divYn">나머지 배점 </label> 
+                                                           		</span>
+                                                            </td>
+                                                           	<td></td>
+															<td></td>
+															<td data-label="합(문항수X배점)"><input type="text" class="form-control w50"  maxlength="2" id="divPnt" name="divPnt" value="${vo.divPnt}" readonly="readonly"/></td>
+                                                            
+                                                        </tr>
+                                                        <tr>
                                                             <td scope="row" data-label="종류">총합</td>
                                                             <td></td>
                                                             <td></td>
-                                                            <td data-label="합(문항수X배점)"><input class="form-control w50" type="text" maxlength="3" disabled id="examRateTotScore" value="${(vo.selCnt * vo.selPnt) + (vo.shortCnt * vo.shortPnt) + (vo.desCnt * vo.desPnt) }"/></td>
+                                                            <td data-label="합(문항수X배점)"><input class="form-control w50" type="text" maxlength="3" disabled id="examRateTotScore" value="${(vo.selCnt * vo.selPnt) + (vo.shortCnt * vo.shortPnt) + (vo.desCnt * vo.desPnt) + vo.divPnt }"/></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -312,7 +347,7 @@
 		
 		changeExamType();
 		changeExamStareType();
-	
+		listCnts();
 		
 		$("#examStartDttm").val(formatDate("${vo.examStartDttm}"));
 		$("#examEndDttm").val(formatDate("${vo.examEndDttm}"));
@@ -432,12 +467,21 @@
 				
 			}
 		}else{		//시험일 경우
-			var examStareTm = parseInt(f["stareCritPrgrRatio"].value,10);
-			if(examType == 'ON') {
-				if(examStareTm <=0 ) {
-					alert("<spring:message code="lecture.message.exam.alert.answer.ratio"/>");
-					$("#stareCritPrgrRatio").focus();
+			var examUseCd = $('input[name="examUseCd"]:checked').val();	
+			if(examUseCd == 'UNIT'){	//일반시험 & 과목 차시 시험일 경우
+				if(f["unitCd"].value == '') {
+					alert("차시를 선택해 주세요.");
+					$("#unitCd").focus();
 					return;
+				}
+			}else{
+				var examStareTm = parseInt(f["stareCritPrgrRatio"].value,10);
+				if(examType == 'ON') {
+					if(examStareTm <=0 ) {
+						alert("<spring:message code="lecture.message.exam.alert.answer.ratio"/>");
+						$("#stareCritPrgrRatio").focus();
+						return;
+					}
 				}
 			}
 		}
@@ -530,12 +574,21 @@
 					}
 				}
 			}else{		//시험일 경우
-				var examStareTm = parseInt(f["stareCritPrgrRatio"].value,10);
-				if(examType == 'ON') {
-					if(examStareTm <=0 ) {
-						alert("<spring:message code="lecture.message.exam.alert.answer.ratio"/>");
-						$("#stareCritPrgrRatio").focus();
+				var examUseCd = $('input[name="examUseCd"]:checked').val();	
+				if(examUseCd == 'UNIT'){	//일반시험 & 과목 차시 시험일 경우
+					if(f["unitCd"].value == '') {
+						alert("차시를 선택해 주세요.");
+						$("#unitCd").focus();
 						return;
+					}
+				}else{
+					var examStareTm = parseInt(f["stareCritPrgrRatio"].value,10);
+					if(examType == 'ON') {
+						if(examStareTm <=0 ) {
+							alert("<spring:message code="lecture.message.exam.alert.answer.ratio"/>");
+							$("#stareCritPrgrRatio").focus();
+							return;
+						}
 					}
 				}
 			}
@@ -594,15 +647,16 @@
 			$("#regYnSel").val("${examVO.regYn}");
 			$('#input_regYn').hide();
 			$('.cntsTypeSel').show();
+			$('.examOptDiv').show();
 
 		} else {
 			//-- 정규 시험으로 선택
 			$("#examStareTypeCd option:eq(0)").prop("selected", "selected");
 			$(".online_exam").hide();
 			$(".cntsTypeSel").hide();
+			$(".examOptDiv").hide();
 			$('#input_regYn').show();
 		}
-		changeExamStareType();
 	}
 
 	function changeExamStareType() {
@@ -672,6 +726,7 @@
 		var shortPnt = parseInt(isNull($("#shortPnt").val()) ? 0 : $("#shortPnt").val());
 		var desCnt   = parseInt(isNull($("#desCnt").val()) ? 0 : $("#desCnt").val()); 
 		var desPnt   = parseInt(isNull($("#desPnt").val()) ? 0 : $("#desPnt").val());
+		var divPnt   = parseInt(isNull($("#divPnt").val()) ? 0 : $("#divPnt").val());
 		
 		var selSum = parseInt(isNull($("#selSum").val()) ? 0 : $("#selSum").val());
 		var shortSum = parseInt(isNull($("#shortSum").val()) ? 0 : $("#shortSum").val());
@@ -680,7 +735,7 @@
 		
 		var returnFlag = true;
 		
-		if((selCnt * selPnt) + (shortCnt * shortPnt) + (desCnt * desPnt) > 100){
+		if((selCnt * selPnt) + (shortCnt * shortPnt) + (desCnt * desPnt) + divPnt > 100){
 			if(isNotNull(obj)){//jquery 이벤트 this 여부
 				obj.value = 0;//초기화
 			}else{//전송 전 체크
@@ -690,6 +745,7 @@
 				$("#shortPnt").val(0);
 				$("#desCnt").val(0);
 				$("#desPnt").val(0);
+				$("#divPnt").val(0);
 			}
 			alert("총합이 100을 초과해서는 안됩니다.");
 			returnFlag = false;
@@ -702,12 +758,13 @@
 		shortPnt = parseInt(isNull($("#shortPnt").val()) ? 0 : $("#shortPnt").val());       
 		desCnt   = parseInt(isNull($("#desCnt").val()) ? 0 : $("#desCnt").val());           
 		desPnt   = parseInt(isNull($("#desPnt").val()) ? 0 : $("#desPnt").val()); 
+		divPnt   = parseInt(isNull($("#divPnt").val()) ? 0 : $("#divPnt").val()); 
 		
 		$("#selSum").val(selCnt * selPnt);
 		$("#shortSum").val(shortCnt * shortPnt);
 		$("#desSum").val(desCnt * desPnt);
 		
-		$("#examRateTotScore").val( (selCnt * selPnt) + (shortCnt * shortPnt) + (desCnt * desPnt));
+		$("#examRateTotScore").val( (selCnt * selPnt) + (shortCnt * shortPnt) + (desCnt * desPnt) + divPnt );
 		return returnFlag;	
 	}
 	
@@ -722,27 +779,109 @@
 	}
 	function examChk(){
 		var radioVal = $('input[name="semiExamYn"]:checked').val();
+		var examUseCd = $('input[name="examUseCd"]:checked').val();
 		if(radioVal == undefined){
 			radioVal = 'N'
 			$(":radio[name='semiExamYn'][value='N']").attr('checked', true);
 		}
-		examCtl(radioVal);
+		examCtl(radioVal,examUseCd);
 	}
 	
 	// 평가 유형 설정
-	function examCtl(radioVal){
+	function examCtl(radioVal,examUseCd){
 		
 		// 강좌유형 상태값 
 		switch(radioVal){
     	case "Y" : 	
+	   		$('.examOptDiv').hide();
 			$(".semiExamYn_Y").css("display", "");
+			$(".lecCntDiv").css("display", "");
 	   		$(".semiExamYn_N").css("display", "none");
+	   		$(".unitDiv").css("display", "none");
     		break;
 	   	case "N" :
-	   		$(".semiExamYn_Y").css("display", "none");
-	   		$(".semiExamYn_N").css("display", "");
+	   		$('.examOptDiv').show();
+	   		switch(examUseCd){
+		   	case "CRECRS" :
+		   		$(".semiExamYn_Y").css("display", "none");
+		   		$(".semiExamYn_N").css("display", "");
+		   		$('.examOptDiv').show();
+	    		break;
+		   	case "UNIT" : 	
+	    		$(".semiExamYn_Y").css("display", "");
+		   		$(".semiExamYn_N").css("display", "none");
+		   		$('.examOptDiv').show();
+		   		$(".lecCntDiv").css("display", "none");
+				$(".unitDiv").css("display", "");
+	    		break;
+			}		
     		break;
 		}
 	}	
+	
+	/**
+	 * 컨텐츠 목록 조회
+	 */
+	function listCnts() {
+		var f = document.examForm;
+		var crsCreCd = '${vo.crsCreCd}';
+		var sbjCd = f["sbjCd"].value;
+		var selectBox = document.getElementById("unitCd");
+		var len = selectBox.length;
+		for(var i=len ; i >= 0; i--) {
+			selectBox.options[0] = null;
+		}
+		new_option = new Option("차시를 선택하세요.", "");
+		selectBox.options.add(new_option);
+		$.getJSON( cUrl("/mng/course/createCourse/subject/listCreCnts"),		// url
+				{ 
+				  "sbjCd"	  : sbjCd,
+				  "crsCreCd"  : crsCreCd
+				},			// params
+				listCntsCallback				// callback function
+			);
+	}
+	/**
+	 * 컨텐츠 목록 조회 Callback
+	 */
+	function listCntsCallback(ProcessResultListDTO) {
+		var selectBox = document.getElementById("unitCd");
+		var len = selectBox.length;
+		var unitCd = '${vo.unitCd}';
+		var contentsList = ProcessResultListDTO.returnList;
+		for (var i=0; i<contentsList.length; i++) {
+			var item = contentsList[i];
+			new_option = new Option(item.unitNm, item.unitCd);
+			selectBox.options.add(new_option);
+			if(item.unitCd == unitCd) {
+				selectBox.options[i+1].selected = "selected";
+			}
+		}
+		
+	}
+	
+	function changeDivPnt() {
+	    var divYnCheckbox = document.getElementById('divYn');
+	    var is_checked = divYnCheckbox.checked;
+	    var selSum = parseFloat(document.getElementById("examRateTotScore").value);
+	    var divYnValue = is_checked ? "Y" : "N";
+	    var divPntValue = is_checked ? (100 - selSum) : 0;
+
+	    if (is_checked) {
+	        if (selSum === 0) {
+	            alert("문항과 배점을 지정 후 선택가능합니다.");
+	            divYnCheckbox.checked = false;
+	            return;
+	        } else if (selSum === 100) {
+	            alert("총합이 100일 경우 선택 할 수 없습니다.");
+	            divYnCheckbox.checked = false;
+	            return;
+	        }
+	    }
+
+	    $("#divYn").val(divYnValue);
+	    $("#divPnt").val(divPntValue);
+	    getExamQstnTotScore(); 
+	}
 </script>
 

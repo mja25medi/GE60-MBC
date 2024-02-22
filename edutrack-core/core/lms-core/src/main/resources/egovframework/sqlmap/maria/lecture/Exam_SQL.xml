@@ -49,6 +49,8 @@
 		      , A.SHORT_PNT
 		      , A.DES_CNT
 		      , A.DES_PNT
+		      , A.DIV_YN
+		      , A.DIV_PNT
 		      , A.REG_YN  
 		      , A.REG_NO  
 		      , A.REG_DTTM  
@@ -145,6 +147,8 @@
 		      , A.SHORT_PNT
 		      , A.DES_CNT
 		      , A.DES_PNT
+		      , A.DIV_YN
+		      , A.DIV_PNT
 		      , A.REG_YN  
 		      , A.REG_NO  
 		      , A.REG_DTTM  
@@ -247,6 +251,8 @@
 		      , A.SHORT_PNT
 		      , A.DES_CNT
 		      , A.DES_PNT
+		      , A.DIV_YN
+		      , A.DIV_PNT
 		      , IFNULL(( SELECT COUNT(STARE_CNT)  
 		          		FROM tb_lec_exam_stare  
 		          	   WHERE CRS_CRE_CD = A.CRS_CRE_CD  
@@ -276,7 +282,7 @@
 		      , A.EXAM_SN  
 		      , A.EXAM_TITLE  
 		      , A.EXAM_CTS  
-		      , A.SEM_EXAM_YN
+		      , A.SEMI_EXAM_YN
 		      , A.RSLT_CFRM_DTTM  
 		      , A.SEMI_EXAM_YN 
 		      , IFNULL(FN_GET_NULL(B.STARE_CNT),0) AS STARE_CNT   
@@ -345,6 +351,8 @@
 		      , SHORT_PNT
 		      , DES_CNT
 		      , DES_PNT
+		      , DIV_YN
+		      , DIV_PNT
 		      , REG_YN  
 		      , REG_NO  
 		      , REG_DTTM  
@@ -377,6 +385,8 @@
 		      , #{shortPnt}
 		      , #{desCnt  }
 		      , #{desPnt  }
+		      , #{divYn  }
+		      , #{divPnt  }
 		      , #{regYn}  
 		      , #{regNo}  
 		      , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
@@ -412,6 +422,8 @@
 			  , SHORT_PNT  = #{shortPnt}  
 			  , DES_CNT    = #{desCnt  }  
 			  , DES_PNT    = #{desPnt  }  
+			  , DIV_YN     = #{divYn  }  
+			  , DIV_PNT    = #{divPnt  }  
 		      , REG_YN = #{regYn}  
 		      , MOD_NO = #{modNo}  
 		      , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 

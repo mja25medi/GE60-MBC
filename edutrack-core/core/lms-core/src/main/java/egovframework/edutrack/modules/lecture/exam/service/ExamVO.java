@@ -77,6 +77,8 @@ public class ExamVO
 	private int shortPnt;//단답형 배점
 	private int desCnt  ;//서술형 문항수
 	private int desPnt  ;//서술형 배점
+	private int divPnt  ;//나머지 배점
+	private String	divYn;
 	
 	private String[] stdNoObjArr;
 
@@ -100,9 +102,14 @@ public class ExamVO
 		return desCnt * desPnt;
 	}
 	
+	//나머지 배점
+	public int getCalCulateDivScore() {
+		return divPnt;
+	}
+	
 	//시험 배점 총합 = (선택형 문항수 * 배점) + (단답형 문항수 * 배점) + (서술형 문항수 * 배점)
 	public int getCalCulateTotScore() {
-		return getCalCulateSelScore() + getCalCulateShortScore() + getCalCulateDesScore();
+		return getCalCulateSelScore() + getCalCulateShortScore() + getCalCulateDesScore() + getCalCulateDivScore(); 
 	}
 	
 	//시험 배점 총합 100점이면 true, 아니면 false
@@ -850,6 +857,22 @@ public class ExamVO
 
 	public void setExamUseCd(String examUseCd) {
 		this.examUseCd = examUseCd;
+	}
+
+	public int getDivPnt() {
+		return divPnt;
+	}
+
+	public void setDivPnt(int divPnt) {
+		this.divPnt = divPnt;
+	}
+
+	public String getDivYn() {
+		return divYn;
+	}
+
+	public void setDivYn(String divYn) {
+		this.divYn = divYn;
 	}
 
 }

@@ -295,11 +295,14 @@
 				return false;	
 			}
 			
+			onunloadFunction();
+			
 			var sbjCd = '${contentsVO.sbjCd}';
 			location.href = "/lec/bookmark/viewContents"+"?sbjCd="+sbjCd+"&unitCd="+unitCd+"&deviceType=${param.deviceType}&browserType=${param.browserType}";
 		}
 		
 		function goList(url){
+			onunloadFunction();
 			opener.location.href = url;
 			self.close();
 		}

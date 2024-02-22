@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -24,6 +25,9 @@ import egovframework.edutrack.modules.course.attendance.service.AttendanceServic
 import egovframework.edutrack.modules.course.attendance.service.AttendanceVO;
 import egovframework.edutrack.modules.course.createcourse.service.CreateCourseService;
 import egovframework.edutrack.modules.course.createcourse.service.CreateCourseVO;
+import egovframework.edutrack.modules.lecture.bookmark.service.BookmarkVO;
+import egovframework.edutrack.modules.student.result.service.EduResultService;
+import egovframework.edutrack.modules.student.result.service.EduResultVO;
 import egovframework.edutrack.modules.user.info.service.UsrUserInfoService;
 import egovframework.edutrack.modules.user.info.service.UsrUserInfoVO;
 
@@ -40,6 +44,9 @@ public class UserAttendController extends GenericController {
 	
 	@Autowired @Qualifier("attendanceService")
 	private AttendanceService	attendanceService;
+	
+	@Resource
+	private EduResultService eduResultService;
 	
 	/**
 	 * 출석하기(입실)
@@ -94,6 +101,17 @@ public class UserAttendController extends GenericController {
 			}
 		} else {
 			resultVO = attendanceService.enterClass(vo);
+			
+			//-- 자동 성적 처리 :
+			EduResultVO eduResultVO = new EduResultVO();
+			eduResultVO.setCrsCreCd(crsCreCd);
+			eduResultVO.setStdNo(stdNo);
+
+			BookmarkVO iBookmarkVO = new BookmarkVO();
+			iBookmarkVO.setScoreCategory("BOOKMARK");
+			iBookmarkVO.setScoreSaveType("START");
+
+			eduResultService.addEduResultSp(eduResultVO, iBookmarkVO);
 		}
 		
 		return "home/lecture/attend/view_qr_pop";
@@ -143,14 +161,25 @@ public class UserAttendController extends GenericController {
 		//qr번호 체크
 		if(!qrNum.equals("")){
 			if(qrNum.equals(ccvo.getCrsCreQrOutNo())) {
-				resultVO = attendanceService.enterClass(vo);
+				resultVO = attendanceService.quitClass(vo);
 			} else {
 				resultVO.setMessage("퇴실 번호가 일치하지 않습니다.");
 				resultVO.setResult(-1);
 				return JsonUtil.responseJson(response, resultVO);
 			}
 		} else {
-			resultVO = attendanceService.enterClass(vo);
+			resultVO = attendanceService.quitClass(vo);
+			
+			//-- 자동 성적 처리 :
+			EduResultVO eduResultVO = new EduResultVO();
+			eduResultVO.setCrsCreCd(crsCreCd);
+			eduResultVO.setStdNo(stdNo);
+
+			BookmarkVO iBookmarkVO = new BookmarkVO();
+			iBookmarkVO.setScoreCategory("BOOKMARK");
+			iBookmarkVO.setScoreSaveType("START");
+
+			eduResultService.addEduResultSp(eduResultVO, iBookmarkVO);
 		}
 		
 		return "home/lecture/attend/view_qr_pop";
@@ -219,6 +248,17 @@ public class UserAttendController extends GenericController {
 		}
 		
 		resultVO = attendanceService.leftClass(vo, leftTime);
+		
+		//-- 자동 성적 처리 :
+		EduResultVO eduResultVO = new EduResultVO();
+		eduResultVO.setCrsCreCd(crsCreCd);
+		eduResultVO.setStdNo(stdNo);
+
+		BookmarkVO iBookmarkVO = new BookmarkVO();
+		iBookmarkVO.setScoreCategory("BOOKMARK");
+		iBookmarkVO.setScoreSaveType("START");
+
+		eduResultService.addEduResultSp(eduResultVO, iBookmarkVO);
 		
 		return "home/lecture/attend/view_qr_pop";
 	}

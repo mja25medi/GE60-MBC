@@ -101,14 +101,14 @@
 					- IF(IF(max(A.col_2_1) = 'S' or max(A.col_2_1) = '-', 1, 0) + IF(max(A.col_2_2) = 'S' or max(A.col_2_2) = '-', 1, 0) + IF(max(A.col_2_3) = 'S' or max(A.col_2_3) = '-', 1, 0) + IF(max(A.col_2_4) = 'S' or max(A.col_2_4) = '-', 1, 0) + IF(max(A.col_2_5) = 'S' or max(A.col_2_5) = '-', 1, 0) + IF(max(A.col_2_6) = 'S' or max(A.col_2_6) = '-', 1, 0) + IF(max(A.col_2_7) = 'S' or max(A.col_2_7) = '-', 1, 0) + IF(max(A.col_2_8) = 'S' or max(A.col_2_8) = '-', 1, 0) < 4, 1, 0)
 					- IF(IF(max(A.col_3_1) = 'S' or max(A.col_3_1) = '-', 1, 0) + IF(max(A.col_3_2) = 'S' or max(A.col_3_2) = '-', 1, 0) + IF(max(A.col_3_3) = 'S' or max(A.col_3_3) = '-', 1, 0) + IF(max(A.col_3_4) = 'S' or max(A.col_3_4) = '-', 1, 0) + IF(max(A.col_3_5) = 'S' or max(A.col_3_5) = '-', 1, 0) + IF(max(A.col_3_6) = 'S' or max(A.col_3_6) = '-', 1, 0) + IF(max(A.col_3_7) = 'S' or max(A.col_3_7) = '-', 1, 0) + IF(max(A.col_3_8) = 'S' or max(A.col_3_8) = '-', 1, 0) < 4, 1, 0)
 					- IF(IF(max(A.col_4_1) = 'S' or max(A.col_4_1) = '-', 1, 0) + IF(max(A.col_4_2) = 'S' or max(A.col_4_2) = '-', 1, 0) + IF(max(A.col_4_3) = 'S' or max(A.col_4_3) = '-', 1, 0) + IF(max(A.col_4_4) = 'S' or max(A.col_4_4) = '-', 1, 0) + IF(max(A.col_4_5) = 'S' or max(A.col_4_5) = '-', 1, 0) + IF(max(A.col_4_6) = 'S' or max(A.col_4_6) = '-', 1, 0) + IF(max(A.col_4_7) = 'S' or max(A.col_4_7) = '-', 1, 0) + IF(max(A.col_4_8) = 'S' or max(A.col_4_8) = '-', 1, 0) < 4, 1, 0)
-					- A.absentDay - truncate(((A.lateDay + A.leftDay + A.outDay)/3), 0)) < 0, 0, 
+					- A.absentDay, 0)) < 0, 0, 
 					(A.realDay 
 					- IF(IF(max(A.col_0_1) = 'S' or max(A.col_0_1) = '-', 1, 0) + IF(max(A.col_0_2) = 'S' or max(A.col_0_2) = '-', 1, 0) + IF(max(A.col_0_3) = 'S' or max(A.col_0_3) = '-', 1, 0) + IF(max(A.col_0_4) = 'S' or max(A.col_0_4) = '-', 1, 0) + IF(max(A.col_0_5) = 'S' or max(A.col_0_5) = '-', 1, 0) + IF(max(A.col_0_6) = 'S' or max(A.col_0_6) = '-', 1, 0) + IF(max(A.col_0_7) = 'S' or max(A.col_0_7) = '-', 1, 0) + IF(max(A.col_0_8) = 'S' or max(A.col_0_8) = '-', 1, 0) < 4, 1, 0) 
 					- IF(IF(max(A.col_1_1) = 'S' or max(A.col_1_1) = '-', 1, 0) + IF(max(A.col_1_2) = 'S' or max(A.col_1_2) = '-', 1, 0) + IF(max(A.col_1_3) = 'S' or max(A.col_1_3) = '-', 1, 0) + IF(max(A.col_1_4) = 'S' or max(A.col_1_4) = '-', 1, 0) + IF(max(A.col_1_5) = 'S' or max(A.col_1_5) = '-', 1, 0) + IF(max(A.col_1_6) = 'S' or max(A.col_1_6) = '-', 1, 0) + IF(max(A.col_1_7) = 'S' or max(A.col_1_7) = '-', 1, 0) + IF(max(A.col_1_8) = 'S' or max(A.col_1_8) = '-', 1, 0) < 4, 1, 0)
 					- IF(IF(max(A.col_2_1) = 'S' or max(A.col_2_1) = '-', 1, 0) + IF(max(A.col_2_2) = 'S' or max(A.col_2_2) = '-', 1, 0) + IF(max(A.col_2_3) = 'S' or max(A.col_2_3) = '-', 1, 0) + IF(max(A.col_2_4) = 'S' or max(A.col_2_4) = '-', 1, 0) + IF(max(A.col_2_5) = 'S' or max(A.col_2_5) = '-', 1, 0) + IF(max(A.col_2_6) = 'S' or max(A.col_2_6) = '-', 1, 0) + IF(max(A.col_2_7) = 'S' or max(A.col_2_7) = '-', 1, 0) + IF(max(A.col_2_8) = 'S' or max(A.col_2_8) = '-', 1, 0) < 4, 1, 0)
 					- IF(IF(max(A.col_3_1) = 'S' or max(A.col_3_1) = '-', 1, 0) + IF(max(A.col_3_2) = 'S' or max(A.col_3_2) = '-', 1, 0) + IF(max(A.col_3_3) = 'S' or max(A.col_3_3) = '-', 1, 0) + IF(max(A.col_3_4) = 'S' or max(A.col_3_4) = '-', 1, 0) + IF(max(A.col_3_5) = 'S' or max(A.col_3_5) = '-', 1, 0) + IF(max(A.col_3_6) = 'S' or max(A.col_3_6) = '-', 1, 0) + IF(max(A.col_3_7) = 'S' or max(A.col_3_7) = '-', 1, 0) + IF(max(A.col_3_8) = 'S' or max(A.col_3_8) = '-', 1, 0) < 4, 1, 0)
 					- IF(IF(max(A.col_4_1) = 'S' or max(A.col_4_1) = '-', 1, 0) + IF(max(A.col_4_2) = 'S' or max(A.col_4_2) = '-', 1, 0) + IF(max(A.col_4_3) = 'S' or max(A.col_4_3) = '-', 1, 0) + IF(max(A.col_4_4) = 'S' or max(A.col_4_4) = '-', 1, 0) + IF(max(A.col_4_5) = 'S' or max(A.col_4_5) = '-', 1, 0) + IF(max(A.col_4_6) = 'S' or max(A.col_4_6) = '-', 1, 0) + IF(max(A.col_4_7) = 'S' or max(A.col_4_7) = '-', 1, 0) + IF(max(A.col_4_8) = 'S' or max(A.col_4_8) = '-', 1, 0) < 4, 1, 0)
-					- A.absentDay - truncate(((A.lateDay + A.leftDay + A.outDay)/3), 0))) as realDay,
+					- A.absentDay, 0))) as realDay,
 			       A.absentDay,
 			       A.lateDay,
 			       A.leftDay,
@@ -172,6 +172,7 @@
 			              AND DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = DATE_FORMAT(C.ATTEND_DTTM,'%Y%m%d')
 			              AND D.USER_NO = A.USER_NO 
 			        WHERE A.CRS_CRE_CD = #{crsCreCd}
+			         AND A.ENRL_STS IN ('S', 'C', 'F')
 			          GROUP BY B.USER_NO , 
 			              B.USER_NM , 
 			              C.ATTEND_DTTM  

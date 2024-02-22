@@ -38,7 +38,7 @@ include file="/WEB-INF/jsp/common/page_init.jsp" %>
 	String tarYear = StringUtil.nvl(request.getParameter("tarYear"),DateTimeUtil.getYear());
 	Map<String, Object> userInfo = new Hashtable<String, Object>();
 	//-- 학습중인과정, 준비중인 과정 목록 가져오기
-	System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> user type : "+userType);
+	//System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> user type : "+userType);
 	if(userType.contains("TEACHER") || userType.contains("TUTOR")) {
 		//-- 강사나 투터의 경우 운영중인 과정
 		userInfo.put("userNo", UserBroker.getUserNo(request));
@@ -109,7 +109,7 @@ include file="/WEB-INF/jsp/common/page_init.jsp" %>
 			            		<li <c:if test="${chkedmenu1 eq item.menuCd }">class="on"</c:if>><a href="${linkUrl }"><img src="/tpl/003/img/class/icon_${item.leftMenuImg}.svg" alt="icon" />${menuName1 }</a></li>
 			            	</c:if>
 			            	<c:if test="${not empty item.subList}">
-			            		<li><a href="#0"><img src="/tpl/003/img/class/icon_${item.leftMenuImg}.svg" alt="icon" />${menuName1 }<i class="xi-angle-down-min" aria-hidden="true"></i></a>
+			            		<li <c:if test="${fn:contains(item.subList, chkedmenu1)}">class="on"</c:if>><a href="#0"><img src="/tpl/003/img/class/icon_${item.leftMenuImg}.svg" alt="icon" />${menuName1 }<i class="xi-angle-down-min" aria-hidden="true"></i></a>
 					                <ul class="sub">
 										<c:forEach items="${item.subList}" var="item1">
 											<c:set var="menuName2" value="${item1.menuNm}"/>

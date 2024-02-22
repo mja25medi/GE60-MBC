@@ -38,7 +38,7 @@
                     		
                     		<!-- 순차/랜덤 학습 변수 -->
 							<c:set var="btnDisabled" value=""/>
-                    		<c:if test="${status.count ne '0' and beforePrgr < 100 and sbjVO.studyMthd eq 'SE' and contentsCnt > 0}">
+                    		<c:if test="${status.count ne '0' and beforePrgr < 100 and sbjVO.studyMthd eq 'SE' and contentsCnt > 0 and sbjVO.sbjType eq 'ON'}">
                     			<c:set var="btnDisabled" value="disabled"/>	
                     		</c:if>
                     		

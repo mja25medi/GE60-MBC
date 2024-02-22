@@ -1,9 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@include file="/WEB-INF/jsp/common/page_init.jsp" %>
+<fmt:formatDate value="${nowTime}" pattern="HHmmss" var="currentTime" />
 
 <%
 	String authGrpCd = UserBroker.getClassUserType(request);
 	request.setAttribute("authGrpCd", authGrpCd);
+	String redisYn = Constants.REDIS_CHECK_YN;
+	request.setAttribute("redisYn", redisYn);
 %>
                     <div class="course_info">
                         <label class="category">${courseVO.crsCtgrNm }</label>
@@ -14,15 +17,15 @@
 	                              	  <button type="button" class="btn type6" onclick="resHelp()" style="display: none;" id="resHelp">코딩실습 도움주기</button>
 	                              </c:if>
 	                              <c:if test="${authGrpCd ne 'TCH'}">
-		                            <c:if test="${createCourseVO.creTypeCd eq 'OF' or createCourseVO.creTypeCd eq 'BL' }">
-			                            <c:if test="${attendanceVO.enterFlag ne 'E'}">
-	                                    	<button type="button" class="btn type3" onclick="enterClass()">출석하기</button>
-	                                    </c:if>
-	                                    <c:if test="${attendanceVO.enterFlag eq 'E'}">
-		                                    <button type="button" id="quitBtn" class="btn type3" onclick="quitClass()" style="display: none;">퇴실하기</button>
-		                                    <button type="button" class="btn type3" onclick="classOutingCheck()">외출/조퇴하기</button>
-	                                    </c:if>
-	                                </c:if>
+		                            <c:if test="${(createCourseVO.creTypeCd eq 'OF' or createCourseVO.creTypeCd eq 'BL') && nowDate >= createCourseVO.enrlStartDttm && nowDate <= createCourseVO.enrlEndDttm}">
+						                 <c:if test="${attendanceVO.enterFlag ne 'E'}">
+				                         	<button type="button" class="btn type3" onclick="enterClass()">출석하기</button>
+				                         </c:if>
+				                         <c:if test="${attendanceVO.enterFlag eq 'E' }">
+				                         	 	<button type="button" id="quitBtn" class="btn type3" onclick="quitClass()" style="display: none;">퇴실하기</button>
+				                         	 	<button type="button" id="outBtn" class="btn type3" onclick="classOutingCheck()">외출/조퇴하기</button>
+				                         </c:if>
+					                 </c:if>
                                 </c:if>
                             </div>
                             <ul>
@@ -45,7 +48,9 @@
                     
                     $(document).ready(function() {
                     	callRedis();
+                    	<%if("Y".equals(redisYn)){%>
                     	setInterval(callRedis, 3000);
+                    	<%}%>
                     	clock();
                         setInterval(clock, 60000); 
                     });
@@ -105,6 +110,7 @@
                         let M = today.getMinutes();
                         let S = today.getSeconds();
 						if(H>=18 && M>=0) {
+							$('#outBtn').hide();
 							$('#quitBtn').show();
 						}
                     }
@@ -132,7 +138,7 @@
                	 						$("#resHelp").show();
                	 					}
                	 				}
-               	 			);
+           	 			);
                	 	}
                     </script>
 
