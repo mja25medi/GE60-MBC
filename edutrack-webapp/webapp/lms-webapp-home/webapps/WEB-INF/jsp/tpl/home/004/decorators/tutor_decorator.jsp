@@ -7,7 +7,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>${USER_DOMAINNM }</title>
+    <title>스마트인재개발원</title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <meta name="description" content="페이지 설명">
     <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/tpl/${COLOR_TPL}/img/common/apple-touch-icon-57x57.png">
@@ -39,20 +39,40 @@
 	<script src="/js/nuguya/nice.nuguya.oivs.util.js"></script>
 
 
-     <!-- Summernote Editor -->
-    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/summernote-lite.css" />
-    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/plugin/math/katex.min.css" />
-    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/css/emoji.css" />
-
-	<!-- Summernote Editor -->
-    <script src="/tpl/${COLOR_TPL}/js/summernote/summernote-lite.js"></script>
-    <script src="/tpl/${COLOR_TPL}/js/summernote/lang/summernote-ko-KR.js"></script>
-    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/math/katex.min.js"></script>
-    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/math/summernote-math.js"></script>
-    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/js/config.js"></script>
-    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/js/tam-emoji.js"></script>
-	<script src="/tpl/${COLOR_TPL}/js/summernote/plugin/uploadcare.js"></script>
- 
+    <c:if test="${not empty summernote}">
+	    <!-- jQuery	-->
+		<meditag:js src="/js/jquery/jquery-1.11.1.min.js"/>
+		<meditag:js src="/js/jquery/jquery-ui-1.11.0.custom/jquery-ui.min.js"/>
+		<meditag:js src="/js/jquery/jquery-custom/jquery.input-1.0.js"/>
+		<meditag:js src="/js/jquery/jquery.ui.touch-punch.min.js"/>
+		
+		
+	
+		<link rel="stylesheet" href="/tpl/002/css/summernote.min.css" />	
+		<!-- include libraries(jQuery, bootstrap, fontawesome) -->
+		<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+		<!-- include summernote css/js-->
+		<meditag:css href="libs/summernote/summernote.css"/>
+		<meditag:css href="css/summernote_custom.css"/>
+		<meditag:js src="/libs/summernote/summernote.js"/>
+		<meditag:js src="/libs/summernote/lang/summernote-ko-KR.js"/>
+		<meditag:js src="/libs/summernote/lang/summernote-ja-JP.js"/>
+		<meditag:js src="/js/common_summernote.js"/>
+		<!-- Bootstrap 3.3.6 -->
+		<script src="${CONTEXT_ROOT }/libs/admin-lte/bootstrap/js/bootstrap.min.js"></script>
+		<!-- FastClick -->
+		<script src="${CONTEXT_ROOT }/libs/admin-lte/plugins/fastclick/fastclick.js"></script>
+		<!-- AdminLTE App -->
+		<script src="${CONTEXT_ROOT }/libs/admin-lte/dist/js/app.min.js"></script>
+		<!-- SlimScroll 1.3.0 -->
+		<script src="${CONTEXT_ROOT }/libs/admin-lte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+		<meditag:js src="/libs/admin-lte/plugins/flot/excanvas.min.js"/>
+		<meditag:js src="/libs/admin-lte/plugins/flot/jquery.flot.js"/>
+		<meditag:js src="/libs/admin-lte/plugins/flot/jquery.flot.pie.js"/>
+		<meditag:js src="/libs/admin-lte/plugins/flot/jquery.flot.resize.js"/>
+		<meditag:js src="/libs/admin-lte/plugins/flot/jquery.flot.time.js"/>
+		<meditag:js src="/libs/admin-lte/plugins/flot/jquery.flot.tooltip.min.js"/>
+	</c:if>
 	
     <c:if test="${not empty fileupload}">
 		<meditag:js src="/js/jquery/jquery-fileupload/vendor/jquery.ui.widget.js"/>

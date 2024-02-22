@@ -6,7 +6,7 @@
 <html lang="ko">
 	<head>
 	    <meta charset="utf-8">
-	    <title>${USER_DOMAINNM }</title>
+	    <title>스마트인재개발원</title>
 	    <meta name="viewport" content="width=device-width,initial-scale=1.0">
 	    <meta name="description" content="페이지 설명">
 	    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/tpl/${COLOR_TPL}/img/common/apple-touch-icon-57x57.png">
@@ -39,8 +39,24 @@
 		<script src="/tpl/002/js/jquery/jquery.min.js"></script>
 		<script src="/tpl/002/js/jquery/jquery-ui.min.js"></script>
 
-    <!-- Summernote Editor -->
-    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/summernote-lite.css" />
+    <c:if test="${not empty summernote}">
+<%--  	   <link href="/libs/bootstrap-3.3.5/css/bootstrap.css" rel="stylesheet">
+       <script src="/libs/bootstrap-3.3.5/js/bootstrap.js"></script>
+	    <!-- jQuery	-->
+		<meditag:js src="/js/jquery/jquery-ui-1.11.0.custom/jquery-ui.min.js"/>
+		<meditag:js src="/js/jquery/jquery-custom/jquery.input-1.0.js"/>
+		<meditag:js src="/js/jquery/jquery.ui.touch-punch.min.js"/>
+	
+		<link rel="stylesheet" href="/tpl/002/css/summernote.min.css" />	
+		<!-- include summernote css/js-->
+		<meditag:css href="libs/summernote/summernote.css"/>
+		<meditag:css href="css/summernote_custom.css"/>
+		<meditag:js src="/libs/summernote/summernote.js"/>
+		<meditag:js src="/libs/summernote/lang/summernote-ko-KR.js"/>
+		<meditag:js src="/libs/summernote/lang/summernote-ja-JP.js"/> --%>
+		<meditag:js src="/js/common_summernote.js"/>
+		
+		 <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/summernote-lite.css" />
     <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/plugin/math/katex.min.css" />
     <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/css/emoji.css" />
 
@@ -52,7 +68,7 @@
     <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/js/config.js"></script>
     <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/js/tam-emoji.js"></script>
 	<script src="/tpl/${COLOR_TPL}/js/summernote/plugin/uploadcare.js"></script>
-
+	</c:if>
 	
     <c:if test="${not empty fileupload}">
 		<meditag:js src="/js/jquery/jquery-fileupload/vendor/jquery.ui.widget.js"/>
