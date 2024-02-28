@@ -253,6 +253,7 @@ public class BrdBbsHomeController extends GenericController {
 			parent.setAtclSn(vo.getParAtclSn());
 			parent = brdBbsAtclService.viewAtcl(parent);
 			vo.setAtclTitle("["+getMessage(request, "common.title.reply")+"] " + parent.getAtclTitle());
+			vo.setAtclLvl(parent.getAtclLvl()+1);
 			vo.setBbsCd(parent.getBbsCd());
 			//dto.setAtclSn(null);
 			request.setAttribute("gubun", "AR");

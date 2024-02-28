@@ -62,7 +62,8 @@
 				</c:forEach>
 			</td>
 		</tr>
-		<tr style="display:none;">
+		<!-- <tr style="display:none;"> -->
+		<tr>
 			<th scope="row"><spring:message code="board.title.bbs.info.reply.useyn"/></th>
 			<td>
 				<label style="font-weight: normal;">
@@ -120,7 +121,8 @@
 				</label>
 			</td>
 		</tr>
-		<tr style="display:none;">
+		<!-- <tr style="display:none;"> -->
+		<tr>
 			<th scope="row"><spring:message code="board.title.bbs.info.editor.useyn"/></th>
 			<td>
 				<label style="font-weight:normal;">

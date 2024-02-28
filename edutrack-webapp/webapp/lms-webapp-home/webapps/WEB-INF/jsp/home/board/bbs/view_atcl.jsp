@@ -109,7 +109,11 @@ function formatSizeUnits(bytes){
 					</div>
 				</c:if> 
 				</div>
-
+                     <c:if test="${bbsInfoVO.writeUseYn eq 'Y'}">
+	                     <c:if test="${bbsInfoVO.ansrUseYn eq 'Y' && not empty sessionScope.USERNO}">
+	                    	 <a href="<c:url value="/home/brd/bbs/addFormAtclMain"/>?searchKey=${vo.searchKey}&amp;searchValue=${vo.searchValue}&amp;bbsCd=${vo.bbsCd}&amp;pageIndex=${vo.pageIndex}&amp;parAtclSn=${vo.atclSn}" class="btn btn-info btn-sm"><spring:message code="button.reply"/></a>
+	                     </c:if>
+                     </c:if>
                     <div class="btn_area">
                         <button type="button" onclick="listAtcl();" class="btn gray2">목록</button>
 					<c:if test = "${vo.regNo eq sessionScope.USERNO }">
@@ -155,7 +159,7 @@ function formatSizeUnits(bytes){
 		
 		/** 답변 등록 화면으로 이동 */
 		function addFormAtcl(){
-			var url = "/home/brd/bbs/addFormAtcl&searchKey=${vo.searchKey}&searchValue=${vo.searchValue}&bbsCd=${vo.bbsCd}&pageIndex=${vo.pageIndex}&parAtclSn=${vo.atclSn}";
+			var url = "/home/brd/bbs/addFormAtclMain&searchKey=${vo.searchKey}&searchValue=${vo.searchValue}&bbsCd=${vo.bbsCd}&pageIndex=${vo.pageIndex}&parAtclSn=${vo.atclSn}";
 			document.location.href = url;	
 		}
 		

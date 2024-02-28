@@ -87,9 +87,9 @@
 									</table>
 				
 									<div class="text-right" style="margin-bottom:10px;">
-				<%-- 						<c:if test="${bbsInfoVO.ansrUseYn eq 'Y'}">
+										<c:if test="${bbsInfoVO.ansrUseYn eq 'Y'}">
 										<a href="/mng/brd/bbs/addFormAtclMain?searchKey=${vo.searchKey}&amp;searchValue=${vo.searchValue}&amp;bbsCd=${vo.bbsCd}&amp;pageIndex=${vo.pageIndex}&amp;parAtclSn=${vo.atclSn}" class="btn btn-primary btn-sm"><spring:message code="button.reply"/> </a>
-										</c:if>--%>
+										</c:if>
 										<a href="/mng/brd/bbs/editFormAtclMain?searchKey=${vo.searchKey}&amp;searchValue=${vo.searchValue}&amp;bbsCd=${vo.bbsCd}&amp;pageIndex=${vo.pageIndex}&amp;atclSn=${vo.atclSn}" class="btn btn-primary btn-sm"><spring:message code="button.edit"/> </a>
 										<a href="javascript:deleteAtcl('${vo.atclSn }');" class="btn btn-warning btn-sm"><spring:message code="button.delete"/> </a>
 										<a href="/mng/brd/bbs/listAtclMain?searchKey=${vo.searchKey}&amp;searchValue=${vo.searchValue}&amp;bbsCd=${vo.bbsCd}&amp;pageIndex=${vo.pageIndex}" class="btn btn-default btn-sm"><spring:message code="button.list"/> </a>

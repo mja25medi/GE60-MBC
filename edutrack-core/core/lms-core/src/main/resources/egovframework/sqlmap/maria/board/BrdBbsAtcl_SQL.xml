@@ -197,10 +197,32 @@
 			 SQL ID : listPageing
 			 설  명 : 게시판 게시물의 페이징 목록
 	 	*/
+	 	WITH RECURSIVE CTE AS (
+		    SELECT
+		     ATCL_SN , CAST(ATCL_SN AS CHAR(200)) AS PATH
+		     , ATCL_SN AS GROUP_NO
+		    FROM TB_BRD_BBS_ATCL
+			<include refid="selectWhereQuery"/>
+			AND PAR_ATCL_SN IS NULL
+			<include refid="selectListWhereQuery"/>
+		    UNION ALL
+		    SELECT
+		       A.ATCL_SN, CONCAT(CTE.path,',',A.ATCL_SN) as path
+		       , SUBSTRING_INDEX(CTE.path,',',1) AS GROUP_NO
+		    FROM TB_BRD_BBS_ATCL A
+		    inner join CTE on A.PAR_ATCL_SN = CTE.ATCL_SN
+			<include refid="selectWhereQuery"/>
+			<include refid="selectListWhereQuery"/>
+		)
 	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
-		<include refid="listQuery"/>
+		<!-- <include refid="listQuery"/> -->
+		SELECT
+			B.PATH, B.GROUP_NO, 
+		<include refid="selectColumnQuery"/>
+		FROM tb_brd_bbs_atcl A, CTE B
+		WHERE A.ATCL_SN = B.ATCL_SN
 		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
-		ORDER BY ATCLSN DESC
+		ORDER BY GROUP_NO DESC, PATH
 	 	<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
 	</select>
 	
@@ -449,7 +471,7 @@
 	 	*/
 		WITH RECURSIVE CTE AS (
 		    SELECT
-		     ATCL_SN , ATCL_SN AS PATH
+		     ATCL_SN , CAST(ATCL_SN AS CHAR(200)) AS PATH
 		    FROM tb_brd_bbs_atcl
 			<include refid="selectWhereQuery"/>
 			AND PAR_ATCL_SN IS NULL

@@ -75,11 +75,12 @@
 									<td class="title">
 									<meditag:reply level="${item.atclLvl}"/>
 										<a href="javascript:readAtcl('${item.atclSn}','${item.lockYn }','${item.originRegNo }', '${item.regNo }','${item.parRegNo }' )">
-											${item.atclTitle}
+											<c:if test="${not empty item.headNm}">[${item.headNm}] </c:if>${item.atclTitle}
 											<c:if test="${item.recently eq 'NEW' }">
 												<i class="xi-new"></i><span class="sr-only">새글</span>
 											</c:if>
 										</a>
+										<c:if test="${item.cmntCnt > 0}">[${item.cmntCnt}]</c:if>
 									</td>
 									<c:if test="${vo.bbsCd eq 'REVIEW'}">
 										<td class="m_hidden">
