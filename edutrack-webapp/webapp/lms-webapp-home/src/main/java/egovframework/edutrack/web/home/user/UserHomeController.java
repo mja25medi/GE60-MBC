@@ -728,7 +728,7 @@ public class UserHomeController extends GenericController {
 			}
 		}
 		
-		if("N".equals(uuivo.getPhoneVeriYn())) {
+		if("N".equals(uuivo.getPhoneVeriYn()) && "N".equals(uuivo.getExceptYn())) {	//예외 아이디 체크가 되어 있을 경우, 본인인증 확인 제외
 			request.getSession().setAttribute("verifiedId", "false");
 		}
 		

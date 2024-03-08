@@ -381,9 +381,9 @@
 		$('.inputNumber').inputNumber();	// 숫자만 입력되도록 설정.
 		$('.inputDate').inputDate();	// 날짜 형식만 입력되도록 설정.
 		//-- 텝 초기 페이지 호출
-		ItemDTO.crsCreCd = '${createCourseVO.crsCreCd}';
-		ItemDTO.crsCreNm = '${createCourseVO.crsCreNm}';
-		ItemDTO.crsOperMthd = '${courseVO.crsOperMthd}';
+		ItemDTO.crsCreCd = "${createCourseVO.crsCreCd}";
+		ItemDTO.crsCreNm = "${createCourseVO.crsCreNm}";
+		ItemDTO.crsOperMthd = "${courseVO.crsOperMthd}";
 
 		chgNopLimitYn();
 		if(ItemDTO.crsOperMthd == 'ON') {

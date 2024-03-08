@@ -86,9 +86,9 @@
 	$(document).ready(function() {
 		$('.inputNumber').inputNumber();	// 숫자만 입력되도록 설정.
 		//-- 텝 초기 페이지 호출
-		ItemDTO.crsCd = '${courseVO.crsCd}';
-		ItemDTO.crsCreCd = '${createCourseVO.crsCreCd}';
-		ItemDTO.crsCreNm = '${createCourseVO.crsCreNm}';
+		ItemDTO.crsCd = "${courseVO.crsCd}";
+		ItemDTO.crsCreCd = "${createCourseVO.crsCreCd}";
+		ItemDTO.crsCreNm = "${createCourseVO.crsCreNm}";
 
 		$('#tabMenuOper a').click(function (e) {
 			  $(this).tab('show');

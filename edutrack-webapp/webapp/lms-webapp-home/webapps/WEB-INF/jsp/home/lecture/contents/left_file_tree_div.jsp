@@ -356,10 +356,10 @@
 										return;
 									}
 
-									if($('#contentsWriteForm').attr('style').indexOf("none") > 0 ){
+/* 									if($('#contentsWriteForm').attr('style').indexOf("none") > 0 ){
 										alert("<spring:message code="course.message.contents.alert.msg3"/>");
 										return;
-									}
+									} */
 
 									$("#contentsForm").find('input[name="unitNm"]').val(ItemDTO.fileName);
 									$("#contentsForm").find('input[name="unitFilePath"]').val("/contents/${ORGCD}/"+ItemDTO.fileDir+"/"+ItemDTO.fileName);

@@ -31,12 +31,12 @@
                             ${vo.unitNm }</span></li>
                             <li><strong>작성일시</strong><span><meditag:dateformat type="1" delimeter="." property="${vo.regDttm}"/> <meditag:dateformat type="7" delimeter="." property="${vo.regDttm}"/></span></li>
                         </ul>
-                        <div class="tb_contents">
+                        <div class="tb_contents" style="word-break : break-all">
                        		<c:if test="${vo.editorYn eq 'Y' }">
-										${vo.qnaCts}
-									</c:if>
-									<c:if test="${vo.editorYn ne 'Y' }">
-										${fn:replace(vo.qnaCts,crlf,"<br/>")}
+								${vo.qnaCts}
+							</c:if>
+							<c:if test="${vo.editorYn ne 'Y' }">
+								${fn:replace(vo.qnaCts,crlf,"<br/>")}
 							</c:if>
                         </div>
                         <c:if test="${not empty vo.attachFiles}">

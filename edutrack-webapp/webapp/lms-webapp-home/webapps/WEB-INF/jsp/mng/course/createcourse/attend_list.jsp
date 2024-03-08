@@ -44,7 +44,7 @@
                                         <div class="input-group" style="float:left;width:128px;">
                                         	<input type="text" maxlength="10" id="week-picker" class="inputDate form-control input-sm" value="${searchPeriod}" style="width: 150px;"/>
                                             <input type="hidden" maxlength="10" name="searchDate" id="searchDate" class="inputDate form-control input-sm" value="${searchDate}"/>
-                                            <span class="input-group-addon btn-sm" onclick="_clickCalendar('searchDate')" style="cursor:pointer">
+                                            <span class="input-group-addon btn-sm" onclick="weekPicker()" style="cursor:pointer">
                                                 <i class="fa fa-calendar"></i>
                                             </span>
                                             <%-- <meditag:datepicker name1="searchDate" /> --%>
@@ -712,6 +712,10 @@ $(function() {
         }
     });
 });
+
+function weekPicker(){
+    $('#week-picker').focus();
+}
 
 function applyWeeklyHighlight() {
 	$('.ui-datepicker-calendar tr').each(function() {

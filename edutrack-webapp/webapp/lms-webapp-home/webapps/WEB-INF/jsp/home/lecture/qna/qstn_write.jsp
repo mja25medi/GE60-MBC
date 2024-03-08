@@ -18,7 +18,7 @@
 				<input type="hidden" name="lecYn" value="Y" />
 				<div class="segment">
                     <div class="tstyle">
-                        <ul class="dbody">
+                        <ul class="dbody" style="word-break : break-all">
                             <li>
                                 <div class="row">
                                     <label for="titleInput" class="form-label col-sm-2">제목</label>
