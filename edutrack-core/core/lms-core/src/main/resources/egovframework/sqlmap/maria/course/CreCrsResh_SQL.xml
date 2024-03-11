@@ -28,11 +28,6 @@
 		             FROM tb_crs_resh_ansr						
 		            WHERE CRS_CRE_CD = A.CRS_CRE_CD			
 		              AND RESH_SN = A.RESH_SN ) AS ANSR_CNT	
-		        , ( SELECT COUNT(*)								
-		             FROM tb_crs_resh_ansr						
-		            WHERE CRS_CRE_CD = A.CRS_CRE_CD			
-		              AND RESH_SN = A.RESH_SN 
-		              AND STD_NO IN (SELECT STD_NO FROM TB_STD_STD WHERE ENRL_STS IN ('S','C','F'))) AS STD_ANSR_CNT	
 		       , ( SELECT COUNT(*) 							
 		             FROM tb_crs_resh_item						
 		            WHERE RESH_SN = A.RESH_SN ) AS ITEM_CNT	
@@ -170,14 +165,7 @@
 	<delete id="delete" parameterType="creCrsReshVO">
 		 	DELETE  FROM tb_crs_cre_crs_resh    	
 		    WHERE CRS_CRE_CD = #{crsCreCd} 			
-		    AND RESH_SN = #{reshSn} 	 
+		     	AND RESH_SN = #{reshSn} 	 
     </delete>
-    
-    <delete id="deleteAnswer" parameterType="creCrsReshVO">
-		 	DELETE  FROM tb_crs_resh_ansr   	
-		   	WHERE CRS_CRE_CD = #{crsCreCd} 			
-		    AND RESH_SN = #{reshSn} 	
-    </delete>
-    
 
 </mapper>	

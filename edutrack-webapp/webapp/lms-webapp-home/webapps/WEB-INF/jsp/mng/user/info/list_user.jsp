@@ -130,7 +130,9 @@
 														<td class="text-center">
 															<div class="btn-group">
 																<button class="btn btn-primary btn-sm" onclick="crmOpen('${item.userNo}')">CRM</button>
+																<c:if test="${mngType eq '|MANAGER'}">
 																<button class="btn btn-primary btn-sm" onclick="userEdit('${item.userNo}')">정보수정</button>
+																</c:if>
 															</div>
 														</td>
 													</tr>

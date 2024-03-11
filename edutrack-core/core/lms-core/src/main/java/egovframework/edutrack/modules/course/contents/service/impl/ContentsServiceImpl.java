@@ -1143,7 +1143,7 @@ public class ContentsServiceImpl
 		}
 		//-- 최상위 목록이 아닌경우 상위 목차의 단원 유형 변경
 		if(!"".equals(StringUtil.nvl(iContentsVO.getParUnitCd()))) {
-			ContentsVO parContentsVO = contentsMapper.selectContents(iContentsVO);
+			ContentsVO parContentsVO = contentsMapper.selectCreateContents(iContentsVO);
 			if(parContentsVO.getSubCnt() > 0) {
 				parContentsVO.setUnitType("C");
 			} else {

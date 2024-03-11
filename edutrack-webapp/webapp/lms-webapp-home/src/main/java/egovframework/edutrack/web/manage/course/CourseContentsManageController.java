@@ -779,6 +779,7 @@ public class CourseContentsManageController extends GenericController {
 		String workType = StringUtil.nvl(request.getParameter("workType"),"file");
 		String orgCd = UserBroker.getUserOrgCd(request);
 		String crsCreCd = request.getParameter("crsCreCd");
+		String sbjType = request.getParameter("sbjType");
 		
 		String forwardUrl = "mng/course/contents/left_file_tree_div";
 		if("othersbj".equals(workType)) {
@@ -802,6 +803,7 @@ public class CourseContentsManageController extends GenericController {
 
 			List<ClibShareCntsCtgrVO> listCtgr = clibShareCntsCtgrService.list(ccscVO).getReturnList();
 			request.setAttribute("ctgrList", listCtgr);
+			request.setAttribute("sbjType", sbjType);
 
 			// 교육기관 정보를 가져온다.
 			OrgOrgInfoVO orgInfoVO = new OrgOrgInfoVO();

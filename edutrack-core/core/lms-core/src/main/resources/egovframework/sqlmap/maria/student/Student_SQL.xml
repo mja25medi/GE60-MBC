@@ -2013,4 +2013,42 @@
   		 WHERE STD_NO = #{stdNo}
     </delete>
     
+   <select id="selectStdCpltInfo" parameterType="studentVO" resultType="java.util.HashMap">
+		/*
+			 SQL ID : selectStdCpltInfo
+			 설  명 :  수료증 데이터
+	 	*/
+	 	SELECT 	 A.CPLT_NO			AS cpltNo
+				, C.DEPT_NM			AS deptNm
+				, C.USER_NM 		AS userNm
+				, E.CRS_CRE_NM		AS crsCreNm
+				, E.ONLN_EDU_TM		AS onlnEduTm
+				,(select CODE_NM from tb_sys_code where CODE_CTGR_CD ='CRS_SVC_TYPE' and CODE_CD =F.CRS_SVC_TYPE) 	AS crsSvcType
+				, CONCAT(DATE_FORMAT(A.ENRL_START_DTTM ,'%Y.%m.%d'), ' ~ ', DATE_FORMAT(A.ENRL_END_DTTM ,'%Y.%m.%d')) AS crsCreDttm
+				, A.ENRL_CPLT_DTTM	AS cpltDttm
+		FROM tb_std_std A , tb_usr_user_info C, tb_usr_login D, tb_crs_cre_crs E, tb_crs_crs F
+		WHERE 1=1 
+			AND A.USER_NO = C.USER_NO 
+			AND C.USER_NO = D.USER_NO 
+			AND A.CRS_CRE_CD = E.CRS_CRE_CD
+			AND E.CRS_CD = F.CRS_CD 
+		AND A.STD_NO = #{stdNo}
+	</select>
+	
+	<select id="selectStdCpltInfoSample" parameterType="studentVO" resultType="java.util.HashMap">
+		/*
+			 SQL ID : selectStdCpltInfo
+			 설  명 :  수료증 데이터
+	 	*/
+	 	SELECT '2022000000-0000' 					    AS cpltNo
+               , 'TEST과정'								AS crsCreNm
+		       , '홍길동'									AS userNm
+		       , '2024.01.01 ~ 2024.01.01' 				AS crsCreDttm
+               , '원격훈련과정' 							AS crsSvcType
+               , '오성온평생교육원'							AS deptNm
+               , '20240101090000'						AS cpltDttm
+               , '8'									AS onlnEduTm
+		 FROM dual;
+	</select>
+    
 </mapper>

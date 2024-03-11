@@ -66,7 +66,7 @@
                                 <tr>
                                     <th scope="col" width="10%">목차</th>
                                     <th scope="col">목차명</th>
-                                     <c:if test="${createCourseVO.creTypeCd eq 'OF' || createCourseVO.creTypeCd eq 'BL' }">
+                                     <c:if test="${createCourseVO.creTypeCd eq 'OF' && createCourseVO.creTypeCd eq 'BL' }">
                                     <th scope="col" width="37%">시간</th>
                                     </c:if>
                                     <th scope="col" width="10%">설정</th>
@@ -75,10 +75,16 @@
                             <tbody>
                              <c:forEach items="${contentsList}" var="item" varStatus="status">
                                 <tr>
-                                    <td scope="row" data-label="목차">${item.unitOdr}차시</td>
+                                    <td scope="row" data-label="목차">
+                                     <c:choose>
+	                                		<c:when test="${item.unitLvl == 1 }">${item.unitOdr}차시</c:when>
+	                                		<c:when test="${item.unitLvl == 2 }">-</c:when>
+	                                	</c:choose>
+                                    </td>
                                     <td class="title ico_type" data-label="목차명">
                                         <input class="form-control w80" id="unitNm" name="subList[${status.index}].unitNm"  type="text" value="${item.unitNm}">
                                         <c:choose>
+                                        	<c:when test="${item.unitLvl == 1 && item.prgrChkType eq 'PAGE'}"><button onclick="cntsWrite('2' ,'${item.unitCd}')" class="btn type3">페이지 추가</button></c:when>
                                         	<c:when test="${item.cntsTypeCd eq 'CDN' }"><img src="/tpl/003/img/class/icon_course_cdn.svg" alt="icon" title="CDN"></c:when>
                                         	<c:when test="${item.cntsTypeCd eq 'VOD' }"><img src="/tpl/003/img/class/icon_course_play.svg" alt="icon" title="VOD"></c:when>
                                         	<c:when test="${item.cntsTypeCd eq 'LECTURE' }"><i class="fa fa-desktop ml5" title="코딩강의"></i></c:when>
@@ -88,7 +94,7 @@
                                         <img src="/tpl/003/img/class/icon_course_video.svg" alt="icon" title="Zoom">
                                         <img src="/tpl/003/img/class/icon_course_code.svg" alt="icon" title="코딩학습"> -->
                                     </td>
-                                    <c:if test="${osVO.sbjType eq 'OF' || osVO.sbjType eq 'BL' }">
+                                    <c:if test="${osVO.sbjType eq 'OF' && osVO.sbjType eq 'BL' }">
                                     <td class="time_setting" data-label="시간">
                                         <div class="form-inline">
                                             <input type="date" class="form-control md" name="classDay_${status.index}" id="classDay_${status.index }" value="<meditag:dateformat type="1" delimeter="-" property="${item.classStartTime}"/>" >
@@ -122,6 +128,7 @@
 									<input type="hidden" name="sbjCd" value="${vo.sbjCd}" />
 									<input type="hidden" name="unitType" value="${vo.unitType}" />
 									<input type="hidden" name="unitCd" value="${vo.unitCd}" />
+									<input type="hidden" name="unitNm" value="${vo.unitNm}" />
 									<input type="hidden" name="parUnitCd" value="${vo.parUnitCd}" />
 									<input type="hidden" name="unitLvl" value="${vo.unitLvl}" />
 									<!-- 등록만 하기 위해 디폴트값 추가 -->

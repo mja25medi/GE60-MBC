@@ -154,6 +154,7 @@
 		<typeAlias  alias="orgReshVO"       type="egovframework.edutrack.modules.org.resh.service.OrgReshVO"/>
 		<typeAlias  alias="orgReshItemVO"       type="egovframework.edutrack.modules.org.resh.service.OrgReshItemVO"/>
 		<typeAlias  alias="orgReshAnsrVO"       type="egovframework.edutrack.modules.org.resh.service.OrgReshAnsrVO"/>
+		<typeAlias  alias="orgCertVO"       type="egovframework.edutrack.modules.org.crscert.service.OrgCertVO"/>
 		<typeAlias  alias="olcCartrgVO"       type="egovframework.edutrack.modules.olc.olccart.service.OlcCartrgVO"/>
 		<typeAlias  alias="olcCntsVO"       type="egovframework.edutrack.modules.olc.olccnts.service.OlcCntsVO"/>
 		<typeAlias  alias="olcCtgrVO"       type="egovframework.edutrack.modules.olc.olcctgr.service.OlcCtgrVO"/>

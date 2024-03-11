@@ -123,7 +123,7 @@ function formatSizeUnits(bytes){
                      </c:if>
                     </div>
 
-
+ 
                     <ul class="list_board">
 						<li>
 							<span>이전글</span>

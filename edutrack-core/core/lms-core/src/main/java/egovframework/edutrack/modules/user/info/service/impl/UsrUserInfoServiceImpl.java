@@ -20,9 +20,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import egovframework.edutrack.Constants;
 import egovframework.edutrack.comm.annotation.HrdApiUsrUserInfo;
 import egovframework.edutrack.comm.annotation.HrdApiUsrUserInfo.Type;
 import egovframework.edutrack.comm.exception.ServiceProcessException;
@@ -231,7 +229,6 @@ public class UsrUserInfoServiceImpl
 		return resultList;
 	}
 	
-
 	/**
 	 * 사용자 정보 정보 조회
 	 * @param UsrUserInfoVO vo

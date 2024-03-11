@@ -2,8 +2,6 @@ package egovframework.edutrack.modules.log.educourse.service.impl;
 
 import java.util.List;
 
-import org.springframework.dao.DataAccessException;
-
 import egovframework.edutrack.modules.log.educourse.service.LogEduCourseStatusVO;
 import egovframework.edutrack.modules.log.educourse.service.LogEduOrgStatusVO;
 import egovframework.edutrack.modules.log.educourse.service.LogEduTeamStatusVO;
@@ -102,4 +100,8 @@ public interface LogEduCourseStatusMapper {
 	 * @
 	 */
 	public LogEduOrgStatusVO selectResult(LogEduOrgStatusVO vo) ;
+
+	public String selectDeptCd(String userNo);
+
+	public List<LogEduCourseStatusVO> listCourseStatusDeptMngPageing(LogEduCourseStatusVO vO);
 }

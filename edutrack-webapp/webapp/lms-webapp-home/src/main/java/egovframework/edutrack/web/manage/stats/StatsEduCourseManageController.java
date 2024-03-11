@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import egovframework.edutrack.Constants;
 import egovframework.edutrack.comm.service.ProcessResultListVO;
 import egovframework.edutrack.comm.service.SysCodeMemService;
 import egovframework.edutrack.comm.util.web.DateTimeUtil;
@@ -125,14 +126,25 @@ public class StatsEduCourseManageController extends GenericController {
 		LogEduCourseStatusVO eduCourseStatusVO = vo.getLogEduCourseStatusVO();
 
 		String orgCd = UserBroker.getUserOrgCd(request);
+		String mngType = UserBroker.getMngType(request);
+		String userNo = UserBroker.getUserNo(request);
 		eduCourseStatusVO.setOrgCd(orgCd);
+		
+		ProcessResultListVO<LogEduCourseStatusVO> resultList;
 
-	//	ProcessResultListVO<LogEduCourseStatusVO> resultList = logEduCourseStatusService.listCourseStatusPageing(eduCourseStatusVO,vo.getCurPage(),Constants.LIST_SCALE, Constants.LIST_PAGE_SCALE);
-		ProcessResultListVO<LogEduCourseStatusVO> resultList = logEduCourseStatusService.listCourseStatus(eduCourseStatusVO);
+		if (mngType.contains("DEPTMNG")) {
+			String deptCd = logEduCourseStatusService.getDeptCd(userNo);
+			eduCourseStatusVO.setDeptCd(deptCd);
+			resultList = logEduCourseStatusService.listCourseStatusDeptMngPageing(eduCourseStatusVO,vo.getCurPage(),Constants.LIST_SCALE, Constants.LIST_PAGE_SCALE);
+		}else {
+			resultList = logEduCourseStatusService.listCourseStatusPageing(eduCourseStatusVO,vo.getCurPage(),Constants.LIST_SCALE, Constants.LIST_PAGE_SCALE);
+		}
+			
+	//	ProcessResultListVO<LogEduCourseStatusVO> resultList = logEduCourseStatusService.listCourseStatus(eduCourseStatusVO);
 		ProcessResultListVO<LogEduCourseStatusVO> deptList = logEduCourseStatusService.deptStatusList(eduCourseStatusVO);
 		
 		request.setAttribute("eduCourseStatusList", resultList.getReturnList());
-	//	request.setAttribute("pageInfo", resultList.getPageInfo());
+		request.setAttribute("pageInfo", resultList.getPageInfo());
 		request.setAttribute("eduCourseStatusVO", eduCourseStatusVO);
 		request.setAttribute("deptList", deptList.getReturnList());
 		request.setAttribute("vo", vo);

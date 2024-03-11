@@ -81,11 +81,4 @@ public interface CreCrsReshMapper {
 	 */
 	public int delete(CreCrsReshVO VO )   ;
 
-	/**
-	 * 개설 과정 설문 수강생별 답변 삭제
-	 * @param VO
-	 * @return
-	 */
-	public void deleteAnswer(CreCrsReshVO ccrvo);
-
 }

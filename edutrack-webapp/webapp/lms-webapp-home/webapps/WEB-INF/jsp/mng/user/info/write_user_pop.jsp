@@ -272,6 +272,7 @@
 			<td>
 				<div class="radio">
 					<span class="mr10"><spring:message code="user.title.userinfo.member"/></span>
+				<c:if test="${mngType eq '|MANAGER' }">
 				<c:forEach var="item" items="${wwwAuthList}">
 					<c:if test="${item.authGrpCd ne 'MEMBER' && item.authGrpCd ne 'GUEST' }">
 					<c:set var="authGrpNm" value="${item.authGrpNm}"/>
@@ -292,6 +293,7 @@
  					</c:forEach> 
  					<label class="mr10"><input type="checkbox" name="mngUserAuth" value="${item.authGrpCd}" <c:if test="${fn:contains(userAuthGrpCd, item.authGrpCd)}">checked</c:if> id="authGrp_${item.authGrpCd}"/> ${authGrpNm}</label> 
  				</c:forEach> 
+ 				</c:if>
 				</div>
 			</td>
 		</tr>

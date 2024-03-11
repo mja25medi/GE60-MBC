@@ -23,6 +23,7 @@ public class BookmarkVO
 	private int					unitOdr;
 	private String				unitType;
 	private String				unitFilePath;
+	private String				mobileFilePath;
 	private int					quizCnt;
 	private int					quizPassScore;
 	private String				prgrChkType;
@@ -108,6 +109,9 @@ public class BookmarkVO
 	private AttendStatusCode	attendStsCd;
 	private int 				asmtSn;
 	private int					asmtSubSn;
+	
+	private String				detailBookmarkCd;
+	private int					detailStudyTm;
 	
 	//성적 API 발송 용 필드 (start의 경우 eduResult를 사용하지 않아 사용하는 VO별 선언)
   	private String scoreSaveType;//START,END,RATE,RESET
@@ -912,6 +916,30 @@ public class BookmarkVO
 
 	public void setAsmtSubSn(int asmtSubSn) {
 		this.asmtSubSn = asmtSubSn;
+	}
+
+	public String getMobileFilePath() {
+		return mobileFilePath;
+	}
+
+	public void setMobileFilePath(String mobileFilePath) {
+		this.mobileFilePath = mobileFilePath;
+	}
+
+	public String getDetailBookmarkCd() {
+		return detailBookmarkCd;
+	}
+
+	public void setDetailBookmarkCd(String detailBookmarkCd) {
+		this.detailBookmarkCd = detailBookmarkCd;
+	}
+
+	public int getDetailStudyTm() {
+		return detailStudyTm;
+	}
+
+	public void setDetailStudyTm(int detailStudyTm) {
+		this.detailStudyTm = detailStudyTm;
 	}
 	
 }

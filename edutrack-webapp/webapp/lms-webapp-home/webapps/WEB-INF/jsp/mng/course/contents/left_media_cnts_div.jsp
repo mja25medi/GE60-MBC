@@ -95,9 +95,11 @@
 									var searchValue = $("#shareSearchValue").val();
 									var searchKey = "cntsNm";
 									var cntsTypeCd = $('#cntsTypeCd').val();
+									var sbjType = "${sbjType}";
+									
 									if(["VOD", "CDN","MLINK"].includes(cntsTypeCd)) {
 										var url = cUrl("/mng/library/clibShareCnts/listMediaCntsForCntsMgr");										
-										$("#shareContentsListArea").load(url, { "ctgrCd" : ctgrCd, "useYn":"Y", "searchValue" : searchValue, "cntsTypeCd": '${cntsTypeCd}', "searchKey":searchKey})
+										$("#shareContentsListArea").load(url, { "ctgrCd" : ctgrCd, "useYn":"Y", "searchValue" : searchValue, "cntsTypeCd": '${cntsTypeCd}', "searchKey":searchKey, "sbjType":sbjType })
 									} 
 								}
 
@@ -133,13 +135,13 @@
 										alert("<spring:message code="course.message.contents.alert.msg1"/>");
 										return;
 									}
-									if(unitType != "L") {
+									/* if(unitType != "L") {
 										alert("<spring:message code="course.message.contents.alert.msg2"/>");
 										return;
-									}
+									} */
 
-									$("#contentsForm").find('input[name="unitNm"]').val(cntsNm);
-									//$("#contentsForm").find('input[name="mobileFilePath"]').val(cntsCd);
+									//$("#contentsForm").find('input[name="unitNm"]').val(cntsNm);
+									$("#contentsForm").find('input[name="mobileFilePath"]').val(cntsCd);
 									//$("#contentsForm").find('input[name="cntsTypeCd"]').val("MEDIA");
 									$("input:radio[name=cntsTypeCd]").prop("checked", false);
 									$("input:radio[name=cntsTypeCd][value="+cntsTypeCd+"]").prop("checked", true);

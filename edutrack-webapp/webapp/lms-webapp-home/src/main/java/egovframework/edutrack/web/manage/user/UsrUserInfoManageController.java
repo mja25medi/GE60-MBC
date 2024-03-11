@@ -35,6 +35,7 @@ import egovframework.edutrack.modules.course.course.service.CourseService;
 import egovframework.edutrack.modules.course.course.service.CourseVO;
 import egovframework.edutrack.modules.course.createcourse.service.CreateCourseService;
 import egovframework.edutrack.modules.course.createcourse.service.CreateCourseVO;
+import egovframework.edutrack.modules.log.educourse.service.LogEduCourseStatusService;
 import egovframework.edutrack.modules.log.message.service.LogMsgLogService;
 import egovframework.edutrack.modules.log.message.service.LogMsgLogVO;
 import egovframework.edutrack.modules.log.message.service.LogMsgTransLogVO;
@@ -131,6 +132,8 @@ public class UsrUserInfoManageController extends GenericController {
 	@Autowired @Qualifier("createCourseService")
 	private CreateCourseService			createCourseService;
 	
+	@Autowired @Qualifier("logEduCourseStatusService")
+	private LogEduCourseStatusService		logEduCourseStatusService;
 	
 	/**
      * @Method Name : mainUser
@@ -177,9 +180,19 @@ public class UsrUserInfoManageController extends GenericController {
 			HttpServletRequest request) throws Exception {
 		commonVOProcessing(vo, request);
 		String orgCd = UserBroker.getUserOrgCd(request);
+		String mngType = UserBroker.getMngType(request);
+		String userNo = UserBroker.getUserNo(request);
 		vo.setOrgCd(orgCd);
         
-		ProcessResultListVO<UsrUserInfoVO> resultList = usrUserInfoService.listPageing(vo);
+		ProcessResultListVO<UsrUserInfoVO> resultList;
+		
+		if (mngType.contains("DEPTMNG")) {
+			String deptCd = logEduCourseStatusService.getDeptCd(userNo);
+			vo.setDeptCd(deptCd);
+			resultList = usrUserInfoService.listPageing(vo);
+		}else {
+			resultList = usrUserInfoService.listPageing(vo);
+		}
 		
 		//사용자 정보관리
 		OrgUserInfoCfgVO ouicvo = new OrgUserInfoCfgVO();
@@ -190,6 +203,7 @@ public class UsrUserInfoManageController extends GenericController {
 		request.setAttribute("userInfoList", resultList.getReturnList());
 		request.setAttribute("pageInfo", resultList.getPageInfo());
 		request.setAttribute("vo", vo);
+		request.setAttribute("mngType", mngType);
 		
 		//-- 개인 정보 조회 로그
 		String inqCts = "";
@@ -223,6 +237,7 @@ public class UsrUserInfoManageController extends GenericController {
 			HttpServletRequest request) throws Exception {
 		commonVOProcessing(vo, request);
 		String orgCd = UserBroker.getUserOrgCd(request);
+		String mngType = UserBroker.getMngType(request);
 		vo.setOrgCd(orgCd);
 		
 		List<OrgOrgInfoVO> orgInfoList = orgOrgInfoService.list(new OrgOrgInfoVO()).getReturnList();
@@ -307,6 +322,7 @@ public class UsrUserInfoManageController extends GenericController {
 		request.setAttribute("vo", vo);
 		request.setAttribute("gubun", "A");
 		request.setAttribute("fileupload", "Y");
+		request.setAttribute("mngType", mngType);
 		
 		//회원 등록폼
 		String retUrl = "mng/user/info/write_user_pop";
@@ -1016,9 +1032,20 @@ public class UsrUserInfoManageController extends GenericController {
 			HttpServletRequest request) throws Exception {
 		commonVOProcessing(vo, request);
 		String orgCd = UserBroker.getUserOrgCd(request);
+	 	String mngType = UserBroker.getMngType(request);
+		String userNo = UserBroker.getUserNo(request);
 		vo.setOrgCd(orgCd);
         
-		ProcessResultListVO<UsrUserInfoVO> resultList = usrUserInfoService.listPageing(vo);
+		ProcessResultListVO<UsrUserInfoVO> resultList;
+		
+		if (mngType.contains("DEPTMNG")) {
+			String deptCd = logEduCourseStatusService.getDeptCd(userNo);
+			vo.setDeptCd(deptCd);
+			resultList = usrUserInfoService.listPageing(vo);
+		}else {
+			resultList = usrUserInfoService.listPageing(vo);
+		}
+		
 		
 		request.setAttribute("userInfoList", resultList.getReturnList());
 		request.setAttribute("pageInfo", resultList.getPageInfo());

@@ -218,6 +218,9 @@
 		     	<if test = 'crsCd != null and crsCd != ""'>
 					AND A.CRS_CD = IFNULL(FN_GET_NULL(#{crsCd}),A.CRS_CD)
 				</if>
+				<if test = "crsSvcType != null and crsSvcType != ''">
+				     AND B.CRS_SVC_TYPE = #{crsSvcType}
+				</if>     
 		     	<if test = 'deptCd != null and deptCd != ""'>
 					AND A.DEPT_CD = IFNULL(FN_GET_NULL(#{deptCd}),A.DEPT_CD)
 				</if>
@@ -517,6 +520,9 @@
 		     	<if test = 'crsCd != null and crsCd != ""'>
 					AND A.CRS_CD = IFNULL(FN_GET_NULL(#{crsCd}),A.CRS_CD)
 				</if>
+				<if test = "crsSvcType != null and crsSvcType != ''">
+				     AND B.CRS_SVC_TYPE = #{crsSvcType}
+				</if>     
 		     	<if test = 'selectMode == "PAYMENT"'>
 					AND A.EDU_PRICE > 0  
 				</if>

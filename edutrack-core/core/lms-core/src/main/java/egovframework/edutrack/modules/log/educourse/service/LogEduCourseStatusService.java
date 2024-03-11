@@ -97,4 +97,14 @@ public interface LogEduCourseStatusService {
 	 */
 	public abstract void listExcelDownloadResult(LogEduCourseStatusVO vo, String orgNm, ArrayList<String> titleList, OutputStream os) throws Exception;
 
+	/**
+	 * 과정 운영 현황(기업관리자) - 개설 과정 목록을 반환한다.(페이징)
+	 * @param LogEduCourseStatusVO
+	 * @return
+	 * @throws Exception 
+	 */
+	public abstract ProcessResultListVO<LogEduCourseStatusVO> listCourseStatusDeptMngPageing(LogEduCourseStatusVO eduCourseStatusVO, int curPage, int listScale, int listPageScale) throws Exception;
+
+	public abstract String getDeptCd(String userNo) throws Exception;
+
 }

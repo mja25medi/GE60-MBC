@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.edutrack.modules.org.crscert.service.impl.OrgCertMapper">	
+	
+	<sql id="selectQuery">
+		<![CDATA[
+		 SELECT ORG_CD
+			   , USE_YN
+			   , PRINT_DIREC
+			   , CERT_CONTENT_JSON
+			   , REG_NO
+			   , REG_DTTM
+			   , MOD_NO
+			   , MOD_DTTM
+		  FROM TB_ORG_CRS_CPLT_INFO
+		 WHERE ORG_CD = #{orgCd}
+		]]>
+	</sql>
+	
+	<select id="select" parameterType="OrgCertVO" resultType="OrgCertVO">
+		/*
+			 SQL ID : select
+			 설  명 : 기관 수료증의 정보 조회
+	 	*/
+	 	<include refid="selectQuery"/>
+	</select>	
+	
+	<insert id="insert" parameterType="OrgCertVO" >
+		/*
+			 SQL ID : insert
+			 설  명 : 기관 수료증의 정보 등록
+	 	*/
+	 	INSERT INTO TB_ORG_CRS_CPLT_INFO (
+			ORG_CD
+			, USE_YN
+			, PRINT_DIREC
+			, CERT_CONTENT_JSON
+			, REG_NO
+			, REG_DTTM
+			, MOD_NO
+			, MOD_DTTM
+		) VALUES (
+			  #{orgCd}
+			, 'Y'
+			, #{printDirec}
+ 			, #{certContentJson}
+			, #{regNo}
+			, DATE_FORMAT(NOW(),'%Y%m%d%H%i%s')
+			, #{modNo}
+			, DATE_FORMAT(NOW(),'%Y%m%d%H%i%s')
+		) 	
+	</insert>
+	
+	<update id="update" parameterType="OrgCertVO" >
+		/*
+			 SQL ID : update
+			 설  명 : 기관 수료증의 정보 수정
+	 	*/
+	 	UPDATE TB_ORG_CRS_CPLT_INFO
+		   SET PRINT_DIREC = #{printDirec}
+			   , CERT_CONTENT_JSON = #{certContentJson}
+			   , MOD_NO = #{modNo}
+			   , MOD_DTTM = DATE_FORMAT(NOW(),'%Y%m%d%H%i%s')
+	     WHERE ORG_CD = #{orgCd}
+	</update>	
+
+	<delete id="delete" parameterType="OrgCertVO" >
+		/*
+			 SQL ID : delete
+			 설  명 : 기관 수료증의 정보 삭제
+	 	*/
+		DELETE FROM TB_ORG_CRS_CPLT_INFO
+		 WHERE ORG_CD = #{orgCd}
+	</delete>
+</mapper>

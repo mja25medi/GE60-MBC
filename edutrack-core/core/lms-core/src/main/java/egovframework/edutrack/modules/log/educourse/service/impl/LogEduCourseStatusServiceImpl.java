@@ -150,6 +150,42 @@ public class LogEduCourseStatusServiceImpl
 		return resultList;
 	}
 	
+	/**
+	 * 과정 운영 현황(기업관리자) - 개설 과정 목록을 반환한다.
+	 * (페이징 정보 포함)
+	 * @param LogEduCourseStatusVO
+	 * @param curPage 현재 페이지
+	 * @param listScale 페이지당 표시갯수 : 입력이 없을 경우 시스템 초기값 사용
+	 * @param pageScale 표시할 페이지 이동컨트롤 갯수 : 입력이 없을 경우 시스템 초기갑 사용
+	 * @return ProcessResultListVO<LogEduCourseStatusVO>
+	 */
+	@Override
+	public ProcessResultListVO<LogEduCourseStatusVO> listCourseStatusDeptMngPageing(LogEduCourseStatusVO VO, int pageIndex, int listScale, int pageScale)  throws Exception {
+		
+		/** start of paging */
+		PaginationInfo paginationInfo = new PaginationInfo();
+		paginationInfo.setCurrentPageNo(pageIndex);
+		paginationInfo.setRecordCountPerPage(listScale);
+		paginationInfo.setPageSize(pageScale);
+		
+		VO.setFirstIndex(paginationInfo.getFirstRecordIndex());
+		VO.setLastIndex(paginationInfo.getLastRecordIndex());
+		
+		ProcessResultListVO<LogEduCourseStatusVO> resultList = new ProcessResultListVO<LogEduCourseStatusVO>();
+		try {
+			// 전체 목록 수
+			int totalCount = logEduCourseStatusMapper.count(VO);
+			paginationInfo.setTotalRecordCount(totalCount);
+			
+			List<LogEduCourseStatusVO> returnList = logEduCourseStatusMapper.listCourseStatusDeptMngPageing(VO);
+			resultList.setReturnList(returnList);
+			resultList.setPageInfo(paginationInfo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultList;
+	}
+	
 	
 	/**
 	 * 교육 총괄 실적표용 과정 결과 목록 
@@ -577,5 +613,10 @@ public class LogEduCourseStatusServiceImpl
 			throw new Exception("Excel 생성 실패", e);
 		}
 
+	}
+
+	@Override
+	public String getDeptCd(String userNo) throws Exception {
+		return logEduCourseStatusMapper.selectDeptCd(userNo);
 	}
 }

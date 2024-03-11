@@ -471,7 +471,7 @@
 	 	*/
 		WITH RECURSIVE CTE AS (
 		    SELECT
-		     ATCL_SN , CAST(ATCL_SN AS CHAR(200)) AS PATH
+		    ATCL_SN , CAST(ATCL_SN AS CHAR(200)) AS PATH
 		    FROM tb_brd_bbs_atcl
 			<include refid="selectWhereQuery"/>
 			AND PAR_ATCL_SN IS NULL

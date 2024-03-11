@@ -15,7 +15,6 @@ import egovframework.edutrack.comm.exception.ServiceProcessException;
 import egovframework.edutrack.comm.service.AbstractResult;
 import egovframework.edutrack.comm.service.ProcessResultListVO;
 import egovframework.edutrack.comm.service.ProcessResultVO;
-import egovframework.edutrack.modules.student.student.service.StudentVO;
 import egovframework.edutrack.modules.system.code.service.SysCodeVO;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -299,4 +298,5 @@ public interface UsrUserInfoService {
 	public abstract ProcessResultVO<UsrUserInfoVO> editTeacherUrl(UsrUserInfoVO vo) throws Exception;
 	
 	public abstract ProcessResultVO<UsrUserInfoVO> addTeacherIdeUrlExcel(UsrUserInfoVO vo, String fileName, String filePath);
+
 }

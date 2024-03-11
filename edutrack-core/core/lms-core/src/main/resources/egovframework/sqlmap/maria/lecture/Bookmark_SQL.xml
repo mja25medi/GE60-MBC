@@ -10,6 +10,7 @@
 		        ,  A.UNIT_LVL																								
 		        ,  A.UNIT_ODR																								
 		        ,  A.UNIT_TYPE																								
+		        ,  A.MOBILE_FILE_PATH																						
 		        ,  A.UNIT_FILE_PATH																						
 		        ,  A.ATCH_FILE_PATH																						
 		        ,  A.QUIZ_CNT																								
@@ -28,6 +29,7 @@
 			        B.STUDY_YN
 			        ELSE (SELECT TLBD.STUDY_YN FROM tb_lec_bookmark_detail TLBD WHERE STD_NO = #{stdNo} AND SBJ_CD = A.SBJ_CD AND UNIT_CD = A.UNIT_CD)
 			        END),'N') AS STUDY_YN																					
+			    ,  NVL((SELECT TLBD.STUDY_TM FROM tb_lec_bookmark_detail TLBD WHERE STD_NO = #{stdNo} AND SBJ_CD = A.SBJ_CD AND UNIT_CD = A.UNIT_CD), 0) AS DETAIL_STUDY_TM		
 		        ,  IFNULL(FN_GET_NULL(B.STUDY_DTTM),'') AS STUDY_DTTM																		
 		        ,  IFNULL(FN_GET_NULL(B.QUIZ_PASS_YN),'') AS QUIZ_PASS_YN																	
 		        ,  IFNULL(FN_GET_NULL(B.PASS_SCORE), 0) AS PASS_SCORE																		
@@ -168,15 +170,15 @@
 		WITH RECURSIVE CTE AS (
 		    SELECT
 		     	SBJ_CD, UNIT_CD , CAST(UNIT_CD AS CHAR(200)) AS UNIT_PATH
-		    FROM tb_crs_sbj_cnts
+		    FROM tb_crs_cre_sbj_cnts
 			WHERE 
 				SBJ_CD  = #{sbjCd}													
 		      AND  UNIT_CD = #{unitCd} 
 			AND (PAR_UNIT_CD IS NULL OR PAR_UNIT_CD = '')
-		    UNION ALL
+		    UNION
 		    SELECT
 		       A.SBJ_CD, A.UNIT_CD, CONCAT(CTE.UNIT_PATH,',',A.UNIT_CD) as UNIT_PATH
-		    FROM tb_crs_sbj_cnts A
+		    FROM tb_crs_cre_sbj_cnts A
 		    inner join CTE on A.par_UNIT_CD = CTE.UNIT_CD
 		    	AND A.SBJ_CD  = #{sbjCd}													
 		      	AND A.UNIT_CD = #{unitCd} 
@@ -347,6 +349,17 @@
 		      AND  A.SBJ_CD  			=  #{sbjCd}								
 		      AND  A.UNIT_CD 			=  #{unitCd}
 	</update>
+	
+	<update id="updateDetailStudyTm" parameterType="bookmarkVO">
+		<!-- 학습 결과를 Update한다. -->
+		UPDATE  tb_lec_bookmark_detail	A											
+		      SET  A.STUDY_TM        	=  #{detailStudyTm}
+		        ,  A.MOD_NO          	=  #{modNo}								
+		        ,  A.MOD_DTTM        	=  DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+		    WHERE  A.STD_NO  			=  #{stdNo}								
+		      AND  A.SBJ_CD  			=  #{sbjCd}								
+		      AND  A.UNIT_CD 			=  #{detailBookmarkCd}
+	</update>	
 	
 	<update id="updateHitsup" parameterType="bookmarkVO">
 		<!-- 학습 횟수를 증가 시킨다. -->

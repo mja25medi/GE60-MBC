@@ -8,7 +8,9 @@
 									<span class="btns">
 										 <button class="btn3 sm basic fcDarkgray" onclick="javascript:previewShareCnts('${item.cntsCd}')"><spring:message code="button.preview"/></button>
                                		     <button class="btn3 sm basic fcBlue" onclick="javascript:selectShareCnts('${item.cntsCd}','${item.cntsNm}')"><spring:message code="button.choice"/></button>
-										<%-- <a href="javascript:selectMobileShareCnts('${item.cntsCd}','${item.cntsNm}')" class="btn btn-xs btn-default">모바일<spring:message code="button.choice"/></a> --%>
+                               		     <c:if test="${sbjType eq 'ON'}">
+                               		     <button class="btn3 sm basic fcBlue" onclick="javascript:selectMobileShareCnts('${item.cntsCd}','${item.cntsNm}')">모바일<spring:message code="button.choice"/></button>
+                               		     </c:if>
 									</span>
 									<div style="clear:both;"></div>
 								</li>

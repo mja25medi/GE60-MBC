@@ -86,9 +86,11 @@
 												<label style="font-weight: normal;margin-right:20px;">
 													<input type="radio" style="border:0" name="prgrChkType" value="TIME" <c:if test="${vo.prgrChkType eq 'TIME'}">checked</c:if> id="prgrChkTypeTIME" onclick="prgrChkTypeChk()"/> <spring:message code="course.title.contents.progress.time"/>
 												</label>
-												<label style="font-weight: normal;">
-													<input type="radio" style="border:0" name="prgrChkType" value="PAGE" <c:if test="${vo.prgrChkType eq 'PAGE'}">checked</c:if> id="prgrChkTypePAGE" onclick="prgrChkTypeChk()"/> <spring:message code="course.title.contents.progress.page"/>
-												</label>
+												<c:if test="${osVO.sbjType eq 'ON'}">
+													<label style="font-weight: normal;">
+														<input type="radio" style="border:0" name="prgrChkType" value="PAGE" <c:if test="${vo.prgrChkType eq 'PAGE'}">checked</c:if> id="prgrChkTypePAGE" onclick="prgrChkTypeChk()"/> <spring:message code="course.title.contents.progress.page"/>
+													</label>
+												</c:if>
 											</td>
 										</tr>
 										<tr id="cntsTypeSel">
@@ -152,7 +154,7 @@
 												</div>
 											</td>
 										</tr>
-<%-- 										<tr id="mobileFilePathTr">
+										<tr id="mobileFilePathTr">
 											<td style="padding:2px;">
 												<label for="mobileFilePath">모바일 파일경로</label>
 											</td>
@@ -164,7 +166,7 @@
 													</span>
 												</div>
 											</td>
-										</tr> --%>										
+										</tr>										
 										<tr id="atchFilePathTr">
 											<td style="padding:2px;">
 												<label for="atchFilePath">교안파일경로(PDF)</label>
@@ -262,6 +264,7 @@
 		}else {
 			ajaxData = {"workType":"FILE"};
 		}
+		ajaxData.sbjType = "${osVO.sbjType}";
 		$("#leftWorkArea").load(ajaxUrl, ajaxData);
 	}
 	
@@ -273,11 +276,19 @@
 			$("input:radio[id=cntsTypeCd2]").attr("disabled",false);
 			$("input:radio[id=cntsTypeCd3]").attr("disabled",false);
 			$("input:radio[id=cntsTypeCd4]").attr("disabled",true);
+			$("#atchFilePathTr").show();
+			$("#cntsTypeSel").show();
+			$("#unitFilePathTr").show();
+			$("#mobileFilePathTr").hide();
 		}else if(chkVal =="PAGE"){
 			$("input:radio[id=cntsTypeCd1]").attr("disabled",true);
 			$("input:radio[id=cntsTypeCd2]").attr("disabled",true);
 			$("input:radio[id=cntsTypeCd3]").attr("disabled",true);
 			$("input:radio[id=cntsTypeCd4]").attr("disabled",false);
+			$("#atchFilePathTr").hide();
+			$("#cntsTypeSel").hide();
+			$("#unitFilePathTr").hide();
+			$("#mobileFilePathTr").show();
 		}
 		
 	}
@@ -443,7 +454,10 @@
 		//if(!validate(document.contentsForm)) return;
 		
 		if($("#unitNm").val() == ""){alert("페이지명을 입력해주세요."); return false;}
-		if($(':radio[name="cntsTypeCd"]:checked').length < 1){alert("콘텐츠 타입을 선택해주세요."); return false;}
+		if($(':radio[name="prgrChkType"]:checked').val() == "TIME"){
+			if($(':radio[name="cntsTypeCd"]:checked').length < 1){alert("콘텐츠 타입을 선택해주세요."); return false;}
+			if($("#unitFilePath").val() == ""){alert("콘텐츠를 선택해주세요."); return false;}
+		}
 		if($(':radio[name="cntsTypeCd"]:checked').val() == "CODING_L" || $(':radio[name="cntsTypeCd"]:checked').val() == "CODING_T"){
 			//if($("#zoomUrl").val() == ""){alert("Zoom URL을 입력해주세요."); return false;}		
 		}
@@ -453,7 +467,8 @@
 				return false;
 			}
 		}
-		if($("#unitFilePath").val() == ""){alert("콘텐츠를 선택해주세요."); return false;}
+		
+		
 		if($("#critTm").val() == ""){alert("기준시간을 입력해주세요."); return false;}
 		
 		$('#contentsForm').attr("action","/mng/course/contents/editContents");
@@ -549,6 +564,7 @@
 			$("#contentsForm").find('input[name="unitLvl"]').val(dept);
 			$("#contentsForm").find('input[name="unitNm"]').val("차시");
 			$("#unitLvNm").text('차시명');
+			$("#cntsTypeSel").show();
 		}else{
 			$("#contentsForm").find('input[name="parUnitCd"]').val(unitCd);
 			$("#contentsForm").find('input[name="unitLvl"]').val(dept);
@@ -556,6 +572,7 @@
 			$("#unitLvNm").text('페이지명');
 			$("#prgrChkTypeTr").hide();
 			$("#prgrChkYnTd").hide();
+			$("#cntsTypeSel").hide();
 		}
 		
 		$("#metaTd").html('');
@@ -566,7 +583,7 @@
 		$("#contentsForm").find('input[name="unitFilePath"]').val("");
 		$("#contentsForm").find('input[name="mobileFilePath"]').val("");
 		$("#contentsForm").find('input[name="atchFilePath"]').val("");
-		//$("#contentsForm").find('input[name="cntsTypeCd"]').val("");
+		$("#contentsForm").find('input[name="cntsTypeCd"]').val("");
 		$("#contentsForm").find('input[id="cntsTypeCd1"]').attr("checked", false);
 		$("#contentsForm").find('input[id="cntsTypeCd2"]').attr("checked", false);
 		$("#contentsForm").find('input[id="cntsTypeCd3"]').attr("checked", false);
@@ -581,8 +598,8 @@
 			var item = resultDTO.returnVO;
 			if(resultDTO.result >= 0) {
 				contentsList();
-				cntsEditForm(item.unitCd);
 				prgrChkTypeChk();
+				cntsEditForm(item.unitCd);
 			} else {
 
 			}
@@ -603,21 +620,34 @@
 			}, function (resultDTO) {
 				$("#contentsWriteForm").show();
 				var item = resultDTO.returnVO;
-				/* if(resultDTO.unitLvl == 1){
+				if(item.unitLvl == 1){
 					$("#unitLvNm").text('차시명');
-					$("#prgrChkTypeTr").show();
-					$("#prgrChkYnTd").show();
-					$("#atchFilePathTr").show();
+					if(item.prgrChkType == 'TIME') {
+						$("#prgrChkTypeTr").show();
+						$("#prgrChkYnTd").show();
+						$("#atchFilePathTr").show();
+						$("#mobileFilePathTr").hide();
+						$("#cntsTypeSel").show();
+					}else if(item.prgrChkType == 'PAGE'){
+						$("input:radio[id=prgrChkTypeTIME]").attr("disabled",true);
+						$("#prgrChkTypeTr").show();
+						$("#prgrChkYnTd").show();
+						$("#atchFilePathTr").show();
+						$("#mobileFilePathTr").show();
+						$("#cntsTypeSel").show();
+					}
 				}else{
 					$("#unitLvNm").text('페이지명');
 					$("#prgrChkTypeTr").hide();
 					$("#prgrChkYnTd").hide();
 					$("#atchFilePathTr").hide();
-				} */
-				$("#unitLvNm").text('차시명');
+					$("#mobileFilePathTr").hide();
+					$("#cntsTypeSel").hide();
+				} 
+				/* $("#unitLvNm").text('차시명');
 				$("#prgrChkTypeTr").show();
 				$("#prgrChkYnTd").show();
-				$("#atchFilePathTr").show();
+				$("#atchFilePathTr").show(); */
 				
 				$("#contentsForm").find('input[name="sbjCd"]').val(ItemDTO.sbjCd);
 				$("#contentsForm").find('input[name="unitCd"]').val(item.unitCd);
@@ -637,7 +667,7 @@
 				
 				if(item.unitType == "C") {
 					$("#unitFilePathTr").hide();
-					$("#mobileFilePathTr").hide();
+					$("#mobileFilePathTr").show();
 				} else {
 					if (item.cntsTypeCd == "MEDIA") {
 						$("#contentsForm").find('input[id="prgrChkTypeTIME"]').prop("disabled", false);
@@ -648,7 +678,7 @@
 					}
 					
 					$("#unitFilePathTr").show();
-					$("#mobileFilePathTr").show();
+					$("#mobileFilePathTr").hide();
 				}
 				
 				$("#contentsForm").find('input[id="prgrChkTypeTIME"]').prop("checked", false);
@@ -665,12 +695,16 @@
 					$("#contentsForm").find('input[id="cntsTypeCd2"]').prop("disabled", false);
 					$("#contentsForm").find('input[id="cntsTypeCd3"]').prop("disabled", false);
 					$("#contentsForm").find('input[id="cntsTypeCd4"]').prop("disabled", true);
+					$("#atchFilePathTr").show();
+					$("#cntsTypeSel").show();
 				}else if(item.prgrChkType == 'PAGE') {
 					$("#contentsForm").find('input[id="prgrChkTypePAGE"]').prop("checked", true);
 					$("#contentsForm").find('input[id="cntsTypeCd1"]').prop("disabled", true);
 					$("#contentsForm").find('input[id="cntsTypeCd2"]').prop("disabled", true);
 					$("#contentsForm").find('input[id="cntsTypeCd3"]').prop("disabled", true);
 					$("#contentsForm").find('input[id="cntsTypeCd4"]').prop("disabled", false);
+					$("#atchFilePathTr").hide();
+					$("#cntsTypeSel").hide();
 				}
 				
 				if(item.cntsTypeCd == 'CDN') {

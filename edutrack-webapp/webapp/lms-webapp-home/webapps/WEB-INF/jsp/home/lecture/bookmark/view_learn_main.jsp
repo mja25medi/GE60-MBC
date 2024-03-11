@@ -178,7 +178,7 @@
 					                            			</c:otherwise>
 					                            		</c:choose> 
 					                            		--%>
-					                            		<c:if test="${not empty contentsItem.unitFilePath}"> <!-- 콘텐츠 연결이 있을때만 버튼 노출 --> 
+					                            		<c:if test="${not empty contentsItem.unitFilePath || contentsItem.unitType eq 'C' }"> <!-- 콘텐츠 연결이 있을때만 버튼 노출 || 페이지 방식일 경우 버튼 노출 --> 
 						                            		<c:choose>
 						                            			<c:when test="${nowDate < createCourseVO.enrlStartDttm }">	<!-- 수강기간 이전일 경우 disabled -->
 						                            				<button type="button" class="primary disabled" title="학습하기" onclick="checkDayLimit('${contentsItem.sbjCd}','${contentsItem.unitCd}','${contentsItem.prgrRatio}','${contentsItem.cntsTypeCd}','','')">학습하기</button>

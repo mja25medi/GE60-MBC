@@ -207,6 +207,12 @@ public class MainHomeController extends GenericController {
 		bbsAtclVO.setBbsCd("PDS");
 		ProcessResultListVO<BrdBbsAtclVO> pdsList = brdBbsAtclService.listTopAtcl(bbsAtclVO);
 		request.setAttribute("pdsList", pdsList.getReturnList());
+
+		//-- FAQ TOP5 가져오기
+		bbsAtclVO.setBbsCd("FAQ");
+		ProcessResultListVO<BrdBbsAtclVO> faqList = brdBbsAtclService.listTopAtcl(bbsAtclVO);
+		request.setAttribute("faqList", faqList.getReturnList());
+
 		
 		//-- 수강후기 TOP5 가져오기
 		bbsAtclVO.setBbsCd("REVIEW");
@@ -311,11 +317,7 @@ public class MainHomeController extends GenericController {
 		OrgPageVO reviewPageVO = orgPageService.view(pageVO);
 		request.setAttribute("reviewPageVO", reviewPageVO);
 		
-		//NEWS CTS 조회
-		pageVO.setPageCd("MPAGE003");
-		OrgPageVO newsPageVO = orgPageService.view(pageVO);
-		request.setAttribute("newsPageVO", newsPageVO);
-		
+	
 		//교육신청 카운트다운 
 		CreateCourseVO cntCourseVO = new CreateCourseVO();
 		cntCourseVO.setOrgCd(orgCd);
@@ -329,12 +331,6 @@ public class MainHomeController extends GenericController {
 			request.setAttribute("cntCourse", "0");
 		}
 		
-		//-- 이벤트 목록
-		EtcEventVO eventVO = new EtcEventVO();
-		eventVO.setOrgCd(orgCd);
-		eventVO.setOpenYn("Y");
-		List<EtcEventVO> eventList = etcEventService.list(eventVO).getReturnList();
-		request.setAttribute("eventList", eventList);
 		
 		UsrUserInfoVO usrUserInfoVO = new UsrUserInfoVO();
 		
@@ -683,6 +679,7 @@ public class MainHomeController extends GenericController {
 		List<CourseVO> courseList = courseService.listCourse(vo).getReturnList();
 		
 		request.setAttribute("courseList", courseList);
+		request.setAttribute("courseVO", vo);
 		returnUrl = "home/main/list_course_enroll_div";
 
 		return returnUrl;

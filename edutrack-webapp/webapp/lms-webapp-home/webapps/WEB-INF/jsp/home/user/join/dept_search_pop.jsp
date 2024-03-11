@@ -1,7 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/jsp/common/page_init.jsp" %>
-<%pageContext.setAttribute("crlf", "\n");%>
-
 <style>
 	input[type=checkbox] {
 	  -webkit-appearance: checkbox;
@@ -103,13 +101,13 @@
 	
 	function selectComplete() {
 		var checked = $("input[name=checkSelect]:checked");
-		if(checked.size() > 0) {
+		if(checked.length > 0) {
 			var target = checked.parent();
 			var deptCd = target.siblings("td[name=searchDeptCd]").text();
 			var deptNm = target.siblings("td[name=searchDeptNm]").text();
-			$("#deptCd").val(deptCd);
-			$("#deptNm").val(deptNm);
-			modalBoxClose();
+			$("#deptCd", parent.document).val(deptCd);
+			$("#deptNm", parent.document).val(deptNm);
+			parent.modalBox.close();
 		}
 		else {
 			alert("소속 기업을 선택해주세요.");

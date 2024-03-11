@@ -103,11 +103,17 @@
                                 <c:forEach items="${contentsList}" var="item" varStatus="status">
                                 <tbody>
                                 <tr>
-                                    <td>${item.unitOdr}차시</td>
+                                    <td>
+	                                    <c:choose>
+	                                		<c:when test="${item.unitLvl == 1 }">${item.unitOdr}차시</c:when>
+	                                		<c:when test="${item.unitLvl == 2 }">-</c:when>
+	                                	</c:choose>
+                                    </td>
                                     <td class="text-left">
                                         <input type="hidden" style="width:80%; display:inline-block;" id="unitNm" name="subList[${status.index}].unitNm" class="form-control input-sm" value="${item.unitNm}">
-                                        ${item.unitNm}
+                                        ${item.unitNm}  
                                         <c:choose>
+                                        	<c:when test="${item.unitLvl == 1 && item.prgrChkType eq 'PAGE'}"><a href="javascript:cntsWrite('2' ,'${item.unitCd}')" class="btn btn-default btn-xs">페이지 추가</a></c:when>
                                         	<c:when test="${item.cntsTypeCd eq 'CDN' }"><i class="fa fa-cloud ml5" title="CDN"></i></c:when>
                                         	<c:when test="${item.cntsTypeCd eq 'VOD' }"><i class="fa fa-play-circle ml5" title="VOD"></i></c:when>
                                         	<c:when test="${item.cntsTypeCd eq 'LECTURE' }"><i class="fa fa-desktop ml5" title="코딩강의"></i></c:when>

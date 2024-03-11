@@ -391,6 +391,8 @@ public class BookmarkServiceImpl extends EgovAbstractServiceImpl implements Book
 			if(iBookmarkVO.getConnTm() > 999999999) iBookmarkVO.setConnTm(999999999);
 			if(iBookmarkVO.getConnCnt() > 999) iBookmarkVO.setConnCnt(999);
 			bookmarkMapper.updateBookmark(iBookmarkVO);
+			
+			bookmarkMapper.updateDetailStudyTm(iBookmarkVO);
 
 			StudentVO stdVO = new StudentVO();
 			stdVO.setStdNo(iBookmarkVO.getStdNo());

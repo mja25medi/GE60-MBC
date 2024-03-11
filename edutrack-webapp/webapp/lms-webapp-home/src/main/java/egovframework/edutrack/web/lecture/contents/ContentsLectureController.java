@@ -311,6 +311,7 @@ public class ContentsLectureController
 		String workType = StringUtil.nvl(request.getParameter("workType"),"file");
 		String orgCd = UserBroker.getUserOrgCd(request);
 		String crsCreCd = request.getParameter("crsCreCd");
+		String sbjType = request.getParameter("sbjType");
 		
 		String forwardUrl = "home/lecture/contents/left_file_tree_div";
 		if("othersbj".equals(workType)) {
@@ -334,6 +335,7 @@ public class ContentsLectureController
 
 			List<ClibShareCntsCtgrVO> listCtgr = clibShareCntsCtgrService.list(ccscVO).getReturnList();
 			request.setAttribute("ctgrList", listCtgr);
+			request.setAttribute("sbjType", sbjType);
 
 			// 교육기관 정보를 가져온다.
 			OrgOrgInfoVO orgInfoVO = new OrgOrgInfoVO();
@@ -833,12 +835,14 @@ public class ContentsLectureController
 		commonVOProcessing(vo, request);
 
 		String orgCd = UserBroker.getUserOrgCd(request);
+		String sbjType = request.getParameter("sbjType");
 		vo.setOrgCd(orgCd);
 		vo.setShareDivCd("CNTS");
 
 		ProcessResultListVO<ClibShareMediaCntsVO> resultList = clibShareMediaCntsService.list(vo);
 
 		request.setAttribute("clibShareMediaCntsList", resultList.getReturnList());
+		request.setAttribute("sbjType", sbjType);
 		return"home/lecture/library/share/media_cnts_list_for_cnts_mgr_div";
 	}
 	

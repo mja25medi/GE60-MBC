@@ -387,7 +387,14 @@ public class MainManageController extends GenericController {
 //					.addParameter("mcd", "MS00000000")
 //					.toString();
 //		}
-
+		String mngType = uuivo.getMngAuthGrpCd();
+		if (mngType.contains("DEPTMNG")) {
+			return "redirect:"+
+					new URLBuilder("/mng/main/goMenuPage")
+					.addParameter("mcd", "MS05003000")
+					.toString();
+		}
+		
 		return "redirect:"+
 				new URLBuilder("/mng/main/goMenuPage")
 				.addParameter("mcd", "MS00000000")

@@ -20,8 +20,8 @@
                         <li id="tabBox3"><a href="javascript:tabBox('3')">영상링크</a></li>
                         <!-- 
                         <li id="tabBox5"><a href="javascript:tabBox('5')">코딩과제</a></li>
-                        <li id="tabBox4"><a href="javascript:tabBox('4')">콘텐츠파일</a></li>
                          -->
+                        <li id="tabBox4"><a href="javascript:tabBox('4')">콘텐츠파일</a></li>
                     </ul>
                     <div class="panel-body" id="leftWorkArea" style="border-top:0px;">
 
@@ -30,8 +30,8 @@
             </div>
             
             
-            <div class="col-sm-6">
-                <div class="segment subject_pop">
+            <div class="col-sm-6" id="contentsWriteArea" >
+                <div class="segment subject_pop" id="contentsWriteForm">
                			<form id="contentsForm" name="contentsForm" class="form-inline" onsubmit="return false" style="display: unset">
 						<input type="hidden" name="crsCreCd" value="${vo.crsCreCd}" />
 						<input type="hidden" name="sbjCd" value="${vo.sbjCd}" />
@@ -45,6 +45,7 @@
 						<input type="hidden" name="bookmarkCnt" value="${vo.bookmarkCnt}" />
 						<input type="hidden" name="subCnt" value="${vo.subCnt}" />
 						<input type="hidden" name="roomId" id="roomId" value="${vo.roomId}" />
+						<input type="hidden" name="prgrChkYn" value="${vo.prgrChkYn}" />
 	                    <div class="tstyle">
 	                        <ul class="dbody">                            
 	                            <li>
@@ -57,6 +58,27 @@
 	                                    </div>
 	                                </div>
 	                            </li>
+	                            <li id="prgrChkTypeTr">
+									 <div class="row" >
+										<label for="prgrChkType" class="form-label col-sm-2">진도체크방법</label>
+										<div class="col-sm-10">
+										 	 <div class="form-row">
+	                                            <div class="ra_inline">
+	                                            	<span class="custom-input">
+	                                                    <input type="radio" name="prgrChkType" id="prgrChkTypeTIME" value="TIME" <c:if test="${vo.prgrChkType eq 'TIME'}">checked</c:if>  onclick="prgrChkTypeChk()"/>
+	                                                    <label for="prgrChkTypeTIME"><spring:message code="course.title.contents.progress.time"/></label>
+	                                                </span>
+	                                                 <c:if test="${createOnlineSubjectVO.sbjType eq 'ON'}">
+		                                                <span class="custom-input">
+		                                                    <input type="radio" name="prgrChkType" id="prgrChkTypePAGE" value="PAGE" <c:if test="${vo.prgrChkType eq 'PAGE'}">checked</c:if>  onclick="prgrChkTypeChk()"/>
+		                                                    <label for="prgrChkTypePAGE"><spring:message code="course.title.contents.progress.page"/></label>
+		                                                </span>
+	                                                </c:if>
+												</div>
+											</div>
+										</div>
+									</div>
+								</li> 
 	                            <li id="cntsTypeSel">
 	                                <div class="row" >
 	                                    <label for="conType" class="form-label col-sm-2">콘텐츠 타입</label>
@@ -147,6 +169,19 @@
 	                                    </div>
 	                                </div>
 	                            </li>
+	                            <li id="mobileFilePathTr">
+	                                <div class="row">
+	                                    <label for="mobileFilePath" class="form-label col-sm-2">모바일 파일경로</label>
+	                                    <div class="col-sm-10">
+	                                        <div class="form-row">
+	                                            <div class="input_btn full">
+	                                                <input type="text" style="background-color:#f3f3f3" name="mobileFilePath" value="${vo.mobileFilePath }" readonly="true" class="form-control input-sm" id="mobileFilePath" />
+	                                                <label onclick="delPath('mobileFilePath')"><i class="xi-close"></i></label>
+	                                            </div>
+	                                        </div>             
+	                                    </div>
+	                                </div>
+	                            </li>
 	                            <li id="atchFilePathTr">
 	                                <div class="row">
 	                                    <label for="pdfIatchFilePathnput" class="form-label col-sm-2">교안파일경로(PDF)</label>
@@ -174,12 +209,12 @@
 	                                </div>
 	                            </li>
 	                            <li>
-	                                <div class="row">
+	                                <div class="row" id="prgrChkYnTd">
 	                                    <label for="prgrChkYn" class="form-label col-sm-2"><spring:message code="course.title.course.ratio.progress.check"/></label>
 	                                     <div class="col-sm-10">
-	                                        <div class="form-row">
+	                                        <div class="form-row"> 
 	                                            <span class="custom-input onlychk"> 
-	                                            <input type="checkbox" name="prgrChkYn"  value="Y" id="prgrChkYn" <c:if test="${vo.prgrChkYn eq 'Y'}">checked</c:if>/>
+	                                            <input type="checkbox"  id="prgrChkYn" <c:if test="${vo.prgrChkYn eq 'Y'}">checked</c:if>/>
 	                                            <label for="prgrChkYn"></label></span>
 	                                        </div>             
 	                                    </div>
@@ -220,8 +255,11 @@
 		var lvl1Num;
 		var lvl2Num;
 		tabBox(1);
-		
-		
+		prgrChkTypeChk();
+		var chkVal = $('input[name="prgrChkType"]:checked').val();
+		if(chkVal =="PAGE"){
+		$("#contentsForm").find('input[id="prgrChkTypeTIME"]').prop("disabled", true);
+		}
 		// 콘텐츠 타입 체크박스 활성화
 		$("input:radio[name ='cntsTypeCd']:input[value='${vo.cntsTypeCd}']").trigger("click");
 		
@@ -269,22 +307,46 @@
 		}
 		$('.active').removeClass('active');
 		$('#tabBox'+str).addClass('active');
+		ajaxData.sbjType = "${createOnlineSubjectVO.sbjType}";
 		$("#leftWorkArea").load(ajaxUrl, ajaxData);
 	}
 	
 	//진도체크방법 설정
 	function prgrChkTypeChk(){
 		var chkVal = $('input[name="prgrChkType"]:checked').val();
+		var unitLvl = $("#contentsForm").find('input[name="unitLvl"]').val();
 		if(chkVal =="TIME"){
 			$("input:radio[id=cntsTypeCd1]").attr("disabled",false);
 			$("input:radio[id=cntsTypeCd2]").attr("disabled",false);
 			$("input:radio[id=cntsTypeCd3]").attr("disabled",false);
 			$("input:radio[id=cntsTypeCd4]").attr("disabled",true);
+			$("#atchFilePathTr").show();
+			$("#cntsTypeSel").show();
+			$("#unitFilePathTr").show();
+			$("#zoomUrlTr").show();
+			$("#mobileFilePathTr").hide();
 		}else if(chkVal =="PAGE"){
 			$("input:radio[id=cntsTypeCd1]").attr("disabled",true);
 			$("input:radio[id=cntsTypeCd2]").attr("disabled",true);
 			$("input:radio[id=cntsTypeCd3]").attr("disabled",true);
 			$("input:radio[id=cntsTypeCd4]").attr("disabled",false);
+			if(unitLvl == 1){
+				$("#atchFilePathTr").hide();
+				$("#cntsTypeSel").hide();
+				$("#unitFilePathTr").hide();
+				$("#zoomUrlTr").hide();
+				$("#mobileFilePathTr").show();
+			}
+			else{
+				$("#unitLvNm").text('페이지명');
+				$("#prgrChkTypeTr").hide();
+				$("#prgrChkYnTd").hide();
+				$("#atchFilePathTr").hide();
+				$("#mobileFilePathTr").hide();
+				$("#cntsTypeSel").hide();
+				$("#zoomUrlTr").hide();
+				$("#prgrChkYnTd").hide();
+			}
 		}
 		
 	}
@@ -465,7 +527,18 @@ function getMetaScenes(sceneId){
 
 	function contentsEdit() {
 		var sbjCd = '${vo.sbjCd}';
-		if(!validate(document.contentsForm)) return;
+		//if(!validate(document.contentsForm)) return;
+		if($(':radio[name="prgrChkType"]:checked').val() == "TIME"){
+			if($(':radio[name="cntsTypeCd"]:checked').length < 1){alert("콘텐츠 타입을 선택해주세요."); return false;}
+			if($("#unitFilePath").val() == ""){alert("콘텐츠를 선택해주세요."); return false;}
+		}
+		
+		if($('input:checkbox[id="prgrChkYn"]').is(':checked')){
+			$("#contentsForm").find('input[name="prgrChkYn"]').val("Y");
+		}else{
+			$("#contentsForm").find('input[name="prgrChkYn"]').val("N");
+		}
+		
 		$('#contentsForm').attr("action","/lec/cnts/editCreateContents");
 		$('#contentsForm').ajaxSubmit(function (resultDTO) {
 			alert(resultDTO.message);
@@ -559,6 +632,7 @@ function getMetaScenes(sceneId){
 			$("#unitLvNm").text('페이지명');
 			$("#prgrChkTypeTr").hide();
 			$("#prgrChkYnTd").hide();
+			$("#cntsTypeSel").hide();
 		}
 		
 		$("#metaTd").html('');
@@ -568,7 +642,7 @@ function getMetaScenes(sceneId){
 		$("#contentsForm").find('input[name="unitFilePath"]').val("");
 		$("#contentsForm").find('input[name="mobileFilePath"]').val("");
 		$("#contentsForm").find('input[name="atchFilePath"]').val("");
-		//$("#contentsForm").find('input[name="cntsTypeCd"]').val("");
+		$("#contentsForm").find('input[name="cntsTypeCd"]').val("");
 		$("#contentsForm").find('input[id="cntsTypeCd1"]').attr("checked", false);
 		$("#contentsForm").find('input[id="cntsTypeCd2"]').attr("checked", false);
 		$("#contentsForm").find('input[id="cntsTypeCd3"]').attr("checked", false);

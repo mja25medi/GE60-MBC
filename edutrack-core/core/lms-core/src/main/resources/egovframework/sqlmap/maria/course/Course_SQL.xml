@@ -550,9 +550,14 @@
 		  FROM TB_CRS_CRS A, TB_CRS_CRS_CTGR B							
 		  WHERE A.ORG_CD = B.ORG_CD		
 		     AND A.CRS_CTGR_CD = B.CRS_CTGR_CD  
-		     AND A.CRS_SVC_TYPE = 'S'
-		     <if test = "crsCtgrCd != null and crsCtgrCd != ''">
-			AND B.CRS_CTGR_PATH LIKE CONCAT('%/', #{crsCtgrCd}, '%' )
+		<if test = "crsSvcType != null and crsSvcType != ''">
+		     AND A.CRS_SVC_TYPE = #{crsSvcType}
+		</if>     
+		<if test = "searchMode != null and searchMode != '' and searchMode == 'NEW'">
+		     AND A.REG_DTTM BETWEEN DATE_ADD(NOW(),INTERVAL -4 WEEK ) AND NOW()
+		</if>     
+		<if test = "crsCtgrCd != null and crsCtgrCd != ''">
+			 AND B.CRS_CTGR_PATH LIKE CONCAT('%/', #{crsCtgrCd}, '%' )
 		</if>
 		<if test = "orgCd != null and orgCd != ''">
 			AND A.ORG_CD = IFNULL(FN_GET_NULL(#{orgCd}), A.ORG_CD)

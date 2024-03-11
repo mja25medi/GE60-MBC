@@ -83,6 +83,7 @@ public interface BookmarkMapper {
 	 */
 	public int updateDetailStudyYn(BookmarkVO iBookmarkVO) ;
 
+	public int updateDetailStudyTm(BookmarkVO vo);
 	/**
 	 * 학습 횟수를 증가 시킨다.
 	 * @param iBookmarkVO

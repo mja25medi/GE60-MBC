@@ -172,7 +172,6 @@
 			              AND DATE_FORMAT(D.ATTEND_DTTM,'%Y%m%d') = DATE_FORMAT(C.ATTEND_DTTM,'%Y%m%d')
 			              AND D.USER_NO = A.USER_NO 
 			        WHERE A.CRS_CRE_CD = #{crsCreCd}
-			         AND A.ENRL_STS IN ('S', 'C', 'F')
 			          GROUP BY B.USER_NO , 
 			              B.USER_NM , 
 			              C.ATTEND_DTTM  

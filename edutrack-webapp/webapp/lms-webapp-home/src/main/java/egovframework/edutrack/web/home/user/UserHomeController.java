@@ -228,7 +228,7 @@ public class UserHomeController extends GenericController {
 		if(jsonObj != null && !jsonObj.isEmpty()) {
 			String id = jsonObj.get("id").toString();
 			paramMap.put("snsKey", id);
-			paramMap.put("snsDiv", "KAKAO");
+			paramMap.put("snsDiv", "K");
 			int joinChk = usrUserInfoService.oauthCheckId(paramMap);
 			
 			if(joinChk > 0) {
@@ -260,7 +260,7 @@ public class UserHomeController extends GenericController {
 					return null;
 				}
 				
-				uuiVO.setSnsDiv("KAKAO"); //KAKAO
+				uuiVO.setSnsDiv("K"); //KAKAO
 				uuiVO.setSnsKey(id);
 				
 				//-- 로그인 시도 DB에 기록
@@ -310,7 +310,7 @@ public class UserHomeController extends GenericController {
 			} else {
 				//신규 가입
 				session.setAttribute("snsKey", paramMap.get("snsKey"));
-				session.setAttribute("snsDiv", "KAKAO");
+				session.setAttribute("snsDiv", "K");
 				session.setAttribute("snsJoin", "Y");
 				
 				/*
@@ -363,7 +363,7 @@ public class UserHomeController extends GenericController {
 		if(response_obj != null && !response_obj.equals("")) {
 			String id = (String) response_obj.get("id");
 			paramMap.put("snsKey", id);
-			paramMap.put("snsDiv", "NAVER");
+			paramMap.put("snsDiv", "N");
 			int joinChk = usrUserInfoService.oauthCheckId(paramMap);
 			
 			if(joinChk > 0) {
@@ -403,7 +403,7 @@ public class UserHomeController extends GenericController {
 
 				int faileSec = Integer.parseInt(sysCfgService.getValue("LOGIN", "GAPTIME"))/60;
 				
-				uuiVO.setSnsDiv("NAVER");
+				uuiVO.setSnsDiv("N");
 				uuiVO.setSnsKey(id);
 				
 				//-- 로그인 시도 DB에 기록
@@ -456,7 +456,7 @@ public class UserHomeController extends GenericController {
 			} else {
 				//신규 가입
 				session.setAttribute("snsKey", paramMap.get("snsKey"));
-				session.setAttribute("snsDiv", "NAVER");
+				session.setAttribute("snsDiv", "N");
 				
 				session.setAttribute("snsJoin", "Y");
 				

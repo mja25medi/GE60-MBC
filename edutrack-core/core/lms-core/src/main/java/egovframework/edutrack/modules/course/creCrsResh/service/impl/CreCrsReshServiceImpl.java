@@ -252,9 +252,6 @@ public class CreCrsReshServiceImpl
 		
 		ProcessResultVO<CreCrsReshVO> resultVO = new ProcessResultVO<CreCrsReshVO>();
 		try {
-			//설문 답변 삭제
-			creCrsReshMapper.deleteAnswer(VO);
-			//설문 정보 삭제
 			creCrsReshMapper.delete(VO);
 			resultVO.setReturnVO(VO);
 			resultVO.setResultSuccess();

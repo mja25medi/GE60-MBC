@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +25,9 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -84,6 +88,10 @@ import egovframework.edutrack.modules.lecture.score.service.StdScoreVO;
 import egovframework.edutrack.modules.log.message.service.LogMsgLogService;
 import egovframework.edutrack.modules.log.message.service.LogMsgLogVO;
 import egovframework.edutrack.modules.log.message.service.LogMsgTransLogVO;
+import egovframework.edutrack.modules.org.code.service.OrgCodeService;
+import egovframework.edutrack.modules.org.code.service.OrgCodeVO;
+import egovframework.edutrack.modules.org.crscert.service.OrgCertService;
+import egovframework.edutrack.modules.org.crscert.service.OrgCertVO;
 import egovframework.edutrack.modules.org.crscert.service.OrgCrsCertService;
 import egovframework.edutrack.modules.org.crscert.service.OrgCrsCertVO;
 import egovframework.edutrack.modules.org.emailtpl.service.OrgEmailTplService;
@@ -105,6 +113,8 @@ import egovframework.edutrack.modules.student.student.service.StudentVO;
 import egovframework.edutrack.modules.student.student.service.ValidateRollbackStudentException;
 import egovframework.edutrack.modules.system.code.service.SysCodeVO;
 import egovframework.edutrack.modules.system.config.service.SysCfgService;
+import egovframework.edutrack.modules.system.file.service.SysFileService;
+import egovframework.edutrack.modules.system.file.service.SysFileVO;
 import egovframework.edutrack.modules.user.info.service.UsrUserInfoService;
 import egovframework.edutrack.modules.user.info.service.UsrUserInfoVO;
 import egovframework.edutrack.notification.MessageNotificationException;
@@ -179,6 +189,12 @@ public class StudentHomeController
 	
 	@Autowired @Qualifier("stdScoreService")
 	private StdScoreService			stdScoreService;
+	
+	@Autowired @Qualifier("orgCertService")
+	private OrgCertService 		orgCertService;
+
+	@Autowired @Qualifier("orgCodeService")
+	private OrgCodeService 	 orgCodeService;
 
 	/**
 	 * 수강 신청 화면
@@ -600,9 +616,10 @@ public class StudentHomeController
 	 * @param request
 	 * @param response
 	 * @return
+	 * 이전버전 현재 사용x
 	 */
-	@RequestMapping(value="/printCertificate")
-	public String printCertificate(StudentVO vo, Map commandMap, ModelMap model,
+	@RequestMapping(value="/printCertificateX")
+	public String printCertificateX(StudentVO vo, Map commandMap, ModelMap model,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		commonVOProcessing(vo, request);
 
@@ -753,6 +770,245 @@ public class StudentHomeController
 			request.setAttribute("msie6", msie6);
 
 			return "home/student/student/print_certification_default_pop";
+		}
+	}
+	
+	/**
+	 * 수료증 출력
+	 * - PDF 출력으로 변경
+	 * @param mapping
+	 * @param form
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="/printCertificate")
+	public String printCertificate(StudentVO vo, Map commandMap, ModelMap model, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		commonVOProcessing(vo, request);
+		String orgCd = UserBroker.getUserOrgCd(request);
+
+		/*수료증 정보*/
+		OrgCertVO orgCertVO = new OrgCertVO();
+		orgCertVO.setOrgCd(orgCd);
+		orgCertVO = orgCertService.view(orgCertVO);
+		
+		/*수료증 내용 JSON*/
+		String certContentJson = orgCertVO.getCertContentJson();
+	
+		//-- 수강생 정보를 가져온다.
+		vo = studentService.viewStudent(vo).getReturnVO();
+		
+		/*학습자 정보 Map */
+		HashMap<String, Object> stdCertInfoMap = studentService.selectStdCertInfo(vo);
+		
+		try {
+			// 파일 다운로드 설정
+			String fileName = URLEncoder.encode("수료증", "UTF-8"); // 파일명이 한글일 땐 인코딩 필요
+			response.setHeader("Content-Transper-Encoding", "binary");
+			response.setContentType("application/pdf");
+			//response.setContentType("application/octet-stream"); // 다운로드 형태로 변경
+			response.setHeader("Content-Disposition", "inline; filename=" + fileName + ".pdf");
+			
+			// step 1 : Document 생성
+			Document document;
+			if("HOR".equals(orgCertVO.getPrintDirec())) {
+				document = new Document(PageSize.A4.rotate(), 50, 50, 50, 50); // 용지 및 여백 설정
+			} else {
+				document = new Document(PageSize.A4, 50, 50, 50, 50); // 용지 및 여백 설정
+			}
+			
+			// step 2 : 백그라운드 이미지 설정
+			String filePathBack = "";
+			String repoPathBack = "";
+			String fileSaveNmBack = "";
+			
+			List<SysFileVO> fileListBack = orgCertVO.getAttachFiles();
+			
+			for(int j = 0; j < fileListBack.size(); j++) {
+				 SysFileVO sfvoBack = fileListBack.get(j);
+				 filePathBack = sfvoBack.getFilePath();
+				 repoPathBack = sfvoBack.getRepoPath();
+				 fileSaveNmBack = sfvoBack.getFileSaveNm();
+			}
+			
+			String backImgFilePath = Constants.FILE_STORAGE_PATH  + "/" + orgCd + "/" + repoPathBack  + filePathBack + "/"  + fileSaveNmBack; 
+			Image background = Image.getInstance(backImgFilePath);
+			float widthBack = document.getPageSize().getWidth();
+	        float heightBack = document.getPageSize().getHeight();
+	
+	        // step 3 : PdfWriter 생성
+	        PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
+	        
+	        // step 4 : Document Open
+	        document.open();
+	               
+	        // Measuring a String in Helvetica
+	        String fontPath = "";
+	        String locale = UserBroker.getLocaleKey(request);
+	        BaseFont bf_font;
+	        if("ko".equals(locale)) {
+	        	fontPath = request.getSession().getServletContext().getRealPath("/font/Batang.ttf");
+	        	bf_font = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED); // IDENTITY_V, IDENTITY_H, WINANSI, UniKS-UCS2-H, UniGB-UCS2-H
+	        } else if("jp".equals(locale)) {
+	        	fontPath = request.getSession().getServletContext().getRealPath("/font/MSMINCHO.TTF");
+	        	bf_font = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+	        } else {
+	            Font helvetica = new Font(FontFamily.HELVETICA, 12);
+	            bf_font = helvetica.getCalculatedBaseFont(false);
+	        }
+	        
+	        document.newPage();
+	        writer.getDirectContentUnder().addImage(background, widthBack, 0, 0, heightBack, 0, 0);
+	        
+	        // Drawing lines to see where the text is added
+	        PdfContentByte canvas = writer.getDirectContent();
+	        canvas.beginText();
+	        	     	     
+			/* 수료증내용과 학습자 정보 셋팅 */
+			Iterator<String> iteratorK = stdCertInfoMap.keySet().iterator();
+			
+			while (iteratorK.hasNext()) {
+				
+				String key = iteratorK.next();
+				String value = (String) stdCertInfoMap.get(key);
+				
+				JSONParser jsonParser = new JSONParser();
+				
+				Object obj = jsonParser.parse(certContentJson);
+				
+				JSONArray jsonArr = (JSONArray)obj;
+				
+				for(int i=0;i<jsonArr.size();i++){
+	
+					JSONObject jsonObj = (JSONObject)jsonArr.get(i);
+					
+					if(jsonObj.get(key) == null){
+						continue;
+					}
+					
+					String certContent = jsonObj.get(key).toString();
+					
+					JSONParser jsonParser2 = new JSONParser();
+					JSONObject jsonObj2 = (JSONObject)jsonParser2.parse(certContent);
+					
+					String displayName = null;
+					
+					if(key.equals("cpltNo")) {
+						displayName = "제"+ value + "호";
+					}else if(key.equals("cpltDttm")) {
+						String year = StringUtil.substring(value, 0, 4);
+						String month = StringUtil.substring(value, 4, 6);
+						String day = StringUtil.substring(value, 6, 8);
+						displayName = year+"년 "+month+"월 "+day+"일";
+					}else if(key.equals("onlnEduTm")) {
+						displayName = (String)jsonObj2.get("displayName") + " : " + value + "시간";
+					}else {
+						displayName = (String)jsonObj2.get("displayName") + " : " +  value;
+					}
+							
+					String width = (String)jsonObj2.get("width");
+					String height = (String)jsonObj2.get("height");
+					String fontSize = (String)jsonObj2.get("fontSize");
+				
+					canvas.setFontAndSize(bf_font, Float.parseFloat(fontSize));
+					canvas.showTextAligned(Element.ALIGN_LEFT, displayName, Float.parseFloat(width), document.top()-Float.parseFloat(height), 0);
+				} 
+			}
+			
+			//직인
+	        String filePathStamp = "";
+			String repoPathStamp = "";
+			String fileSaveNmStamp = "";
+			
+			List<SysFileVO> fileListStamp = orgCertVO.getAttachFiles2();
+			
+			for(int j = 0; j < fileListStamp.size(); j++) {
+				
+				SysFileVO sfvoStamp = fileListStamp.get(j);
+				filePathStamp = sfvoStamp.getFilePath();
+				repoPathStamp = sfvoStamp.getRepoPath();
+				fileSaveNmStamp = sfvoStamp.getFileSaveNm();
+			}
+			
+			String stampImgFilePath = Constants.FILE_STORAGE_PATH  + "/" + orgCd + "/" + repoPathStamp + filePathStamp + "/"  + fileSaveNmStamp; 
+			Image stamp = Image.getInstance(stampImgFilePath);
+			float widthStamp = document.getPageSize().getWidth();
+	        float heightStamp = document.getPageSize().getHeight();
+	        
+	        //수료증 기관 코드
+	        List<OrgCodeVO> certOrgList = orgCodeService.listCode(orgCertVO.getOrgCd(), "CERT_ORG_CD").getReturnList();
+			
+	        //수료증 상단 타이틀
+	        
+	        if("HOR".equals(orgCertVO.getPrintDirec())) {
+	        	canvas.addImage(stamp, 80, 0, 0, 80, 460, 40);
+		        canvas.setFontAndSize(bf_font, 30);
+		        canvas.showTextAligned(Element.ALIGN_LEFT,  "수 료 증", 365, 500, 0);
+		        
+		        for(int i=0; i < certOrgList.size(); i++) {
+		        	String codeCd = certOrgList.get(i).getCodeCd();
+		        	String codeOptn = certOrgList.get(i).getCodeOptn();
+		        	
+		        	if("certOrgCts".equals(codeCd)) {	 
+		        		//수료증 문구
+		        		canvas.setFontAndSize(bf_font, 15);
+		     	       // canvas.showTextAligned(Element.ALIGN_LEFT, codeOptn, 150, 220, 0);
+		     	        
+		 	        		String proofCts[] = null;
+			        		int proofCtsPostion = 220;
+		 	        		if(codeOptn.indexOf("<BR/>") >-1) {
+			        			proofCts = codeOptn.split("<BR/>");
+			        			for(int k=0;k<proofCts.length;k++) {
+			        				canvas.showTextAligned(Element.ALIGN_LEFT, proofCts[k], 150, proofCtsPostion, 0);
+			        				proofCtsPostion=proofCtsPostion-20;
+			        			}
+			        		}else {
+			        			canvas.showTextAligned(Element.ALIGN_LEFT, codeOptn, 150, 220, 0);
+			        		}
+		        	}else if("certOrgNm".equals(codeCd)) {	 
+		        		//수료증 발급기관
+		        		canvas.setFontAndSize(bf_font, 30);
+		     	        canvas.showTextAligned(Element.ALIGN_LEFT, codeOptn, 300, 100, 0);
+		        	}
+		        }
+	        }else {
+	        	canvas.addImage(stamp, 80, 0, 0, 80, 360, 70);
+	        	canvas.setFontAndSize(bf_font, 35);
+	            canvas.showTextAligned(Element.ALIGN_LEFT, "수 료 증", 235, 630, 0);
+	             
+	            for(int i=0; i < certOrgList.size(); i++) {
+	            	String codeCd = certOrgList.get(i).getCodeCd();
+	 	        	String codeOptn = certOrgList.get(i).getCodeOptn();
+	 	        	
+	 	        	if("certOrgCts".equals(codeCd)) {	 
+	 	        		//수료증 문구
+	 	        		canvas.setFontAndSize(bf_font, 15);
+	 	        		String proofCts[] = null;
+		        		int proofCtsPostion = 290;
+	 	        		if(codeOptn.indexOf("<BR/>") >-1) {
+		        			proofCts = codeOptn.split("<BR/>");
+		        			for(int k=0;k<proofCts.length;k++) {
+		        				canvas.showTextAligned(Element.ALIGN_LEFT, proofCts[k], 60, proofCtsPostion, 0);
+		        				proofCtsPostion=proofCtsPostion-20;
+		        			}
+		        		}else {
+		        			canvas.showTextAligned(Element.ALIGN_CENTER, codeOptn, 300, 400, 0);
+		        		}
+	 	        	}else if("certOrgNm".equals(codeCd)) {	 
+	 	        		//수료증 발급기관
+	 	        		canvas.setFontAndSize(bf_font, 30);
+	 	        		canvas.showTextAligned(Element.ALIGN_LEFT, codeOptn, 185, 100, 0);
+	 	        	}
+	 	        }
+	        }
+       		canvas.endText();
+       		document.close();
+       		writer.close();
+       		return null;
+       		
+		} catch (Exception e) {
+			throw new ServiceProcessException("PDF file creation failed!", e);
 		}
 	}
 	

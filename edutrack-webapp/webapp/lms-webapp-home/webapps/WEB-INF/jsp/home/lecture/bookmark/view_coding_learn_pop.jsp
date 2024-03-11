@@ -67,6 +67,8 @@
 <script src="/js/jquery/jquery.form.js"></script>
 <script src="/tpl/${COLOR_TPL}/js/pdfobject.js"></script>
 <script src="/tpl/${COLOR_TPL}/js/jquery-resizable.js"></script>
+<script src="/tpl/${COLOR_TPL}/js/codemirror/lib/codemirror.js"></script>
+<script src="/tpl/${COLOR_TPL}/js/codemirror/mode/sql/sql.js"></script>
 </head>
 <body>
 <iframe id='edutrackAPIFrame' name='edutrackAPIFrame' style="height:0;width:0;border:0;border:none;visibility:hidden;display:block;" src="<c:url value="/jsp/bookmark/study_edutrack_adapter.jsp"/>" onload="onloadApiFrame()"></iframe>

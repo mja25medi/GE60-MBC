@@ -1,12 +1,12 @@
 package egovframework.edutrack.modules.student.student.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import egovframework.edutrack.modules.course.course.service.CourseVO;
 import egovframework.edutrack.modules.lecture.bookmark.service.BookmarkVO;
 import egovframework.edutrack.modules.student.student.service.StudentVO;
-import egovframework.edutrack.modules.user.info.service.UsrUserInfoVO;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 
 @Mapper("studentMapper")
@@ -524,5 +524,20 @@ public interface StudentMapper {
 	 *
 	 */
 	public void deleteStudentEduRslt(StudentVO studentVO);
+	
+	
+	 /**
+	 * 학습자 수료증을 정보를 조회한다.
+	 * @param vo
+	 * @throws Exception
+	 */ 
+	public HashMap<String, Object> selectStdCpltInfo(StudentVO vo)throws Exception;
+	
+	 /**
+	 * 학습자 수료증을 정보를 조회한다.
+	 * @param vo
+	 * @throws Exception
+	 */ 
+	public HashMap<String, Object> selectStdCpltInfoSample(StudentVO vo)throws Exception;
 	
 }

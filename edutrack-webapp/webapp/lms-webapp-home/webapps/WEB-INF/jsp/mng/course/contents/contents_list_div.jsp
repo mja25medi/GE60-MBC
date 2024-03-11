@@ -26,7 +26,7 @@
 												<a href="javascript:cntsEditForm('${item.unitCd}')" class=""><i class="fa fa-cog"></i></a>
 											</td>
 											<td class="text-center">
-												<c:if test="${item.unitLvl == 1 && item.cntsTypeCd == 'FILE'}">
+												<c:if test="${item.unitLvl == 1 && item.prgrChkType == 'PAGE'}">
 												<a href="javascript:cntsWrite('2' ,'${item.unitCd}')" class="btn btn-primary btn-sm">페이지 추가</a>
 												</c:if>
 												<c:if test="${item.unitLvl == 2}">

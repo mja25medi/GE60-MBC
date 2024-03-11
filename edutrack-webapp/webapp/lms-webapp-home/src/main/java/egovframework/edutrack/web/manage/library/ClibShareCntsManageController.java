@@ -271,12 +271,15 @@ public class ClibShareCntsManageController extends GenericController {
 		commonVOProcessing(vo, request);
 
 		String orgCd = UserBroker.getUserOrgCd(request);
+		String sbjType = request.getParameter("sbjType");
 		vo.setOrgCd(orgCd);
 		vo.setShareDivCd("CNTS");
-
+		
+		
 		ProcessResultListVO<ClibShareMediaCntsVO> resultList = clibShareMediaCntsService.list(vo);
 
 		request.setAttribute("clibShareMediaCntsList", resultList.getReturnList());
+		request.setAttribute("sbjType", sbjType);
 		return"mng/library/share/media_cnts_list_for_cnts_mgr_div";
 	}
 

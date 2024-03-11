@@ -31,15 +31,10 @@ function modalBoxClose() {
 }
 
 function printCerti(crsCreCd, stdNo) {
-	// download용 iframe이 없으면 만든다.
-	if ( $("#_m_pdf_iframe").length == 0 ) {
-		iframeHtml =
-			'<iframe id="_m_pdf_iframe" name="_m_pdf_iframe" style="visibility: none; display: none;"></iframe>';
-		$("body").append(iframeHtml);
-	}
-	// 폼에 action을 설정하고 submit시킨다.
-	var url = cUrl("/home/student/printCert?crsCreCd="+crsCreCd+"&stdNo="+stdNo);
-	$("#_m_pdf_iframe").attr("src",url);
+	var url = cUrl("/home/student/printCertificate?crsCreCd="+crsCreCd+"&stdNo="+stdNo);
+	var option = "width=830, height=640, toolbar=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no";
+	var reportWin = window.open(url,'reportWin', option);
+	reportWin.focus();
 }
 
 	

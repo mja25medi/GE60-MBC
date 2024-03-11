@@ -170,6 +170,7 @@ public class CreateCourseHomeController extends GenericController {
 		cvo.setMngType(UserBroker.getUserType(request));
 		cvo.setCrsCtgrCd(vo.getCrsCtgrCd());
 		cvo.setCrsCtgrArr(vo.getCrsCtgrArr());
+		cvo.setCrsSvcType(vo.getCrsSvcType());
 		
 		
 		ProcessResultListVO<CreateCourseVO> createCourseList = createCourseService.listCreateCoursePageing(cvo, cvo.getCurPage(), cvo.getListScale(), true);

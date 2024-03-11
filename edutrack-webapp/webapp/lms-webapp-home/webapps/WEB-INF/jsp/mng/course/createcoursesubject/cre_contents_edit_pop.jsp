@@ -55,17 +55,17 @@
 									<input type="hidden" name="subCnt" value="${vo.subCnt}" />
 									<input type="hidden" name="prgrChkYn" id="prgrChkYn" value="${vo.prgrChkYn}" />
 									<input type="hidden" name="roomId" id="roomId" value="${vo.roomId}" />
-									<table style="width:96%;margin-top:5px;margin-left:10px;font-size:14px; height: 250px;">
+									<table style="width:96%;margin-top:5px;margin-left:10px;font-size:14px;">
 										<tr>
 											<td style="width:22%;padding:2px;">
-												<label for="unitNm">차시명</label>
+												<label for="unitNm" id="unitLvNm">차시명</label>
 											</td>
 											<td colspan="2" style="padding:2px;">
 												<input type="text" dispName="<spring:message code="course.title.contents.name"/>" style="width:100%" maxlength="100" name="unitNm" value="${vo.unitNm }"  onfocus="this.select()" class="form-control input-sm" id="unitNm" />
 											</td>
 										</tr>
 										
-										<%-- <tr id="prgrChkTypeTr">
+										<tr id="prgrChkTypeTr">
 											<td style="padding:2px;">
 												<spring:message code="course.title.contents.progress.method"/>
 											</td>
@@ -73,11 +73,13 @@
 												<label style="font-weight: normal;margin-right:20px;">
 													<input type="radio" style="border:0" name="prgrChkType" value="TIME" <c:if test="${vo.prgrChkType eq 'TIME'}">checked</c:if> id="prgrChkTypeTIME" onclick="prgrChkTypeChk()"/> <spring:message code="course.title.contents.progress.time"/>
 												</label>
+												<c:if test="${createOnlineSubjectVO.sbjType eq 'ON' }">
 												<label style="font-weight: normal;">
 													<input type="radio" style="border:0" name="prgrChkType" value="PAGE" <c:if test="${vo.prgrChkType eq 'PAGE'}">checked</c:if> id="prgrChkTypePAGE" onclick="prgrChkTypeChk()"/> <spring:message code="course.title.contents.progress.page"/>
 												</label>
+												</c:if>
 											</td>
-										</tr> --%>
+										</tr> 
 										<tr id="cntsTypeSel">
 											<td style="padding:2px;">
 												<label for="cntsTypeCd">콘텐츠 타입</label>
@@ -162,7 +164,7 @@
 												</div>
 											</td>
 										</tr>
-<%-- 										<tr id="mobileFilePathTr">
+ 										<tr id="mobileFilePathTr">
 											<td style="padding:2px;">
 												<label for="mobileFilePath">모바일 파일경로</label>
 											</td>
@@ -174,7 +176,7 @@
 													</span>
 												</div>
 											</td>
-										</tr> --%>										
+										</tr> 									
 										<tr id="atchFilePathTr">
 											<td style="padding:2px;">
 												<label for="atchFilePath">교안파일경로(PDF)</label>
@@ -196,7 +198,7 @@
 												<input type="text" style="width:50px;text-align:right;float:left;" dispName="<spring:message code="course.title.contents.default.time"/>" maxlength="5" lenCheck="5" name="critTm" value="${vo.critTm }"  class="form-control input-sm" id="critTm"  onkeyup="isChkNumber(this)"/>
 												<span style="float:left;line-height:30px;"><spring:message code="common.title.min"/></span>
 											</td>
-											<td style="display: flex; justify-content: flex-end; padding-right: 5px;">
+											<td style="display: flex; justify-content: flex-end; padding-right: 5px;"id="prgrChkYnTd">
 												<label for="prgrChkYn" style="margin-top: 10px"><spring:message code="course.title.course.ratio.progress.check"/></label> &nbsp;
 												<input type="checkbox" name="prgrChk" style="border:0" id="prgrChk" value="${vo.prgrChkYn}" <c:if test="${vo.prgrChkYn eq 'Y'}">checked</c:if>/>
 											</td>
@@ -244,11 +246,14 @@
 		var lvl1Num;
 		var lvl2Num;
 		tabBox(1);
+		prgrChkTypeChk();
 		
-		
+		var chkVal = $('input[name="prgrChkType"]:checked').val();
+		if(chkVal =="PAGE"){
+		$("#contentsForm").find('input[id="prgrChkTypeTIME"]').prop("disabled", true);
+		}
 		// 콘텐츠 타입 체크박스 활성화
 		$("input:radio[name ='cntsTypeCd']:input[value='${vo.cntsTypeCd}']").trigger("click");
-		
 		// 코딩 실습 코딩과제 경로 활성
 		<c:if test="vo.cntsTypeCd eq 'CODING_T'}">
 			$("#codingUrlTr").css("display", "");
@@ -286,22 +291,46 @@
 		}else {
 			ajaxData = {"workType":"FILE"};
 		}
+		ajaxData.sbjType = "${createOnlineSubjectVO.sbjType}";
 		$("#leftWorkArea").load(ajaxUrl, ajaxData);
 	}
 	
 	//진도체크방법 설정
 	function prgrChkTypeChk(){
 		var chkVal = $('input[name="prgrChkType"]:checked').val();
+		var unitLvl = $("#contentsForm").find('input[name="unitLvl"]').val();
 		if(chkVal =="TIME"){
 			$("input:radio[id=cntsTypeCd1]").attr("disabled",false);
 			$("input:radio[id=cntsTypeCd2]").attr("disabled",false);
 			$("input:radio[id=cntsTypeCd3]").attr("disabled",false);
 			$("input:radio[id=cntsTypeCd4]").attr("disabled",true);
+			$("#atchFilePathTr").show();
+			$("#cntsTypeSel").show();
+			$("#unitFilePathTr").show();
+			$("#zoomUrlTr").show();
+			$("#mobileFilePathTr").hide();
 		}else if(chkVal =="PAGE"){
 			$("input:radio[id=cntsTypeCd1]").attr("disabled",true);
 			$("input:radio[id=cntsTypeCd2]").attr("disabled",true);
 			$("input:radio[id=cntsTypeCd3]").attr("disabled",true);
 			$("input:radio[id=cntsTypeCd4]").attr("disabled",false);
+			if(unitLvl == 1){
+				$("#atchFilePathTr").hide();
+				$("#cntsTypeSel").hide();
+				$("#unitFilePathTr").hide();
+				$("#zoomUrlTr").hide();
+				$("#mobileFilePathTr").show();
+			}
+			else{
+				$("#unitLvNm").text('페이지명');
+				$("#prgrChkTypeTr").hide();
+				$("#prgrChkYnTd").hide();
+				$("#atchFilePathTr").hide();
+				$("#mobileFilePathTr").hide();
+				$("#cntsTypeSel").hide();
+				$("#zoomUrlTr").hide();
+				$("#prgrChkYnTd").hide();
+			}
 		}
 		
 	}
@@ -479,7 +508,11 @@ function getMetaScenes(sceneId){
 	}
 
 	function contentsEdit() {
-		if(!validate(document.contentsForm)) return;
+		//if(!validate(document.contentsForm)) return;
+		if($(':radio[name="prgrChkType"]:checked').val() == "TIME"){
+			if($(':radio[name="cntsTypeCd"]:checked').length < 1){alert("콘텐츠 타입을 선택해주세요."); return false;}
+			if($("#unitFilePath").val() == ""){alert("콘텐츠를 선택해주세요."); return false;}
+		}
 		
 		if($('input:checkbox[name="prgrChk"]').is(':checked')){
 			$('#prgrChkYn').val("Y");
@@ -573,6 +606,7 @@ function getMetaScenes(sceneId){
 			$("#contentsForm").find('input[name="unitLvl"]').val(dept);
 			$("#contentsForm").find('input[name="unitNm"]').val("차시");
 			$("#unitLvNm").text('차시명');
+			$("#cntsTypeSel").show();
 		}else{
 			$("#contentsForm").find('input[name="parUnitCd"]').val(unitCd);
 			$("#contentsForm").find('input[name="unitLvl"]').val(dept);
@@ -580,6 +614,7 @@ function getMetaScenes(sceneId){
 			$("#unitLvNm").text('페이지명');
 			$("#prgrChkTypeTr").hide();
 			$("#prgrChkYnTd").hide();
+			$("#cntsTypeSel").hide();
 		}
 		
 		$("#metaTd").html('');
@@ -589,7 +624,7 @@ function getMetaScenes(sceneId){
 		$("#contentsForm").find('input[name="unitFilePath"]').val("");
 		$("#contentsForm").find('input[name="mobileFilePath"]').val("");
 		$("#contentsForm").find('input[name="atchFilePath"]').val("");
-		//$("#contentsForm").find('input[name="cntsTypeCd"]').val("");
+		$("#contentsForm").find('input[name="cntsTypeCd"]').val("");
 		$("#contentsForm").find('input[id="cntsTypeCd1"]').attr("checked", false);
 		$("#contentsForm").find('input[id="cntsTypeCd2"]').attr("checked", false);
 		$("#contentsForm").find('input[id="cntsTypeCd3"]').attr("checked", false);
@@ -598,7 +633,7 @@ function getMetaScenes(sceneId){
 		$("#contentsForm").find('input[id="cntsTypeCd6"]').attr("checked", false);
 		$("#contentsForm").find('input[id="prgrChkTypeTIME"]').attr("checked", false);
 		$("#contentsForm").find('input[id="prgrChkTypePAGE"]').attr("checked", false);
-
+		$("#contentsForm").find('input[name="prgrChkYn"]').prop("checked", false);
 
 		$.ajaxSetup({async: false});
 		$('#contentsForm').attr("action","/mng/course/contents/addContents");

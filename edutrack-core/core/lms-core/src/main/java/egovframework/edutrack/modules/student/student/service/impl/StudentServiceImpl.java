@@ -1,6 +1,7 @@
 package egovframework.edutrack.modules.student.student.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -25,19 +26,15 @@ import egovframework.edutrack.comm.util.web.UserBroker;
 import egovframework.edutrack.comm.util.web.ValidationUtils;
 import egovframework.edutrack.modules.course.course.service.CourseVO;
 import egovframework.edutrack.modules.course.course.service.impl.CourseMapper;
-import egovframework.edutrack.modules.course.creCrsResh.service.CreCrsReshVO;
-import egovframework.edutrack.modules.course.creCrsResh.service.impl.CreCrsReshMapper;
 import egovframework.edutrack.modules.course.createcourse.service.CreateCourseVO;
 import egovframework.edutrack.modules.course.createcourse.service.impl.CreateCourseMapper;
 import egovframework.edutrack.modules.lecture.bookmark.service.BookmarkVO;
 import egovframework.edutrack.modules.lecture.bookmark.service.impl.BookmarkMapper;
-import egovframework.edutrack.modules.student.payment.service.PaymentVO;
 import egovframework.edutrack.modules.student.payment.service.impl.PaymentMapper;
 import egovframework.edutrack.modules.student.result.service.EduResultVO;
 import egovframework.edutrack.modules.student.result.service.impl.EduResultMapper;
 import egovframework.edutrack.modules.student.student.service.StudentService;
 import egovframework.edutrack.modules.student.student.service.StudentVO;
-import egovframework.edutrack.modules.student.student.service.ValidateRollbackStudentException;
 import egovframework.edutrack.modules.student.student.service.ValidateStudentException;
 import egovframework.edutrack.modules.user.info.service.UsrLoginVO;
 import egovframework.edutrack.modules.user.info.service.UsrUserInfoVO;
@@ -77,9 +74,6 @@ public class StudentServiceImpl extends EgovAbstractServiceImpl implements Stude
 	
 	@Resource
 	private UsrUserInfoMapper usrUserInfoMapper;
-	
-	@Resource
-	private CreCrsReshMapper creCrsReshMapper;
 	
 	/**
 	 * 수강 신청 목록 조회
@@ -502,19 +496,28 @@ public class StudentServiceImpl extends EgovAbstractServiceImpl implements Stude
 	 */
 	public ProcessResultVO<StudentVO> deleteCourseStudent(StudentVO iStudentVO)  throws Exception {
 
+
+		String returnMsg = "";
 		StudentVO studentVO = new StudentVO();
 		studentVO.setCrsCreCd(iStudentVO.getCrsCreCd());
 		studentVO.setStdNo(iStudentVO.getStdNo());
 		studentVO.setEnrlSts("D");
+
 		studentService.deleteStudentForHrdApi(studentVO);
+
+		studentVO = studentMapper.selectStudentInfo(studentVO);
+		returnMsg += "/"+studentVO.getUserNo();
 	
+
 		//진도율 삭제
 		BookmarkVO bookmarkVO = new BookmarkVO();
 		bookmarkVO.setStdNo(iStudentVO.getStdNo());
 		bookmarkMapper.deleteBookmarkStdNo(bookmarkVO);
 
+
 		ProcessResultVO<StudentVO> processResultVO = new ProcessResultVO<StudentVO>();
 		processResultVO.setResultSuccess();
+		processResultVO.setMessage(returnMsg);
 		processResultVO.setResult(1);
 		return processResultVO;
 	}
@@ -1700,5 +1703,23 @@ public class StudentServiceImpl extends EgovAbstractServiceImpl implements Stude
 			}
 		}
 		return new ProcessResultVO<StudentVO>(ProcessResultVO.RESULT_SUCC, resultMessage);
+	}
+	
+	/***************************************************** 
+	 * 학습자 수료증을 정보를 조회한다.
+	 * @param vo
+	 * @throws Exception
+	 ******************************************************/ 
+	@Override
+	public HashMap<String, Object> selectStdCertInfo(StudentVO vo) throws Exception {
+		
+		HashMap<String, Object> repositories = new HashMap<String, Object>();
+		if(vo.getCpltNo() != null) {
+			repositories = studentMapper.selectStdCpltInfo(vo);
+		}else {
+			repositories = studentMapper.selectStdCpltInfoSample(vo);
+		}
+		
+		return repositories;
 	}
 }

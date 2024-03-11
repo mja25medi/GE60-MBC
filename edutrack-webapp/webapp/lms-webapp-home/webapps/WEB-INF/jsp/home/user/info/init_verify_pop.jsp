@@ -62,7 +62,8 @@
 	function changePwdCallback(resultDTO) {
 		if(resultDTO.result == 1) {
 			alert(resultDTO.message);
-			modalBoxClose();
+			//modalBoxClose();
+			parent.modalBox.close();
 			parent.document.location.reload();
 		}else {
 			alert(resultDTO.message);

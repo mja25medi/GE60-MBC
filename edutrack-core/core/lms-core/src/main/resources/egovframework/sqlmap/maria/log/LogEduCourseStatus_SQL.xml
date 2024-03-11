@@ -64,16 +64,16 @@
 	</select>
 	
 	<sql id="getListStatusQuery">
-		SELECT A.CRS_CRE_CD as crsCreCd
-		     , B.CRS_NM as crsNm
-		     , A.CRS_CRE_NM as crsCreNm
-		     , A.CRE_YEAR as creYear
-		     , A.CRE_TERM as creTerm
-		     , A.ENRL_START_DTTM as enrlStartDttm
-		     , A.ENRL_END_DTTM as enrlEndDttm
-		     , A.OFLN_START_DTTM as oflnStartDttm
-		     , A.OFLN_END_DTTM as oflnEndDttm
-		     , B.CRS_OPER_MTHD as crsOperMthd
+		SELECT A.CRS_CRE_CD 
+		     , B.CRS_NM
+		     , A.CRS_CRE_NM 
+		     , A.CRE_YEAR 
+		     , A.CRE_TERM 
+		     , A.ENRL_START_DTTM
+		     , A.ENRL_END_DTTM 
+		     , A.OFLN_START_DTTM 
+		     , A.OFLN_END_DTTM 
+		     , B.CRS_OPER_MTHD 
 		     , A.DEPT_CD
 			 <!-- , C.DEPT_NM -->
 		     , ( SELECT COUNT(*)
@@ -93,6 +93,48 @@
 		<!--  AND A.DEPT_CD = C.DEPT_CD -->
 	</sql>
 	
+	<sql id="getListStatusQueryForDeptMng">
+		SELECT A.CRS_CRE_CD 
+		     , B.CRS_NM
+		     , A.CRS_CRE_NM 
+		     , A.CRE_YEAR 
+		     , A.CRE_TERM 
+		     , A.ENRL_START_DTTM
+		     , A.ENRL_END_DTTM 
+		     , A.OFLN_START_DTTM 
+		     , A.OFLN_END_DTTM 
+		     , B.CRS_OPER_MTHD 
+		     , A.DEPT_CD
+			 <!-- , C.DEPT_NM -->
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std C, tb_usr_user_info D
+		          WHERE C.CRS_CRE_CD = A.CRS_CRE_CD
+		        	AND C.USER_NO = D.USER_NO
+	        		AND D.DEPT_CD = #{deptCd}
+		            AND C.ENRL_STS IN ('S','C','F') ) AS enrlCnt
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std C, tb_usr_user_info D
+		          WHERE C.CRS_CRE_CD = A.CRS_CRE_CD
+		        	AND C.USER_NO = D.USER_NO
+	        		AND D.DEPT_CD = #{deptCd}
+		            AND C.ENRL_STS = 'C' ) AS cpltCnt
+		     , ( SELECT COUNT(*)
+		           FROM tb_std_std C, tb_usr_user_info D
+		          WHERE C.CRS_CRE_CD = A.CRS_CRE_CD
+		        	AND C.USER_NO = D.USER_NO
+	        		AND D.DEPT_CD = #{deptCd}
+		            AND C.ENRL_STS = 'F' ) AS failCnt
+		  FROM tb_crs_cre_crs A, tb_crs_crs B <!-- tb_usr_dept_info C -->
+		 WHERE A.CRS_CD = B.CRS_CD
+		 AND ( SELECT COUNT(*)
+		           FROM TB_STD_STD C, TB_USR_USER_INFO D
+		          WHERE C.CRS_CRE_CD = A.CRS_CRE_CD
+		        	AND C.USER_NO = D.USER_NO
+		          	AND D.DEPT_CD = #{deptCd}
+		            AND C.ENRL_STS IN ('S','C','F') )  > 0
+		<!--  AND A.DEPT_CD = C.DEPT_CD -->
+	</sql>
+	
 	<sql id="whereStatusQuery">
 		<!-- 	<if test = 'creMonth != null and creMonth != ""'>
 		   AND SUBSTR(A.ENRL_START_DTTM,1,6) = CONCAT(#{creYear},#{creMonth})
@@ -109,9 +151,9 @@
 		<if test = 'creCrsCnt != null and creCrsCnt != ""'>
 			AND A.CRE_TERM = IFNULL((#{creCrsCnt}),A.CRE_TERM)
 		</if>
-		<if test = 'deptCd != null and deptCd != ""'>
+		<!-- <if test = 'deptCd != null and deptCd != ""'>
 			AND A.DEPT_CD = IFNULL((#{deptCd}),A.DEPT_CD)
-		</if>
+		</if> -->
 		<if test = 'sbjCd != null and sbjCd != ""'>
 			AND A.SBJ_CD = IFNULL((#{sbjCd}),A.SBJ_CD)
 		</if>
@@ -129,35 +171,34 @@
 	<sql id="orderStatusQuery">
 		<if test = 'sortKey != null and sortKey != ""'>
 			<if test = 'sortKey == "CRS_NM_ASC"'>
-				 ORDER BY B.CRS_NM ASC
+				 ORDER BY CRS_NM ASC
 			</if>
 			<if test = 'sortKey == "CRS_NM_DESC"'>
-				 ORDER BY B.CRS_NM DESC
+				 ORDER BY CRS_NM DESC
 			</if>
 			<if test = 'sortKey == "CRE_TERM_ASC"'>
-				 ORDER BY A.CRE_TERM ASC
+				 ORDER BY CRE_TERM ASC
 			</if>
 			<if test = 'sortKey == "CRE_TERM_DESC"'>
-				 ORDER BY A.CRE_TERM DESC
+				 ORDER BY CRE_TERM DESC
 			</if> 
 			<if test = 'sortKey == "CRS_CRE_NM_ASC"'>
-				 ORDER BY A.CRS_CRE_NM ASC
+				 ORDER BY CRS_CRE_NM ASC
 			</if>
 			<if test = 'sortKey == "CRS_CRE_NM_DESC"'>
-				 ORDER BY A.CRS_CRE_NM DESC
+				 ORDER BY CRS_CRE_NM DESC
 			</if>			
 		</if>
 		<if test = 'sortKey == null or sortKey == ""'>
-		 ORDER BY A.ENRL_START_DTTM DESC, A.CRS_CRE_CD DESC		
+		 ORDER BY ENRL_START_DTTM DESC, CRS_CRE_CD DESC		
 		</if>
 	</sql>
 	
 	<select id="count" parameterType="LogEduCourseStatusVO" resultType="Integer">
 		SELECT 
 			COUNT(*)
-		FROM tb_crs_cre_crs A, tb_crs_crs B, tb_usr_dept_info C
+		FROM tb_crs_cre_crs A, tb_crs_crs B
 		 WHERE A.CRS_CD = B.CRS_CD
-		 AND A.DEPT_CD = C.DEPT_CD								
 		<include refid="whereStatusQuery" />
 	</select>
 	
@@ -170,6 +211,16 @@
 	<select id="listCourseStatusPageing" parameterType="logEduCourseStatusVO" resultType="logEduCourseStatusVO">
 		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
 	    <include refid="getListStatusQuery" />
+		<include refid="whereStatusQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
+		<include refid="orderStatusQuery" />
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageSubfix"/>
+	</select>
+	
+	
+	<select id="listCourseStatusDeptMngPageing" parameterType="logEduCourseStatusVO" resultType="logEduCourseStatusVO">
+		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pagePrefix"/>
+	    <include refid="getListStatusQueryForDeptMng" />
 		<include refid="whereStatusQuery" />
 		<include refid="egovframework.edutrack.comm.service.impl.CommonMapper.pageRnumfix"/>
 		<include refid="orderStatusQuery" />
@@ -730,5 +781,9 @@
 		            AND A.ENRL_STS = 'F' ) AS failCnt12
 		  FROM DUAL
 	</select>	
+	
+	<select id="selectDeptCd" parameterType="String" resultType="String">
+		SELECT DEPT_CD FROM TB_USR_USER_INFO WHERE USER_NO = #{USERNO}
+	</select>
 
 </mapper>

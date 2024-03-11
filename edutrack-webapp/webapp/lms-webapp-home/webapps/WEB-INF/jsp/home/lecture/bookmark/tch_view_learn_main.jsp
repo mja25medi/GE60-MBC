@@ -135,7 +135,7 @@
  			                            		</c:choose>
 			                            	</c:when>
 			                            	<c:otherwise>
-			                            		<c:if test="${not empty contentsItem.unitFilePath}"> <!-- 콘텐츠 연결이 있을때만 버튼 노출 --> 
+			                            		<c:if test="${not empty contentsItem.unitFilePath || contentsItem.unitType eq 'C'}"> <!-- 콘텐츠 연결이 있을때만 버튼 노출 || 페이지 방식일 경우 버튼 노출 -->  
 				                            		<c:choose>
 	 			                            			<c:when test="${sbjVO.sbjType eq 'OFF' }">
 	 			                            				<c:choose>

@@ -1,5 +1,6 @@
 package egovframework.edutrack.modules.student.student.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -7,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataAccessException;
 
 import egovframework.edutrack.comm.annotation.HrdApiStdStd;
-import egovframework.edutrack.comm.annotation.RefundHistory;
 import egovframework.edutrack.comm.annotation.HrdApiStdStd.SyncType;
+import egovframework.edutrack.comm.annotation.RefundHistory;
 import egovframework.edutrack.comm.annotation.RefundHistory.RefundType;
 import egovframework.edutrack.comm.service.ProcessResultListVO;
 import egovframework.edutrack.comm.service.ProcessResultVO;
@@ -430,6 +431,14 @@ public interface StudentService {
 	 * @return  ProcessResultVO
 	 */
 	public abstract ProcessResultVO<StudentVO> cancelStudentCertPass(StudentVO iStudentVO) throws Exception;
+	
+	
+	/***************************************************** 
+	 * 학습자 수료증을 정보를 조회한다.
+	 * @param vo
+	 * @throws Exception
+	 ******************************************************/ 
+	public HashMap<String, Object> selectStdCertInfo(StudentVO vo) throws Exception;
 
 	
 }

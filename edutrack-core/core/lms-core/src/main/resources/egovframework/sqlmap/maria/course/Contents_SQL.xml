@@ -92,15 +92,15 @@
 		       , (SELECT FN_GET_USER_NAME(A.MOD_NO) ) MOD_NM  
 		       , (SELECT FN_GET_USER_NAME(A.REG_NO) ) REG_NM  
 		       , IFNULL(( SELECT UNIT_NM
-		                 FROM tb_crs_sbj_cnts  
-		                WHERE UNIT_CD = A.PAR_UNIT_CD),'ROOT') AS PAR_UNIT_NM  
+		                 FROM tb_crs_cre_sbj_cnts  
+		                WHERE UNIT_CD = A.PAR_UNIT_CD AND CRS_CRE_CD = #{crsCreCd}),'ROOT') AS PAR_UNIT_NM  
 		       , CASE WHEN (A.UNIT_LVL -1) < 0 THEN 0 ELSE (A.UNIT_LVL -1) END PAR_UNIT_LVL  
 		       , ( SELECT MAX(UNIT_ODR)  
-		             FROM tb_crs_sbj_cnts  
-		            WHERE IFNULL( FN_GET_NULL(PAR_UNIT_CD),'1') = IFNULL( FN_GET_NULL(A.PAR_UNIT_CD),'1') AND SBJ_CD = A.SBJ_CD) AS MAX_ODR
+		             FROM tb_crs_cre_sbj_cnts  
+		            WHERE CRS_CRE_CD = #{crsCreCd} AND IFNULL( FN_GET_NULL(PAR_UNIT_CD),'1') = IFNULL( FN_GET_NULL(A.PAR_UNIT_CD),'1') AND SBJ_CD = A.SBJ_CD) AS MAX_ODR
 		       , ( SELECT COUNT(*)  
-		             FROM tb_crs_sbj_cnts  
-		            WHERE PAR_UNIT_CD = A.UNIT_CD AND SBJ_CD = A.SBJ_CD) AS SUB_CNT  
+		             FROM tb_crs_cre_sbj_cnts  
+		            WHERE PAR_UNIT_CD = A.UNIT_CD AND SBJ_CD = A.SBJ_CD AND CRS_CRE_CD = #{crsCreCd}) AS SUB_CNT  
 		       , ( SELECT COUNT(*)  
 		             FROM tb_lec_bookmark  
 		            WHERE SBJ_CD = A.SBJ_CD  
@@ -110,10 +110,10 @@
 		            WHERE SBJ_CD = A.SBJ_CD  
 		              AND UNIT_CD = A.UNIT_CD
 		              AND STD_NO = #{stdNo} ) AS PRGR_RATIO   
-		       , ( SELECT MAX(UNIT_CD) FROM TB_CRS_CRE_SBJ_CNTS B WHERE CNTS_TYPE_CD IN ('CDN','VOD','MLINK') AND B.SBJ_CD = A.SBJ_CD AND B.UNIT_ODR < A.UNIT_ODR  ) AS PRE_UNIT_CD
-               , ( SELECT MIN(UNIT_CD) FROM TB_CRS_CRE_SBJ_CNTS B WHERE CNTS_TYPE_CD IN ('CDN','VOD','MLINK') AND B.SBJ_CD = A.SBJ_CD AND B.UNIT_ODR > A.UNIT_ODR  ) AS NEXT_UNIT_CD
+		      	, ( SELECT MAX(UNIT_CD) FROM TB_CRS_CRE_SBJ_CNTS B WHERE  B.UNIT_LVL =1 AND B.SBJ_CD = A.SBJ_CD AND B.UNIT_ODR < A.UNIT_ODR  ) AS PRE_UNIT_CD
+		      	, ( SELECT MIN(UNIT_CD) FROM TB_CRS_CRE_SBJ_CNTS B WHERE B.UNIT_LVL =1 AND B.SBJ_CD = A.SBJ_CD AND B.UNIT_ODR > A.UNIT_ODR  ) AS NEXT_UNIT_CD   
 		    FROM  tb_crs_cre_sbj_cnts A 
-		   WHERE SBJ_CD = #{sbjCd} 
+		   WHERE A.SBJ_CD = #{sbjCd} 
 		   ]]>
 
 	</sql>
@@ -180,9 +180,10 @@
 				, UNIT_ODR
 				, CRIT_TM
 				, CNTS_TYPE_CD
+				, PRGR_CHK_TYPE 
 				, CONCAT(LPAD(UNIT_ODR,'3','0'),'/',UNIT_CD) AS PATH
 			FROM
-				tb_crs_sbj_cnts
+				tb_crs_cre_sbj_cnts
 			WHERE
 				UNIT_LVL = 1
 			 AND SBJ_CD = #{sbjCd}
@@ -196,11 +197,12 @@
 				, A.UNIT_ODR
 				, A.CRIT_TM
 				, A.CNTS_TYPE_CD
+				, A.PRGR_CHK_TYPE 
 				, CONCAT(LPAD(CTE.UNIT_ODR,'3','0'),'/', CTE.UNIT_CD,'/', LPAD(A.UNIT_ODR, '3', '0')) AS PATH
 			FROM
-				tb_crs_sbj_cnts AS A
+				tb_crs_cre_sbj_cnts AS A
 			INNER JOIN 
-				tb_crs_sbj_cnts AS CTE ON A.PAR_UNIT_CD = CTE.UNIT_CD
+				tb_crs_cre_sbj_cnts AS CTE ON A.PAR_UNIT_CD = CTE.UNIT_CD
 					AND A.SBJ_CD = #{sbjCd}
 		ORDER BY PATH
 	</select> 
@@ -243,6 +245,7 @@
 	
 	<select id="selectCreContents" parameterType="contentsVO" resultType="contentsVO">
 	    <include refid="selectCreContentsQuery" />
+	    	AND A.UNIT_LVL = 1
 	    <if test = 'crsCreCd != null and crsCreCd != ""'> 
 		   	AND A.CRS_CRE_CD = #{crsCreCd}
 		</if>
@@ -726,7 +729,8 @@
 				, UNIT_ODR
 				, CRIT_TM
 				, CNTS_TYPE_CD
-				, CONCAT(LPAD(UNIT_ODR,'3','0'),'/',UNIT_CD) AS PATH
+				, PRGR_CHK_TYPE 
+				, CONCAT(LPAD(UNIT_ODR,'3','0'),'/',UNIT_CD) AS PATH 
 				, TEACHER_NO
 				, CLASS_START_TIME
 				, (SELECT FN_GET_DATE_FORMAT(CLASS_START_TIME,'%H')) AS CLASS_START_HOUR
@@ -740,7 +744,7 @@
 				UNIT_LVL = 1
 			 AND CRS_CRE_CD = #{crsCreCd}
 			 AND SBJ_CD = #{sbjCd}
-		UNION ALL
+		UNION 
 			SELECT
 				A.CRS_CRE_CD  
 				,  A.SBJ_CD
@@ -752,7 +756,8 @@
 				, A.UNIT_ODR
 				, A.CRIT_TM
 				, A.CNTS_TYPE_CD
-				, CONCAT(LPAD(CTE.UNIT_ODR,'3','0'),'/', CTE.UNIT_CD,'/', LPAD(A.UNIT_ODR, '3', '0')) AS PATH
+				, A.PRGR_CHK_TYPE 
+				, CONCAT(LPAD(CTE.UNIT_ODR,'3','0'),'/', CTE.UNIT_CD,'/', LPAD(A.UNIT_ODR, '3', '0')) AS PATH 
 				, A.TEACHER_NO
 				, A.CLASS_START_TIME
 				, (SELECT FN_GET_DATE_FORMAT(A.CLASS_START_TIME,'%H')) AS CLASS_START_HOUR
@@ -767,6 +772,7 @@
 					AND A.CRS_CRE_CD = #{crsCreCd}
 					AND A.SBJ_CD = #{sbjCd}
 		ORDER BY PATH
+		
 	</select>
 	
 	<update id="updateCreateContents" parameterType="contentsVO">
@@ -893,7 +899,7 @@
 		             FROM tb_crs_sbj_cnts  
 		            WHERE IFNULL( FN_GET_NULL(PAR_UNIT_CD),'1') = IFNULL( FN_GET_NULL(A.PAR_UNIT_CD),'1') AND SBJ_CD = A.SBJ_CD) AS MAX_ODR
 		       , ( SELECT COUNT(*)  
-		             FROM tb_crs_sbj_cnts  
+		             FROM tb_crs_cre_sbj_cnts  
 		            WHERE PAR_UNIT_CD = A.UNIT_CD AND SBJ_CD = A.SBJ_CD) AS SUB_CNT  
 		       , ( SELECT COUNT(*)  
 		             FROM tb_lec_bookmark  
@@ -921,7 +927,8 @@
     
     <select id="listCreateContentsDel" parameterType="contentsVO" resultType="contentsVO">
 	    <![CDATA[
-		  SELECT A.SBJ_CD  
+		  SELECT A.CRS_CRE_CD
+		  	   , A.SBJ_CD  
 		       , A.UNIT_CD  
 		       , A.PAR_UNIT_CD  
 		       , A.UNIT_NM  
@@ -1010,23 +1017,23 @@
 		       , (SELECT FN_GET_USER_NAME(A.MOD_NO) ) MOD_NM  
 		       , (SELECT FN_GET_USER_NAME(A.REG_NO) ) REG_NM  
 		       , IFNULL(( SELECT UNIT_NM
-		                 FROM tb_crs_sbj_cnts  
+		                 FROM tb_crs_cre_sbj_cnts  
 		                WHERE UNIT_CD = A.PAR_UNIT_CD),'ROOT') AS PAR_UNIT_NM  
 		       , CASE WHEN (A.UNIT_LVL -1) < 0 THEN 0 ELSE (A.UNIT_LVL -1) END PAR_UNIT_LVL  
 		       , ( SELECT MAX(UNIT_ODR)  
-		             FROM tb_crs_sbj_cnts  
+		             FROM tb_crs_cre_sbj_cnts  
 		            WHERE IFNULL( FN_GET_NULL(PAR_UNIT_CD),'1') = IFNULL( FN_GET_NULL(A.PAR_UNIT_CD),'1') AND SBJ_CD = A.SBJ_CD) AS MAX_ODR
 		       , ( SELECT COUNT(*)  
-		             FROM tb_crs_sbj_cnts  
+		             FROM tb_crs_cre_sbj_cnts  
 		            WHERE PAR_UNIT_CD = A.UNIT_CD AND SBJ_CD = A.SBJ_CD) AS SUB_CNT  
 		       , ( SELECT COUNT(*)  
 		             FROM tb_lec_bookmark  
 		            WHERE SBJ_CD = A.SBJ_CD  
 		              AND UNIT_CD = A.UNIT_CD ) AS BOOKMARK_CNT  
-		    FROM tb_crs_sbj_cnts A 
+		    FROM tb_crs_cre_sbj_cnts A 
 		   WHERE SBJ_CD = #{sbjCd} AND CRS_CRE_CD = #{crsCreCd}
 		]]>
-	    AND IFNULL(FN_GET_NULL(UNIT_CD),'1') = IFNULL(FN_GET_NULL(#{parUnitCd}) ,'1')
+	    AND IFNULL(FN_GET_NULL(UNIT_CD),'1') = IFNULL(FN_GET_NULL(#{unitCd}) ,'1')
 	    ORDER BY UNIT_ODR
 	</select>
 	

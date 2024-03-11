@@ -683,6 +683,7 @@ public class CourseCreateCourseSubjectManageController extends GenericController
 		String sbjCd = StringUtil.nvl(request.getParameter("sbjCd"));
 		String unitCd = StringUtil.nvl(request.getParameter("unitCd"));
 		String crsCreCd = StringUtil.nvl(request.getParameter("crsCreCd"));
+		String sbjType = StringUtil.nvl(request.getParameter("sbjType"));
 		ProcessResultVO<ContentsVO> resultVO = new ProcessResultVO<ContentsVO>();
 		resultVO = contentsService.viewCreateContents(crsCreCd, sbjCd, unitCd);
 		

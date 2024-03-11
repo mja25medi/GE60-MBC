@@ -748,17 +748,12 @@ public class BookmarkLectureController
 					filePath = clibShareMediaCntsVO.getFilePath();
 				}
 	
-				if(clibShareMediaCntsVO.getCntsTypeCd().equals("VOD")) {
-					ext = FileUtil.getFileExtention(clibShareMediaCntsVO.getFilePath());
-					filePath = "/contents"+clibShareMediaCntsVO.getFilePath();
-				}
 				String fileExt = "none";
 				if(Constants.MEDIA_FILE_MP3.contains(ext)) {
 					fileExt = "mp3";
 				} else if(Constants.MEDIA_FILE_MP4.contains(ext)) {
 					fileExt = "mp4";
 				}
-				
 				request.setAttribute("filePath", filePath);
 				request.setAttribute("fileName", clibShareMediaCntsVO.getFileNm());
 				request.setAttribute("fileExt", fileExt);
@@ -801,6 +796,8 @@ public class BookmarkLectureController
 		} else { //-- 로컬 콘텐츠의 경우
 			vo = bookmarkService.viewContents(vo).getReturnVO();
 			String rootUnitCd = StringUtil.split(vo.getUnitPath(),">")[0];
+			vo.setStdNo(stdNo);
+			vo.setCrsCreCd(crsCreCd);
 			List<BookmarkVO> contentsList = bookmarkService.listBookmarkSub(vo, rootUnitCd).getReturnList();
 			request.setAttribute("contentsList", contentsList);
 
@@ -899,9 +896,10 @@ public class BookmarkLectureController
 	@RequestMapping(value="/listSubContents")
 	public String listSubContents(BookmarkVO vo, Map commandMap, ModelMap model,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
-
+		String crsCreCd = UserBroker.getCreCrsCd(request);
 		vo = bookmarkService.viewContents(vo).getReturnVO();
 		vo.setStdNo(UserBroker.getStudentNo(request));
+		vo.setCrsCreCd(crsCreCd);
 		ProcessResultListVO<BookmarkVO> contentsList = bookmarkService.listBookmarkSub(vo, vo.getUnitCd());
 
 		return JsonUtil.responseJson(response, contentsList);

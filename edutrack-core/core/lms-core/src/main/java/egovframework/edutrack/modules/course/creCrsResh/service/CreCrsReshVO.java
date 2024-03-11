@@ -20,7 +20,6 @@ public class CreCrsReshVO extends DefaultVO{
 	private String   regYn;
 	private Integer itemCnt;
 	private Integer ansrCnt;
-	private Integer stdAnsrCnt;
 	private String  stdNo;
 	private Integer stdCnt;
 
@@ -140,11 +139,5 @@ public class CreCrsReshVO extends DefaultVO{
 	}
 	public void setEndMin(String endMin) {
 		this.endMin = endMin;
-	}
-	public Integer getStdAnsrCnt() {
-		return stdAnsrCnt;
-	}
-	public void setStdAnsrCnt(Integer stdAnsrCnt) {
-		this.stdAnsrCnt = stdAnsrCnt;
 	}
 }
