@@ -110,8 +110,8 @@
 		            WHERE SBJ_CD = A.SBJ_CD  
 		              AND UNIT_CD = A.UNIT_CD
 		              AND STD_NO = #{stdNo} ) AS PRGR_RATIO   
-		      	, ( SELECT MAX(UNIT_CD) FROM TB_CRS_CRE_SBJ_CNTS B WHERE  B.UNIT_LVL =1 AND B.SBJ_CD = A.SBJ_CD AND B.UNIT_ODR < A.UNIT_ODR  ) AS PRE_UNIT_CD
-		      	, ( SELECT MIN(UNIT_CD) FROM TB_CRS_CRE_SBJ_CNTS B WHERE B.UNIT_LVL =1 AND B.SBJ_CD = A.SBJ_CD AND B.UNIT_ODR > A.UNIT_ODR  ) AS NEXT_UNIT_CD   
+		      	, ( SELECT MAX(UNIT_CD) FROM TB_CRS_CRE_SBJ_CNTS B WHERE  B.UNIT_LVL =1 AND B.SBJ_CD = A.SBJ_CD AND B.UNIT_ODR < A.UNIT_ODR  AND CRS_CRE_CD = #{crsCreCd} ) AS PRE_UNIT_CD
+		      	, ( SELECT MIN(UNIT_CD) FROM TB_CRS_CRE_SBJ_CNTS B WHERE B.UNIT_LVL =1 AND B.SBJ_CD = A.SBJ_CD AND B.UNIT_ODR > A.UNIT_ODR   AND CRS_CRE_CD = #{crsCreCd}) AS NEXT_UNIT_CD   
 		    FROM  tb_crs_cre_sbj_cnts A 
 		   WHERE A.SBJ_CD = #{sbjCd} 
 		   ]]>
@@ -183,7 +183,7 @@
 				, PRGR_CHK_TYPE 
 				, CONCAT(LPAD(UNIT_ODR,'3','0'),'/',UNIT_CD) AS PATH
 			FROM
-				tb_crs_cre_sbj_cnts
+				tb_crs_sbj_cnts
 			WHERE
 				UNIT_LVL = 1
 			 AND SBJ_CD = #{sbjCd}
@@ -200,9 +200,9 @@
 				, A.PRGR_CHK_TYPE 
 				, CONCAT(LPAD(CTE.UNIT_ODR,'3','0'),'/', CTE.UNIT_CD,'/', LPAD(A.UNIT_ODR, '3', '0')) AS PATH
 			FROM
-				tb_crs_cre_sbj_cnts AS A
+				tb_crs_sbj_cnts AS A
 			INNER JOIN 
-				tb_crs_cre_sbj_cnts AS CTE ON A.PAR_UNIT_CD = CTE.UNIT_CD
+				tb_crs_sbj_cnts AS CTE ON A.PAR_UNIT_CD = CTE.UNIT_CD
 					AND A.SBJ_CD = #{sbjCd}
 		ORDER BY PATH
 	</select> 

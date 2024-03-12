@@ -48,8 +48,7 @@
 	<script src="/js/jquery/jquery.form.js"></script>
 	
 
-</head>
-<body>
+
 <iframe id='edutrackAPIFrame' name='edutrackAPIFrame' width='0' height='0' frameborder='0' src="<c:url value="/jsp/bookmark/study_edutrack_adapter.jsp"/>" onload="onloadApiFrame()"></iframe>
 <script type="text/javascript" defer="defer">
 
@@ -140,15 +139,7 @@ $(document).on("click","#qnaSave",function(){
 		edutrackAPI.SetConnPageCnt(parseInt(currentIdx));
 		edutrackAPI.Commit("");
 		opener.listContents();
-		window.close();
-	}
-	
-	function setShowControl() {
-		$(".flowplayer .fp-timeline").show();
-	}
-	
-	function setHideControl() {
-		$(".flowplayer .fp-timeline").hide();
+		//window.close();
 	}
 	
 	//-- 동영생 재생 위치를 넘겨 준다.
@@ -254,7 +245,9 @@ function goUnitCd(unitCd,type,prgrRatio) {
 		return false;	
 	}
 	
-	if(type == 'n' && prgrRatio < 100 && studyMthd == 'SE'){
+	var classUserType = '${CLASSUSERTYPE}';
+	
+	if(type == 'n' && prgrRatio < 100 && studyMthd == 'SE'  && classUserType == 'STU'){
 		alert("해당 차시를 완료해야 다음 학습이 가능합니다.");
 		return false;
 	}
@@ -608,6 +601,34 @@ var viewTime = 0;
 		window.frames[0].document.body.style.zoom =  nowZoom + "%";
 	}
 </script>
+<c:if test="${ bookmarkVO.unitType ne 'C' && empty bookmarkVO.unitFilePath}">
+<script type="text/javascript" defer="defer">
+
+var isPlayed = 0;
+var mediaTotalTime = 0;
+var sessionPlayTime = 0;
+var sessionSeekTime;
+var credit = "${credit}";
+var isStartPlay	= false; //-- 동영상 재생이 시작되었는지에 대한 체크 , 크롬에서 전체화면/일반화면 전환시 새로 ready를 호출되어 이어보기 메시지가 계속 뜨는 현상 방지
+
+var result;
+var seekTime = 0;
+var prgrRatio = 0;
+ 
+ 
+var halfTime			= 0;
+var modalBox = null;
+
+$(document).ready(function() {
+	alert("콘텐츠 준비중입니다.");
+	window.close();
+
+});
+
+</script>
+</c:if>
+</head>
+<body>
 <div class="vod_wrap">
         <div class="vod_header">
             <div class="top_inner">
@@ -798,32 +819,7 @@ var viewTime = 0;
         </div>
     </div>
 
-<c:if test="${empty bookmarkVO.unitFilePath && empty bookmarkVO.mobileFilePath}">
-<script type="text/javascript" defer="defer">
 
-var isPlayed = 0;
-var mediaTotalTime = 0;
-var sessionPlayTime = 0;
-var sessionSeekTime;
-var credit = "${credit}";
-var isStartPlay	= false; //-- 동영상 재생이 시작되었는지에 대한 체크 , 크롬에서 전체화면/일반화면 전환시 새로 ready를 호출되어 이어보기 메시지가 계속 뜨는 현상 방지
-
-var result;
-var seekTime = 0;
-var prgrRatio = 0;
- 
- 
-var halfTime			= 0;
-var modalBox = null;
-
-$(document).ready(function() {
-	alert("콘텐츠 준비중입니다.");
-	window.close();
-
-});
-
-</script>
-</c:if>
 
 </body>
 </html>

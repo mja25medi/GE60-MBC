@@ -23,8 +23,8 @@
 		        ,  A.ATCH_FILE_PATH																						
 		        ,  A.OLC_YN																								
 		        ,  ( SELECT COUNT(*)																						
-		           	FROM tb_crs_sbj_cnts																				
-		              WHERE PAR_UNIT_CD = A.UNIT_CD AND SBJ_CD = A.SBJ_CD) AS SUB_CNT															
+		           	FROM tb_crs_cre_sbj_cnts																				
+		              WHERE PAR_UNIT_CD = A.UNIT_CD AND SBJ_CD = A.SBJ_CD AND CRS_CRE_CD= A.CRS_CRE_CD) AS SUB_CNT															
 		        ,  IFNULL(FN_GET_NULL(CASE WHEN A.PAR_UNIT_CD IS NULL OR A.PAR_UNIT_CD = '' THEN 
 			        B.STUDY_YN
 			        ELSE (SELECT TLBD.STUDY_YN FROM tb_lec_bookmark_detail TLBD WHERE STD_NO = #{stdNo} AND SBJ_CD = A.SBJ_CD AND UNIT_CD = A.UNIT_CD)

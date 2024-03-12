@@ -409,8 +409,9 @@ function goUnitCd(unitCd,type,prgrRatio) {
 		if(type == 'n'){alert("마지막 차시입니다.")};
 		return false;	
 	}
+	var classUserType = '${CLASSUSERTYPE}';
 	
-	if(type == 'n' && prgrRatio < 100 && studyMthd == 'SE'){
+	if(type == 'n' && prgrRatio < 100 && studyMthd == 'SE'  && classUserType == 'STU'){
 		alert("해당 차시를 완료해야 다음 학습이 가능합니다.");
 		return false;
 	}
