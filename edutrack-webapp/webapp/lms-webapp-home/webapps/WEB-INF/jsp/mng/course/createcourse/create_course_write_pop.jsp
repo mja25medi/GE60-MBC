@@ -161,9 +161,9 @@
 		</tr>
 		</c:if>
 		
-		<tr id="scoreOpenDttm">
-			<th scope="row"><span style="color:red;">* </span><label for="scoreOpenDttm"><spring:message code="course.title.createterm.score.date"/></label></th>
-			<td>
+		<tr>
+			<th scope="row" id="scoreOpenDttm_1"><span style="color:red;">* </span><label for="scoreOpenDttm"><spring:message code="course.title.createterm.score.date"/></label></th>
+			<td id="scoreOpenDttm_2">
 				<div style="float:left">
 					<div class="input-group" style="float:left;width:128px;">
 						<input type="text" maxlength="10" name="scoreOpenDttm_0" id="scoreOpenDttm_0" class="inputDate form-control input-sm" autocomplete="off"/>
@@ -171,13 +171,12 @@
 							<i class="fa fa-calendar"></i>
 						</span>
 					</div>
-					<meditag:datepicker name1="scoreOpenDttm_0" />
+						<meditag:datepicker name1="scoreOpenDttm_0" />
 				</div>
 			</td>
-		</tr>
-		<tr id="eduday">
-			<th scope="row"><span style="color:red;">* </span><spring:message code="course.title.createcourse.eduday"/></th>
-			<td>
+			
+			<th scope="row" id="eduday_1" style="display: none;"><span style="color:red;">* </span><spring:message code="course.title.createcourse.eduday"/></th>
+			<td id="eduday_2" style="display: none;">
 				<input type="hidden" name="enrlEndDttm_0" id="enrlEndDttm_0"/>
 				<input type="hidden" name="enrlStartDttm_0" id="enrlStartDttm_0"/>
 				<div style="float: left">
@@ -185,8 +184,7 @@
 				<span style="float:left;line-height:30px;padding-left:5px"><spring:message code="common.title.day"/></span>
 				</div>
 			</td>
-		</tr>
-		<tr>
+			
 			<th scope="row" ><span style="color:red;">* </span><label for="eduPrice"><spring:message code="course.title.course.edufee"/></label></th>
 			<td>
 				<div class="input-group">
@@ -888,15 +886,20 @@
 	    if (crsOperType == 'S') {
     		$('#durationAplc').hide();
     		$('#enrlDttm').hide();
-    		$('#scoreOpenDttm').hide();
-    		$('#eduday').show();
+    		$('#scoreOpenDttm_1').hide();
+    		$('#scoreOpenDttm_2').hide();
+    		$('#eduday_1').show();
+    		$('#eduday_2').show();
 		}else{
 			$('#durationAplc').show();
     		$('#enrlDttm').show();
-    		$('#scoreOpenDttm').show();
-    		$('#eduday').hide();
+    		$('#scoreOpenDttm_1').show();
+    		$('#scoreOpenDttm_2').show();
+    		$('#eduday_1').hide();
+    		$('#eduday_2').hide();
 		}
 		
+
 	}
 	
 	//기타 성적 input

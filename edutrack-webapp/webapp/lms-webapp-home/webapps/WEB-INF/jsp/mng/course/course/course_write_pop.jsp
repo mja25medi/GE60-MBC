@@ -696,7 +696,13 @@
 	 */
 	function selectCheck() {
 		<c:if test="${gubun eq 'A'}">
-		var crsOperMthd = $("#crsOperMthd option:selected").val();
+			var crsOperType = $("#crsOperType option:selected").val();
+			if (crsOperType == 'S') {
+			  //document.getElementById('crsOperMthd').disabled  = false;
+			   $("#crsOperMthd").attr("disabled", false);
+			}else{
+				var crsOperMthd = $("#crsOperMthd option:selected").val();
+			}
 		</c:if>
 		var enrlCertMthd = $("#enrlCertMthd option:selected").val();
 
@@ -725,9 +731,11 @@
 
 		if (id == 'crsOperType') {
 	        if (val == 'S') {
-	        	removeOptions(['OF', 'BL']);
+	        	//removeOptions(['OF', 'BL']);
+	        	 document.getElementById('crsOperMthd').disabled  = true;
 	        } else {
-	        	restoreOptions();
+	        	//restoreOptions();
+	        	 document.getElementById('crsOperMthd').disabled  = false;
 	        }
 	    }
 		
@@ -745,7 +753,7 @@
 		}
 		
 	}	
-	function removeOptions(optionValues) {
+	/* function removeOptions(optionValues) {
 	    var selectBox = document.getElementById('crsOperMthd');
 	    for (var i = 0; i < selectBox.options.length; i++) {
 	        if (optionValues.includes(selectBox.options[i].value)) {
@@ -774,7 +782,7 @@
 	        selectBox.add(option);
 	    });
 	}
-
+ */
 	
 	
 </script>
