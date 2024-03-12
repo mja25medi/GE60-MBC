@@ -52,7 +52,8 @@
 						</td>
 					</tr>
 				</c:if>
-				<tr>
+			<c:if test="${vo.creOperTypeCd ne 'S' }">
+			<tr>
 			<th scope="row"><span style="color:red;">* </span><spring:message code="course.title.createcourse.duration.aplc"/></th>
 			<td colspan="4">
 				<div class="input-group" style="float:left;width:128px;">
@@ -92,6 +93,7 @@
 				<meditag:datepicker name1="enrlStartDttm" name2="enrlEndDttm" />
 			</td>
 		</tr>
+		</c:if>
 				<%-- 
 				<tr >
 					<th scope="row"><spring:message code="course.title.createcourse.duration.aplc"/></th>
@@ -145,9 +147,19 @@
 					</c:if>
 				</tr>
 				 --%>
-				 
-				 <tr>
-					<th scope="row"><span style="color:red;">* </span><label for="scoreOpenDttm"><spring:message code="course.title.createterm.score.date"/></label></th>
+				<tr>
+				<c:choose>
+						<c:when test="${vo.crsOperType eq 'S'}">
+					<th scope="row"><spring:message code="course.title.createcourse.eduday"/></th>
+					<td>
+						<input type="hidden" name="enrlEndDttm" value="${vo.enrlEndDttm }" />
+						<input type="hidden" name="enrlStartDttm" value="${vo.enrlStartDttm }" />
+						<input type="text" dispName="<spring:message code="course.title.createcourse.eduday"/>" maxlength="3" isNull="Y" lenCheck="3" name="enrlDaycnt" value="${vo.enrlDaycnt }" id="enrlDaycnt" class="inputNumber form-control input-sm" style="text-align:right;width:50px;float:left;" onkeyup="isChkNumber(this)"/>
+						<span style="float:left;line-height:30px;padding-left:5px"><spring:message code="common.title.day"/></span>
+					</td>
+					</c:when>
+					<c:otherwise>
+						<th scope="row"><span style="color:red;">* </span><label for="scoreOpenDttm"><spring:message code="course.title.createterm.score.date"/></label></th>
 					<td>
 						<div style="float:left">
 							<div class="input-group" style="float:left;width:128px;">
@@ -159,6 +171,8 @@
 							<meditag:datepicker name1="scoreOpenDttm" />
 						</div>
 					</td>
+					</c:otherwise>
+				</c:choose>	
 					<th scope="row"><label for="eduPrice"><spring:message code="course.title.course.edufee"/></label></th>
 					<td>
 						<div class="input-group">
@@ -172,7 +186,6 @@
 						</div>
 					</td>
 				</tr>
-				
 				<tr>
 					<th scope="row"><span style="color:red;">* </span><label for="cpltScore"><spring:message code="course.title.course.completescore"/></label></th>
 					<td>
@@ -507,51 +520,54 @@
 	function creCrsEdit() {
 		var f = document.createCourseForm;
 		
-		if($("#enrlAplcStartDttm").val() == '') {
-			alert('<spring:message code="course.message.createcourse.input.duration.aplc"/>');
-			$("#enrlAplcStartDttm").focus();
-			return false;
-		}
-		if($("#enrlAplcEndDttm").val() == '') {
-			alert('<spring:message code="course.message.createcourse.input.duration.aplc"/>');
-			$("#enrlAplcEndDttm").focus();
-			return false;
-		}
-		
-		if($("#enrlStartDttm").val() == '') {
-			alert('<spring:message code="course.message.createcourse.input.duration.edu"/>');
-			$("#enrlStartDttm").focus();
-			return false;
-		}
-		
-		var enrlStartDate = $("#enrlStartDttm").val();
-		var enrlEendDate = $("#enrlEndDttm").val();
-		var endDate = $("#enrlAplcEndDttm").val();
-		
-		var enrlStartArray = enrlStartDate.split('.');
-		var enrlEndArray = enrlEendDate.split('.');
-		var endArray = endDate.split('.');
-
-		var enrl_start_date = new Date(enrlStartArray[0], enrlStartArray[1]-1, enrlStartArray[2]);
-		var enrl_end_date = new Date(enrlEndArray[0], enrlEndArray[1]-1, enrlEndArray[2]);
-		var end_date = new Date(endArray[0], endArray[1]-1, endArray[2]);
-		
-		if(end_date.getTime() > enrl_start_date.getTime()) {
-			alert("교육기간은 교육신청기간 종료날짜 이후에만 가능합니다.");
-			$("#enrlStartDttm").focus();
-			return false;
-		}
-				
-		if($("#enrlEndDttm").val() == '') {
-			alert('<spring:message code="course.message.createcourse.input.duration.edu"/>');
-			$("#enrlEndDttm").focus();
-			return false;
-		}
-		
-		if($("#scoreOpenDttm").val() == '') {
-			alert('성적 열람 시작일을 입력하세요.');
-			$("#scoreOpenDttm").focus();
-			return false;
+		var creOperTypeCd = "${vo.creOperTypeCd}"
+		if (creOperTypeCd != 'S') {
+			if($("#enrlAplcStartDttm").val() == '') {
+				alert('<spring:message code="course.message.createcourse.input.duration.aplc"/>');
+				$("#enrlAplcStartDttm").focus();
+				return false;
+			}
+			if($("#enrlAplcEndDttm").val() == '') {
+				alert('<spring:message code="course.message.createcourse.input.duration.aplc"/>');
+				$("#enrlAplcEndDttm").focus();
+				return false;
+			}
+			
+			if($("#enrlStartDttm").val() == '') {
+				alert('<spring:message code="course.message.createcourse.input.duration.edu"/>');
+				$("#enrlStartDttm").focus();
+				return false;
+			}
+			
+			var enrlStartDate = $("#enrlStartDttm").val();
+			var enrlEendDate = $("#enrlEndDttm").val();
+			var endDate = $("#enrlAplcEndDttm").val();
+			
+			var enrlStartArray = enrlStartDate.split('.');
+			var enrlEndArray = enrlEendDate.split('.');
+			var endArray = endDate.split('.');
+	
+			var enrl_start_date = new Date(enrlStartArray[0], enrlStartArray[1]-1, enrlStartArray[2]);
+			var enrl_end_date = new Date(enrlEndArray[0], enrlEndArray[1]-1, enrlEndArray[2]);
+			var end_date = new Date(endArray[0], endArray[1]-1, endArray[2]);
+			
+			if(end_date.getTime() > enrl_start_date.getTime()) {
+				alert("교육기간은 교육신청기간 종료날짜 이후에만 가능합니다.");
+				$("#enrlStartDttm").focus();
+				return false;
+			}
+					
+			if($("#enrlEndDttm").val() == '') {
+				alert('<spring:message code="course.message.createcourse.input.duration.edu"/>');
+				$("#enrlEndDttm").focus();
+				return false;
+			}
+			
+			if($("#scoreOpenDttm").val() == '') {
+				alert('성적 열람 시작일을 입력하세요.');
+				$("#scoreOpenDttm").focus();
+				return false;
+			}
 		}
 		
 		if($("#cpltScore").val() == '') {

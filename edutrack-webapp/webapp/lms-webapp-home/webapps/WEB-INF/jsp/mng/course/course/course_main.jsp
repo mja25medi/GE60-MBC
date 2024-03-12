@@ -69,6 +69,7 @@
 									<col style="width:auto;min-width:110px;"/>
 									<col style="width:auto;min-width:110px;"/>
 									<col style="width:auto;min-width:110px;"/>
+									<col style="width:auto;min-width:110px;"/>
 									<col style="width:75px"/>
 								</colgroup>
 								<thead>
@@ -77,7 +78,8 @@
 										<th scope="col"><spring:message code="course.title.course.code"/></th>
 										<th scope="col"><spring:message code="course.title.course.category"/></th>
 										<th scope="col"><spring:message code="course.title.course.name"/></th>
-										<th scope="col">과정유형</th>
+										<th scope="col"><spring:message code="course.title.course.oper.type"/></th>
+										<th scope="col"><spring:message code="course.title.course.crstype"/></th>
 										<th scope="col"><spring:message code="common.title.useyn"/></th>
 										<th scope="col"><spring:message code="common.title.manage"/></th>
 									</tr>

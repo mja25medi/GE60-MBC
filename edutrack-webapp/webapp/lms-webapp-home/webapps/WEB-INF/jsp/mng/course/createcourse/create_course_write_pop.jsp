@@ -25,7 +25,8 @@
 								value4="${courseList.crsOperMthd}" 
 								value5="${courseList.eduPrice }"
 								value6="${courseList.eduTm}"
-								value7="${courseList.cpltScore}">${courseList.crsNm}</option>
+								value7="${courseList.cpltScore}"
+								value8="${courseList.crsOperType}">${courseList.crsNm}</option>
 					</c:forEach>
 				</select>
 			</td>
@@ -53,7 +54,7 @@
 			</td>
 		</tr>
 		
-		<tr>
+		<tr id="durationAplc">
 			<th scope="row"><span style="color:red;">* </span><spring:message code="course.title.createcourse.duration.aplc"/></th>
 			<td colspan="4">
 				<div class="input-group" style="float:left;width:128px;">
@@ -72,7 +73,7 @@
 				<meditag:datepicker name1="enrlAplcStartDttm_0" name2="enrlAplcEndDttm_0" />
 			</td>
 		</tr>
-		<tr>
+		<tr id="enrlDttm">
 			<th scope="row"><span style="color:red;">* </span>
 				<c:if test="${courseVO.crsOperMthd eq 'BL' || courseVO.crsOperMthd eq 'ON' }"><spring:message code="course.title.createcourse.method.online"/></c:if>
 				<c:if test="${courseVO.crsOperMthd eq 'OF' }"><spring:message code="course.title.createcourse.method.offline"/></c:if>
@@ -160,7 +161,7 @@
 		</tr>
 		</c:if>
 		
-		<tr>
+		<tr id="scoreOpenDttm">
 			<th scope="row"><span style="color:red;">* </span><label for="scoreOpenDttm"><spring:message code="course.title.createterm.score.date"/></label></th>
 			<td>
 				<div style="float:left">
@@ -173,7 +174,20 @@
 					<meditag:datepicker name1="scoreOpenDttm_0" />
 				</div>
 			</td>
-				<th scope="row" ><span style="color:red;">* </span><label for="eduPrice"><spring:message code="course.title.course.edufee"/></label></th>
+		</tr>
+		<tr id="eduday">
+			<th scope="row"><span style="color:red;">* </span><spring:message code="course.title.createcourse.eduday"/></th>
+			<td>
+				<input type="hidden" name="enrlEndDttm_0" id="enrlEndDttm_0"/>
+				<input type="hidden" name="enrlStartDttm_0" id="enrlStartDttm_0"/>
+				<div style="float: left">
+				<input type="text" style="text-align:right;width:50px;float:left;" maxlength="3" name="enrlDaycnt_0" id="enrlDaycnt_0" class="inputNumber form-control input-sm" />
+				<span style="float:left;line-height:30px;padding-left:5px"><spring:message code="common.title.day"/></span>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" ><span style="color:red;">* </span><label for="eduPrice"><spring:message code="course.title.course.edufee"/></label></th>
 			<td>
 				<div class="input-group">
 				<c:if test="${sessionScope.MNTRYPOS eq 'PR'}">
@@ -364,6 +378,7 @@
 	<input type="hidden" name="oflnEduPlace" id="oflnEduPlace" value="${vo.oflnEduPlace }"/>
 	<input type="hidden" name="scoreOpenDttm" id="scoreOpenDttm" value="${vo.scoreOpenDttm }"/>
 	<input type="hidden" name="creTypeCd" id="creTypeCd" value="${vo.creTypeCd}"/>
+	<input type="hidden" name="creOperTypeCd" id="creOperTypeCd" value="${vo.creOperTypeCd}"/>
 	<input type="hidden" name="creDesc" id="creDesc" value="${vo.creDesc}"/>
 	<input type="hidden" name="qrFileSn" id="qrFileSn" />
 	<input type="submit" value="submit" style="display:none" />
@@ -385,7 +400,7 @@
 			chgCreTerm(i);
 			sumTotal(i);
 		}
-		
+		selectBoxChange();
 		qrFile = new $M.JqueryFileUpload({
 			"varName"			: "qrFile",
 			"files" 			: $.parseJSON('${vo.qrFileJson}'),
@@ -511,62 +526,65 @@
 			$("#crsCreNm_"+str).focus();
 			return false;
 		}
-		
-		if($("#enrlAplcStartDttm_"+str).val() == '') {
-			alert('<spring:message code="course.message.createcourse.input.duration.aplc"/>');
-			$("#enrlAplcStartDttm_"+str).focus();
-			return false;
-		}
-		if($("#enrlAplcEndDttm_"+str).val() == '') {
-			alert('<spring:message code="course.message.createcourse.input.duration.aplc"/>');
-			$("#enrlAplcEndDttm_"+str).focus();
-			return false;
-		}
-
-		if('${courseVO.crsOperType}' == 'R'){
-			if($("#auditEndDttm_"+str).val() == '') {
-				alert('<spring:message code="course.message.createcourse.input.Audit"/>');
-				$("#auditEndDttm_"+str).focus();
+ 		var crsOperType = $("#creOperTypeCd").val();
+	    if (crsOperType != 'S') {
+			if($("#enrlAplcStartDttm_"+str).val() == '') {
+				alert('<spring:message code="course.message.createcourse.input.duration.aplc"/>');
+				$("#enrlAplcStartDttm_"+str).focus();
 				return false;
 			}
-		}
-
-		if($("#enrlStartDttm_"+str).val() == '') {
-			alert('<spring:message code="course.message.createcourse.input.duration.edu"/>');
-			$("#enrlStartDttm_"+str).focus();
-			return false;
-		}
-		
-		var enrlStartDate = $("#enrlStartDttm_"+str).val();
-		var enrlEendDate = $("#enrlEndDttm_"+str).val();
-		var endDate = $("#enrlAplcEndDttm_"+str).val();
-		
-		var enrlStartArray = enrlStartDate.split('.');
-		var enrlEndArray = enrlEendDate.split('.');
-		var endArray = endDate.split('.');
-
-		var enrl_start_date = new Date(enrlStartArray[0], enrlStartArray[1]-1, enrlStartArray[2]);
-		var enrl_end_date = new Date(enrlEndArray[0], enrlEndArray[1]-1, enrlEndArray[2]);
-		var end_date = new Date(endArray[0], endArray[1]-1, endArray[2]);
-		
-		if(end_date > enrl_start_date) {
-			alert("교육기간은 교육신청기간 종료날짜 이후에만 가능합니다.");
-			$("#enrlStartDttm_"+str).focus();
-			return false;
-		}
-				
-		if($("#enrlEndDttm_"+str).val() == '') {
-			alert('<spring:message code="course.message.createcourse.input.duration.edu"/>');
-			$("#enrlEndDttm_"+str).focus();
-			return false;
-		}
-		
-		if($("#scoreOpenDttm_"+str).val() == '') {
-			alert('성적 열람 시작일을 입력하세요.');
-			$("#scoreOpenDttm_"+str).focus();
-			return false;
-		}
-		
+	    
+			if($("#enrlAplcEndDttm_"+str).val() == '') {
+				alert('<spring:message code="course.message.createcourse.input.duration.aplc"/>');
+				$("#enrlAplcEndDttm_"+str).focus();
+				return false;
+			}
+	  
+			if('${courseVO.crsOperType}' == 'R'){
+				if($("#auditEndDttm_"+str).val() == '') {
+					alert('<spring:message code="course.message.createcourse.input.Audit"/>');
+					$("#auditEndDttm_"+str).focus();
+					return false;
+				}
+			}
+	
+			if($("#enrlStartDttm_"+str).val() == '') {
+				alert('<spring:message code="course.message.createcourse.input.duration.edu"/>');
+				$("#enrlStartDttm_"+str).focus();
+				return false;
+			}
+			
+			var enrlStartDate = $("#enrlStartDttm_"+str).val();
+			var enrlEendDate = $("#enrlEndDttm_"+str).val();
+			var endDate = $("#enrlAplcEndDttm_"+str).val();
+			
+			var enrlStartArray = enrlStartDate.split('.');
+			var enrlEndArray = enrlEendDate.split('.');
+			var endArray = endDate.split('.');
+	
+			var enrl_start_date = new Date(enrlStartArray[0], enrlStartArray[1]-1, enrlStartArray[2]);
+			var enrl_end_date = new Date(enrlEndArray[0], enrlEndArray[1]-1, enrlEndArray[2]);
+			var end_date = new Date(endArray[0], endArray[1]-1, endArray[2]);
+			
+			if(end_date > enrl_start_date) {
+				alert("교육기간은 교육신청기간 종료날짜 이후에만 가능합니다.");
+				$("#enrlStartDttm_"+str).focus();
+				return false;
+			}
+		  	
+			if($("#enrlEndDttm_"+str).val() == '') {
+				alert('<spring:message code="course.message.createcourse.input.duration.edu"/>');
+				$("#enrlEndDttm_"+str).focus();
+				return false;
+			}
+			
+			if($("#scoreOpenDttm_"+str).val() == '') {
+				alert('성적 열람 시작일을 입력하세요.');
+				$("#scoreOpenDttm_"+str).focus();
+				return false;
+			}
+	    }
+	    
 		if($("#cpltScore_"+str).val() == '') {
 			alert('수료점수를 입력하세요.');
 			$("#cpltScore_"+str).focus();
@@ -616,6 +634,14 @@
 			return false;
 		}
 		</c:if>
+		
+		if (crsOperType == 'S') {
+			if($("#enrlDaycnt_"+str).val() == '') {
+				alert('<spring:message code="course.message.createcourse.input.duration.enrldaycnt"/>');
+				$("#enrlDaycnt_"+str).focus();
+				return false;
+			}
+		}
 
 		var cpltScore = parseInt(nvlNumber($("#cpltScore_"+str).val()),10);
 		if(cpltScore == '') {
@@ -845,6 +871,7 @@
 		$("#eduPrice_0").val($("#crsCreNm_0 > option:selected").attr("value5"));
 		$("#onlnEduTm_0").val($("#crsCreNm_0 > option:selected").attr("value6"));
 		$("#cpltScore_0").val($("#crsCreNm_0 > option:selected").attr("value7"));
+		$("#creOperTypeCd").val($("#crsCreNm_0 > option:selected").attr("value8"));
 		//오프라인 강의실 박스
 	    var operType = $("#creTypeCd_0").val();
 	    if (operType == 'OF' || operType == 'BL') {
@@ -856,6 +883,19 @@
 	      $('#qrInput').hide();
 	      $("#addEtc").hide();
 	    }
+	    
+	    var crsOperType = $("#creOperTypeCd").val();
+	    if (crsOperType == 'S') {
+    		$('#durationAplc').hide();
+    		$('#enrlDttm').hide();
+    		$('#scoreOpenDttm').hide();
+    		$('#eduday').show();
+		}else{
+			$('#durationAplc').show();
+    		$('#enrlDttm').show();
+    		$('#scoreOpenDttm').show();
+    		$('#eduday').hide();
+		}
 		
 	}
 	

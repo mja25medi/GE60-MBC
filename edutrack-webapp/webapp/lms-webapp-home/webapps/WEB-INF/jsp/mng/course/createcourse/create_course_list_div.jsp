@@ -15,11 +15,19 @@
 		<div style="float:left; height:40px; line-height:30px;">
 			<%-- <h5><spring:message code="course.message.createcourse.msg.manage"/></h5> --%>
 			<select class="form-control input-sm" name="creTypeCd" id="creTypeCd" onchange="listCreateCourse(1)" >
-							<option value="" 	selected="selected">과정구분</option>
-							<option value="ON"  <c:if test="${vo.creTypeCd eq 'ON' }">selected</c:if>>온라인</option>
-							<option value="OF" <c:if test="${vo.creTypeCd eq 'OF' }">selected</c:if>>오프라인</option>
-							<option value="BL"  <c:if test="${vo.creTypeCd eq 'BL' }">selected</c:if>>혼합</option>
-						</select>
+				<option value="" 	selected="selected">과정구분</option>
+				<option value="ON" <c:if test="${vo.creTypeCd eq 'ON' }">selected</c:if>>온라인</option>
+				<option value="OF" <c:if test="${vo.creTypeCd eq 'OF' }">selected</c:if>>오프라인</option>
+				<option value="BL" <c:if test="${vo.creTypeCd eq 'BL' }">selected</c:if>>혼합</option>
+			</select>
+		</div>
+		<div style="float:left; height:40px; line-height:30px;">
+			<%-- <h5><spring:message code="course.message.createcourse.msg.manage"/></h5> --%>
+			<select class="form-control input-sm" name="creOperTypeCd" id="creOperTypeCd" onchange="listCreateCourse(1)" >
+				<option value="" selected="selected"><spring:message code="course.title.course.oper.type"/></option>
+				<option value="R" <c:if test="${vo.creOperTypeCd eq 'R' }">selected</c:if>><spring:message code="course.title.createcourse.type.regular"/></option>
+				<option value="S" <c:if test="${vo.creOperTypeCd eq 'S' }">selected</c:if>><spring:message code="course.title.createcourse.type.sangsi"/></option>
+			</select>
 		</div>
 		<div style=" float:right; line-height:30px; display: flex;">
 			<button class="btn btn-primary btn-sm" onclick="crsCreWriteFormPop()" ><spring:message code="button.write.round"/></button>
@@ -40,11 +48,13 @@
 			<col style="width:auto"/>
 			<col style="width:auto"/>
 			<col style="width:60px"/>
-			<col style="width:80px"/>
+			<col style="width:auto"/>
+			<col style="width:auto"/>
 			<col style="width:195px"/>
 			<col style="width:195px"/>
 			<!-- <col style="width:auto"/> -->
 			<!-- <col style="width:auto"/> -->
+			
 			<col style="width:auto"/>
 			<col style="width:85px"/>
 			<col style="width:85px"/>
@@ -86,6 +96,7 @@
 						</c:otherwise>
 					</c:choose>
 				</th>
+				<th scope="col"><spring:message code="course.title.course.oper.type"/></th>
 				<th scope="col">과정구분</th>
 				<th scope="col">
 				<spring:message code="course.title.createcourse.duration.aplc"/>
@@ -114,20 +125,34 @@
 				<%-- <td class="text-center">${item.creYear}</td> --%>
 				<td class="text-center">${item.creTerm}</td>
 				<td class="text-center">
+					<c:if test="${item.creOperTypeCd eq 'R'}"><spring:message code="course.title.createcourse.type.regular"/></c:if>
+					<c:if test="${item.creOperTypeCd eq 'S'}"><spring:message code="course.title.createcourse.type.sangsi"/></c:if>
+				</td>
+				<td class="text-center">
 					<c:if test="${item.creTypeCd eq 'ON'}">온라인</c:if>
 					<c:if test="${item.creTypeCd eq 'OF'}">오프라인</c:if>
 					<c:if test="${item.creTypeCd eq 'BL'}">혼합</c:if>
 				</td>
-				<td>
-					<meditag:dateformat type="1" delimeter="." property="${item.enrlAplcStartDttm}"/>~<meditag:dateformat type="1" delimeter="." property="${item.enrlAplcEndDttm}"/>
+				<td class="text-center">
+					<c:choose>
+						<c:when test="${item.creOperTypeCd eq 'S' }">-</c:when>
+						<c:otherwise>
+							<meditag:dateformat type="1" delimeter="." property="${item.enrlAplcStartDttm}"/>~<meditag:dateformat type="1" delimeter="." property="${item.enrlAplcEndDttm}"/>
+						</c:otherwise>
+					</c:choose>
 					<c:if test="${crsOperType eq 'R'}">
 					<br/>
 					<c:if test="${item.enrlStartDttm ne ''}"><meditag:dateformat type="1" delimeter="." property="${item.enrlStartDttm}"/>~<meditag:dateformat type="1" delimeter="." property="${item.enrlEndDttm}"/></c:if>
 					<c:if test="${item.enrlStartDttm eq ''}">${item.creYear}</c:if>
 					</c:if>
 				</td>
-				<td>
-					<c:if test="${item.enrlStartDttm ne ''}"><meditag:dateformat type="1" delimeter="." property="${item.enrlStartDttm}"/>~<meditag:dateformat type="1" delimeter="." property="${item.enrlEndDttm}"/></c:if>
+				<td class="text-center">
+				<c:choose>
+						<c:when test="${item.creOperTypeCd eq 'S' }">-</c:when>
+						<c:otherwise>
+							<c:if test="${item.enrlStartDttm ne ''}"><meditag:dateformat type="1" delimeter="." property="${item.enrlStartDttm}"/>~<meditag:dateformat type="1" delimeter="." property="${item.enrlEndDttm}"/></c:if>
+						</c:otherwise>
+					</c:choose>
 				</td>
 				<%-- <td class="text-right">${item.declsCnt}</td> --%>
 				<%-- <td class="text-right">
