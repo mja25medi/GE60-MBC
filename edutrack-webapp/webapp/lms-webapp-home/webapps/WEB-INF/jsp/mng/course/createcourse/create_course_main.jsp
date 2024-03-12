@@ -236,6 +236,7 @@
 		var creYear = $("#creYear option:selected").val();
 		var listScale = $("#listScale option:selected").val();
 		var creTypeCd = $("#creTypeCd option:selected").val();
+		var creOperTypeCd = $("#creOperTypeCd option:selected").val();
 		var crsCreNm = $('#searchKey2').val();
 		var createdOnly = "N";
 		if(ItemDTO.sortKey2 == "" || ItemDTO.sortKey2 == undefined){
@@ -252,7 +253,8 @@
 				  "sortKey" : ItemDTO.sortKey2,
 				  "curPage": page,
 				  "listScale": listScale,
-				  "creTypeCd": creTypeCd
+				  "creTypeCd": creTypeCd,
+				  "creOperTypeCd": creOperTypeCd
 			    },
 			    function(d) {
 		        	$('.inputNumber').inputNumber();

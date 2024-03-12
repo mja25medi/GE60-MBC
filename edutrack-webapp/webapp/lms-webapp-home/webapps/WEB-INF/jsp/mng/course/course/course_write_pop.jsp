@@ -62,6 +62,28 @@
 					</c:otherwise>
 				</c:choose>
 			</td>
+		</tr>	
+			<!--  -->
+		<tr >
+			<th scope="row"><span style="color:red;">* </span><spring:message code="course.title.course.oper.type"/></th>
+			<td>
+				<div style="float:left">
+				<c:if test="${gubun eq 'A'}">
+				<select name="crsOperType" id="crsOperType" class="form-control input-sm"  onChange="selectBoxChange(this.id, this.value);">
+					<c:forEach var="item" items="${crsOperTypeList}" varStatus="status">
+					<option value="${item.codeCd}" <c:if test="${vo.crsOperType eq item.codeCd}">selected</c:if> >${item.codeNm}</option>
+					</c:forEach>				
+				</select>
+				</c:if>
+				<c:if test="${gubun eq 'E'}">
+				<select name="crsOperType" id="crsOperType" class="form-control input-sm"  onChange="selectBoxChange(this.id, this.value);" readonly>  
+					<c:forEach var="item" items="${crsOperTypeList}" varStatus="status">
+					<option value="${item.codeCd}" <c:if test="${vo.crsOperType eq item.codeCd}">selected</c:if> >${item.codeNm}</option>
+					</c:forEach>				
+				</select>
+				</c:if>
+				</div>
+			</td>
 			
 			<th scope="row"><span style="color:red;">* </span><spring:message code="course.title.course.crstype"/></th>
 			<td>
@@ -89,8 +111,8 @@
 					<span style="float:left;line-height:30px;padding-left:5px;"><spring:message code="common.title.cnt.user"/></span>
 				</div>
 			</td>
+		</tr>	
 			
-		</tr>		
 		<tr id="hrdNetArea" style="display:hidden;">
 			<th scope="row"><span style="color:red;">* </span><label for="simsaCode">HRD 심사코드</label></th>
 			<td>
@@ -699,6 +721,16 @@
 				$("#hrdNetArea").hide();
 			}
 		}
+		
+
+		if (id == 'crsOperType') {
+	        if (val == 'S') {
+	        	removeOptions(['OF', 'BL']);
+	        } else {
+	        	restoreOptions();
+	        }
+	    }
+		
 		//교육구분 (오프라인, 혼합과정인 경우 교육인원을 등록 폼을 보여준다. )
 		if(id == "crsOperMthd") {
 			if(val !="ON") { // 오프라인, 혼합과정인  
@@ -712,9 +744,37 @@
 			}
 		}
 		
-		
-		
-		
 	}	
+	function removeOptions(optionValues) {
+	    var selectBox = document.getElementById('crsOperMthd');
+	    for (var i = 0; i < selectBox.options.length; i++) {
+	        if (optionValues.includes(selectBox.options[i].value)) {
+	            selectBox.remove(i);
+	            i--; 
+	        }
+	    }
+	}
+
+	function restoreOptions() {
+	    var selectBox = document.getElementById('crsOperMthd');
+	    while (selectBox.options.length > 0) {
+	        selectBox.remove(0);
+	    }
+	    
+	    var crsOperMthdList = [
+	        { codeCd: 'ON', codeNm: '온라인' },
+	        { codeCd: 'OF', codeNm: '오프라인' },
+	        { codeCd: 'BL', codeNm: '혼합교육' }
+	    ];
+
+	    crsOperMthdList.forEach(function(item) {
+	        var option = document.createElement('option');
+	        option.value = item.codeCd;
+	        option.text = item.codeNm;
+	        selectBox.add(option);
+	    });
+	}
+
+	
 	
 </script>

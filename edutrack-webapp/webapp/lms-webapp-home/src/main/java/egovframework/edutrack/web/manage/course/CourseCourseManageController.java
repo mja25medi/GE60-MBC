@@ -177,9 +177,11 @@ public class CourseCourseManageController extends GenericController {
         List<SysCodeVO> enrlCertMthdList = sysCodeMemService.getSysCodeList("ENRL_CERT_MTHD", UserBroker.getLocaleKey(request));
         List<SysCodeVO> cpltHandlTypeList = sysCodeMemService.getSysCodeList("CPLT_HANDL_TYPE", UserBroker.getLocaleKey(request));
         List<SysCodeVO> crsSvcEditList = sysCodeMemService.getSysCodeList("CRS_SVC_TYPE", UserBroker.getLocaleKey(request));
+        List<SysCodeVO> crsOperTypeList = sysCodeMemService.getSysCodeList("CRS_OPER_TYPE", UserBroker.getLocaleKey(request));
         
 		request.setAttribute("nopLimitList", nopLimitList);
         request.setAttribute("crsOperMthdList", crsOperMthdList);
+        request.setAttribute("crsOperTypeList", crsOperTypeList);
 		request.setAttribute("enrlCertMthdList", enrlCertMthdList);
 		request.setAttribute("cpltHandlTypeList", cpltHandlTypeList);
 		request.setAttribute("crsSvcEditList", crsSvcEditList);
@@ -360,6 +362,7 @@ public class CourseCourseManageController extends GenericController {
         List<SysCodeVO> enrlCertMthdList = sysCodeMemService.getSysCodeList("ENRL_CERT_MTHD", UserBroker.getLocaleKey(request));
         List<SysCodeVO> cpltHandlTypeList = sysCodeMemService.getSysCodeList("CPLT_HANDL_TYPE", UserBroker.getLocaleKey(request));
         List<SysCodeVO> crsSvcEditList = sysCodeMemService.getSysCodeList("CRS_SVC_TYPE", UserBroker.getLocaleKey(request));
+        List<SysCodeVO> crsOperTypeList = sysCodeMemService.getSysCodeList("CRS_OPER_TYPE", UserBroker.getLocaleKey(request));
             
         if(!Constants.HRD_API_USE_YN.equals("Y")) {
         	//HRD 사용하지 않을 경우에는 국비지원 과정이 뜨지 않도록 작업
@@ -371,6 +374,7 @@ public class CourseCourseManageController extends GenericController {
         }
 		request.setAttribute("nopLimitList", nopLimitList);
 		request.setAttribute("crsOperMthdList", crsOperMthdList);
+		request.setAttribute("crsOperTypeList", crsOperTypeList);
 		request.setAttribute("enrlCertMthdList", enrlCertMthdList);
 		request.setAttribute("cpltHandlTypeList", cpltHandlTypeList);
 		request.setAttribute("crsSvcEditList", crsSvcEditList);

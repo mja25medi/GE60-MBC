@@ -92,6 +92,7 @@
 										</c:otherwise>
 									</c:choose>
 									</th> --%>
+									<th scope="col"><spring:message code="course.title.course.oper.type"/></th>
 									<th scope="col"><spring:message code="course.title.course.crstype"/></th>
 									<th scope="col"><spring:message code="common.title.useyn"/></th>
 									<th scope="col"><spring:message code="common.title.manage"/></th>
@@ -107,8 +108,8 @@
 										${item.crsNm}
 										<a href="javascript:crsEditForm('${item.crsCd}');"><i class="fa fa-cog"></i></a>
 									</td>
+									<td class="text-center"><meditag:codename code="${item.crsOperType}" category="CRS_OPER_TYPE" /></td>
 									<td class="text-center"><meditag:codename code="${item.crsOperMthd}" category="CRS_OPER_MTHD" /></td>
-									<%-- <td class="text-center"><meditag:codename code="${item.crsOperType}" category="CRS_OPER_TYPE" /></td> --%>
 									<td class="text-center"><meditag:codename code="${item.useYn}" category="USE_YN"/></td>
 									<td class="text-center"><button class="btn btn-info btn-sm" onclick="javascript:crsMngForm('${item.crsCd}');"><spring:message code="course.title.course.manage.subject"/></button></td>
 								</tr>

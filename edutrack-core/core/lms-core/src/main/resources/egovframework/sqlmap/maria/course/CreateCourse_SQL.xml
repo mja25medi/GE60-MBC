@@ -10,6 +10,7 @@
 		       , A.ORG_CD  
 		       , A.CRS_CD
 		       , A.CRE_TYPE_CD  
+		       , A.CRE_OPER_TYPE_CD  
 		       , A.CRE_YEAR  
 		       , A.CRE_TERM  
 		       , A.CRS_CRE_NM  
@@ -245,15 +246,15 @@
 						D.CRS_CTGR_PATH like CONCAT('%', #{item}, '%')
 					</foreach>
 				</if>
-				<if test = 'creOperTypeCd != null and creOperTypeCd == "E" '>
+				<if test = 'creOperTypeCd != null and creOperTypeCd != "" '>
 		       		AND A.CRE_OPER_TYPE_CD = #{creOperTypeCd}  
 		   		</if>
 				<if test = 'creTypeCd != null and creTypeCd != "" '>
 		       		AND A.CRE_TYPE_CD = #{creTypeCd}  
 		   		</if>
-		   		<if test = 'creOperTypeCd == null or creOperTypeCd == "" '>
+		   		<!-- <if test = 'creOperTypeCd == null or creOperTypeCd == "" '>
 		       		AND A.CRE_OPER_TYPE_CD IS NULL
-		   		</if>	
+		   		</if>	 -->
 		   		<if test = 'crsOperMthd != null and crsOperMthd != ""'>
 		       		AND B.CRS_OPER_MTHD = #{crsOperMthd}
 		   		</if>
@@ -547,6 +548,9 @@
 				<if test = 'creTypeCd != null and creTypeCd != "" '>
 		       		AND A.CRE_TYPE_CD = #{creTypeCd}  
 		   		</if>
+				<if test = 'creOperTypeCd != null and creOperTypeCd != "" '>
+		       		AND A.CRE_OPER_TYPE_CD = #{creOperTypeCd}  
+		   		</if>
 		     	<if test = 'crsCreNm != null and crsCreNm != ""'>
 					AND A.CRS_CRE_NM like CONCAT('%', IFNULL(#{crsCreNm}, ''), '%')
 				</if>
@@ -698,6 +702,7 @@
 		 SELECT  A.CRS_CRE_CD 
 		       , A.CRS_CD
 		       , A.CRE_TYPE_CD 
+		       , A.CRE_OPER_TYPE_CD 
 		       , A.CRE_YEAR 
 		       , A.CRE_TERM 
 		       , A.CRS_CRE_NM 
@@ -826,12 +831,12 @@
 		    INNER JOIN tb_crs_crs B ON A.CRS_CD = B.CRS_CD
 		    LEFT OUTER JOIN tb_crs_cre_crs_qr C ON C.CRS_CRE_CD = A.CRS_CRE_CD
 		   WHERE A.CRS_CRE_CD	= #{crsCreCd} 
-		    <if test = 'creOperTypeCd != null and creOperTypeCd == "E"'>
+		   <!--  <if test = 'creOperTypeCd != null and creOperTypeCd == "E"'>
 		       	AND A.CRE_OPER_TYPE_CD = #{creOperTypeCd}  
 		   	</if>
 		  	<if test = 'creOperTypeCd == null or creOperTypeCd == "" '>
 		       		AND A.CRE_OPER_TYPE_CD IS NULL
-		   	</if>
+		   	</if> -->
 	</select>
 
     <insert id="insertCreateCourse" parameterType="createCourseVO">
