@@ -9,6 +9,7 @@
                                     <th scope="col" width="8%">번호</th>
                                     <th scope="col" width="15%">상태</th>
                                     <th scope="col">제목</th>
+                                    <th scope="col" width="15%">첨부파일</th>
                                     <th scope="col" width="25%">등록일</th>
                                 </tr>
                             </thead>
@@ -34,6 +35,14 @@
 										  </a>                                   
                                     
                                     </td>
+                                   <td class="m_hidden">
+										<c:forEach var="fileItem" items="${item.attachFiles}" varStatus="fiSts">
+											<a href="#" onclick="javascript:fileDown('${fileItem.fileSn}');" title="Download: ${fileItem.fileNm}">
+												<i class="xi-attachment"></i>
+												<span class="sr-only"></span>
+											</a>
+										</c:forEach>
+									</td>
                                     <td data-label="등록일"><meditag:dateformat type="0" delimeter="." property="${item.regDttm }" /></td>
                                 </tr>
  				</c:forEach>

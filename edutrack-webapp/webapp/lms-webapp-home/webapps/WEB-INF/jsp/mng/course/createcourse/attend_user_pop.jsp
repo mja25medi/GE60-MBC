@@ -221,7 +221,7 @@ function selectAttend() {
 	var crsCreCd = '${vo.crsCreCd}';
 	var userNo = $('#userNo').val();
 	var attendDttm = $('#attendDttm').val();
-	location.href="/mng/course/createCourse/attendUserPop?userNo="+userNo+"&crsCreCd="+crsCreCd+"&attendDttm="+attendDttm;
+	location.href="/mng/course/createCourse/attendance/attendUserPop?userNo="+userNo+"&crsCreCd="+crsCreCd+"&attendDttm="+attendDttm;
 	
 }
 
@@ -229,7 +229,7 @@ function selectUser() {
 	var crsCreCd = '${vo.crsCreCd}';
 	var userNo = $('#userNo').val();
 	var attendDttm = $('#attendDttm').val();
-	location.href="/mng/course/createCourse/attendUserPop?userNo="+userNo+"&crsCreCd="+crsCreCd+"&attendDttm="+attendDttm;
+	location.href="/mng/course/createCourse/attendance/attendUserPop?userNo="+userNo+"&crsCreCd="+crsCreCd+"&attendDttm="+attendDttm;
 	
 }
 
@@ -250,7 +250,7 @@ function updateAttendStat() {
 	var attendDttm = $('#attendDttm').val()
 	attendDttm = attendDttm.replaceAll("-", ".");
 	var crsCreCd = '${vo.crsCreCd}'
-	$('#attendUpdate').attr("action","/mng/course/createCourse/updateAttendStat");
+	$('#attendUpdate').attr("action","/mng/course/createCourse/attendance/updateAttendStat");
 	$('#attendUpdate').ajaxSubmit(function (resultDTO) {
 		if(resultDTO.result >= 0) {
 			alert("수정되었습니다.")

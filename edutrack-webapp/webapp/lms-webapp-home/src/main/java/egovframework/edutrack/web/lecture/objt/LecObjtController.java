@@ -45,7 +45,7 @@ public class LecObjtController extends GenericController {
 	}
 	
 	@RequestMapping("/listObjt")
-	public String listObjt(LecObjtVO vo, HttpServletRequest request, HttpSession session) {
+	public String listObjt(LecObjtVO vo, HttpServletRequest request, HttpSession session) throws Exception {
 		String classUserType = (String)session.getAttribute("CLASSUSERTYPE");
 		if(!"TCH".equals(classUserType)) {
 			vo.setRegNo(UserBroker.getUserNo(request));

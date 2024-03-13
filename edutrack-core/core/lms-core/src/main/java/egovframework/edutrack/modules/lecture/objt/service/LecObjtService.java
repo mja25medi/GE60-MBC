@@ -10,7 +10,7 @@ public interface LecObjtService {
 
 	public abstract int makeObjection(LecObjtVO vo) throws Exception;
 	
-	public abstract ProcessResultListVO<LecObjtVO> getObjectionList(LecObjtVO vo); 
+	public abstract ProcessResultListVO<LecObjtVO> getObjectionList(LecObjtVO vo) throws Exception; 
 	
 	public abstract LecObjtVO getObjection(LecObjtVO vo) throws Exception;
 	

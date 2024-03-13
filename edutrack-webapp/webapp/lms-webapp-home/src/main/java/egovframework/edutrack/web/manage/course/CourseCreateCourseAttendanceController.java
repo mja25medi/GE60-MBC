@@ -54,7 +54,7 @@ import egovframework.edutrack.modules.system.config.service.SysCfgVO;
 
 @Controller
 @SuppressWarnings("rawtypes")
-@RequestMapping(value="/mng/course/createCourse")
+@RequestMapping(value="/mng/course/createCourse/attendance")
 public class CourseCreateCourseAttendanceController extends GenericController {
 	
 	@Autowired @Qualifier("courseService")
@@ -76,7 +76,7 @@ public class CourseCreateCourseAttendanceController extends GenericController {
 	/**
 	 * 출결 관리 메인
 	 */
-	@RequestMapping(value="/attendanceMain")
+	@RequestMapping(value="/main")
 	public String mainCreateCourse( CreateCourseVO vo, Map commandMap, ModelMap model,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		commonVOProcessing(vo, request);
@@ -89,7 +89,7 @@ public class CourseCreateCourseAttendanceController extends GenericController {
 	/**
 	 * 회차 목록
 	 */
-	@RequestMapping(value="/attendanceCourseList")
+	@RequestMapping(value="/courseList")
 	public String attendanceCourseList( CreateCourseVO vo, Map commandMap, ModelMap model,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		commonVOProcessing(vo, request);

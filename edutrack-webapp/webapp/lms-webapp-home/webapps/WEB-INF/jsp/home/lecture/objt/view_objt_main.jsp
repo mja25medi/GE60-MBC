@@ -15,32 +15,51 @@
                             <li class="date"><strong>작성일시</strong><span><meditag:dateformat type="0" delimeter="." property="${objtVO.regDttm}"/></span></li>
                             <li class="hit"><strong>조회수</strong><span>${objtVO.hits}</span></li>
                         </ul>
-                        <div class="tb_contents border_b0">
-                            	${fn:replace(objtVO.cts,crlf,"<br/>")}
+                        <div class="tb_contents">
+                            ${fn:replace(objtVO.cts,crlf,"<br/>")}
                         </div>
-						  <form id="objtCmntForm" name="objtCmntForm">
+                        <c:if test="${not empty objtVO.attachFiles}">
+                        	<div class="add_file_list">
+                           		<strong class="title">첨부파일</strong>
+                            	<ul class="add_file">
+	                            	<c:forEach var="fileItem" items="${objtVO.attachFiles}" varStatus="status">
+	                                	<li>                    
+	                                    	<a href="#_none" onclick="javascript:fileDown('${fileItem.fileSn}');" class="file_down">
+	                                        	<!-- <img src="../../_img/board/file_doc.png" alt=""> -->
+	                                        	<span class="text">${fileItem.fileNm}</span>
+	                                        	<span class="fileSize">(${fileItem.fileSizeStr})</span>
+	                                    	</a>                    
+	                                    	<span class="link">
+	                                        	<a class="btn-line btn-down" href="#_none" onclick="javascript:fileDown('${fileItem.fileSn}');" title="${fileItem.fileNm}">다운로드<i></i></a>
+	                                    	</span>
+	                                	</li>
+	                                </c:forEach>
+                            	</ul>
+                        	</div>
+                        </c:if>
+						<form id="objtCmntForm" name="objtCmntForm">
 							<input type="hidden" id="objtSn" name="objtSn" value="${objtVO.objtSn }"/>
-                        <div class="write_box">
-                        	<textarea name="cmntCts" id="cmntCts" Class="form-control" rows="5"></textarea>
-                            <button type="button" class="btn type2"  onclick="javascript:addCmnt()"><spring:message code="button.add"/></button>
-                        </div>
+                        	<div class="write_box">
+                        		<textarea name="cmntCts" id="cmntCts" Class="form-control" rows="5"></textarea>
+                            	<button type="button" class="btn type2"  onclick="javascript:addCmnt()"><spring:message code="button.add"/></button>
+                        	</div>
                         </form>
-						 <c:if test="${not empty objtVO.cmntList }">
-                        <div class="reply_list">
-                            <ul>
-                            <c:forEach items="${objtVO.cmntList }" var="item" varStatus="status">
-                                <li>
-                                    <div class="item">
-                                        <div class="info"><strong>${item.regNm }</strong><meditag:dateformat type="0" delimeter="." property="${item.regDttm}" /> </div>
-                                        <div class="cont">${item.cmntCts }</div>
-                                    </div>
-                                    	<c:if test="${item.regNo eq USERNO}">
-                                    <button type="button" class="btn-line" onclick="javascript:delCmnt(${item.objtCmntSn});"><spring:message code="button.delete"/></button>
-										</c:if>
-                                </li>
-                                </c:forEach>
-                            </ul>
-                        </div>
+						<c:if test="${not empty objtVO.cmntList }">
+	                        <div class="reply_list">
+	                            <ul>
+		                            <c:forEach items="${objtVO.cmntList }" var="item" varStatus="status">
+		                                <li>
+		                                    <div class="item">
+		                                        <div class="info"><strong>${item.regNm }</strong><meditag:dateformat type="0" delimeter="." property="${item.regDttm}" /> </div>
+		                                        <div class="cont">${item.cmntCts }</div>
+		                                    </div>
+		                                    <c:if test="${item.regNo eq USERNO}">
+		                                    	<button type="button" class="btn-line" onclick="javascript:delCmnt(${item.objtCmntSn});"><spring:message code="button.delete"/></button>
+											</c:if>
+		                                </li>
+	                                </c:forEach>
+	                            </ul>
+	                        </div>
                         </c:if>
                     </div>
                     <div class="btn_area">

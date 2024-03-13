@@ -614,7 +614,7 @@ $(document).ready(function() {
 
         var crsCreCd = '${createCourseVO.crsCreCd}';
     	var searchDate = $('#searchDate').val();
-    	var url = cUrl("/mng/course/createCourse/listAttend");
+    	var url = cUrl("/mng/course/createCourse/attendance/listAttend");
     	$("#workBody")
     		.load(url, {
     			"crsCreCd" : crsCreCd,
@@ -639,7 +639,7 @@ $(document).ready(function() {
 });
 
 function searchAttend(crsCreCd, searchDate) {
- 	var url = cUrl("/mng/course/createCourse/listAttend");
+ 	var url = cUrl("/mng/course/createCourse/attendance/listAttend");
  	$("#workBody")
  		.load(url, {
  			"crsCreCd" : crsCreCd,
@@ -654,7 +654,7 @@ function searchAttend(crsCreCd, searchDate) {
 function userPop(userNo, searchDate) {
 	var crsCreCd = '${createCourseVO.crsCreCd}';
 	var addContent  = "<iframe id='addFrame' name='addFrame' width='100%' height='100%' "
-		+ "frameborder='0' src='<c:url value="/mng/course/createCourse/attendUserPop"/>"
+		+ "frameborder='0' src='<c:url value="/mng/course/createCourse/attendance/attendUserPop"/>"
 		+ "?userNo="+userNo+"&crsCreCd="+crsCreCd+"&attendDttm="+searchDate+"'/>";
 	modalBox.clear();
 	modalBox.addContents(addContent);
@@ -673,7 +673,7 @@ function modalBoxClose() {
  * 엑셀 다운로드
  */
 function excelDownload(crsCreCd) {
-	var url = cUrl("/mng/course/createCourse/excelDownloadAttendList")+"?crsCreCd="+crsCreCd;
+	var url = cUrl("/mng/course/createCourse/attendance/excelDownloadAttendList")+"?crsCreCd="+crsCreCd;
 	if ( $("#_m_download_iframe").length == 0 ) {
 		iframeHtml =
 			'<iframe id="_m_download_iframe" name="_m_download_iframe" style="visibility: none; display: none;"></iframe>';

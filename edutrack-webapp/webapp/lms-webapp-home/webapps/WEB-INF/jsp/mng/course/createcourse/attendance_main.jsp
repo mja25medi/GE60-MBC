@@ -225,7 +225,7 @@
 			if($("#createdOnly").is(":checked")) createdOnly = "Y";
 
 			$('#courseList')
-			.load(cUrl("/mng/course/createCourse/attendanceCourseList"),
+			.load(cUrl("/mng/course/createCourse/attendance/courseList"),
 				{ 
 				  "crsCtgrCd":ItemDTO.crsCtgrCd,
 				  "crsNm":crsNm,
@@ -240,7 +240,7 @@
 	 * 출석부 관리
 	 */
 	function listAttend(crsCreCd) {
-		var url = cUrl("/mng/course/createCourse/listAttend");
+		var url = cUrl("/mng/course/createCourse/attendance/listAttend");
 		$("#workBody")
 			.load(url, {
 				"crsCreCd" : crsCreCd
@@ -252,7 +252,7 @@
 	 * 엑셀 다운로드
 	 */
 	function excelDownload(crsCreCd) {
-		var url = cUrl("/mng/course/createCourse/excelDownloadAttendList")+"?crsCreCd="+crsCreCd;
+		var url = cUrl("/mng/course/createCourse/attendance/excelDownloadAttendList")+"?crsCreCd="+crsCreCd;
 		if ( $("#_m_download_iframe").length == 0 ) {
 			iframeHtml =
 				'<iframe id="_m_download_iframe" name="_m_download_iframe" style="visibility: none; display: none;"></iframe>';

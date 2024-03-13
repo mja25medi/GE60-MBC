@@ -1,5 +1,6 @@
 package egovframework.edutrack.modules.lecture.objt.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import egovframework.edutrack.Constants;
 import egovframework.edutrack.comm.service.ProcessResultListVO;
+import egovframework.edutrack.comm.util.web.StringUtil;
 import egovframework.edutrack.modules.lecture.objt.service.LecObjtCmntVO;
 import egovframework.edutrack.modules.lecture.objt.service.LecObjtService;
 import egovframework.edutrack.modules.lecture.objt.service.LecObjtVO;
@@ -69,7 +71,7 @@ public class LecObjtServiceImpl implements LecObjtService {
 	}
 	
 	@Override
-	public ProcessResultListVO<LecObjtVO> getObjectionList(LecObjtVO vo) {
+	public ProcessResultListVO<LecObjtVO> getObjectionList(LecObjtVO vo) throws Exception {
 		PaginationInfo paginationInfo = new PaginationInfo();
 		paginationInfo.setCurrentPageNo(vo.getCurPage());
 		paginationInfo.setRecordCountPerPage(vo.getListScale());
@@ -85,6 +87,14 @@ public class LecObjtServiceImpl implements LecObjtService {
 		resultList.setReturnList(lecObjtMapper.listPageingByCreCd(vo));
 		resultList.setPageInfo(paginationInfo);
 		
+		List<LecObjtVO> lecObjtList = new ArrayList<LecObjtVO>();
+		for(LecObjtVO lVO : resultList.getReturnList()) {
+			lVO = fileService.getFile(lVO, new lecObjtFileHandler());
+			this.atclUrlToView(lVO);
+			lecObjtList.add(lVO);
+		}
+		resultList.setReturnList(lecObjtList);
+		
 		return resultList;
 	}
 
@@ -92,6 +102,8 @@ public class LecObjtServiceImpl implements LecObjtService {
 	public LecObjtVO getObjection(LecObjtVO vo) throws Exception {
 		lecObjtMapper.hitsup(vo);
 		LecObjtVO objection = lecObjtMapper.selectBySn(vo);
+		objection = fileService.getFile(objection, new lecObjtFileHandler());
+		this.atclUrlToView(vo);
 		if(objection == null) {
 			throw new Exception("해당하는 이의제기가 존재하지 않습니다.");
 		}
@@ -133,5 +145,13 @@ public class LecObjtServiceImpl implements LecObjtService {
 	@Override
 	public int deleteCmnt(LecObjtCmntVO vo) {
 		return lecObjtCmntMapper.delete(vo);
+	}
+	
+	private void atclUrlToPersist(LecObjtVO vo) {
+		vo.setCts(StringUtil.replaceUrlToPersist(vo.getCts()));
+	}
+
+	private void atclUrlToView(LecObjtVO vo) {
+		vo.setCts(StringUtil.replaceUrlToBrowser(vo.getCts()));
 	}
 }
