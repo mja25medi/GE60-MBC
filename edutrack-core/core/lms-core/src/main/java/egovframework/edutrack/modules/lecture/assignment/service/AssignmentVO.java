@@ -80,6 +80,9 @@ public class AssignmentVO  extends DefaultVO {
 	
 	private String asmtSvcCd;			// 과제 서비스 코드(코딩과제:CODE, 일반과제:GEN)
 	
+	private String asmtStareTypeCd;		//과제 응시 유형 코드
+	
+	
 	
 	public String getAsmtSvcCd() {
 		return asmtSvcCd;
@@ -450,5 +453,10 @@ public class AssignmentVO  extends DefaultVO {
 	public void setAsmtUseCd(String asmtUseCd) {
 		this.asmtUseCd = asmtUseCd;
 	}
-
+	public String getAsmtStareTypeCd() {
+		return asmtStareTypeCd;
+	}
+	public void setAsmtStareTypeCd(String asmtStareTypeCd) {
+		this.asmtStareTypeCd = asmtStareTypeCd;
+	}
 }

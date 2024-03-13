@@ -48,7 +48,11 @@
 		         FROM    tb_crs_cre_sbj_cnts AA
 		         WHERE   AA.SBJ_CD = A.SBJ_CD
 		         AND     AA.CRS_CRE_CD = #{crsCreCd}
-		        ) AS SBJ_CNT										
+		        ) AS SBJ_CNT	
+		      , (SELECT CRE_OPER_TYPE_CD 
+		      		FROM TB_CRS_CRE_CRS 
+		      		WHERE CRS_CRE_CD = A.CRS_CRE_CD
+	      		) AS CRE_OPER_TYPE_CD									
 	     FROM  tb_crs_cre_crs_onln_sbj A, tb_crs_onln_sbj B, tb_crs_sbj_ctgr C					
 	    WHERE  A.SBJ_CD = B.SBJ_CD																
 	      AND  B.SBJ_CTGR_CD = C.SBJ_CTGR_CD													

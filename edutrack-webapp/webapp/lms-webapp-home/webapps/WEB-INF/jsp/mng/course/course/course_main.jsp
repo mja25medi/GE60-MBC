@@ -95,7 +95,6 @@
 				</div>
 				<div id="workLayer" class="rowLayer">
 					<div class="col-md-12" id="workBody">
-
 					</div>
 				</div>
 			</div>

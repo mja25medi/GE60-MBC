@@ -66,7 +66,14 @@
 						</div>
 						<input type="hidden" name="studyMthdValue_${item.sbjCd}" id="studyMthdValue_${item.sbjCd}" value="${item.studyMthd}"/>
 					</td>
-					<td class="text-center">${createCourseVO.enrlStartDttm} ~ ${createCourseVO.enrlEndDttm}</td>
+					<td class="text-center">
+						<c:choose>
+							<c:when test="${createCourseVO.creOperTypeCd eq 'S' }">-</c:when>
+							<c:otherwise>
+								${createCourseVO.enrlStartDttm} ~ ${createCourseVO.enrlEndDttm}
+							</c:otherwise>
+						</c:choose>
+					</td>
 					<td class="text-center">
 						<c:if test="${item.sbjType eq 'ON' }">온라인</c:if>
 						<c:if test="${item.sbjType eq 'OF' }">

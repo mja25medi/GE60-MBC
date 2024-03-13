@@ -36,6 +36,7 @@ public class CreateOnlineSubjectVO  extends DefaultVO {
 	private String	sbjType;
 	private String	sbjCnt;
 	private String	sbjYCnt;
+	private String	creOperTypeCd;
 
 	ContentsVO contentsVO;
 
@@ -220,6 +221,13 @@ public class CreateOnlineSubjectVO  extends DefaultVO {
 	public void setSbjYCnt(String sbjYCnt) {
 		this.sbjYCnt = sbjYCnt;
 	}
-	
+
+	public String getCreOperTypeCd() {
+		return creOperTypeCd;
+	}
+
+	public void setCreOperTypeCd(String creOperTypeCd) {
+		this.creOperTypeCd = creOperTypeCd;
+	}
 
 }

@@ -26,7 +26,12 @@ public class CreCrsReshVO extends DefaultVO{
 
 	private String  joinYn;
 	private String  ansrUseYn;
+	
+	private String  creOperTypeCd;
+	private String  reshStareTypeCd;
+	private Integer reshDayCnt;
 
+	
 	public String getCrsCreCd() {
 		return crsCreCd;
 	}
@@ -147,5 +152,22 @@ public class CreCrsReshVO extends DefaultVO{
 	public void setStdAnsrCnt(Integer stdAnsrCnt) {
 		this.stdAnsrCnt = stdAnsrCnt;
 	}
-	
+	public String getCreOperTypeCd() {
+		return creOperTypeCd;
+	}
+	public void setCreOperTypeCd(String creOperTypeCd) {
+		this.creOperTypeCd = creOperTypeCd;
+	}
+	public String getReshStareTypeCd() {
+		return reshStareTypeCd;
+	}
+	public void setReshStareTypeCd(String reshStareTypeCd) {
+		this.reshStareTypeCd = reshStareTypeCd;
+	}
+	public Integer getReshDayCnt() {
+		return reshDayCnt;
+	}
+	public void setReshDayCnt(Integer reshDayCnt) {
+		this.reshDayCnt = reshDayCnt;
+	}
 }

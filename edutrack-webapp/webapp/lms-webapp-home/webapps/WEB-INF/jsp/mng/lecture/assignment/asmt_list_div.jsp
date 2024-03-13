@@ -34,6 +34,7 @@
 					</td>
 					<td class="text-center">
 					<c:choose>
+						<c:when test="${item.asmtStareTypeCd eq 'S' }">-</c:when>
 						<c:when test="${item.asmtSvcCd eq 'CODE' }">-</c:when>
 						<c:otherwise>${item.asmtDuration}</c:otherwise>
 					</c:choose>		

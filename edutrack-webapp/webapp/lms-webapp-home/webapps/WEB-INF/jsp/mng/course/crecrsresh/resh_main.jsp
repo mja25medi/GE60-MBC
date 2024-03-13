@@ -47,6 +47,7 @@
 
 	$(document).ready(function() {
 		ItemDTO.crsCreCd = '${vo.crsCreCd}';
+		ItemDTO.creOperTypeCd = '${vo.creOperTypeCd}';
 		listResearch();
 	});
 
@@ -75,7 +76,7 @@
 	function writeResh() {
 		var addContent  = "<iframe id='addResearchFrame' name='addResearchFrame' width='100%' height='100%' "
 			+ "frameborder='0' scrolling='no' src='<c:url value="/mng/course/creCrs/resh/addPop"/>"
-			+ "?crsCreCd="+ItemDTO.crsCreCd+"'/>";
+			+ "?crsCreCd="+ItemDTO.crsCreCd+"&amp;creOperTypeCd="+ItemDTO.creOperTypeCd+"'/>";
 		parent.modalBox.clear();
 		parent.modalBox.addContents(addContent);
 		parent.modalBox.resize(750, 350);
@@ -89,7 +90,7 @@
 	function editResh(reshSn) {
 		var addContent  = "<iframe id='addResearchFrame' name='addResearchFrame' width='100%' height='100%' "
 			+ "frameborder='0' scrolling='no' src='<c:url value="/mng/course/creCrs/resh/editPop"/>"
-			+ "?crsCreCd="+ItemDTO.crsCreCd+"&amp;reshSn="+reshSn+"'/>";
+			+ "?crsCreCd="+ItemDTO.crsCreCd+"&amp;reshSn="+reshSn+"&amp;creOperTypeCd="+ItemDTO.creOperTypeCd+"'/>";
 		parent.modalBox.clear();
 		parent.modalBox.addContents(addContent);
 		parent.modalBox.resize(750, 350);

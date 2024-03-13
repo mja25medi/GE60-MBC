@@ -8,6 +8,7 @@
 	<input type="hidden" name="crsCreCd" value="${vo.crsCreCd }" />
 	<input type="hidden" name="asmtSn" value="${vo.asmtSn }" />
 	<input type="hidden" name="attachFileSns" value="${vo.attachFileSns }" />
+	<input type="hidden" name="asmtStareTypeCd" value="${vo.asmtStareTypeCd }" />
 	<table summary="<spring:message code="lecture.title.assignment.manage"/>" class="table table-bordered wordbreak">
 		<colgroup>
 			<col style="width:18%"/>
@@ -109,7 +110,7 @@
 				<input type="text" dispName="<spring:message code="lecture.title.assignment.name"/>" maxlength="100" isNull="N" lenCheck="100" name="asmtTitle" value="${vo.asmtTitle }" onfocus="this.select()" id="asmtTitle" class="form-control input-sm"/>
 			</td>
 		</tr>
-		<tr >
+		<tr id="asmtDuration">
 			<th scope="row"><spring:message code="lecture.title.assignment.duration"/></th>
 			<td colspan="3">
 				<div class="input-group" style="float:left;width:128px;">
@@ -136,7 +137,7 @@
 				<meditag:datepicker name1="asmtStartDttm" name2="asmtEndDttm" />
 			</td>
 		</tr>
-		<tr >
+		<tr id="asmtDelaydate">
 			<th scope="row"><spring:message code="lecture.title.assignment.delaydate"/></th>
 			<td colspan="3">
 				<div class="input-group" style="float:left;width:128px;">
@@ -272,7 +273,7 @@
 
 		$(':input:hidden[name=attachFileSns]').val(atchFiles.getFileSnAll());
 		$('#uploadify').attr("disabled", true); //-- 파일 객체 disable
-
+		$("#asmtTypeCd").attr("disabled", false);
 		var asmtSubmit = f["asmtLimitCnt"].value;
 		var asmtTypeCd = $("#asmtTypeCd > option:selected").val();
 		var svcType = $("#asmtSvcCd > option:selected").val();
@@ -281,7 +282,14 @@
 			f["asmtTitle"].focus();
 			return;
 		}
-		var asmtUseCd = $('input[name="asmtUseCd"]:checked').val();	
+	 	var creOperTypeCd = "${subjectList[0].creOperTypeCd}"
+		if (creOperTypeCd == 'S') {
+			f["asmtStareTypeCd"].value="S";
+		}else{
+			f["asmtStareTypeCd"].value="R";
+		}
+ 			
+	 	var asmtUseCd = $('input[name="asmtUseCd"]:checked').val();	
 		if(asmtUseCd == 'UNIT'){	//과목 차시 시험일 경우
 			if(f["unitCd"].value == '') {
 				alert("차시를 선택해 주세요.");
@@ -289,7 +297,12 @@
 				return;
 			}
 		} 
-		if(svcType != "CODE"){
+		if(asmtSubmit == 0 && asmtTypeCd == 'ON' && svcType != "CODE"){
+			alert("<spring:message code="lecture.message.assignment.alert.input.sendcnt"/>");
+			f["asmtLimitCnt"].focus();
+			return;
+		}
+		if(svcType != "CODE" && creOperTypeCd == 'R'){
 			var asmtStartDttm = chgDate(f["asmtStartDttm"].value);
 			var asmtEndDttm = chgDate(f["asmtEndDttm"].value);
 			var extSendDttm = chgDate(f["extSendDttm"].value);
@@ -334,12 +347,6 @@
 				f["extSendMin"].value="0";
 			}
 	
-			if(asmtSubmit == 0 && asmtTypeCd == 'ON'){
-				alert("<spring:message code="lecture.message.assignment.alert.input.sendcnt"/>");
-				f["asmtLimitCnt"].focus();
-				return;
-			}
-			
 			/* if(asmtTypeCd == 'OFF') {
 				$("#regYn").val("Y");
 			} else {
@@ -347,7 +354,7 @@
 			}
 	 */
 			if(validateTime()==false) return;
-		}
+ 		}
 		process("addAsmt");	// cmd
 	}
 
@@ -358,6 +365,7 @@
 		var f = document.assignmentForm;
 		$(':input:hidden[name=attachFileSns]').val(atchFiles.getFileSnAll());
 		$('#uploadify').attr("disabled", true); //-- 파일 객체 disable
+		$("#asmtTypeCd").attr("disabled", false);
 		var asmtSubmit = f["asmtLimitCnt"].value;
 		var svcType = "${assignmentVO.asmtSvcCd}"
 		if(isEmpty(f["asmtTitle"].value)) {
@@ -365,7 +373,20 @@
 			f["asmtTitle"].focus();
 			return;
 		}
-		if(svcType != "CODE"){
+		
+	 	var creOperTypeCd = "${subjectList[0].creOperTypeCd}"
+		if (creOperTypeCd == 'S') {
+			f["asmtStareTypeCd"].value="S";
+ 		}else {
+ 			f["asmtStareTypeCd"].value="R";
+ 		}
+	 	
+	 	if(asmtSubmit == 0 && asmtTypeCd == 'ON' && svcType != "CODE" ){
+			alert("<spring:message code="lecture.message.assignment.alert.input.sendcnt"/>");
+			f["asmtLimitCnt"].focus();
+			return;
+		}
+		if(svcType != "CODE" && creOperTypeCd == 'R' ){
 			var asmtStartDttm = chgDate(f["asmtStartDttm"].value);
 			var asmtEndDttm = chgDate(f["asmtEndDttm"].value);
 			var extSendDttm = chgDate(f["extSendDttm"].value);
@@ -408,12 +429,6 @@
 			}
 			if(isEmpty(f["extSendMin"].value)) {
 				f["extSendMin"].value="0";
-			}
-	
-			if(asmtSubmit == 0 && asmtTypeCd == 'ON'){
-				alert("<spring:message code="lecture.message.assignment.alert.input.sendcnt"/>");
-				f["asmtLimitCnt"].focus();
-				return;
 			}
 	
 			if(validateTime()==false) return;
@@ -449,15 +464,16 @@
 	function validateTime(){
 
 		var f = document.assignmentForm;
+		
+		
+			var asmtStartHour = chgDate(f["asmtStartHour"].value);  //과제 시작일 시''
+			var asmtStartMin = chgDate(f["asmtStartMin"].value);   //과제 시작일 분''
 
-		var asmtStartHour = chgDate(f["asmtStartHour"].value);  //과제 시작일 시''
-		var asmtStartMin = chgDate(f["asmtStartMin"].value);   //과제 시작일 분''
+			var asmtEndHour = chgDate(f["asmtEndHour"].value);  //과제 종료일 시''
+			var asmtEndMin = chgDate(f["asmtEndMin"].value);   //과제 종료일 분''
 
-		var asmtEndHour = chgDate(f["asmtEndHour"].value);  //과제 종료일 시''
-		var asmtEndMin = chgDate(f["asmtEndMin"].value);   //과제 종료일 분''
-
-		var extSendHour = chgDate(f["extSendHour"].value);  //과제 제출일 시''
-		var extSendMin = chgDate(f["extSendMin"].value);   //과제 제출일 분''
+			var extSendHour = chgDate(f["extSendHour"].value);  //과제 제출일 시''
+			var extSendMin = chgDate(f["extSendMin"].value);   //과제 제출일 분''
 		
 		var asmtUseCd = $('input[name="asmtUseCd"]:checked').val();	
 		if(asmtUseCd == 'UNIT'){	//과목 차시 시험일 경우
@@ -467,47 +483,45 @@
 				return;
 			}
 		} 
-
-		if(asmtStartHour==""){
-			alert("<spring:message code="lecture.message.assignment.alert.input.starthour"/>" );
-			f["asmtStartHour"].focus();
-			return false;
-		}
-		else if(asmtStartMin==""){
-			alert("<spring:message code="lecture.message.assignment.alert.input.starthour"/>" );
-			f["asmtStartMin"].focus();
-			return false;
-		}
-		else if(asmtEndHour==""){
-			alert("<spring:message code="lecture.message.assignment.alert.input.startmin"/>" );
-			f["asmtEndHour"].focus();
-			return false;
-		}
-		else if(asmtEndMin==""){
-			alert("<spring:message code="lecture.message.assignment.alert.input.endhour"/>" );
-			f["asmtEndMin"].focus();
-			return false;
-		}
-		else if(extSendHour==""){
-			alert("<spring:message code="lecture.message.assignment.alert.input.delayhour"/>" );
-			f["extSendHour"].focus();
-			return false;
-		}
-		else if(extSendMin==""){
-			alert("<spring:message code="lecture.message.assignment.alert.input.delaymin"/>" );
-			f["extSendMin"].focus();
-			return false;
-		}
-		if(asmtStartHour>24 || asmtStartHour>24  || extSendHour>24){
-			alert("<spring:message code="lecture.message.assignment.alert.validate.hour"/>");
-			return false;
-		}
-
-		if(asmtStartMin>59 || asmtEndMin>59  || extSendMin>59){
-			alert("<spring:message code="lecture.message.assignment.alert.validate.min"/>");
-			return false;
-		}
-
+			if(asmtStartHour==""){
+				alert("<spring:message code="lecture.message.assignment.alert.input.starthour"/>" );
+				f["asmtStartHour"].focus();
+				return false;
+			}
+			else if(asmtStartMin==""){
+				alert("<spring:message code="lecture.message.assignment.alert.input.starthour"/>" );
+				f["asmtStartMin"].focus();
+				return false;
+			}
+			else if(asmtEndHour==""){
+				alert("<spring:message code="lecture.message.assignment.alert.input.startmin"/>" );
+				f["asmtEndHour"].focus();
+				return false;
+			}
+			else if(asmtEndMin==""){
+				alert("<spring:message code="lecture.message.assignment.alert.input.endhour"/>" );
+				f["asmtEndMin"].focus();
+				return false;
+			}
+			else if(extSendHour==""){
+				alert("<spring:message code="lecture.message.assignment.alert.input.delayhour"/>" );
+				f["extSendHour"].focus();
+				return false;
+			}
+			else if(extSendMin==""){
+				alert("<spring:message code="lecture.message.assignment.alert.input.delaymin"/>" );
+				f["extSendMin"].focus();
+				return false;
+			}
+			if(asmtStartHour>24 || asmtStartHour>24  || extSendHour>24){
+				alert("<spring:message code="lecture.message.assignment.alert.validate.hour"/>");
+				return false;
+			}
+	
+			if(asmtStartMin>59 || asmtEndMin>59  || extSendMin>59){
+				alert("<spring:message code="lecture.message.assignment.alert.validate.min"/>");
+				return false;
+			}
 		return true;
 	}
 
@@ -542,16 +556,8 @@
 
 	function changeAsmtType() {
 		var asmtType = $("#asmtTypeCd").val();
-		if(asmtType == "OFF") {
-			$("#asmtSvcCd").attr("disabled",true);
-			$("#asmtSelectTypeCd").attr("disabled",true);
-			$("#asmtLimitCnt").attr("disabled",true);
-			$("#sendCritPrgrRatio").attr("disabled",true);
-			$("#regYn").val("Y");
-			$("#regYnArea").show();
-			$(".online_exam").hide();
-			
-		} else {
+		var creOperTypeCd = "${subjectList[0].creOperTypeCd}"
+		if (creOperTypeCd == 'S') {
 			$("#asmtSvcCd").attr("disabled",false);
 			$("#asmtSelectTypeCd").attr("disabled",false);
 			$("#asmtLimitCnt").attr("disabled",false);
@@ -559,6 +565,28 @@
 			$("#regYnArea").hide();
 			$("#regYn").val("N");
 			$(".online_exam").show();
+			$("#asmtTypeCd").attr("disabled", true);
+			$("#asmtDuration").css("display", "none");
+	   		$("#asmtDelaydate").css("display", "none");
+		}else{
+			if(asmtType == "OFF") {
+				$("#asmtSvcCd").attr("disabled",true);
+				$("#asmtSelectTypeCd").attr("disabled",true);
+				$("#asmtLimitCnt").attr("disabled",true);
+				$("#sendCritPrgrRatio").attr("disabled",true);
+				$("#regYn").val("Y");
+				$("#regYnArea").show();
+				$(".online_exam").hide();
+				
+			} else {
+				$("#asmtSvcCd").attr("disabled",false);
+				$("#asmtSelectTypeCd").attr("disabled",false);
+				$("#asmtLimitCnt").attr("disabled",false);
+				$("#sendCritPrgrRatio").attr("disabled",false);
+				$("#regYnArea").hide();
+				$("#regYn").val("N");
+				$(".online_exam").show();
+			}
 		}
 	}
 	function changeAsmtSvcType() {

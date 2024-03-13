@@ -171,27 +171,27 @@ public class CreCrsReshServiceImpl
 
 		ProcessResultVO<CreCrsReshVO> resultVO = new ProcessResultVO<CreCrsReshVO>();
 		try {
-			if(VO.getStartHour().length() ==1){
-				VO.setStartHour("0"+VO.getStartHour());
+			if (VO.getReshStareTypeCd().equals("R")) {
+				if(VO.getStartHour().length() ==1){
+					VO.setStartHour("0"+VO.getStartHour());
+				}
+				if(VO.getStartMin().length() ==1){
+					VO.setStartMin("0"+VO.getStartMin());
+				}
+	
+				if(VO.getEndHour().length() ==1){
+					VO.setEndHour("0"+VO.getEndHour());
+				}
+				if(VO.getEndMin().length() ==1){
+					VO.setEndMin("0"+VO.getEndMin());
+				}
+				//-- 시간 관련 처리
+				String startDttm = StringUtil.ReplaceAll(VO.getStartDttm(),".","")+VO.getStartHour()+VO.getStartMin()+"01";
+				String endDttm = StringUtil.ReplaceAll(VO.getEndDttm(),".","")+VO.getEndHour()+VO.getEndMin()+"59";
+	
+				VO.setStartDttm(startDttm);
+				VO.setEndDttm(endDttm);
 			}
-			if(VO.getStartMin().length() ==1){
-				VO.setStartMin("0"+VO.getStartMin());
-			}
-
-			if(VO.getEndHour().length() ==1){
-				VO.setEndHour("0"+VO.getEndHour());
-			}
-			if(VO.getEndMin().length() ==1){
-				VO.setEndMin("0"+VO.getEndMin());
-			}
-			//-- 시간 관련 처리
-			String startDttm = StringUtil.ReplaceAll(VO.getStartDttm(),".","")+VO.getStartHour()+VO.getStartMin()+"01";
-			String endDttm = StringUtil.ReplaceAll(VO.getEndDttm(),".","")+VO.getEndHour()+VO.getEndMin()+"59";
-
-			VO.setStartDttm(startDttm);
-			VO.setEndDttm(endDttm);
-
-			
 			creCrsReshMapper.insert(VO);
 			resultVO.setResultSuccess();
 		} catch (Exception e){
@@ -213,25 +213,27 @@ public class CreCrsReshServiceImpl
 
 		ProcessResultVO<CreCrsReshVO> resultVO = new ProcessResultVO<CreCrsReshVO>();
 		try {
-			if(VO.getStartHour().length() ==1){
-				VO.setStartHour("0"+VO.getStartHour());
-			}
-			if(VO.getStartMin().length() ==1){
-				VO.setStartMin("0"+VO.getStartMin());
-			}
+			if (VO.getReshStareTypeCd().equals("R")) {
+				if(VO.getStartHour().length() ==1){
+					VO.setStartHour("0"+VO.getStartHour());
+				}
+				if(VO.getStartMin().length() ==1){
+					VO.setStartMin("0"+VO.getStartMin());
+				}
 
-			if(VO.getEndHour().length() ==1){
-				VO.setEndHour("0"+VO.getEndHour());
-			}
-			if(VO.getEndMin().length() ==1){
-				VO.setEndMin("0"+VO.getEndMin());
-			}
-			//-- 시간 관련 처리
-			String startDttm = StringUtil.ReplaceAll(VO.getStartDttm(),".","")+VO.getStartHour()+VO.getStartMin()+"01";
-			String endDttm = StringUtil.ReplaceAll(VO.getEndDttm(),".","")+VO.getEndHour()+VO.getEndMin()+"59";
+				if(VO.getEndHour().length() ==1){
+					VO.setEndHour("0"+VO.getEndHour());
+				}
+				if(VO.getEndMin().length() ==1){
+					VO.setEndMin("0"+VO.getEndMin());
+				}
+				//-- 시간 관련 처리
+				String startDttm = StringUtil.ReplaceAll(VO.getStartDttm(),".","")+VO.getStartHour()+VO.getStartMin()+"01";
+				String endDttm = StringUtil.ReplaceAll(VO.getEndDttm(),".","")+VO.getEndHour()+VO.getEndMin()+"59";
 
-			VO.setStartDttm(startDttm);
-			VO.setEndDttm(endDttm);
+				VO.setStartDttm(startDttm);
+				VO.setEndDttm(endDttm);
+			}
 			creCrsReshMapper.update(VO);
 			resultVO.setResultSuccess();
 		} catch (Exception e){

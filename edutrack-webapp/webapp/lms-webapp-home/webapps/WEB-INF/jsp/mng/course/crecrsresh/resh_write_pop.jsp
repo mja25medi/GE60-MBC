@@ -7,6 +7,7 @@
 	<input type="hidden" name="crsCreCd" value="${vo.crsCreCd }"/>
 	<input type="hidden" name="useYn" value="${vo.useYn }"/>
 	<input type="hidden" name="stdAnsrCnt" id="stdAnsrCnt" value="${vo.stdAnsrCnt }"/>
+	<input type="hidden" name="reshStareTypeCd" id="reshStareTypeCd" value="${vo.reshStareTypeCd }"/>
 	<table summary="<spring:message code="course.title.resh.manage"/>"  class="table table-bordered wordbreak">
 		<colgroup>
 			<col style="width:25%"/>
@@ -17,19 +18,19 @@
 			<th scope="row"><label for="reshSn"><spring:message code="course.title.resh.select.bank"/></label></th>
 			<td>
 				<c:if test="${gubun eq 'A'}">
-				<select name="reshSn" id="reshSn" class="form-control input-sm" onchange="chk_resh()">
-				<c:forEach var="item" items="${researchBankList}">
-					<option value="${item.reshSn}" <c:if test="${item.reshSn eq creCrsReshVO.reshSn}">selected</c:if>>${item.reshTitle}</option>
-				</c:forEach>
-				</select>
+					<select name="reshSn" id="reshSn" class="form-control input-sm" onchange="chk_resh()">
+						<c:forEach var="item" items="${researchBankList}">
+							<option value="${item.reshSn}" <c:if test="${item.reshSn eq creCrsReshVO.reshSn}">selected</c:if>>${item.reshTitle}</option>
+						</c:forEach>
+					</select>
 				</c:if>
 				<c:if test="${gubun eq 'E'}">
-				${creCrsReshVO.reshTitle}
-				<input type="hidden" name="reshSn" value="${vo.reshSn }"/>
+					${creCrsReshVO.reshTitle}
+					<input type="hidden" name="reshSn" value="${vo.reshSn }"/>
 				</c:if>
 			</td>
 		</tr>
-		<tr>
+		<tr id="reshDuration">
 			<th scope="row"><label for="reshCts"><spring:message code="course.title.resh.duration"/></label></th>
 			<td>
 				<div class="input-group" style="float:left;width:128px;">
@@ -55,6 +56,14 @@
 				<input type="text" style="width:40px;float:left;text-align:right;" dispName="<spring:message code="course.title.resh.end.min"/>" maxlength="2" isNull="N" lenCheck="2" name="endMin" value="${vo.endMin }" id="endMin" class="form-control input-sm" onkeyup="isChkMinute(this)" />
 				<span style="float:left;line-height:30px;"><spring:message code="common.title.min"/></span>
 				<meditag:datepicker name1="startDttm" name2="endDttm"/>
+			</td>
+		</tr>
+		<tr id="reshDayCnt">
+			<th scope="row"><label for="reshCts"><spring:message code="course.title.resh.duration"/></label></th>
+			<td>
+				<span style="float:left;line-height:30px;"><spring:message code="lecture.title.research.day.start"/></span>
+				<input type="text" style="width:60px;float:left;text-align:right;" maxlength="3" isNull="N" lenCheck="4" name="reshDayCnt" id="reshDayCnt" value="${vo.reshDayCnt }" onfocus="this.select()" class="inputSpecial inputNumber form-control input-sm" onkeyup="isChkInteger(this)"/>
+				<span style="float:left;line-height:30px;"><spring:message code="lecture.title.research.day.end"/></span>
 			</td>
 		</tr>
 		<tr>
@@ -83,7 +92,15 @@
 
 	$(document).ready(function() {
 		$('.inputDate').inputDate();  // 날짜 형식만 입력되도록 설정.
-
+		$('.inputNumber').inputNumber();
+		
+		var creOperTypeCd ="${vo.creOperTypeCd}";
+		if (creOperTypeCd == 'S') {
+			$('#reshDuration').css("display", "none");
+		}else{
+			$('#reshDayCnt').css("display", "none");
+		}
+		<c:if test="${gubun eq 'A'}">
 		var reshSn_chk = parent.subWorkFrame.document.getElementById("reshSn_chk").value;
 		var reshSn_ar = reshSn_chk.split("|");
 		var selectReshSn = document.getElementById("reshSn");
@@ -100,29 +117,38 @@
 			alert("<spring:message code="lecture.message.research.noreg"/>");
 			parent.modalBoxClose();
 		}
+		</c:if>
 	});
 
 	/**
 	 * 서브밋 처리
 	 */
 	function process(cmd) {
-		if(!validate(document.creCrsReshForm)) return;
+		var f = document.creCrsReshForm;
+		var creOperTypeCd ="${vo.creOperTypeCd}";
+		if (creOperTypeCd == 'S') {
+			f["reshStareTypeCd"].value="S";
+		}else{
+			f["reshStareTypeCd"].value="R";
+			if(!validate(document.creCrsReshForm)) return;
 
-		var startDttm = $("#startDttm").val();
-		var endDttm = $("#endDttm").val();
-		var startHour = $("#startHour").val();
-		var startMin = $("#startMin").val();
-		var endHour = $("#endHour").val();
-		var endMin = $("#endMin").val();
-		var startDttmArray = startDttm.split(".");
-		var endDttmArray = endDttm.split(".");
-		var StartDttmObj = new Date(startDttmArray[0], Number(startDttmArray[1])-1, startDttmArray[2], startHour, startMin, 01);
-		var EndDttmObj = new Date(endDttmArray[0], Number(endDttmArray[1])-1, endDttmArray[2], endHour, endMin, 01);
+			var startDttm = $("#startDttm").val();
+			var endDttm = $("#endDttm").val();
+			var startHour = $("#startHour").val();
+			var startMin = $("#startMin").val();
+			var endHour = $("#endHour").val();
+			var endMin = $("#endMin").val();
+			var startDttmArray = startDttm.split(".");
+			var endDttmArray = endDttm.split(".");
+			var StartDttmObj = new Date(startDttmArray[0], Number(startDttmArray[1])-1, startDttmArray[2], startHour, startMin, 01);
+			var EndDttmObj = new Date(endDttmArray[0], Number(endDttmArray[1])-1, endDttmArray[2], endHour, endMin, 01);
 
-		if(StartDttmObj >= EndDttmObj){
-			alert('<spring:message code="lecture.message.resh.alert.result.date"/>');
-			return;
+			if(StartDttmObj >= EndDttmObj){
+				alert('<spring:message code="lecture.message.resh.alert.result.date"/>');
+				return;
+			}
 		}
+		
 		$('#creCrsReshForm').attr("action","/mng/course/creCrs/resh/" + cmd);
 		$('#creCrsReshForm').ajaxSubmit(processCallback);
 	}

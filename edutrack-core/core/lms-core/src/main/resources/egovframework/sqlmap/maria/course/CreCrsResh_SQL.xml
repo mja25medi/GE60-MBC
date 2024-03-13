@@ -10,6 +10,8 @@
 		       , B.RESH_CTS 									
 		       , A.USE_YN 										
 		       , A.START_DTTM 									
+		       , A.RESH_STARE_TYPE_CD 									
+		       , A.RESH_DAYCNT 									
 		       , (SELECT FN_GET_DATE_FORMAT(A.START_DTTM,'%H') ) AS START_HOUR  
 		       , (SELECT FN_GET_DATE_FORMAT(A.START_DTTM,'%i') ) AS START_MIN  
 		       , A.END_DTTM 									
@@ -53,7 +55,11 @@
 		        		GROUP BY STD_NO, RESH_SN	
 		         	) ANSR	
 		       		WHERE ANSR.RESH_SN = A.RESH_SN	
-		         ) AS STD_CNT 	
+		         ) AS STD_CNT
+		       ,(SELECT CRE_OPER_TYPE_CD 
+		      		FROM TB_CRS_CRE_CRS 
+		      		WHERE CRS_CRE_CD = A.CRS_CRE_CD
+	      		) AS CRE_OPER_TYPE_CD	
 		 ]]>
 	</sql>
 	
@@ -142,6 +148,8 @@
 		       , REG_DTTM 								
 		       , MOD_NO 								
 		       , MOD_DTTM 								
+		       , RESH_STARE_TYPE_CD 								
+		       , RESH_DAYCNT 								
 		  ) VALUES (                                   
 		         #{crsCreCd} 							
 		       , #{reshSn} 								
@@ -153,6 +161,8 @@
 		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
 		       , #{modNo} 								
 		       , DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')	
+		       , #{reshStareTypeCd}
+		       , #{reshDayCnt}
 		  )		
     </insert>
 
@@ -164,6 +174,8 @@
 		       , REG_YN = #{regYn} 									
 		       , MOD_NO = #{modNo} 									
 		       , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		       , RESH_STARE_TYPE_CD = #{reshStareTypeCd}							
+		       , RESH_DAYCNT = #{reshDayCnt}
 		   WHERE CRS_CRE_CD = #{crsCreCd} 							
 		     AND RESH_SN = #{reshSn} 
     </update>

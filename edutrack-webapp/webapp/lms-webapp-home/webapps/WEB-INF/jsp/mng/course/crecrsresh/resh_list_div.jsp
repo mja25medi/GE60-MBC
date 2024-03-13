@@ -37,8 +37,22 @@
 						${item.reshTitle}
 						<a href="javascript:editResh('${item.reshSn}');" ><i class="fa fa-cog"></i></a>
 					</td>
-					<td class="text-center"><meditag:dateformat type="8" delimeter="." property="${item.startDttm}"/></td>
-					<td class="text-center"><meditag:dateformat type="8" delimeter="." property="${item.endDttm}"/></td>
+					<td class="text-center">
+						<c:choose>
+							<c:when test="${item.creOperTypeCd eq 'S' }">-</c:when>
+							<c:otherwise>
+								<meditag:dateformat type="8" delimeter="." property="${item.startDttm}"/>
+							</c:otherwise>
+						</c:choose>
+					</td>
+					<td class="text-center">
+						<c:choose>
+							<c:when test="${item.creOperTypeCd eq 'S' }">-</c:when>
+							<c:otherwise>
+								<meditag:dateformat type="8" delimeter="." property="${item.endDttm}"/>
+							</c:otherwise>
+						</c:choose>
+					</td>
 					<td class="text-center">
 						<c:set var="regYn" value="${item.regYn}"/>
 						<c:if test="${empty item.regYn}"><c:set var="regYn" value="N"/></c:if>

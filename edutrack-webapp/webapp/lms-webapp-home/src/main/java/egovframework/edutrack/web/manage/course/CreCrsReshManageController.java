@@ -160,11 +160,12 @@ public class CreCrsReshManageController extends GenericController {
 		commonVOProcessing(vo, request);
 		
 		vo = creCrsReshService.view(vo).getReturnVO();
-		if(ValidationUtils.isNotEmpty(vo.getStartDttm()))
-			vo.setStartDttm(DateTimeUtil.getDateText(1, vo.getStartDttm().substring(0,8),"."));
-		if(ValidationUtils.isNotEmpty(vo.getEndDttm()))
-			vo.setEndDttm(DateTimeUtil.getDateText(1, vo.getEndDttm().substring(0,8),"."));
-
+		if(vo.getCreOperTypeCd().equals("R")) {
+			if(ValidationUtils.isNotEmpty(vo.getStartDttm()))
+				vo.setStartDttm(DateTimeUtil.getDateText(1, vo.getStartDttm().substring(0,8),"."));
+			if(ValidationUtils.isNotEmpty(vo.getEndDttm()))
+				vo.setEndDttm(DateTimeUtil.getDateText(1, vo.getEndDttm().substring(0,8),"."));
+		}
 		request.setAttribute("vo", vo);
 		request.setAttribute("gubun", "E");
 		return "mng/course/crecrsresh/resh_write_pop";

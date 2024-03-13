@@ -89,6 +89,7 @@
 		ItemDTO.crsCd = "${courseVO.crsCd}";
 		ItemDTO.crsCreCd = "${createCourseVO.crsCreCd}";
 		ItemDTO.crsCreNm = "${createCourseVO.crsCreNm}";
+		ItemDTO.creOperTypeCd = "${createCourseVO.creOperTypeCd}";
 
 		$('#tabMenuOper a').click(function (e) {
 			  $(this).tab('show');
@@ -102,7 +103,7 @@
 		url['1'] = "/mng/lecture/assignment/asmtMain?crsCreCd="+ItemDTO.crsCreCd;
 		/* url['2'] = "/mng/lecture/forum/main?crsCreCd="+ItemDTO.crsCreCd; */
 		url['2'] = "/mng/course/createCourse/subject/subjectMain?crsCreCd="+ItemDTO.crsCreCd;
-		url['3'] = "/mng/course/creCrs/resh/main?crsCreCd="+ItemDTO.crsCreCd;
+		url['3'] = "/mng/course/creCrs/resh/main?crsCreCd="+ItemDTO.crsCreCd+"&creOperTypeCd="+ItemDTO.creOperTypeCd;
 		url['4'] = "/mng/course/createCourse/teacher/teacherMain?crsCreCd="+ItemDTO.crsCreCd;
 		url['5'] = "/mng/course/createCourse/decls/main?crsCreCd="+ItemDTO.crsCreCd;
 		url['6'] = "/mng/lecture/exam/examMain?crsCreCd="+ItemDTO.crsCreCd+"&semiExamYn=Y";
