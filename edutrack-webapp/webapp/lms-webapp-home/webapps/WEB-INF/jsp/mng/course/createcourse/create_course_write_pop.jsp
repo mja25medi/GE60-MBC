@@ -207,7 +207,7 @@
 			</td>
 			<th scope="row"><span style="color:red;">* </span><spring:message code="course.title.course.edutime"/></th>
 			<td colspan="3">
-				<input type="text" style="width:50px;float:left;text-align:right;" maxlength="3" name="onlnEduTm_0" id="onlnEduTm_0" class="inputNumber form-control input-sm" value="${courseVO.eduTm}" onkeyup="isChkNumber(this)"/>
+				<input type="text" style="width:60px;float:left;text-align:right;" maxlength="5" name="onlnEduTm_0" id="onlnEduTm_0" class="inputNumber form-control input-sm" value="${courseVO.eduTm}" onkeyup="isChkNumber(this)"/>
 				<span style="float:left;margin-left:5px;line-height:30px;"><spring:message code="common.title.time"/></span>
 			</td>
 			

@@ -189,7 +189,7 @@
 				<c:if test="${gubun eq 'A'}">
 
 				<div id="crsOperMthdOn" style="display:">
-				<input type="text" style="width:50px;float:left;text-align:right;" maxlength="3" name="eduTm_temp" id="eduTm_temp" class="inputNumber form-control input-sm" value="" onkeyup="isChkNumber(this)"/>
+				<input type="text" style="width:60px;float:left;text-align:right;" maxlength="5" name="eduTm_temp" id="eduTm_temp" class="inputNumber form-control input-sm" value="" onkeyup="isChkNumber(this)"/>
 				<span style="float:left;margin-left:5px;line-height:30px;"><spring:message code="common.title.time"/></span>
 				</div>
 
