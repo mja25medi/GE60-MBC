@@ -81,7 +81,7 @@
                             </div>
                             <ul class="board-latest">
                             	<c:forEach var="item" items="${noticeList}">
-								<c:url var="noticeUrl" value="/home/main/goMenuPage?mcd=${noticeMcd}&subParam=read@$bbsCd=NOTICE@$atclSn=${item.atclSn}"/>
+								<c:url var="noticeUrl" value="/home/brd/bbs/viewAtclMain?bbsCd=NOTICE&atclSn=${item.atclSn}&mcd=${noticeMcd}"/>
 								<li><a href="${noticeUrl}" title="${item.atclTitle}">
 									<span class="boardTxt">
 										<span class="notice">[공지]</span>
