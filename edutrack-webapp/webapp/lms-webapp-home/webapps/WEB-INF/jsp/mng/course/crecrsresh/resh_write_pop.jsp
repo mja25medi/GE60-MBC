@@ -61,9 +61,9 @@
 		<tr id="reshDayCnt">
 			<th scope="row"><label for="reshCts"><spring:message code="course.title.resh.duration"/></label></th>
 			<td>
-				<span style="float:left;line-height:30px;"><spring:message code="lecture.title.research.day.start"/></span>
+				<span style="float:left;line-height:30px;"><spring:message code="lecture.title.research.day.start"/>&nbsp;</span>
 				<input type="text" style="width:60px;float:left;text-align:right;" maxlength="3" isNull="N" lenCheck="4" name="reshDayCnt" id="reshDayCnt" value="${vo.reshDayCnt }" onfocus="this.select()" class="inputSpecial inputNumber form-control input-sm" onkeyup="isChkInteger(this)"/>
-				<span style="float:left;line-height:30px;"><spring:message code="lecture.title.research.day.end"/></span>
+				<span style="float:left;line-height:30px;">&nbsp;<spring:message code="lecture.title.research.day.end"/></span>
 			</td>
 		</tr>
 		<tr>
@@ -170,7 +170,13 @@
 
 	function add() {
 		var reshSn = $("#reshSn opiton:selected").val();
-
+		var reshDayCnt = $("#reshDayCnt").find('input').val();
+		
+		if(reshDayCnt == 0 || reshDayCnt == '') {
+			alert("<spring:message code="lecture.message.research.alert.daycnt"/>")
+			return;
+		}
+		
 		if(!parent.subWorkFrame.chk_reshSn($("#reshSn").val()) ){
 			return;
 		}
@@ -179,10 +185,19 @@
 			alert("<spring:message code="course.message.resh.alert.questionnaire"/>")
 			return;
 		}
+		
+		
+		
 		process("add");	// cmd
 	}
 
 	function edit() {
+		var reshDayCnt = $("#reshDayCnt").find('input').val();
+		
+		if(reshDayCnt == 0 || reshDayCnt == '') {
+			alert("<spring:message code="lecture.message.research.alert.daycnt"/>")
+			return;
+		}
 		process("edit");	// cmd
 	}
 

@@ -74,7 +74,8 @@
 		        ,  A.ASMT_USE_CD	
 		        ,  A.ASMT_SVC_CD																											
 		        ,  (SELECT FN_GET_CODE_NAME('ASMT_TYPE_CD', A.ASMT_TYPE_CD)) AS ASMT_TYPE_NM										
-		        ,  A.ASMT_SELECT_TYPE_CD        																							
+		        ,  A.ASMT_SELECT_TYPE_CD  
+		        ,  A.ASMT_STARE_TYPE_CD     																							
 		        ,  (SELECT FN_GET_CODE_NAME('ASMT_SELECT_TYPE_CD', A.ASMT_SELECT_TYPE_CD)) AS ASMT_SELECT_TYPE_NM				
 		        ,  (SELECT FN_GET_DATE_FORMAT(A.ASMT_START_DTTM,'%Y.%m.%d')) AS ASMT_START_DTTM								
 		        ,  (SELECT FN_GET_DATE_FORMAT(A.ASMT_START_DTTM,'%H')) AS ASMT_START_HOUR										
@@ -213,7 +214,8 @@
 		        ,  A.ASMT_USE_CD																									
 		        ,  A.ASMT_SVC_CD																									
 		        ,  (SELECT FN_GET_CODE_NAME('ASMT_TYPE_CD', A.ASMT_TYPE_CD)) AS ASMT_TYPE_NM								
-		        ,  A.ASMT_SELECT_TYPE_CD        																					
+		        ,  A.ASMT_SELECT_TYPE_CD
+		        ,  A.ASMT_STARE_TYPE_CD     																					
 		        ,  (SELECT FN_GET_CODE_NAME('ASMT_SELECT_TYPE_CD', A.ASMT_SELECT_TYPE_CD)) AS ASMT_SELECT_TYPE_NM		
 		        ,  (SELECT FN_GET_DATE_FORMAT(A.ASMT_START_DTTM,'%Y.%m.%d %H:%i'))  AS  ASMT_START_DTTM  		      		
 		        ,  (SELECT FN_GET_DATE_FORMAT(A.ASMT_END_DTTM,'%Y.%m.%d %H:%i')) AS  ASMT_END_DTTM							
@@ -293,6 +295,7 @@
 		        ,  A.ASMT_SVC_CD																									
 		        ,  (SELECT FN_GET_CODE_NAME('ASMT_TYPE_CD', A.ASMT_TYPE_CD)) AS ASMT_TYPE_NM								
 		        ,  A.ASMT_SELECT_TYPE_CD        																					
+		        ,  A.ASMT_STARE_TYPE_CD 
 		        ,  (SELECT FN_GET_CODE_NAME('ASMT_SELECT_TYPE_CD', A.ASMT_SELECT_TYPE_CD)) AS ASMT_SELECT_TYPE_NM		
 		        ,  (SELECT FN_GET_DATE_FORMAT(A.ASMT_START_DTTM,'%Y.%m.%d %H:%i'))  AS  ASMT_START_DTTM  		      		
 		        ,  (SELECT FN_GET_DATE_FORMAT(A.ASMT_END_DTTM,'%Y.%m.%d %H:%i')) AS  ASMT_END_DTTM							
@@ -347,6 +350,7 @@
 		        ,  A.ASMT_SVC_CD																									
 		        ,  (SELECT FN_GET_CODE_NAME('ASMT_TYPE_CD', A.ASMT_TYPE_CD)) AS ASMT_TYPE_NM								
 		        ,  A.ASMT_SELECT_TYPE_CD        																					
+		        ,  A.ASMT_STARE_TYPE_CD 
 		        ,  (SELECT FN_GET_CODE_NAME('ASMT_SELECT_TYPE_CD', A.ASMT_SELECT_TYPE_CD)) AS ASMT_SELECT_TYPE_NM		
 		        ,  (SELECT FN_GET_DATE_FORMAT(A.ASMT_START_DTTM,'%Y.%m.%d %H:%i'))  AS  ASMT_START_DTTM  		      		
 		        ,  (SELECT FN_GET_DATE_FORMAT(A.ASMT_END_DTTM,'%Y.%m.%d %H:%i')) AS  ASMT_END_DTTM							

@@ -221,7 +221,8 @@ public class AssignmentServiceImpl extends EgovAbstractServiceImpl implements As
 		ProcessResultVO<AssignmentVO> resultVO = new ProcessResultVO<AssignmentVO>();
 		try {
 			String asmtSvcCd = iAssignmentVO.getAsmtSvcCd();
-			if(!asmtSvcCd.equals("CODE")) {
+			String AsmtStareTypeCd = iAssignmentVO.getAsmtStareTypeCd();
+			if(!asmtSvcCd.equals("CODE") && !AsmtStareTypeCd.equals("S")) {
 				if(iAssignmentVO.getAsmtStartHour().length() ==1){
 					iAssignmentVO.setAsmtStartHour("0"+iAssignmentVO.getAsmtStartHour());
 				}
@@ -277,7 +278,8 @@ public class AssignmentServiceImpl extends EgovAbstractServiceImpl implements As
 	public	ProcessResultVO<AssignmentVO> addRegistAssignment(AssignmentVO iAssignmentVO) throws Exception {
 		
 		String asmtSvcCd = iAssignmentVO.getAsmtSvcCd();
-		if(!asmtSvcCd.equals("CODE")) {
+		String AsmtStareTypeCd = iAssignmentVO.getAsmtStareTypeCd();
+		if(!asmtSvcCd.equals("CODE") && !AsmtStareTypeCd.equals("S")) {
 			if(iAssignmentVO.getAsmtStartHour().length() ==1){
 				iAssignmentVO.setAsmtStartHour("0"+iAssignmentVO.getAsmtStartHour());
 			}
@@ -325,7 +327,8 @@ public class AssignmentServiceImpl extends EgovAbstractServiceImpl implements As
 		ProcessResultVO<AssignmentVO> resultVO = new ProcessResultVO<AssignmentVO>();
 		try {
 			String asmtSvcCd = iAssignmentVO.getAsmtSvcCd();
-			if(!asmtSvcCd.equals("CODE")) {
+			String AsmtStareTypeCd = iAssignmentVO.getAsmtStareTypeCd();
+			if(!asmtSvcCd.equals("CODE") && !AsmtStareTypeCd.equals("S")) {
 			if(iAssignmentVO.getAsmtStartHour().length() ==1){
 				iAssignmentVO.setAsmtStartHour("0"+iAssignmentVO.getAsmtStartHour());
 			}
