@@ -366,7 +366,7 @@ public class StudentHomeController
 			model.addAttribute("paymentVO", vo);
 			
 			//bsk 조회
-			List<PaymentVO> usrBskList = paymentService.listBasketForEnrollByUserNoDeptCd(vo).getReturnList();
+			List<PaymentVO> usrBskList = paymentService.listBasketForEnrollByUserNoNotDdtm(vo).getReturnList();
 			
 			//리스트 없으면 교육과정및신청 페이지로 이동
 			if(usrBskList == null || usrBskList.size() == 0) {
@@ -469,9 +469,19 @@ public class StudentHomeController
 			String endDttm = "";
 			String auditEndDttm = "";
 			
-			startDttm = StringUtil.ReplaceAll(createCourseVO.getEnrlStartDttm(),".","")+"000001";
-			endDttm = StringUtil.ReplaceAll(createCourseVO.getEnrlEndDttm(),".","")+"235959";
-			auditEndDttm = StringUtil.ReplaceAll(createCourseVO.getAuditEndDttm(), ".", "")+"235959";
+			if("R".equals(courseVO.getCrsOperType())) {
+				//-- 정규 강좌인 경우 과정의 수강기간을 따른다.
+				startDttm = StringUtil.ReplaceAll(createCourseVO.getEnrlStartDttm(),".","")+"000001";
+				endDttm = StringUtil.ReplaceAll(createCourseVO.getEnrlEndDttm(),".","")+"235959";
+				auditEndDttm = StringUtil.ReplaceAll(createCourseVO.getAuditEndDttm(), ".", "")+"235959";
+			} else {
+				//-- 상시 강좌인 경우 수강신청 일부터 수강일 수 까지
+				startDttm = DateTimeUtil.getDate()+"000001";
+				int enrlDaycnt = 30;
+				if(createCourseVO.getEnrlDaycnt() > 0) enrlDaycnt = createCourseVO.getEnrlDaycnt();
+				endDttm = DateTimeUtil.afterDate(enrlDaycnt)+"235959";
+				auditEndDttm = endDttm;
+			}
 			
 			vo.setEnrlStartDttm(startDttm);
 			vo.setEnrlEndDttm(endDttm);
@@ -1415,7 +1425,7 @@ public class StudentHomeController
 		
 		model.addAttribute("paymentVO", vo);
 		
-		List<PaymentVO> usrBskList = paymentService.listBasketForEnrollByUserNoDeptCd(vo).getReturnList();
+		List<PaymentVO> usrBskList = paymentService.listBasketForEnrollByUserNoNotDdtm(vo).getReturnList();
 		
 		//리스트 없으면 교육과정및신청 페이지로 이동
 		if(usrBskList == null || usrBskList.size() == 0) {

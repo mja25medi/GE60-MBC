@@ -169,10 +169,58 @@
 		FROM tb_std_pay_bsk A, tb_crs_cre_crs B, tb_crs_crs C
 		WHERE A.CRS_CRE_CD = B.CRS_CRE_CD 
 		AND B.CRS_CD = C.CRS_CD
+		<if test = 'crsOperType != "S"'>
 		AND DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') BETWEEN B.ENRL_APLC_START_DTTM AND B.ENRL_APLC_END_DTTM 
+		</if>
 		AND B.EDU_PRICE > 0
 		AND A.USER_NO = #{userNo}
 		<!--  AND B.DEPT_CD = #{deptCd} -->
+		AND A.CRS_CRE_CD NOT IN (
+									SELECT CRS_CRE_CD 
+									FROM tb_std_std
+									WHERE ENRL_STS IN ('E','S','C','F')
+									AND USER_NO = #{userNo}		
+								)
+		<if test = "crsCreCd != null and crsCreCd != ''">
+			AND A.CRS_CRE_CD = #{crsCreCd}
+		</if>
+		<if test = "crsCreCds != null and crsCreCds != ''">
+			AND A.CRS_CRE_CD IN
+			<foreach item="item" index="index" collection="crsCreCds" open="(" separator="," close=")">
+		        #{item}
+		  </foreach>
+		</if>
+		
+		
+	</select>
+	
+	<select id="listBasketForEnrollByUserNoNotDdtm" parameterType="PaymentVO" resultType="PaymentVO">
+		/*
+			장바구니 리스트 날짜 조건 제외
+		*/
+		SELECT 
+				A.CRS_CRE_CD
+				, A.USER_NO
+				, B.CRS_CRE_NM
+				, B.EDU_PRICE
+				, B.REFUND_YN
+				, B.NOP_LIMIT_YN 
+				, B.ENRL_NOP 
+				, B.SBJ_CD 
+				, (SELECT COUNT(*) FROM tb_crs_sbj_cnts WHERE SBJ_CD = B.SBJ_CD ) AS CONTENTS_CNT		
+				, C.CRS_YEAR
+				, B.CRE_TERM
+				, C.ENRL_APLC_START_DTTM 
+				, C.ENRL_APLC_END_DTTM 
+				, C.ENRL_START_DTTM 
+				, C.ENRL_END_DTTM 
+				, C.TERM_END_DTTM 
+				, FN_GET_CODE_NAME('CRS_SVC_TYPE',C.CRS_SVC_TYPE) AS crs_svc_type
+		FROM tb_std_pay_bsk A, tb_crs_cre_crs B, tb_crs_crs C
+		WHERE A.CRS_CRE_CD = B.CRS_CRE_CD 
+		AND B.CRS_CD = C.CRS_CD
+		AND B.EDU_PRICE > 0
+		AND A.USER_NO = #{userNo}
 		AND A.CRS_CRE_CD NOT IN (
 									SELECT CRS_CRE_CD 
 									FROM tb_std_std

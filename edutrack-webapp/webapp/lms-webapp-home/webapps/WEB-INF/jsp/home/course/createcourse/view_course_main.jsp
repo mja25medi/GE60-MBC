@@ -39,8 +39,16 @@
 	                                        	</c:choose>
 	                                        </li>
 	                                        <li><span>과목 수</span>${item.sbjCnt }과목</li>
-	                                        <li><span>교육신청기간</span><meditag:dateformat type="1" delimeter="." property="${item.enrlAplcStartDttm}"/> ~ <meditag:dateformat type="1" delimeter="." property="${item.enrlAplcEndDttm}"/></li>
-	                                        <li><span>수강기간</span><meditag:dateformat type="1" delimeter="." property="${item.enrlStartDttm}"/> ~ <meditag:dateformat type="1" delimeter="." property="${item.enrlEndDttm}"/> (${item.onlnEduTm }시간)</li>
+	                                       
+	                                        <c:choose>
+		                                	<c:when test="${item.crsOperType  eq 'S'}">
+		                                		<li><span>수강일수</span>${item.enrlDaycnt}일</li>	
+		                                	</c:when>
+		                                	<c:otherwise>
+				                              	 <li><span>교육신청기간</span><meditag:dateformat type="1" delimeter="." property="${item.enrlAplcStartDttm}"/> ~ <meditag:dateformat type="1" delimeter="." property="${item.enrlAplcEndDttm}"/></li>
+	                                       		 <li><span>수강기간</span><meditag:dateformat type="1" delimeter="." property="${item.enrlStartDttm}"/> ~ <meditag:dateformat type="1" delimeter="." property="${item.enrlEndDttm}"/> (${item.onlnEduTm }시간)</li>
+		                                	</c:otherwise>
+		                                </c:choose>
 	                                        <li><span>교육비용</span>
                                                	<c:choose>
                                                 	<c:when test="${item.eduPrice eq 0 or empty item.eduPrice}"><strong class="price">무료</strong></c:when>
@@ -59,7 +67,7 @@
                         	<c:if test="${empty sessionScope.USERNO}">
                             	<button class="btn gray2" onclick="location.href='javascript:addQna();' "><spring:message code="button.write.qna.nonMem"/></button>
                             </c:if>
-                            <c:if test="${item.enrlAplcYn eq 'Y' }">                            
+                            <c:if test="${item.enrlAplcYn eq 'Y' || item.crsOperType  eq 'S' }">                            
 	                            <c:choose>
 	                            	  <c:when test="${stdYn eq 'Y' }">
 	                            	  		<button class="btn type4" onclick="location.href='/home/main/goMenuPage?mcd=MC00000051'"><spring:message code="course.title.createcourse.enroll"/>완료</button>
@@ -68,7 +76,7 @@
 	                                  		<button class="btn type4" onclick="addCourse('${item.crsCtgrCd}','${item.crsCd}','${item.crsCreCd}');"><spring:message code="course.title.createcourse.enroll"/></button>
 	                                  </c:when>
 	                                  <c:otherwise>
-	                           				<button class="btn type4" onclick="javascript:addSingleBasket('${item.crsCreCd}');"><spring:message code="course.title.createcourse.enroll"/></button>
+	                           				<button class="btn type4" onclick="javascript:addSingleBasket('${item.crsCreCd}','${item.crsOperType}');"><spring:message code="course.title.createcourse.enroll"/></button>
 	                            	  </c:otherwise>
 	                           </c:choose>
 	                           <c:choose>
@@ -166,7 +174,7 @@ function addBasket(crsCreCd) {
 	});
 }
 
-function addSingleBasket(crsCreCd) {
+function addSingleBasket(crsCreCd,crsOperType) {
 	if('${USERNO}' == null || '${USERNO}' == ""){
 		location.href = "/home/main/goMenuPage?mcd=HM04001000"
 		alert("로그인 후 신청 가능합니다.");
@@ -181,7 +189,7 @@ function addSingleBasket(crsCreCd) {
 			, async: false
 			, success : function(resultVO) {
 				if(resultVO.result > 0){
-					location.href = "/home/student/enrollPayBasketMain?crsCreCd="+crsCreCd;//수강신청	
+					location.href = "/home/student/enrollPayBasketMain?crsCreCd="+crsCreCd+"&crsOperType="+crsOperType;//수강신청	
 					return;
 				}else{
 					alert(resultVO.message);	

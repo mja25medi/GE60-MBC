@@ -20,6 +20,7 @@
 		       , A.OFLN_END_DTTM  
 		       , A.ENRL_START_DTTM  
 		       , A.ENRL_END_DTTM  
+		       , A.ENRL_DAYCNT  
 		       , A.AUDIT_END_DTTM  
 		       , A.NOP_LIMIT_YN  
 		       , IFNULL(FN_GET_NULL(A.ENRL_NOP),0) AS ENRL_NOP  

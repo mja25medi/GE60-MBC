@@ -126,6 +126,15 @@ public class PaymentVO  extends DefaultVO{
 	private String [] crsCreCds;
 	private String crsOperType;
 	
+	private String creOperType;
+	
+	
+	public String getCreOperType() {
+		return creOperType;
+	}
+	public void setCreOperType(String creOperType) {
+		this.creOperType = creOperType;
+	}
 	public String getCrsOperType() {
 		return crsOperType;
 	}

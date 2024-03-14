@@ -83,5 +83,7 @@ public interface PaymentMapper {
 	 * @return
 	 */
 	PaymentVO selectUserPayByPaymNo(PaymentVO vo);
+
+	List<PaymentVO> listBasketForEnrollByUserNoNotDdtm(PaymentVO vo);
 	
 }

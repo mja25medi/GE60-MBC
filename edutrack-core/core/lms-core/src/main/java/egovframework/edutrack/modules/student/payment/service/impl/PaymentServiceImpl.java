@@ -150,6 +150,18 @@ public class PaymentServiceImpl extends EgovAbstractServiceImpl implements Payme
 		return resultListVO;
 	}
 	
+	/**
+	 * [HRD] [교육과정/신청>수강신청결제] - 장바구니 조회 : 회원번호,
+	 */
+	@Override
+	public ProcessResultListVO<PaymentVO> listBasketForEnrollByUserNoNotDdtm(PaymentVO vo) {
+		ProcessResultListVO<PaymentVO> resultListVO = new ProcessResultListVO<>();
+		
+		resultListVO.setReturnList(paymentMapper.listBasketForEnrollByUserNoNotDdtm(vo));
+		
+		return resultListVO;
+	}
+	
 
 	/**
 	 * [HRD] [교육과정/신청>수강신청결제] - 수강신청 

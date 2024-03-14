@@ -4,6 +4,7 @@ import java.util.Map;
 
 import egovframework.edutrack.comm.service.ProcessResultListVO;
 import egovframework.edutrack.comm.service.ProcessResultVO;
+import egovframework.edutrack.modules.org.code.service.OrgCodeVO;
 
 public interface PaymentService {
 
@@ -71,4 +72,6 @@ public interface PaymentService {
 	 * @return
 	 */
 	public abstract ProcessResultVO<Map<String, Object>> viewInicisParRefundAbleInfo(Map<String, Object> resultMap);
+
+	public abstract ProcessResultListVO<PaymentVO> listBasketForEnrollByUserNoNotDdtm(PaymentVO vo);
 }

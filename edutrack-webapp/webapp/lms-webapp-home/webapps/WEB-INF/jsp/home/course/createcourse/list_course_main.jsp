@@ -47,14 +47,22 @@
                         <div class="item">
                             <h2><a href="<c:url value="/home/course/readCourseCreateMain"/>?crsCreCd=${item.crsCreCd}&crsCd=${item.crsCd}&amp;searchMode=${courseVO.searchMode}">${item.crsCreNm} ${item.creTerm }회차</a></h2>
                             <ul>                                            
-                                <li><span>교육신청기간</span><meditag:dateformat type="1" delimeter="." property="${item.enrlAplcStartDttm}"/> ~ <meditag:dateformat type="1" delimeter="." property="${item.enrlAplcEndDttm}"/></li>
-                                <li><span>수강기간</span><meditag:dateformat type="1" delimeter="." property="${item.enrlStartDttm}"/> ~ <meditag:dateformat type="1" delimeter="." property="${item.enrlEndDttm}"/></li>
+                                <c:choose>
+                                	<c:when test="${item.creOperTypeCd  eq 'S'}">
+                                		<li><span>수강일수</span>${item.enrlDaycnt}일</li>	
+                                	</c:when>
+                                	<c:otherwise>
+		                                <li><span>교육신청기간</span><meditag:dateformat type="1" delimeter="." property="${item.enrlAplcStartDttm}"/> ~ <meditag:dateformat type="1" delimeter="." property="${item.enrlAplcEndDttm}"/></li>
+		                                <li><span>수강기간</span><meditag:dateformat type="1" delimeter="." property="${item.enrlStartDttm}"/> ~ <meditag:dateformat type="1" delimeter="." property="${item.enrlEndDttm}"/></li>
+                                	</c:otherwise>
+                                </c:choose>
                                 <li><span>교육비용</span>
                                 	<c:choose>
                                  	<c:when test="${item.eduPrice eq 0 || item.eduPrice eq null}"><strong class="price">무료</strong></c:when>
                                  	<c:otherwise><strong class="price"><fmt:formatNumber value="${item.eduPrice}" pattern="#,###" />원</strong></c:otherwise>
                                  </c:choose>
                                 </li>
+                                
                             </ul>
                         </div>                    
                     </div>
