@@ -43,7 +43,7 @@
 										<c:when test="${item.examStareTypeCd eq 'R' }">
 											<li>
 												<strong><spring:message code="lecture.title.exam.duration"/></strong>
-                                      		 	${item.examStartDttm} ${item.examStartHour }:${item.examStartMin } ~ ${item.examEndDttm} ${item.examEndHour }:${item.examEndMin }
+                                      		 	${item.examStartDttm} ~ ${item.examEndDttm}
 											</li>
 											<c:if test="${item.semiExamYn eq  'Y'}">
 												<li><strong>응시 기준 강의 수 : </strong>${item.sbjNm} ${item.stareLecCount} 강</li>

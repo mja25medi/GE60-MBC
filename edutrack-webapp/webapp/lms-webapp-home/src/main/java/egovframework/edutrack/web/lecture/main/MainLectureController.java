@@ -485,16 +485,16 @@ public class MainLectureController
 				.filter(exam -> "N".equals(exam.getSemiExamYn()))
 				.map(exam -> String.format("[%s] : %s ~ %s", 
 							exam.getExamTitle(),
-							DateTimeUtil.getDateType(8, exam.getExamStartDttm(), "."),
-							DateTimeUtil.getDateType(8, exam.getExamEndDttm(), ".")))
+							exam.getExamStartDttm(), 
+							exam.getExamEndDttm()))
 				.collect(Collectors.joining("<br>"));
 		
 		String semiDuration = examList.stream()
 				.filter(exam -> "Y".equals(exam.getSemiExamYn()))
 				.map(exam -> String.format("[%s] : %s ~ %s", 
 							exam.getExamTitle(),
-							DateTimeUtil.getDateType(8, exam.getExamStartDttm(), "."),
-							DateTimeUtil.getDateType(8, exam.getExamEndDttm(), ".")))
+							exam.getExamStartDttm(),
+							exam.getExamEndDttm()))
 				.collect(Collectors.joining("<br>"));
 		
 		AssignmentVO asmtVO = new AssignmentVO();

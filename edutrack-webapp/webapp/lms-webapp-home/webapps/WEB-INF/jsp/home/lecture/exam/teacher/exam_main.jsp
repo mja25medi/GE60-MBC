@@ -32,7 +32,7 @@
                            			<c:when test="${item.examStareTypeCd eq 'R' }">
 	                                	<li>
 	                                		<strong>시험기간</strong>
-	                              			${item.examStartDttm} ${item.examStartHour }:${item.examStartMin } ~ ${item.examEndDttm} ${item.examEndHour }:${item.examEndMin }
+	                              			${item.examStartDttm} ~ ${item.examEndDttm}
 	                                	</li>
                                		</c:when>
                            			<c:otherwise>

@@ -39,7 +39,7 @@
 				<td style="text-align: center;">
 					<c:choose>
 						<c:when test="${item.examStareTypeCd eq 'R'}">
-							${item.examStartDttm} ${item.examStartHour}:${item.examStartMin } ~ ${item.examEndDttm} ${item.examEndHour}:${item.examEndMin }
+							${item.examStartDttm}  ~ ${item.examEndDttm}
 						</c:when>
 						<c:otherwise>
 						<span>-</span>
