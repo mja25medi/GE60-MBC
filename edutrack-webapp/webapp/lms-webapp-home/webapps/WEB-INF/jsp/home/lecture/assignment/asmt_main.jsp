@@ -29,7 +29,14 @@
                     <div class="course_list test_custom">
                         <div class="item">
                             <ul class="info_disc">
-                                <li><strong><spring:message code="lecture.title.assignment.duration"/></strong>${item.asmtStartDttm}~${item.asmtEndDttm}</li>
+                            <c:choose>
+									<c:when test="${item.asmtStareTypeCd eq 'S'}"> 
+										<li><strong><spring:message code="lecture.title.assignment.send.ratio"/></strong><spring:message code="lecture.message.asmt.send.alert.answer.ratio" arguments="${item.sendCritPrgrRatio}"/></li>	
+									</c:when>
+									<c:otherwise>
+										<li><strong><spring:message code="lecture.title.assignment.duration"/></strong>${item.asmtStartDttm}~${item.asmtEndDttm}</li>	
+									</c:otherwise>
+							</c:choose>
                                 <c:if test="${item.asmtTypeCd eq 'ON'}">
                                 <li>
                                   	 	<strong><spring:message code="lecture.title.assignment.seltype"/></strong>

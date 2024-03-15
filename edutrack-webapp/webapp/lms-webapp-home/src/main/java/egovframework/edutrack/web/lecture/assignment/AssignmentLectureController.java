@@ -605,7 +605,12 @@ public class AssignmentLectureController extends GenericController {
 		ProcessResultVO<AssignmentVO> resultVO = assignmentService.viewAssignment(vo);
 		vo = resultVO.getReturnVO();
 		vo.setAsmtCts(StringUtil.getHtmlContents(vo.getAsmtCts()));
-
+		
+		if (vo.getAsmtStareTypeCd().equals("S")) {
+			vo.setSendCanYn("Y");
+			vo.setRsltYn("Y");
+		}
+		
 		request.setAttribute("vo", vo);
 
 		//과제 제출 정보

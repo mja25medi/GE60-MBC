@@ -37,13 +37,17 @@
                             <li><meditag:codename code="${assignmentVO.asmtSelectTypeCd}" category="ASMT_SELECT_TYPE_CD" /></li>
                             </c:if>
                         </ul>
+                        <c:if test="${assignmentVO.asmtStareTypeCd != 'S'}"> 
                         <ul class="list">
                             <li class="head"><label><spring:message code="lecture.title.assignment.duration"/></label></li>
                             <li>${assignmentVO.asmtStartDttm} ${assignmentVO.asmtStartHour}:${assignmentVO.asmtStartMin} ~ ${assignmentVO.asmtEndDttm} ${assignmentVO.asmtEndHour}:${assignmentVO.asmtEndMin}</li>
                         </ul>
+                        </c:if>
                         <ul class="list">
+                          <c:if test="${assignmentVO.asmtStareTypeCd != 'S'}"> 
                             <li class="head"><label><spring:message code="lecture.title.assignment.delaydate"/></label></li>
                             <li>${assignmentVO.extSendDttm} ${assignmentVO.extSendHour}:${assignmentVO.extSendMin}</li>
+                            </c:if>
                             <c:if test="${assignmentVO.asmtTypeCd eq 'ON'}">
                             <li class="head"><label><spring:message code="lecture.title.assignment.send.cnt"/></label></li>
                             <li>${assignmentVO.asmtLimitCnt} <spring:message code="common.title.times.postfix"/></li>

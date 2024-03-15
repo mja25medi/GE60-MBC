@@ -22,6 +22,7 @@
                 <li class="head"><label><spring:message code="lecture.title.assignment.name"/></label></li>
                 <li>${assignmentVO.asmtTitle }</li>
             </ul>
+            <c:if test="${assignmentVO.asmtStareTypeCd != 'S'}"> 
             <ul class="list">
                 <li class="head"><label><spring:message code="lecture.title.assignment.duration"/></label></li>
                 <li>${assignmentVO.asmtStartDttm }&nbsp;${assignmentVO.asmtStartHour }:${assignmentVO.asmtStartMin } ~
@@ -31,6 +32,7 @@
                 <li class="head"><label><spring:message code="lecture.title.assignment.delaydate"/></label></li>
                 <li>${assignmentVO.extSendDttm }&nbsp;${assignmentVO.extSendHour }:${assignmentVO.extSendMin }</li>
             </ul>
+            </c:if>
             <c:if test="${assignmentVO.asmtTypeCd eq 'ON' }">
             <ul class="list">
                 <li class="head"><label><spring:message code="lecture.title.assignment.send.cnt"/></label></li>

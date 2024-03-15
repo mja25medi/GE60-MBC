@@ -257,9 +257,9 @@ public class MainLectureController
 		
 		
 		if("STU".equals(classUserType)) {
-			if (createCourseVO.getCrsOperMthd().equals("OF")) {
 				mainLectureVO = mainLectureService.viewCreateCourseSchedule(mainLectureVO).getReturnVO();
 				//권장 진도율
+				if (createCourseVO.getCrsOperMthd().equals("OF")) {
 				float termDayCnt = mainLectureVO.getTermDayCnt();
 				float nowDayCnt = mainLectureVO.getNowDayCnt();
 				
@@ -770,12 +770,13 @@ public class MainLectureController
 		request.setAttribute("attendanceVO", avo);
 
 		//권장 진도율
-		float termDayCnt = mainLectureVO.getTermDayCnt();
-		float nowDayCnt = mainLectureVO.getNowDayCnt();
-		
-		int prpsRatio = Math.round((nowDayCnt/termDayCnt)*100);
-		request.setAttribute("prpsRatio", Math.min(100, prpsRatio));
-
+		if (createCourseVO.getCrsOperMthd().equals("OF")) {
+			float termDayCnt = mainLectureVO.getTermDayCnt();
+			float nowDayCnt = mainLectureVO.getNowDayCnt();
+			
+			int prpsRatio = Math.round((nowDayCnt/termDayCnt)*100);
+			request.setAttribute("prpsRatio", Math.min(100, prpsRatio));
+		}
 		if(!"TCH".equals(classUserType)) {
 			boolean isOpen = true;
 			boolean nowScoreOpen = false;
