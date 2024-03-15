@@ -41,7 +41,7 @@
 		  WHERE  A.USER_NO = B.USER_NO  
 		    AND  B.USER_NO = C.USER_NO  
 		    AND  A.CRS_CRE_CD  = #{crsCreCd}  
-		    AND  A.ENRL_STS IN('S','C','F','D')  
+		    AND  A.ENRL_STS IN('S','C','F')  
 			<if test = "userNm != null and userNm != ''">
 				AND  B.USER_NM LIKE CONCAT('%',#{userNm}, '%') 
 			</if> 
