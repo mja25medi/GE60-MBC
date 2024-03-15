@@ -2027,12 +2027,12 @@
 			<if test = "crsCd != null and crsCd != ''">
 				AND A.CRS_CD = #{crsCd}
 			</if>
-			<if test = 'creOperTypeCd != null and creOperTypeCd == "E" '>
+			<!-- <if test = 'creOperTypeCd != null and creOperTypeCd == "E" '>
 		       	AND A.CRE_OPER_TYPE_CD = #{creOperTypeCd}  
 		   </if>
 		   	<if test = 'creOperTypeCd == null or creOperTypeCd == "" '>
 		       	AND A.CRE_OPER_TYPE_CD IS NULL
-		   	</if>
+		   	</if> -->
 		   	<if test = "orgCd != null and orgCd != ''">
 				AND A.ORG_CD = #{orgCd}
 			</if>	
@@ -2226,12 +2226,12 @@
 			<if test = "crsCd != null and crsCd != ''">
 				AND A.CRS_CD = #{crsCd}
 			</if>
-			<if test = 'creOperTypeCd != null and creOperTypeCd == "E" '>
+		<!-- 	<if test = 'creOperTypeCd != null and creOperTypeCd == "E" '>
 		       	AND A.CRE_OPER_TYPE_CD = #{creOperTypeCd}  
 		   	</if>
 		   	<if test = 'creOperTypeCd == null or creOperTypeCd == "" '>
 		       	AND A.CRE_OPER_TYPE_CD IS NULL
-		   	</if>	
+		   	</if>	 -->
 		ORDER BY A.CRE_YEAR DESC, A.CRE_TERM DESC, A.CRS_CRE_NM ASC
 	</select>
 	
@@ -2477,15 +2477,15 @@
 		     	<if test = 'creTerm != null and creTerm != ""'>
 					AND A.CRE_TERM like CONCAT('%', IFNULL(#{creTerm},''), '%')
 				</if>
-				<if test = 'creOperTypeCd != null and creOperTypeCd == "E" '>
+			<!-- 	<if test = 'creOperTypeCd != null and creOperTypeCd == "E" '>
 		       		AND A.CRE_OPER_TYPE_CD = #{creOperTypeCd}  
-		   		</if>
+		   		</if> -->
 				<if test = 'creTypeCd != null and creTypeCd != "" '>
 		       		AND A.CRE_TYPE_CD = #{creTypeCd}  
 		   		</if>
-		   		<if test = 'creOperTypeCd == null or creOperTypeCd == "" '>
+		   <!-- 		<if test = 'creOperTypeCd == null or creOperTypeCd == "" '>
 		       		AND A.CRE_OPER_TYPE_CD IS NULL
-		   		</if>	
+		   		</if>	 -->
 		   		<if test = 'crsOperMthd != null and crsOperMthd != ""'>
 		       		AND B.CRS_OPER_MTHD = #{crsOperMthd}
 		   		</if>
