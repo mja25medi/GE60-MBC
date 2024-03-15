@@ -770,41 +770,50 @@ public class CreateCourseServiceImpl extends EgovAbstractServiceImpl implements 
 	 */
 	@Override
 	@HrdApiCrsCreCrs(CreSyncType.DELETE)
-	public ProcessResultVO<?> deleteCreateCourse(CreateCourseVO iCreateCourseVO) throws Exception {
+	public ProcessResultVO<?> deleteCreateCourse(CreateCourseVO iCreateCourseVO){
 
 		ProcessResultVO<?> resultVO = new ProcessResultVO();
-			//-- 과정 개설시 과정 개시판 삭제.
-		LecBbsVO bbsVO = new LecBbsVO();
-		bbsVO.setCrsCreCd(iCreateCourseVO.getCrsCreCd());
-		lecBbsMapper.deleteAll(bbsVO);
-
-		//수강신청 삭제한 학생 정보 삭제
-		StudentVO svo = new StudentVO();
-		svo.setEnrlSts("D");
-		svo.setCrsCreCd(iCreateCourseVO.getCrsCreCd());
-		List<StudentVO> sList = studentMapper.listStudent(svo);
-		for(int i=0; i<sList.size(); i++) {
-			studentMapper.deleteStudentEduRslt(sList.get(i));
+		try {
+			//-- 과정 개설시 과정 게시판 삭제.
+			LecBbsVO bbsVO = new LecBbsVO();
+			bbsVO.setCrsCreCd(iCreateCourseVO.getCrsCreCd());
+			lecBbsMapper.deleteAll(bbsVO);
+	
+			//수강신청 삭제한 학생 정보 삭제
+			StudentVO svo = new StudentVO();
+			svo.setEnrlSts("D");
+			svo.setCrsCreCd(iCreateCourseVO.getCrsCreCd());
+			List<StudentVO> sList = studentMapper.listStudent(svo);
+			for(int i=0; i<sList.size(); i++) {
+				studentMapper.deleteStudentEduRslt(sList.get(i));
+			}
+			
+			studentMapper.deleteCreateCourseStudent(svo);
+	
+			//-- 담임,튜터 삭제
+			TeacherVO tchVO = new TeacherVO();
+			tchVO.setCrsCreCd(iCreateCourseVO.getCrsCreCd());
+			createCourseTeacherMapper.deleteTeacherAll(tchVO);
+			
+			//-- 개설된 과정의 분반을 삭제한다.
+			CreCrsDeclsVO creCrsDeclsVO = new CreCrsDeclsVO();
+			creCrsDeclsVO.setCrsCreCd(iCreateCourseVO.getCrsCreCd());
+			creCrsDeclsMapper.deleteAll(creCrsDeclsVO);
+			
+			//-- 강의실 접속 로그 삭제
+			LogClassConnVO lccvo = new LogClassConnVO();
+			lccvo.setCrsCreCd(iCreateCourseVO.getCrsCreCd());
+			logClassConnMapper.delClassConLog(lccvo);
+			//-- 개설과정 QR 정보 삭제
+			createCourseMapper.deleteCreateCourseQr(iCreateCourseVO);
+			
+			createCourseMapper.deleteCreateCourse(iCreateCourseVO);
+			
+			resultVO.setResultSuccess();
+			resultVO.setMessage("과정을 삭제하였습니다.");
+		}catch(Exception e) {
+			resultVO.setMessage("운영상 등록된 데이터가 남아있어 과정을 삭제할 수 없습니다.");
 		}
-		
-		studentMapper.deleteCreateCourseStudent(svo);
-		
-		//-- 개설된 과정의 분반을 삭제한다.
-		CreCrsDeclsVO creCrsDeclsVO = new CreCrsDeclsVO();
-		creCrsDeclsVO.setCrsCreCd(iCreateCourseVO.getCrsCreCd());
-		creCrsDeclsMapper.deleteAll(creCrsDeclsVO);
-		
-		//-- 강의실 접속 로그 삭제
-		LogClassConnVO lccvo = new LogClassConnVO();
-		lccvo.setCrsCreCd(iCreateCourseVO.getCrsCreCd());
-		logClassConnMapper.delClassConLog(lccvo);
-		//-- 개설과정 QR 정보 삭제
-		createCourseMapper.deleteCreateCourseQr(iCreateCourseVO);
-		
-		createCourseMapper.deleteCreateCourse(iCreateCourseVO);
-		
-		resultVO.setResultSuccess();
-		
 		return resultVO;
 		
 		

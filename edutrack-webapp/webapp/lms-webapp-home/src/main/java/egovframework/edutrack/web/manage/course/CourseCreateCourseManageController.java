@@ -461,13 +461,8 @@ public class CourseCreateCourseManageController extends GenericController{
 		} else if (ccVO.getTchCnt() > 0) {
 			resultVO.setResult(-1);
 			resultVO.setMessage(getMessage(request, "course.message.createcourse.alert.delete3").replace("\\n\\n", "\r\n"));
-		} else {
-			try {
+		}else {
 				resultVO = createCourseService.deleteCreateCourse(vo);
-				resultVO.setMessage(getMessage(request, "course.message.createcourse.delete.success"));
-			}catch(Exception e) {
-				resultVO.setMessage(getMessage(request, "course.message.createcourse.delete.failed"));
-			}
 		}
 		return JsonUtil.responseJson(response, resultVO);
 	}
