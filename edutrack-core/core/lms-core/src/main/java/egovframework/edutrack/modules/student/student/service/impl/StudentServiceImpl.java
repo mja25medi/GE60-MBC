@@ -206,11 +206,20 @@ public class StudentServiceImpl extends EgovAbstractServiceImpl implements Stude
 			throw new ServiceProcessException("중복 신청 불가능합니다.");
 		}
 		
+		
+		if("R".equals(viewCreateCourse.getCrsOperType())) {
+			//---- 정규 과정의 경우 과정의 날짜로 셋팅
+			studentVO.setEnrlStartDttm(viewCreateCourse.getEnrlStartDttm());
+			studentVO.setEnrlEndDttm(viewCreateCourse.getEnrlEndDttm());
+			studentVO.setAuditEndDttm(viewCreateCourse.getAuditEndDttm());
+		} else {
+			studentVO.setEnrlStartDttm( DateTimeUtil.getDate()+"000001");
+			studentVO.setEnrlEndDttm(DateTimeUtil.afterDate(viewCreateCourse.getEnrlDaycnt())+"235959");
+			studentVO.setAuditEndDttm(DateTimeUtil.afterDate(viewCreateCourse.getEnrlDaycnt())+"235959");
+		}
+		
 		studentVO.setDeclsNo(1);
 		studentVO.setEnrlSts("E"); //승인대기
-		studentVO.setEnrlStartDttm(viewCreateCourse.getEnrlStartDttm());
-		studentVO.setEnrlEndDttm(viewCreateCourse.getEnrlEndDttm());
-		studentVO.setAuditEndDttm(viewCreateCourse.getAuditEndDttm());
 		studentVO.setStdNo(studentMapper.selectKey());
 		studentVO.setOrgCd(viewUserInfo.getOrgCd());
 		studentVO.setDeptNm(viewUserInfo.getDeptNm());

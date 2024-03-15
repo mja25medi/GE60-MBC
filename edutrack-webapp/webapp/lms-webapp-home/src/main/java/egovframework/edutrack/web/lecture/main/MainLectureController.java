@@ -257,13 +257,15 @@ public class MainLectureController
 		
 		
 		if("STU".equals(classUserType)) {
-			mainLectureVO = mainLectureService.viewCreateCourseSchedule(mainLectureVO).getReturnVO();
-			//권장 진도율
-			float termDayCnt = mainLectureVO.getTermDayCnt();
-			float nowDayCnt = mainLectureVO.getNowDayCnt();
-			
-			int prpsRatio = Math.round((nowDayCnt/termDayCnt)*100);
-			request.setAttribute("prpsRatio", Math.min(100, prpsRatio));
+			if (createCourseVO.getCrsOperMthd().equals("OF")) {
+				mainLectureVO = mainLectureService.viewCreateCourseSchedule(mainLectureVO).getReturnVO();
+				//권장 진도율
+				float termDayCnt = mainLectureVO.getTermDayCnt();
+				float nowDayCnt = mainLectureVO.getNowDayCnt();
+				
+				int prpsRatio = Math.round((nowDayCnt/termDayCnt)*100);
+				request.setAttribute("prpsRatio", Math.min(100, prpsRatio));
+			}
 			
 			String nowDate = DateTimeUtil.getDateType(1, DateTimeUtil.getDate(),".");
 			request.setAttribute("nowDate", nowDate);

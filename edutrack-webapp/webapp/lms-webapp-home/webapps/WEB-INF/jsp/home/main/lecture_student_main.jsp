@@ -15,7 +15,9 @@
 	            </div>
 				<ul>
 					<li><span>교육기간</span>${createCourseVO.enrlStartDttm } ~ ${createCourseVO.enrlEndDttm }</li>
-					<li><span>성적열람 시작일</span>${createCourseVO.scoreOpenDttm }</li>
+					<c:if test="${createCourseVO.crsOperType eq 'R' }">
+						<li><span>성적열람 시작일</span>${createCourseVO.scoreOpenDttm }</li>
+					</c:if>
 	             	<li>
 		                <c:if test="${authGrpCd ne 'TCH'}">
 		                <span><i class="xi-calendar-check" aria-hidden="true"></i>전체 ${createCourseVO.sbjCnt }개의 과목 중</span>

@@ -715,8 +715,18 @@
 		         FN_GET_DATE_FORMAT(A.ENRL_APLC_END_DTTM,'MM.DD')) AS ENRL_APLC_DURATION	
 		       , FN_GET_DATE_FORMAT(A.OFLN_START_DTTM,'%Y.%m.%d') AS OFLN_START_DTTM 
 		       , FN_GET_DATE_FORMAT(A.OFLN_END_DTTM,'%Y.%m.%d') AS OFLN_END_DTTM 
-		       , FN_GET_DATE_FORMAT(A.ENRL_START_DTTM,'%Y.%m.%d') AS ENRL_START_DTTM 
-		       , FN_GET_DATE_FORMAT(A.ENRL_END_DTTM,'%Y.%m.%d') AS ENRL_END_DTTM 
+		      <!--  , FN_GET_DATE_FORMAT(A.ENRL_START_DTTM,'%Y.%m.%d') AS ENRL_START_DTTM 
+		       , FN_GET_DATE_FORMAT(A.ENRL_END_DTTM,'%Y.%m.%d') AS ENRL_END_DTTM  -->
+  		       , ( SELECT FN_GET_DATE_FORMAT(ENRL_START_DTTM,'%Y.%m.%d')
+		            FROM TB_STD_STD 
+		            WHERE CRS_CRE_CD =  #{crsCreCd} 
+		            AND STD_NO = #{stdNo} 
+		         ) AS  ENRL_START_DTTM
+		       , ( SELECT FN_GET_DATE_FORMAT(ENRL_END_DTTM,'%Y.%m.%d')
+		            FROM TB_STD_STD 
+		            WHERE CRS_CRE_CD =  #{crsCreCd} 
+		            AND STD_NO = #{stdNo} 
+		         ) AS  ENRL_END_DTTM
 		       , FN_GET_DATE_FORMAT(A.AUDIT_END_DTTM,'%Y.%m.%d') AS AUDIT_END_DTTM 
 		       , CONCAT(FN_GET_DATE_FORMAT(A.ENRL_START_DTTM,'MM.DD'),'~',
 		         FN_GET_DATE_FORMAT(A.ENRL_END_DTTM,'MM.DD')) AS ENRL_DURATION 
@@ -2076,6 +2086,7 @@
 		       , A.ENRL_APLC_END_DTTM 
 		       , A.ENRL_START_DTTM 
 		       , A.ENRL_END_DTTM 
+		       , A.ENRL_DAYCNT 
 		       , A.AUDIT_END_DTTM 
 		       , IFNULL(FN_GET_NULL(A.NOP_LIMIT_YN),'N') AS NOP_LIMIT_YN
 		       , A.ENRL_NOP 

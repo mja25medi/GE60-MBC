@@ -205,8 +205,8 @@
 		 	UPDATE 	tb_std_std 																	
 		      SET	ENRL_STS 			= #{enrlSts}			 									
 		        ,  ENRL_START_DTTM 	= CONCAT(DATE_FORMAT(NOW(), '%Y%m%d'),'000001')					
-		        ,  ENRL_END_DTTM 		= CONCAT(DATE_FORMAT(NOW() + #{enrlDaycnt}, '%Y%m%d'),'235959'	)
-		        ,  AUDIT_END_DTTM 		= CONCAT(DATE_FORMAT(NOW() + #{enrlDaycnt}, '%Y%m%d'),'235959'	)
+		        ,  ENRL_END_DTTM 		= CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL #{enrlDaycnt} DAY), '%Y%m%d'),'235959')
+		        ,  AUDIT_END_DTTM 		= CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL #{enrlDaycnt} DAY), '%Y%m%d'),'235959')
 		        ,  ENRL_CERT_DTTM		= DATE_FORMAT(NOW(),'%Y%m%d%H%i%s')					
 		        ,  ENRL_CANCEL_DTTM 	= ''													
 		        ,  MOD_NO 				= #{modNo}												
@@ -830,8 +830,8 @@
 			    SET
 			      	   ENRL_STS 			= #{item.enrlSts}			 									
 			        ,  ENRL_START_DTTM 	= CONCAT(DATE_FORMAT(NOW(),'%Y%m%d'),'000001')					
-			        ,  ENRL_END_DTTM 		= CONCAT(DATE_FORMAT(NOW() + #{item.enrlDaycnt}, '%Y%m%d'),'235959')	
-			        ,  AUDIT_END_DTTM 		= CONCAT(DATE_FORMAT(NOW() + #{item.enrlDaycnt}, '%Y%m%d'),'235959')	
+			        ,  ENRL_END_DTTM 		= CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL #{item.enrlDaycnt} DAY), '%Y%m%d'),'235959')
+			        ,  AUDIT_END_DTTM 		= CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL #{item.enrlDaycnt} DAY), '%Y%m%d'),'235959')
 			        ,  ENRL_CERT_DTTM		= DATE_FORMAT(NOW(),'%Y%m%d%H%i%s')					
 			        ,  ENRL_CANCEL_DTTM 	= ''													
 			        ,  MOD_NO 				= #{item.modNo}												
