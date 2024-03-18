@@ -352,7 +352,7 @@ public class CreCrsReshLectureController extends GenericController {
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		commonVOProcessing(vo, request);
 		String stdNo = UserBroker.getStudentNo(request);
-
+		
 		String crsCreCd = UserBroker.getCreCrsCd(request);
 		vo.setCrsCreCd(crsCreCd);
 		vo.setUseYn("Y");
@@ -384,7 +384,7 @@ public class CreCrsReshLectureController extends GenericController {
 		String stdNo = UserBroker.getStudentNo(request);
 		String crsCreCd = UserBroker.getCreCrsCd(request);
 		vo.setCrsCreCd(crsCreCd);
-
+		vo.setStdNo(stdNo);
 		//-- 설문 정보 검색
 		vo = creCrsReshService.view(vo).getReturnVO();
 

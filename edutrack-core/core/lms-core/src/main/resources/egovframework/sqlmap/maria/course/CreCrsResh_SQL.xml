@@ -9,12 +9,12 @@
 		       , B.RESH_TITLE 									
 		       , B.RESH_CTS 									
 		       , A.USE_YN 										
-		       , A.START_DTTM 									
+		       , IFNULL(FN_GET_NULL(A.START_DTTM), (SELECT CONCAT(DATE_FORMAT(DATE_SUB(ENRL_END_DTTM, INTERVAL A.RESH_DAYCNT DAY),'%Y%m%d'),'000001') FROM TB_STD_STD WHERE STD_NO = #{stdNo})) AS START_DTTM 									
 		       , A.RESH_STARE_TYPE_CD 									
 		       , A.RESH_DAYCNT 									
 		       , (SELECT FN_GET_DATE_FORMAT(A.START_DTTM,'%H') ) AS START_HOUR  
 		       , (SELECT FN_GET_DATE_FORMAT(A.START_DTTM,'%i') ) AS START_MIN  
-		       , A.END_DTTM 									
+		       , IFNULL(FN_GET_NULL(A.START_DTTM), (SELECT ENRL_END_DTTM FROM TB_STD_STD WHERE STD_NO = #{stdNo})) AS END_DTTM									
 		       , (SELECT FN_GET_DATE_FORMAT(A.END_DTTM,'%H') ) AS END_HOUR  
 		       , (SELECT FN_GET_DATE_FORMAT(A.END_DTTM,'%i') ) AS END_MIN  
 		       , A.REG_YN 										
@@ -45,8 +45,8 @@
 		                        AND CRS_CRE_CD = #{crsCreCd} ) > 0			
 		              THEN 'Y' ELSE 'N' END AS JOIN_YN						
 		       , CASE WHEN DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') 			
-		                   BETWEEN IFNULL(FN_GET_NULL(A.START_DTTM),'19000101000001')		
-		                       AND IFNULL(FN_GET_NULL(A.END_DTTM),'99991231235959')			       
+		                   BETWEEN IFNULL(FN_GET_NULL(A.START_DTTM), (SELECT CONCAT(DATE_FORMAT(DATE_SUB(ENRL_END_DTTM, INTERVAL A.RESH_DAYCNT DAY),'%Y%m%d'),'000001') FROM TB_STD_STD WHERE STD_NO = #{stdNo}))	
+		                       AND IFNULL(FN_GET_NULL(A.START_DTTM), (SELECT ENRL_END_DTTM FROM TB_STD_STD WHERE STD_NO = #{stdNo}))		       
 		              THEN 'Y' ELSE 'N' END AS ANSR_USE_YN		
 		       ,(SELECT COUNT(*) FROM (	
 		       			SELECT STD_NO, RESH_SN	
