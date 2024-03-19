@@ -79,7 +79,16 @@
                     <div class="table_list">
                         <ul class="list">
                             <li class="head"><label>수강기간</label></li>
-                            <li>${mainLectureVO.enrlDuration}</li>
+                            <li>
+                               <c:choose>
+									<c:when test="${createCourseVO.creOperTypeCd eq 'S' }">
+										${createCourseVO.enrlDaycnt}일
+									</c:when>
+									<c:otherwise>
+										${mainLectureVO.enrlDuration}
+									</c:otherwise>
+								</c:choose>
+                            </li>
                         </ul>
                         <ul class="list">
                             <li class="head"><label>시험기간</label></li>
@@ -115,10 +124,12 @@
 								</c:otherwise>
 							</c:choose>
                         </ul>
-                        <ul class="list">
-                            <li class="head"><label>기수종료일</label></li>
-                            <li>${mainLectureVO.termEndDttm}</li>
-                        </ul>
+                        <c:if test="${createCourseVO.creOperTypeCd ne 'S' }">
+	                        <ul class="list">
+	                            <li class="head"><label>기수종료일</label></li>
+	                            <li>${mainLectureVO.termEndDttm}</li>
+	                        </ul>
+                        </c:if>
                     </div>
                 </div>
                    

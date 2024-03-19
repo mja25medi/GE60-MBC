@@ -467,6 +467,7 @@ public class MainLectureController
 		
 		//-- 과정 개설 정보를 가져온다.
 		createCourseVO = createCourseService.viewCreateCourse(createCourseVO).getReturnVO();
+		String creOperTypeCd =  createCourseVO.getCreOperTypeCd(); 
 		request.setAttribute("createCourseVO", createCourseVO);
 		
 		//-- 과정 정보를 가져온다.
@@ -485,32 +486,55 @@ public class MainLectureController
 		List<ExamVO> examList = examService.listExam(examVO).getReturnList();
 		String examDuration = examList.stream()
 				.filter(exam -> "N".equals(exam.getSemiExamYn()))
-				.map(exam -> String.format("[%s] : %s ~ %s", 
-							exam.getExamTitle(),
-							StringUtil.nvl(exam.getExamStartDttm()), 
-							StringUtil.nvl(exam.getExamEndDttm())))
-				.collect(Collectors.joining("<br>"));
+		        .map(exam -> {
+		            if ("S".equals(creOperTypeCd)) {
+		                return String.format("[%s] : -", exam.getExamTitle());
+		            } else {
+		                return String.format("[%s] : %s ~ %s", 
+		                    exam.getExamTitle(),
+		                    StringUtil.nvl(exam.getExamStartDttm()), 
+		                    StringUtil.nvl(exam.getExamEndDttm()));
+		            }
+		        })
+		        .collect(Collectors.joining("<br>"));
+
+					
 		
 		String semiDuration = examList.stream()
 				.filter(exam -> "Y".equals(exam.getSemiExamYn()))
-				.map(exam -> String.format("[%s] : %s ~ %s", 
+				.map(exam -> { 
+					if ("S".equals(creOperTypeCd)) {
+						return String.format("[%s] : -", exam.getExamTitle());
+					}else {
+						return	String.format("[%s] : %s ~ %s", 
 							exam.getExamTitle(),
 							StringUtil.nvl(exam.getExamStartDttm()),
-							StringUtil.nvl(exam.getExamEndDttm())))
+							StringUtil.nvl(exam.getExamEndDttm()));
+					}
+				})
 				.collect(Collectors.joining("<br>"));
 		
 		AssignmentVO asmtVO = new AssignmentVO();
 		asmtVO.setCrsCreCd(crsCreCd);
 		String asmtDuration = assignmentService.listAssignment(asmtVO).getReturnList().stream()
-				.map(asmt -> String.format("[%s] : %s", asmt.getAsmtTitle(), asmt.getAsmtDuration()))
+				.map(asmt -> {
+				if ("S".equals(creOperTypeCd)) {
+					return String.format("[%s] : -", asmt.getAsmtTitle());
+				}else {
+					return String.format("[%s] : %s", asmt.getAsmtTitle(), asmt.getAsmtDuration());
+					}	
+				})
 				.collect(Collectors.joining("<br>"));
 		
 		mainLectureVO.setExamDuration(examDuration);
 		mainLectureVO.setSemiExamDuration(semiDuration);
 		mainLectureVO.setAsmtDuration(asmtDuration);
-		
 		request.setAttribute("mainLectureVO", mainLectureVO);
-		request.setAttribute("prpsRatio", Math.min(100, (mainLectureVO.getNowDayCnt()/mainLectureVO.getTermDayCnt())*100));
+		
+		if (!creOperTypeCd.equals("S")) {
+			request.setAttribute("prpsRatio", Math.min(100, (mainLectureVO.getNowDayCnt()/mainLectureVO.getTermDayCnt())*100));
+		}
+		
 		
 		return "home/main/lecture_course_info_main";
 	}
