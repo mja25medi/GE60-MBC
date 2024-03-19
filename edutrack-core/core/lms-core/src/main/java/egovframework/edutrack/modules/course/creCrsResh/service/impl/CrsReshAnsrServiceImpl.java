@@ -305,6 +305,9 @@ public class CrsReshAnsrServiceImpl
 
 		List<StudentVO> stdList = null;
 		List<CrsReshAnsrVO> resultList = null;
+		String startDttm = null;
+		String endDttm = null;
+		
 		try {
 			// 수강생의 목록을 가져온다.
 			StudentVO sVO = new StudentVO();
@@ -329,8 +332,10 @@ public class CrsReshAnsrServiceImpl
 		String locale = UserBroker.getLocaleKey(request);
 
 		//-- 설문기간
-		String startDttm = creCrsReshVO.getStartDttm().substring(0,4)+"."+creCrsReshVO.getStartDttm().substring(4,6)+"."+creCrsReshVO.getStartDttm().substring(6,8);
-        String endDttm = creCrsReshVO.getEndDttm().substring(0,4)+"."+creCrsReshVO.getEndDttm().substring(4,6)+"."+creCrsReshVO.getEndDttm().substring(6,8);
+		if (creCrsReshVO.getCreOperTypeCd().equals("R")) {
+			startDttm = creCrsReshVO.getStartDttm().substring(0,4)+"."+creCrsReshVO.getStartDttm().substring(4,6)+"."+creCrsReshVO.getStartDttm().substring(6,8);
+			endDttm = creCrsReshVO.getEndDttm().substring(0,4)+"."+creCrsReshVO.getEndDttm().substring(4,6)+"."+creCrsReshVO.getEndDttm().substring(6,8);
+		}
 
 
 		try {
@@ -357,10 +362,12 @@ public class CrsReshAnsrServiceImpl
 			XSSFRow pageRow3 = sheet.createRow((short)rowNum);
 			POIExcelUtil.createMergeCell(titleMap.get("resh_title")+" : "+creCrsReshVO.getReshTitle(), pageRow3, 0, margeCell, "left");
 
+			if (creCrsReshVO.getCreOperTypeCd().equals("R")) {
 			rowNum++;
 			XSSFRow pageRow4 = sheet.createRow((short)rowNum);
 			POIExcelUtil.createMergeCell(titleMap.get("duration")+" : "+startDttm+"~"+endDttm, pageRow4, 0, margeCell, "left");
-
+			}
+			
 			rowNum++;
 			XSSFRow pageRow5 = sheet.createRow((short)rowNum);
 			POIExcelUtil.createMergeCell(condition, pageRow5, 0, margeCell, "right");

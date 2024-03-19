@@ -21,8 +21,10 @@
 			<li>${creCrsReshVO.reshTitle}</li>
 		</ul>
 		<ul class="list">
-			<li class="head"><label><spring:message code="lecture.title.research.duration"/></label></li>
-			<li><meditag:dateformat type="8" delimeter="." property="${creCrsReshVO.startDttm}"/> ~<meditag:dateformat type="8" delimeter="." property="${creCrsReshVO.endDttm}"/></li>
+			<c:if test="${creCrsReshVO.creOperTypeCd ne 'S' }">
+				<li class="head"><label><spring:message code="lecture.title.research.duration"/></label></li>
+				<li><meditag:dateformat type="8" delimeter="." property="${creCrsReshVO.startDttm}"/> ~<meditag:dateformat type="8" delimeter="." property="${creCrsReshVO.endDttm}"/></li>
+			</c:if>
 			<li class="head"><label><spring:message code="lecture.title.research.regyn"/></label></li>
 			<li>
 				<c:set var="regYn" value="${creCrsReshVO.regYn}"/>

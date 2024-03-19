@@ -20,10 +20,13 @@
 				</div>
 				<div class="course_list test_custom">
 					<div class="item">
-						<ul class="info_disc">
-							<li><strong><spring:message code="lecture.title.research.duration"/></strong><meditag:dateformat type="8" delimeter="." property="${item.startDttm}"/>~<meditag:dateformat type="8" delimeter="." property="${item.endDttm}"/></li>
-							<li><strong><spring:message code="lecture.title.research.regyn"/></strong><meditag:codename code="${item.regYn}" category="OPEN_YN" /></li>
+							<ul class="info_disc">
+								<c:if test="${item.creOperTypeCd ne 'S' }">
+								<li><strong><spring:message code="lecture.title.research.duration"/></strong><meditag:dateformat type="8" delimeter="." property="${item.startDttm}"/>~<meditag:dateformat type="8" delimeter="." property="${item.endDttm}"/></li>
+								</c:if>
+								<li><strong><spring:message code="lecture.title.research.regyn"/></strong><meditag:codename code="${item.regYn}" category="OPEN_YN" /></li>
 						</ul>
+						
 						<div class="button_group">
 							<button type="button" class="primary" onclick="location.href='<c:url value="/lec/creCrsResh/rsltMain"/>?crsCreCd=${item.crsCreCd}&amp;reshSn=${item.reshSn}'"><spring:message code="button.view.result"/></button>
 						</div>

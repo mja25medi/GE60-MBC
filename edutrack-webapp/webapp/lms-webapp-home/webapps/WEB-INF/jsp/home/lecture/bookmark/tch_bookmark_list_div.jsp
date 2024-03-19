@@ -28,7 +28,8 @@
                                     </div>
                                 </div>
                             </li>
-                                 </c:if>   
+                                 </c:if>  
+                            <c:if test="${createCourseVO.creOperTypeCd ne 'S' }"> 
                             <li>
                                 <div class="row">
                                     <span class="form-label col-sm-2">교육기간<i class="icon_star"></i></span>
@@ -41,7 +42,7 @@
                                     </div> 
                                 </div>
                             </li>  
-                                                
+                       		</c:if>           
                         </ul>
                     </div>
                 </div>     

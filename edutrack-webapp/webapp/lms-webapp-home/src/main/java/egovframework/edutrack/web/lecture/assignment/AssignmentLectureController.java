@@ -295,6 +295,8 @@ public class AssignmentLectureController extends GenericController {
 		commonVOProcessing(vo, request);
 
 		try {
+			vo = assignmentService.viewAssignment(vo).getReturnVO();
+			vo.setRegYn("Y");
 			assignmentService.addRegistAssignment(vo);
 			setAlertMessage(request, getMessage(request, "lecture.message.assignment.regist.success"));
 		}catch (Exception e) {
@@ -319,6 +321,8 @@ public class AssignmentLectureController extends GenericController {
 		commonVOProcessing(vo, request);
 
 		try {
+			vo = assignmentService.viewAssignment(vo).getReturnVO();
+			vo.setRegYn("N");
 			assignmentService.addRegistAssignment(vo);
 			setAlertMessage(request, getMessage(request, "lecture.message.assignment.cancelregist.success"));
 		}catch (Exception e) {

@@ -67,6 +67,7 @@
 								</c:if>
 	                            
 	                        </ul>
+	                        <c:if test="${assignmentVO.asmtStareTypeCd eq 'R' }">
 	                        <ul class="list">
 	                            <li class="head"><label><spring:message code="lecture.title.assignment.duration"/></label></li>
 	                            <li>
@@ -78,7 +79,9 @@
 	                            	</c:if>	
 	                            </li>
 	                        </ul>
+	                        </c:if>
 	                        <ul class="list">
+	                            <c:if test="${assignmentVO.asmtStareTypeCd eq 'R' }">
 	                            <li class="head"><label><spring:message code="lecture.title.assignment.delaydate"/></label></li>
 	                            <li>
 	                            <c:if test="${assignmentVO.asmtSvcCd eq 'CODE'}">
@@ -88,6 +91,7 @@
 	                            	${assignmentVO.extSendDttm} ${assignmentVO.extSendHour}:${assignmentVO.extSendMin}
 	                            </c:if>
 	                            </li>
+	                            </c:if>
 	                            <c:if test="${assignmentVO.asmtTypeCd eq 'ON'}">
 								<li class="head"><label><spring:message code="lecture.title.assignment.send.cnt"/></label></li>
 	                            <li>${assignmentVO.asmtLimitCnt} <spring:message code="common.title.times.postfix"/></li>

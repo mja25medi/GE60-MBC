@@ -34,6 +34,7 @@
                             <ul class="info_disc">
                             	 <c:choose>
 									<c:when test="${item.asmtSvcCd eq 'CODE' }"><li><strong><spring:message code="lecture.title.assignment.duration"/></strong>-</li></c:when>
+									<c:when test="${item.asmtStareTypeCd eq 'S' }"></c:when>
 									<c:otherwise><li><strong><spring:message code="lecture.title.assignment.duration"/></strong>${item.startDttm}~${item.endDttm}</li></c:otherwise>
 								</c:choose>		
                                 <c:if test="${item.asmtTypeCd eq 'ON'}">

@@ -398,6 +398,10 @@
 	 */
 	function addExam() {
 		var f = document.examForm;
+		
+		$("#examTypeCd").attr("disabled", false);
+		$("#examStareTypeCd").attr("disabled", false);
+		
 		var examStareType = f["examStareTypeCd"].value;
 		var examType = f["examTypeCd"].value;
 
@@ -525,6 +529,10 @@
 	 */
 	 function editExam() {
 		var f = document.examForm;
+		
+		$("#examTypeCd").attr("disabled", false);
+		$("#examStareTypeCd").attr("disabled", false);
+		
 		var examStareType = f["examStareTypeCd"].value;
 		var examType = f["examTypeCd"].value;
 
@@ -641,21 +649,32 @@
 
 	function changeExamType() {
 		var examType = $("#examTypeCd").val();
-		if(examType == "ON") {
+		var creOperTypeCd = "${onlineSubjectList[0].creOperTypeCd}"
+		if (creOperTypeCd == 'S') {
 			$(".online_exam").show();
 			$("#regYn").val("${examVO.regYn}");
 			$("#regYnSel").val("${examVO.regYn}");
 			$('#input_regYn').hide();
-			$('.cntsTypeSel').show();
-			$('.examOptDiv').show();
-
-		} else {
-			//-- 정규 시험으로 선택
-			$("#examStareTypeCd option:eq(0)").prop("selected", "selected");
-			$(".online_exam").hide();
-			$(".cntsTypeSel").hide();
-			$(".examOptDiv").hide();
-			$('#input_regYn').show();
+			$("#examStareTypeCd option:eq(1)").prop("selected", "selected");
+			$("#examTypeCd").attr("disabled", true);
+			$("#examStareTypeCd").attr("disabled", true);
+		}else{
+			if(examType == "ON") {
+				$(".online_exam").show();
+				$("#regYn").val("${examVO.regYn}");
+				$("#regYnSel").val("${examVO.regYn}");
+				$('#input_regYn').hide();
+				$('.cntsTypeSel').show();
+				$('.examOptDiv').show();
+			} else {
+				//-- 정규 시험으로 선택
+				$("#examStareTypeCd option:eq(0)").prop("selected", "selected");
+				$(".online_exam").hide();
+				$(".cntsTypeSel").hide();
+				$(".examOptDiv").hide();
+				$('#input_regYn').show();
+			}
+			changeExamStareType();
 		}
 	}
 

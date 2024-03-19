@@ -8,6 +8,7 @@
 				<input type="hidden" name="crsCreCd" value="${vo.crsCreCd }" />
 				<input type="hidden" name="asmtSn" value="${vo.asmtSn }" />
 				<input type="hidden" name="attachFileSns" value="${vo.attachFileSns }" />
+				<input type="hidden" name="asmtStareTypeCd" value="${vo.asmtStareTypeCd }" />
                 <div class="learn_top">
                     <div class="left_title">
                         <c:if test="${gubun eq 'A'}"><h3>과제등록</h3></c:if>
@@ -141,7 +142,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li>
+                            <li  id="asmtDuration">
                                 <div class="row">
                                     <label for="asmtStartDttm" class="form-label col-sm-2"><span><spring:message code="lecture.title.assignment.duration"/></span></label>
                                     <div class="col-sm-10">
@@ -170,7 +171,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li>
+                            <li id="asmtDelaydate">
                                 <div class="row">
                                     <label for="extSendDttm" class="form-label col-sm-2"><span><spring:message code="lecture.title.assignment.delaydate"/></span></label>
                                     <div class="col-sm-10">
@@ -312,11 +313,18 @@
 	function addAssignment() {
 		$(':input:hidden[name=attachFileSns]').val(atchFiles.getFileSnAll());
 		$('#uploadify').attr("disabled", true); //-- 파일 객체 disable
+		$("#asmtTypeCd").attr("disabled", false);
 		var f = document.assignmentForm;
 		if(isEmpty(f["asmtTitle"].value)) {
 			alert("<spring:message code="lecture.message.assignment.alert.input.name"/>");
 			f["asmtTitle"].focus();
 			return;
+		}
+		var creOperTypeCd = "${subjectList[0].creOperTypeCd}"
+		if (creOperTypeCd == 'S') {
+			f["asmtStareTypeCd"].value="S";
+		}else{
+			f["asmtStareTypeCd"].value="R";
 		}
 		var asmtUseCd = $('input[name="asmtUseCd"]:checked').val();	
 		if(asmtUseCd == 'UNIT'){	//과목 차시 시험일 경우
@@ -327,7 +335,7 @@
 			}
 		} 
 		var svcType = $("#asmtSvcCd > option:selected").val();
-		if(svcType != "CODE"){
+		if(svcType != "CODE" && creOperTypeCd == 'R'){
 		if(validate(document.assignmentForm) ==false) return ;
 
 		var asmtStartDttm = chgDate(f["asmtStartDttm"].value);
@@ -367,6 +375,7 @@
 		var f = document.assignmentForm;
 		$(':input:hidden[name=attachFileSns]').val(atchFiles.getFileSnAll());
 		$('#uploadify').attr("disabled", true); //-- 파일 객체 disable
+		$("#asmtTypeCd").attr("disabled", false);
 		var asmtSubmit = f["asmtLimitCnt"].value;
 		var svcType = "${assignmentVO.asmtSvcCd}"
 		if(isEmpty(f["asmtTitle"].value)) {
@@ -374,7 +383,15 @@
 			f["asmtTitle"].focus();
 			return;
 		}
-		if(svcType != "CODE"){
+		
+		var creOperTypeCd = "${subjectList[0].creOperTypeCd}"
+			if (creOperTypeCd == 'S') {
+				f["asmtStareTypeCd"].value="S";
+	 		}else {
+	 			f["asmtStareTypeCd"].value="R";
+	 		}
+		
+		if(svcType != "CODE" && creOperTypeCd == 'R' ){
 			var asmtStartDttm = chgDate(f["asmtStartDttm"].value);
 			var asmtEndDttm = chgDate(f["asmtEndDttm"].value);
 			var extSendDttm = chgDate(f["extSendDttm"].value);
@@ -525,22 +542,36 @@
 
 	function changeAsmtType() {
 		var asmtType = $("#asmtTypeCd").val();
-		if(asmtType == "OFF") {
-			$("#asmtSvcCd").attr("disabled",true);
-			$("#asmtSelectTypeCd").attr("disabled",true);
-			$("#asmtLimitCnt").attr("disabled",true);
-			$("#sendCritPrgrRatio").attr("disabled",true);
-			$(".examOptDiv").hide();
-			$("#regYnArea").show();
-		} else {
+		var creOperTypeCd = "${subjectList[0].creOperTypeCd}"
+		if (creOperTypeCd == 'S') {
 			$("#asmtSvcCd").attr("disabled",false);
 			$("#asmtSelectTypeCd").attr("disabled",false);
 			$("#asmtLimitCnt").attr("disabled",false);
 			$("#sendCritPrgrRatio").attr("disabled",false);
 			$("#regYnArea").hide();
-			$(".examOptDiv").show();
 			$("#regYn").val("N");
-			asmtCtl();
+			$(".online_exam").show();
+			$("#asmtTypeCd").attr("disabled", true);
+			$("#asmtDuration").css("display", "none");
+	   		$("#asmtDelaydate").css("display", "none");
+		}else{
+			if(asmtType == "OFF") {
+				$("#asmtSvcCd").attr("disabled",true);
+				$("#asmtSelectTypeCd").attr("disabled",true);
+				$("#asmtLimitCnt").attr("disabled",true);
+				$("#sendCritPrgrRatio").attr("disabled",true);
+				$(".examOptDiv").hide();
+				$("#regYnArea").show();
+			} else {
+				$("#asmtSvcCd").attr("disabled",false);
+				$("#asmtSelectTypeCd").attr("disabled",false);
+				$("#asmtLimitCnt").attr("disabled",false);
+				$("#sendCritPrgrRatio").attr("disabled",false);
+				$("#regYnArea").hide();
+				$(".examOptDiv").show();
+				$("#regYn").val("N");
+				asmtCtl();
+			}
 		}
 			changeAsmtSvcType()
 	}

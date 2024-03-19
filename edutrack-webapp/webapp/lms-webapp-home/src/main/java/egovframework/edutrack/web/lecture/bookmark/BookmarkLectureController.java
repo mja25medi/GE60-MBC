@@ -450,8 +450,10 @@ public class BookmarkLectureController
 			CreateCourseVO createCourseVO = new CreateCourseVO();
 			createCourseVO.setCrsCreCd(crsCreCd);
 			createCourseVO = createCourseService.viewCreateCourse(createCourseVO).getReturnVO();
-			createCourseVO.setEnrlStartDttm(StringUtil.dateNumber(createCourseVO.getEnrlStartDttm()));
-			createCourseVO.setEnrlEndDttm(StringUtil.dateNumber(createCourseVO.getEnrlEndDttm()));
+			if (!createCourseVO.getCreOperTypeCd().equals("S")) {
+				createCourseVO.setEnrlStartDttm(StringUtil.dateNumber(createCourseVO.getEnrlStartDttm()));
+				createCourseVO.setEnrlEndDttm(StringUtil.dateNumber(createCourseVO.getEnrlEndDttm()));
+			}
 			request.setAttribute("createCourseVO", createCourseVO);
 			
 			OnlineSubjectVO osVO = new OnlineSubjectVO();
