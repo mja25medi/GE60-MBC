@@ -150,6 +150,43 @@ public class ClibCntsCtgrServiceImpl extends EgovAbstractServiceImpl implements 
 		}
 		return resultVO;
 	}
+	
+
+	/**
+	 * 분류를 등록하고 결과를 반환한다.
+	 * (강사가 등록 시 개설과정코드로 등록)
+	 * @param ClibCntsCtgrVO
+	 * @return  ProcessResultVO
+	 * @throws Exception 
+	 */
+	@Override
+	public ProcessResultVO<ClibCntsCtgrVO> addWithCrsCreCd(ClibCntsCtgrVO vo) throws Exception{
+		
+		ProcessResultVO<ClibCntsCtgrVO> resultVO = new ProcessResultVO<ClibCntsCtgrVO>();
+		try {
+
+			String ctgrPath = "";
+			String ctgrPathNm = "";
+			int ctgrLvl = 0;
+
+			//---- 메뉴 레벨 : 상위 메뉴 레벨 + 1
+			vo.setCtgrLvl(ctgrLvl+1);
+			vo.setCtgrPath(ctgrPath+"/"+vo.getCtgrCd());
+			vo.setCtgrPathNm(ctgrPathNm+"/"+vo.getCtgrNm());
+			vo.setRegNo(vo.getUserNo());
+			vo.setModNo(vo.getUserNo());
+			
+			clibCntsCtgrMapper.insert(vo);
+			resultVO.setReturnVO(vo);
+			resultVO.setResultSuccess();
+		} catch (Exception e){
+			e.printStackTrace();
+			resultVO.setResultFailed();
+			resultVO.setMessage(e.getMessage());
+		}
+		return resultVO;
+	}
+
 
 	/**
 	 * 분류를 수정하고 결과를 반환한다.

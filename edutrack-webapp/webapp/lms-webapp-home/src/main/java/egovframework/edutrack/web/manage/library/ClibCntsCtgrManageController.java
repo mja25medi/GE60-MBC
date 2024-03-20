@@ -62,7 +62,7 @@ public class ClibCntsCtgrManageController extends GenericController {
 			if(id.equals("root")) id = "";
 			ClibCntsCtgrVO cccVO = new ClibCntsCtgrVO();
 			cccVO.setOrgCd(orgCd);
-			cccVO.setUserNo(userNo);
+			//cccVO.setUserNo(userNo);	//본인이 등록한 것 뿐만 아니라 전부 보이도록 작업
 			cccVO.setParCtgrCd(id);
 			List<ClibCntsCtgrVO> listCtgr = clibCntsCtgrService.listSub(cccVO).getReturnList();
 

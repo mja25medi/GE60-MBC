@@ -56,6 +56,7 @@
                             <h4>학습 목차 설정</h4>
                         </div>
                         <div class="right_btn">
+                        	<button type="button" class="btn type1" onclick="javascript:shareCntsWrite()">미디어 콘텐츠 관리</button>
                             <button type="button" class="btn type4" onclick="javascript:cntsWrite('1','')">목차추가</button>
                         </div>
                     </div>
@@ -151,6 +152,19 @@ $(document).ready(function() {
 	$("#enrlEndDttm_0").val(formatDate("${createCourseVO.enrlEndDttm}"));
 });
 
+//미디어콘텐츠 관리 
+function shareCntsWrite() {
+	var crsCreCd = '${createCourseVO.crsCreCd}';
+	var crsCreNm = '${createCourseVO.crsCreNm}';
+	var addContent  = "<iframe id='addFrame' name='addFrame' width='100%' height='100%' "
+		+ "frameborder='0' src='<c:url value="/lec/cnts/shareContentsManagePop"/>"
+		+ "?crsCreCd="+crsCreCd+"&crsCreNm="+crsCreNm+"'/>";
+		parent.modalBox.clear();
+		parent.modalBox.setTitle("미디어 콘텐츠 관리");
+		parent.modalBox.addContents(addContent);
+		parent.modalBox.resize(1400, 500);
+		parent.modalBox.show();
+}
 
 //차시 추가
 function cntsWrite(dept,unitCd) {

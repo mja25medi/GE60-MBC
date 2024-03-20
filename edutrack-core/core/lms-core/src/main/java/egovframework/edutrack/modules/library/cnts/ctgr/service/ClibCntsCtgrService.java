@@ -40,6 +40,14 @@ public interface ClibCntsCtgrService {
 	public abstract ProcessResultVO<ClibCntsCtgrVO> add(ClibCntsCtgrVO vo) throws Exception;
 
 	/**
+	 * 분류를 등록하고 결과를 반환한다.
+	 * (강사가 등록 시 개설과정코드로 등록)
+	 * @param ClibCntsCtgrVO
+	 * @return  ProcessResultVO
+	 */
+	public abstract ProcessResultVO<ClibCntsCtgrVO> addWithCrsCreCd(ClibCntsCtgrVO vo) throws Exception;
+	
+	/**
 	 * 분류를 수정하고 결과를 반환한다.
 	 * @param ClibCntsCtgrVO
 	 * @return  ProcessResultVO

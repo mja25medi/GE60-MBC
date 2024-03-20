@@ -2,7 +2,6 @@
 package egovframework.edutrack.web.lecture.contents;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,21 +23,17 @@ import egovframework.edutrack.comm.service.SysCodeMemService;
 import egovframework.edutrack.comm.util.web.DateTimeUtil;
 import egovframework.edutrack.comm.util.web.FileUtil;
 import egovframework.edutrack.comm.util.web.JsonUtil;
-import egovframework.edutrack.comm.util.web.RedisUtil;
 import egovframework.edutrack.comm.util.web.StringUtil;
 import egovframework.edutrack.comm.util.web.URLBuilder;
 import egovframework.edutrack.comm.util.web.UserBroker;
 import egovframework.edutrack.comm.util.web.ValidationUtils;
 import egovframework.edutrack.comm.web.GenericController;
-import egovframework.edutrack.modules.board.qna.service.BrdQnaQstnVO;
 import egovframework.edutrack.modules.board.qna.service.BrdQnaService;
 import egovframework.edutrack.modules.course.contents.service.ContentsFileVO;
 import egovframework.edutrack.modules.course.contents.service.ContentsService;
 import egovframework.edutrack.modules.course.contents.service.ContentsVO;
 import egovframework.edutrack.modules.course.course.service.CourseService;
-import egovframework.edutrack.modules.course.course.service.CourseVO;
 import egovframework.edutrack.modules.course.createcourse.service.CreateCourseService;
-import egovframework.edutrack.modules.course.createcourse.service.CreateCourseVO;
 import egovframework.edutrack.modules.course.createcoursesubject.service.CreateCourseSubjectService;
 import egovframework.edutrack.modules.course.createcoursesubject.service.CreateOnlineSubjectVO;
 import egovframework.edutrack.modules.course.createcourseteacher.service.CreateCourseTeacherService;
@@ -49,7 +44,8 @@ import egovframework.edutrack.modules.lecture.assignment.service.AssignmentVO;
 import egovframework.edutrack.modules.lecture.bookmark.service.BookmarkService;
 import egovframework.edutrack.modules.lecture.bookmark.service.BookmarkVO;
 import egovframework.edutrack.modules.lecture.main.service.MainLectureService;
-import egovframework.edutrack.modules.lecture.main.service.MainLectureVO;
+import egovframework.edutrack.modules.library.cnts.ctgr.service.ClibCntsCtgrService;
+import egovframework.edutrack.modules.library.cnts.ctgr.service.ClibCntsCtgrVO;
 import egovframework.edutrack.modules.library.cnts.media.service.ClibMediaCntsService;
 import egovframework.edutrack.modules.library.cnts.media.service.ClibMediaCntsVO;
 import egovframework.edutrack.modules.library.share.ctgr.service.ClibShareCntsCtgrService;
@@ -62,18 +58,14 @@ import egovframework.edutrack.modules.library.share.olc.service.ClibShareOlcPage
 import egovframework.edutrack.modules.library.share.olc.service.ClibShareOlcPageVO;
 import egovframework.edutrack.modules.olc.olccart.service.OlcCartrgService;
 import egovframework.edutrack.modules.olc.olccnts.service.OlcCntsService;
-import egovframework.edutrack.modules.olc.olccnts.service.OlcCntsVO;
+import egovframework.edutrack.modules.org.code.service.OrgCodeService;
+import egovframework.edutrack.modules.org.code.service.OrgCodeVO;
 import egovframework.edutrack.modules.org.info.service.OrgOrgInfoService;
 import egovframework.edutrack.modules.org.info.service.OrgOrgInfoVO;
 import egovframework.edutrack.modules.student.result.service.EduResultService;
-import egovframework.edutrack.modules.student.result.service.EduResultVO;
 import egovframework.edutrack.modules.student.student.service.StudentService;
-import egovframework.edutrack.modules.student.student.service.StudentVO;
-import egovframework.edutrack.modules.system.code.service.SysCodeVO;
 import egovframework.edutrack.modules.system.config.service.SysCfgService;
-import egovframework.edutrack.modules.user.info.service.UsrLoginVO;
 import egovframework.edutrack.modules.user.info.service.UsrUserInfoService;
-import net.sf.json.JSONObject;
 
 /**
  * 학습교재 엑센 컨트롤
@@ -157,6 +149,12 @@ public class ContentsLectureController
 	
 	@Autowired @Qualifier("assignmentService")
 	private AssignmentService 			assignmentService;
+	
+	@Autowired @Qualifier("clibCntsCtgrService")
+	private ClibCntsCtgrService 			clibCntsCtgrService;
+	
+	@Autowired @Qualifier("orgCodeService")
+	private OrgCodeService 	 orgCodeService;
 	
 	/**
 	 * 교재 정보 일괄 수정
@@ -980,5 +978,349 @@ public class ContentsLectureController
 			}
 			return JsonUtil.responseJson(response, resultVO);
 		}
+		
+		
+		/**
+		 * 미디어콘텐츠관리 팝업
+		 * @param mapping
+		 * @param form
+		 * @param request
+		 * @param response
+		 * @return
+		 */
+		@RequestMapping(value="/shareContentsManagePop")
+		public String shareContentsManagePop( ClibMediaCntsVO vo, Map commandMap, ModelMap model,
+				HttpServletRequest request, HttpServletResponse response) throws Exception {
+			commonVOProcessing(vo, request);
+
+			String orgCd = UserBroker.getUserOrgCd(request);
+			String userNo = UserBroker.getUserNo(request);
+
+			ClibMediaCntsVO cvo = new ClibMediaCntsVO();
+			vo.setOrgCd(orgCd);
+			vo.setUserNo(userNo);		//본인이 등록한 내용만 확인 가능
+
+			ProcessResultListVO<ClibMediaCntsVO> resultList = clibMediaCntsService.listPageing(vo);
+
+			request.setAttribute("clibMediaCntsList", resultList.getReturnList());
+			request.setAttribute("paging", "Y");
+			request.setAttribute("pageInfo", resultList.getPageInfo());
+			request.setAttribute("vo", vo);
+			return "home/lecture/contents/cre_share_contents_pop";
+		}
+		
+		/**
+		 * 미디어콘텐츠관리 목록
+		 * @param mapping
+		 * @param form
+		 * @param request
+		 * @param response
+		 * @return
+		 */
+		@RequestMapping(value="/shareContentsList")
+		public String shareContentsList( ClibMediaCntsVO vo, Map commandMap, ModelMap model,
+				HttpServletRequest request, HttpServletResponse response) throws Exception {
+			commonVOProcessing(vo, request);
+
+			String orgCd = UserBroker.getUserOrgCd(request);
+			String userNo = UserBroker.getUserNo(request);
+			vo.setOrgCd(orgCd);
+			vo.setUserNo(userNo);		// 본인이 등록한 내용만 보이도록 작업
+
+			ProcessResultListVO<ClibMediaCntsVO> resultList = clibMediaCntsService.listPageing(vo);
+
+			request.setAttribute("clibMediaCntsList", resultList.getReturnList());
+			request.setAttribute("pageInfo", resultList.getPageInfo());
+			return "home/lecture/contents/cre_share_contents_list";
+		}
+		
+		/**
+		 * 미디어콘텐츠관리 등록 팝업
+		 * @param mapping
+		 * @param form
+		 * @param request
+		 * @param response
+		 * @return
+		 */
+		@RequestMapping(value="/addShareContentsPop")
+		public String addShareContentsPop( ClibMediaCntsVO vo, Map commandMap, ModelMap model,
+				HttpServletRequest request, HttpServletResponse response) throws Exception {
+			commonVOProcessing(vo, request);
+			
+			String orgCd = UserBroker.getUserOrgCd(request);
+			String userNo = UserBroker.getUserNo(request);
+			
+			ClibCntsCtgrVO ctvo = new ClibCntsCtgrVO();
+			ctvo.setCtgrCd(vo.getCtgrCd()); 	
+			ctvo.setOrgCd(orgCd);
+			
+			ProcessResultVO<ClibCntsCtgrVO> resultVO = clibCntsCtgrService.view(ctvo);
+			if(resultVO.getReturnVO() == null) {
+				//등록된 분류 정보가 없으면 등록
+				ctvo.setParCtgrCd("");	//강사가 등록하는건 무조건 최상위로 등록
+				ctvo.setUserNo(userNo);
+				ctvo.setCtgrNm(vo.getCtgrNm());
+				try {
+					clibCntsCtgrService.addWithCrsCreCd(ctvo);
+				} catch (Exception ex) {
+					setAlertMessage(request, (getMessage(request, "library.message.contents.category.add.failed")));
+				}
+			}
+
+			vo.setOrgCd(orgCd);
+			vo.setUseYn("Y"); //-- 초기 사용으로 셋팅
+			vo.setUldStsCd("NO"); //-- 초기 사용으로 셋팅
+
+			// 경로 가져오기
+			OrgOrgInfoVO orgInfoVO = new OrgOrgInfoVO();
+			orgInfoVO.setOrgCd(orgCd);
+			orgInfoVO = orgOrgInfoService.view(orgInfoVO);
+
+			request.setAttribute("orgInfoVO", orgInfoVO);
+			request.setAttribute("gubun", "A");
+			request.setAttribute("vo", vo);
+			return "home/lecture/contents/cre_share_contents_add_pop";
+		}
+		
+
+		/**
+		 * 미디어 콘텐츠 등록
+		 *
+		 * @return  ProcessResultVO
+		 */
+		@RequestMapping(value="/addShareContents")
+		public String addShareContents( ClibMediaCntsVO vo, Map commandMap, ModelMap model,
+				HttpServletRequest request,	HttpServletResponse response) throws Exception {
+			commonVOProcessing(vo, request);
+			
+			String orgCd = UserBroker.getUserOrgCd(request);
+			String userNo = UserBroker.getUserNo(request);
+
+			vo.setOrgCd(orgCd);
+			vo.setUserNo(userNo);
+			vo.setUseYn("Y");
+			
+			//콘텐츠 등록
+			if(ValidationUtils.isNotEmpty(vo.getUldFileKey())) {
+				vo.setUldStsCd("upload");
+			}
+			
+			if ("VOD".equals(vo.getCntsType())) {
+				//-- 등록시 파일 경로에 ORG_CD를 붙여서 저장이 되도록 수정함. 
+				//vo.setFilePath("/"+orgCd+vo.getFilePath());
+				String filePath = vo.getFilePath();
+				if(Character.toString(filePath.charAt(filePath.length() - 1)).equals("/")) {
+					filePath = filePath.substring(0, filePath.length()-1);
+				}
+				vo.setFilePath("/"+orgCd+filePath);
+			}else {
+				//cntsType 이 vod가 아니면 주소라서 그냥 저장
+				String filePath = vo.getFilePath();
+				if(filePath.charAt(0) == ',') {
+					filePath = filePath.substring(1);
+					vo.setFilePath(filePath);				
+				}
+				vo.setUldStsCd("complete");
+				vo.setPlayerDiv("common");
+			}
+			
+			ProcessResultVO<ClibMediaCntsVO> resultVO = clibMediaCntsService.add(vo);
+			if(resultVO.getResult() > 0) {
+				resultVO.setMessage(getMessage(request, "library.message.contents.add.success"));
+			} else {
+				resultVO.setMessage(getMessage(request, "library.message.contents.add.failed"));
+			}
+			
+			//공유 분류 등록
+			ClibShareCntsCtgrVO shareCtgrVo = new ClibShareCntsCtgrVO();
+			shareCtgrVo.setCtgrCd(vo.getCtgrCd()); 
+			shareCtgrVo.setOrgCd(orgCd);
+			
+			ProcessResultVO<ClibShareCntsCtgrVO> shareCtgrReturnVO = clibShareCntsCtgrService.view(shareCtgrVo);
+			if(shareCtgrReturnVO.getReturnVO() == null) {
+				//등록된 분류 정보가 없으면 등록
+				shareCtgrVo.setParCtgrCd("");
+				shareCtgrVo.setUseYn("Y");
+				shareCtgrVo.setRegNo(userNo);
+				shareCtgrVo.setModNo(userNo);
+				shareCtgrVo.setDivCd("CNTS");
+				shareCtgrVo.setCtgrNm(vo.getCtgrNm());
+				
+				ClibShareCntsCtgrVO shareCtgrVO = clibShareCntsCtgrService.addWithCrsCreCd(shareCtgrVo).getReturnVO();
+				if(shareCtgrVO == null) {
+					resultVO.setMessage(getMessage(request, "library.message.manage.share.category.add.failed"));
+				} 
+			}
+			
+			//콘텐츠 공유 자동으로 되도록 작업
+			//CCL코드
+			List<OrgCodeVO> cclCode = orgCodeService.listCode(orgCd,"CCL_CD").getReturnList();
+			vo.setCclCd(cclCode.get(0).getCodeCd());	//CCL코드 첫번째 것으로 저장
+			vo.setShareDivCd("CNTS");	//공유구분 : 콘텐츠공유
+			vo.setShareStsCd("03"); //강사 공유시 바로 공유승인
+			vo.setCtgrCd(shareCtgrVo.getCtgrCd());
+			String[] shareCd = new String[1];
+			shareCd[0] = "CNTS";
+			
+			ProcessResultVO<ClibMediaCntsVO> shareResultVO = clibMediaCntsService.addShare(vo, shareCd);
+			if(shareResultVO.getResult() < 0) {
+				resultVO.setMessage(getMessage(request, "library.message.contents.share.failed"));
+			} 
+			return JsonUtil.responseJson(response, resultVO);
+		}
+		
+		/**
+		 * 미디어콘텐츠관리 (수정)
+		 * @param mapping
+		 * @param form
+		 * @param request
+		 * @param response
+		 * @return
+		 */
+		@RequestMapping(value="/editShareContentsPop")
+		public String editShareContentsPop( ClibMediaCntsVO vo, Map commandMap, ModelMap model,
+				HttpServletRequest request, HttpServletResponse response) throws Exception {
+			commonVOProcessing(vo, request);
+			
+			String orgCd = UserBroker.getUserOrgCd(request);
+			String userNo = UserBroker.getUserNo(request);
+
+			vo.setOrgCd(orgCd);
+			vo.setUserNo(userNo);
+
+			vo = clibMediaCntsService.view(vo).getReturnVO();
+			
+			// 경로 가져오기
+			OrgOrgInfoVO orgInfoVO = new OrgOrgInfoVO();
+			orgInfoVO.setOrgCd(orgCd);
+			orgInfoVO = orgOrgInfoService.view(orgInfoVO);
+
+			request.setAttribute("orgInfoVO", orgInfoVO);
+			request.setAttribute("gubun", "E");
+			request.setAttribute("vo", vo);
+			return "home/lecture/contents/cre_share_contents_add_pop";
+		}
+		
+		/**
+		 * 미디어 콘텐츠 수정
+		 *
+		 * @return  ProcessResultVO
+		 */
+		@RequestMapping(value="/editShareContents")
+		public String editShareContents( ClibMediaCntsVO vo, Map commandMap, ModelMap model,
+				HttpServletRequest request,	HttpServletResponse response) throws Exception {
+			commonVOProcessing(vo, request);
+			
+			String orgCd = UserBroker.getUserOrgCd(request);
+			String userNo = UserBroker.getUserNo(request);
+
+			vo.setOrgCd(orgCd);
+			vo.setUserNo(userNo);
+			
+			ClibMediaCntsVO cmcVO = clibMediaCntsService.view(vo).getReturnVO();
+			//-- 기존 정보로 덮어 쓰기
+			vo.setChanlKey(cmcVO.getChanlKey());
+			vo.setChanlNm(cmcVO.getChanlNm());
+			vo.setMediaCntsKey(cmcVO.getMediaCntsKey());
+			vo.setProfileKey(cmcVO.getProfileKey());
+			vo.setHits(cmcVO.getHits());
+			vo.setUldStsCd(cmcVO.getUldStsCd()); //-- 상태값은 자동 변경된 값만 사용함.
+
+			ProcessResultVO<ClibMediaCntsVO> resultVO = clibMediaCntsService.edit(vo);
+			if(resultVO.getResult() > 0) {
+				resultVO.setMessage(getMessage(request, "library.message.contents.edit.success"));
+			} else {
+				resultVO.setMessage(getMessage(request, "library.message.contents.edit.failed"));
+			}
+			
+			return JsonUtil.responseJson(response, resultVO);
+		}
+		
+
+		/**
+		 * 콘텐츠 라이브러리 : 콘텐츠 삭제
+		 *
+		 * @return  ProcessResultVO
+		 */
+		@RequestMapping(value="/removeShareContents")
+		public String remove( ClibMediaCntsVO vo, Map commandMap, ModelMap model,
+				HttpServletRequest request, HttpServletResponse response) throws Exception {
+			commonVOProcessing(vo, request);
+
+			String orgCd = UserBroker.getUserOrgCd(request);
+			String userNo = UserBroker.getUserNo(request);
+
+			vo.setOrgCd(orgCd);
+			vo.setUserNo(userNo);
+
+			vo = clibMediaCntsService.view(vo).getReturnVO();
+
+			// 교육기관 정보를 가져온다.
+			OrgOrgInfoVO orgInfoVO = new OrgOrgInfoVO();
+			orgInfoVO.setOrgCd(orgCd);
+			orgInfoVO = orgOrgInfoService.view(orgInfoVO);
+
+			int error = 0;
+			if(vo.getSharedCnt() == 0) {
+				//-- 공유가 안되어 있을 경우만 파일 삭제, 공유가 되어 잇는 경우는 파일은 삭제 하지 않음
+				if("common".equals(vo.getPlayerDiv())) {
+					try {
+						//-- 일반 파일일 경우 파일 및 폴더 삭제
+						FileUtil.delDirectory(Constants.CONTENTS_STORAGE_PATH + "\\" + orgCd + vo.getFilePath());
+					} catch (Exception e) {
+						error = 200;
+					}
+				}
+			}
+
+			ProcessResultVO<ClibMediaCntsVO> resultVO = null;
+			if(error == 0) {
+				resultVO = clibMediaCntsService.delete(vo);
+			} else {
+				resultVO = new ProcessResultVO<ClibMediaCntsVO>();
+				resultVO.setResult(-1);
+			}
+			if(resultVO.getResult() > 0) {
+				resultVO.setMessage(getMessage(request, "library.message.contents.delete.success"));
+			} else {
+				resultVO.setMessage(getMessage(request, "library.message.contents.delete.failed"));
+			}
+			return JsonUtil.responseJson(response, resultVO);
+		}
+		
+	    /**
+		 * 콘텐츠 라이브러리 : 미디어 파일 업로드 폼
+		 * @param mapping
+		 * @param form
+		 * @param request
+		 * @param response
+		 * @return
+		 */
+		@RequestMapping(value="/addUploadPop")
+		public String addUploadPop( ClibMediaCntsVO vo, Map commandMap, ModelMap model,
+				HttpServletRequest request, HttpServletResponse response) throws Exception {
+			commonVOProcessing(vo, request);
+
+			String orgCd = UserBroker.getUserOrgCd(request);
+			String userNo = UserBroker.getUserNo(request);
+
+			// 교육기관 정보를 가져온다.
+			OrgOrgInfoVO orgInfoVO = new OrgOrgInfoVO();
+			orgInfoVO.setOrgCd(orgCd);
+			orgInfoVO = orgOrgInfoService.view(orgInfoVO);
+
+			String currentDate = DateTimeUtil.getCurrentString();
+			String filePath = "/mediacnts/"+userNo+"/"+currentDate;
+			request.setAttribute("filePath", filePath);
+
+			request.setAttribute("vo", vo);
+			request.setAttribute("fileupload", "Y");
+			
+			
+			return "home/lecture/contents/common_upload_pop";
+		}
+		
+
+		
 
 }

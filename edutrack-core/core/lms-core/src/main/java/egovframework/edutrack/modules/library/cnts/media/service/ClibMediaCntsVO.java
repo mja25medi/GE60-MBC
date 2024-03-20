@@ -43,6 +43,9 @@ public class ClibMediaCntsVO extends DefaultVO{
 	private String  shareStsCd;
 
 	private SysFileVO thumbFile;
+	
+	private String crsCreCd;
+	private String crsCreNm;
 
 	public String getCntsCd() {
 		return cntsCd;
@@ -226,6 +229,18 @@ public class ClibMediaCntsVO extends DefaultVO{
 	}
 	public void setCntsFilePath(String cntsFilePath) {
 		this.cntsFilePath = cntsFilePath;
+	}
+	public String getCrsCreCd() {
+		return crsCreCd;
+	}
+	public void setCrsCreCd(String crsCreCd) {
+		this.crsCreCd = crsCreCd;
+	}
+	public String getCrsCreNm() {
+		return crsCreNm;
+	}
+	public void setCrsCreNm(String crsCreNm) {
+		this.crsCreNm = crsCreNm;
 	}
 	
 }
