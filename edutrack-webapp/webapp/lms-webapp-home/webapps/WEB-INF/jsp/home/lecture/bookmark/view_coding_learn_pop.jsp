@@ -280,7 +280,14 @@ $(document).on("click","#qnaSave",function(){
 		api.bind("ready", function() {
 			mediaTotalTime  = api.video.duration;
 			$("#mediaTotalTime").html(Math.round(Math.floor(mediaTotalTime / 60))+":"+ Math.round(Math.floor(mediaTotalTime % 60))); 
-			setShowControl();
+			if(credit == 'no-credit') {
+				setShowControl();
+			} else {
+				if(prgrRatio < 100)
+					setHideControl();
+				else
+					setShowControl();
+			}
 			if(seekTime > 0) {
 				var st = confirm("<spring:message code="lecture.message.contents.learn.continue"/>");
 				if(st){
