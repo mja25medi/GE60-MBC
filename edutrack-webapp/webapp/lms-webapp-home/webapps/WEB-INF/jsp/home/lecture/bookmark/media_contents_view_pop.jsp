@@ -57,7 +57,8 @@
 <!-- 2. flowplayer -->
 <script src="/libs/flowplayer7/flowplayer.js"></script>
 <script src="/libs/flowplayer7/hls.light.min.js"></script>
-
+<!-- 배속 기능 -->
+<script src="/libs/flowplayer7/flowplayer.speed-menu.min.js"></script>
 
     <script src="/tpl/003/jquery/jquery-3.2.1.min.js"></script>
     <script src="/tpl/003/js/func.min.js"></script>
@@ -161,6 +162,7 @@ $(document).ready(function() {
 					src: sourcesSrc
 	            }
 	        ],
+	        speeds: [0.5, 1, 2]
 	    }
 	});
 	parent.playerType = "mp4";

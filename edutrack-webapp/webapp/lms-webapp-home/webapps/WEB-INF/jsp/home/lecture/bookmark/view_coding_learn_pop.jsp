@@ -280,7 +280,7 @@ $(document).on("click","#qnaSave",function(){
 		api.bind("ready", function() {
 			mediaTotalTime  = api.video.duration;
 			$("#mediaTotalTime").html(Math.round(Math.floor(mediaTotalTime / 60))+":"+ Math.round(Math.floor(mediaTotalTime % 60))); 
-			setShowControl();	//스마트인재개발원은 복습이 아닌 일반 학습하기일 때도 컨트롤 바 노출
+			setShowControl();
 			if(seekTime > 0) {
 				var st = confirm("<spring:message code="lecture.message.contents.learn.continue"/>");
 				if(st){
