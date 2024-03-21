@@ -1071,6 +1071,10 @@ public class ExamLectureController
 				}
 			}
 		}
+		
+		for(ExamQuestionVO qstnList : questionList) {
+			qstnList.setQstnCts(HtmlCleaner.cleanTag(qstnList.getQstnCts()));
+		}
 		request.setAttribute("questionList", questionList);
 
 		//-- 학습자 정보 조회

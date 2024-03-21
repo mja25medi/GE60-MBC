@@ -3,7 +3,7 @@
 <div class="modal_cont">
         <div class="board_top type2">
             <div class="left_title">
-                <h4>학습 목차 설정: 1차시 ${vo.unitNm }</h4>
+                <h4>학습 목차 설정: ${vo.unitNm }</h4>
             </div>
             <div class="page_btn">
                 <button type="button" class="btn type2" onclick="javascript:contentsEdit()">저장</button>

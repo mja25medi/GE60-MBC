@@ -194,17 +194,17 @@
 				</div>
 
 				<div id="crsOperMthdOf" style="display:none">
-				<input type="text" style="width:50px;float:left;text-align:right;" maxlength="3" name="oflnEduTm_temp" id="oflnEduTm_temp" class="inputNumber form-control input-sm" value="" onkeyup="isChkNumber(this)"/>
+				<input type="text" style="width:60px;float:left;text-align:right;" maxlength="5" name="oflnEduTm_temp" id="oflnEduTm_temp" class="inputNumber form-control input-sm" value="" onkeyup="isChkNumber(this)"/>
 				<span style="float:left;margin-left:5px;line-height:30px;"><spring:message code="common.title.time"/></span>
 				</div>
 
 				<div id="crsOperMthdBl" style="display:none">
 				<span style="float:left;line-height:30px;"><spring:message code="course.title.createcourse.cyber"/> : </span>
-				<input type="text" style="width:50px;float:left;text-align:right;" maxlength="3" name="eduTm_tempBl" id="eduTm_tempBl" class="inputNumber form-control input-sm" value="" onkeyup="isChkNumber(this)"/>
+				<input type="text" style="width:60px;float:left;text-align:right;" maxlength="5" name="eduTm_tempBl" id="eduTm_tempBl" class="inputNumber form-control input-sm" value="" onkeyup="isChkNumber(this)"/>
 				<span style="float:left;margin-left:5px;line-height:30px;"><spring:message code="common.title.time"/></span>
 
 				<span style="float:left;margin-left:20px;line-height:30px;"><spring:message code="course.title.createcourse.offline"/> : </span>
-				<input type="text" style="width:50px;float:left;text-align:right;" maxlength="3" name="oflnEduTm_tempBl" id="oflnEduTm_tempBl" class="inputNumber form-control input-sm" value="" onkeyup="isChkNumber(this)"/>
+				<input type="text" style="width:60px;float:left;text-align:right;" maxlength="5" name="oflnEduTm_tempBl" id="oflnEduTm_tempBl" class="inputNumber form-control input-sm" value="" onkeyup="isChkNumber(this)"/>
 				<span style="float:left;margin-left:5px;line-height:30px;"><spring:message code="common.title.time"/></span>
 				</div>
 
@@ -213,18 +213,18 @@
 				<c:if test="${gubun eq 'E'}">
 				<c:choose>
 					<c:when test="${vo.crsOperMthd eq 'ON'}">
-				<input type="text" style="width:50px;text-align:right;float:left;" dispName="<spring:message code="course.title.createcourse.edutime"/>" maxlength="3" isNull="Y" lenCheck="3" dataType="number" name="eduTm" value="${vo.eduTm }" onfocus="this.select()" class="inputNumber form-control input-sm" id="onlnEduTm" onkeyup="isChkNumber(this)"/>
+				<input type="text" style="width:60px;text-align:right;float:left;" dispName="<spring:message code="course.title.createcourse.edutime"/>" maxlength="5" isNull="Y" lenCheck="5" dataType="number" name="eduTm" value="${vo.eduTm }" onfocus="this.select()" class="inputNumber form-control input-sm" id="onlnEduTm" onkeyup="isChkNumber(this)"/>
 				<span style="float:left;line-height:30px;"><spring:message code="common.title.time"/></span>
 				<input type="hidden" name="oflnEduTm"/>
 					</c:when>
 					<c:when test="${vo.crsOperMthd eq 'OF'}">
-				<input type="text" style="width:50px;text-align:right;float:left;" dispName="<spring:message code="course.title.createcourse.edutime"/>" maxlength="3" isNull="Y" lenCheck="3" dataType="number" name="eduTm" value="${vo.eduTm }" onfocus="this.select()" class="inputNumber form-control input-sm" id="onlnEduTm" onkeyup="isChkNumber(this)"/>
+				<input type="text" style="width:60px;text-align:right;float:left;" dispName="<spring:message code="course.title.createcourse.edutime"/>" maxlength="5" isNull="Y" lenCheck="5" dataType="number" name="eduTm" value="${vo.eduTm }" onfocus="this.select()" class="inputNumber form-control input-sm" id="onlnEduTm" onkeyup="isChkNumber(this)"/>
 				<span style="float:left;line-height:30px;"><spring:message code="common.title.time"/></span>
 				<input type="hidden" name="oflnEduTm"/>
 					</c:when>
 					<c:otherwise>
 				<span style="float:left;line-height:30px;"></span>
-				<input type="text" style="width:50px;float:left;text-align:right;" dispName="<spring:message code="course.title.createcourse.edutime"/>" maxlength="3" isNull="Y" lenCheck="3" maxValue="100" dataType="number" name="eduTm" value="${vo.eduTm }" onfocus="this.select()" class="inputNumber form-control input-sm" id="onlnEduTm" onkeyup="isChkNumber(this)"/>
+				<input type="text" style="width:60px;float:left;text-align:right;" dispName="<spring:message code="course.title.createcourse.edutime"/>" maxlength="5" isNull="Y" lenCheck="5" dataType="number" name="eduTm" value="${vo.eduTm }" onfocus="this.select()" class="inputNumber form-control input-sm" id="onlnEduTm" onkeyup="isChkNumber(this)"/>
 				<span style="float:left;line-height:30px;"><spring:message code="common.title.time"/></span>
 				<input type="hidden" name="oflnEduTm"/>
 				<%-- <span style="float:left;margin-left:20px;line-height:30px;"><spring:message code="course.title.createcourse.offline"/> : </span>

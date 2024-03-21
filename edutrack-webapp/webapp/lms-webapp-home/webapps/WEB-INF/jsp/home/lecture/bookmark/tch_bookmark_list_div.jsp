@@ -68,8 +68,8 @@
                                 <tr>
                                     <th scope="col" width="10%">목차</th>
                                     <th scope="col">목차명</th>
-                                     <c:if test="${createCourseVO.creTypeCd eq 'OF' && createCourseVO.creTypeCd eq 'BL' }">
-                                    <th scope="col" width="37%">시간</th>
+                                    <c:if test="${osVO.sbjType eq 'OF' }">
+                                    	<th scope="col" width="37%">시간</th>
                                     </c:if>
                                     <th scope="col" width="10%">설정</th>
                                 </tr>

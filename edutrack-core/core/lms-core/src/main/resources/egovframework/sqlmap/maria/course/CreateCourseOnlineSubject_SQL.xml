@@ -3,10 +3,11 @@
 <mapper namespace="egovframework.edutrack.modules.course.createcoursesubject.service.impl.CreateCourseOnlineSubjectMapper">	
 	<sql id="selectQuery">
 		SELECT	A.CRS_CRE_CD																	
-	      	 ,  A.SBJ_CD																		
+	      	 ,  A.SBJ_CD
+	      	 ,  A.SBJ_TYPE																		
 	      	 ,  B.SBJ_NM																		
-	        ,  B.SBJ_CTGR_CD																	
-	        ,  C.SBJ_CTGR_NM																	
+	         ,  B.SBJ_CTGR_CD																	
+	         ,  C.SBJ_CTGR_NM																	
 	      	 ,  A.STUDY_MTHD																	
 	      	 ,  (SELECT FN_GET_CODE_NAME('STUDY_MTHD',A.STUDY_MTHD) ) AS STUDY_MTHD_NM	
 	      	 ,  IFNULL(FN_GET_NULL(A.PRGR_RATIO),0) AS PRGR_RATIO												
