@@ -31,7 +31,7 @@
                             <ul class="info_disc">
                             <c:choose>
 									<c:when test="${item.asmtStareTypeCd eq 'S'}"> 
-										<li><strong><spring:message code="lecture.title.assignment.send.ratio"/></strong><spring:message code="lecture.message.asmt.send.alert.answer.ratio" arguments="${item.sendCritPrgrRatio}"/></li>	
+										<li><strong><spring:message code="lecture.title.assignment.send.ratio"/></strong><spring:message code="lecture.message.exam.send.ratio.over" arguments="${item.sendCritPrgrRatio}"/></li>	
 									</c:when>
 									<c:otherwise>
 										<li><strong><spring:message code="lecture.title.assignment.duration"/></strong>${item.asmtStartDttm}~${item.asmtEndDttm}</li>	

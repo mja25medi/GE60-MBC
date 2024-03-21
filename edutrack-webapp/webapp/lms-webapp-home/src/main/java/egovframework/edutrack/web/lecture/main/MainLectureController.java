@@ -1,6 +1,7 @@
 package egovframework.edutrack.web.lecture.main;
 
 import java.text.SimpleDateFormat;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,6 +36,7 @@ import egovframework.edutrack.modules.course.course.service.CourseVO;
 import egovframework.edutrack.modules.course.creCrsResh.service.CreCrsReshService;
 import egovframework.edutrack.modules.course.createcourse.service.CreateCourseService;
 import egovframework.edutrack.modules.course.createcourse.service.CreateCourseVO;
+import egovframework.edutrack.modules.course.createcourse.service.UserCourseVO;
 import egovframework.edutrack.modules.course.createcoursesubject.service.CreateCourseSubjectService;
 import egovframework.edutrack.modules.course.createcourseteacher.service.CreateCourseTeacherService;
 import egovframework.edutrack.modules.course.createcourseteacher.service.TeacherVO;
@@ -234,6 +236,12 @@ public class MainLectureController
 		List<LecBbsAtclVO> pdsList = lecBbsService.listAtclPageing(lecBbsAtclVO).getReturnList();
 		request.setAttribute("pdsList", pdsList);
 
+		Map<String, Object> userInfo = new Hashtable<String, Object>();
+		userInfo.put("userNo", UserBroker.getUserNo(request));
+		userInfo.put("crsCd", createCourseVO.getCrsCd());
+		
+		ProcessResultListVO<UserCourseVO> resultList = createCourseService.listCreateCourseForStudent(userInfo);
+		request.setAttribute("courseList", resultList.getReturnList());
 
 		LogMsgLogVO lmlVO = new LogMsgLogVO();
 		lmlVO.setRegNo(UserBroker.getUserNo(request));
@@ -793,6 +801,13 @@ public class MainLectureController
 		avo = attendanceService.viewAttend(avo).getReturnVO();
 		request.setAttribute("attendanceVO", avo);
 
+		Map<String, Object> userInfo = new Hashtable<String, Object>();
+		userInfo.put("userNo", UserBroker.getUserNo(request));
+		userInfo.put("crsCd", createCourseVO.getCrsCd());
+		
+		ProcessResultListVO<UserCourseVO> resultList = createCourseService.listCreateCourseForStudent(userInfo);
+		request.setAttribute("courseList", resultList.getReturnList());
+		
 		//권장 진도율
 		if (createCourseVO.getCrsOperMthd().equals("OF")) {
 			float termDayCnt = mainLectureVO.getTermDayCnt();

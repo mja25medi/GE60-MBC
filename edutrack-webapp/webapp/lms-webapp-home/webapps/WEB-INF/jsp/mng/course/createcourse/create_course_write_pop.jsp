@@ -180,7 +180,7 @@
 				<input type="hidden" name="enrlEndDttm_0" id="enrlEndDttm_0"/>
 				<input type="hidden" name="enrlStartDttm_0" id="enrlStartDttm_0"/>
 				<div style="float: left">
-				<input type="text" style="text-align:right;width:50px;float:left;" maxlength="3" name="enrlDaycnt_0" id="enrlDaycnt_0" class="inputNumber form-control input-sm" />
+				<input type="text" style="text-align:right;width:50px;float:left;" maxlength="3" name="enrlDaycnt_0" id="enrlDaycnt_0" class="inputNumber form-control input-sm" onkeyup="isChkNumber(this)"/>
 				<span style="float:left;line-height:30px;padding-left:5px"><spring:message code="common.title.day"/></span>
 				</div>
 			</td>

@@ -14,7 +14,17 @@
 					<h2>${createCourseVO.crsCreNm }</h2>
 	            </div>
 				<ul>
-					<li><span>교육기간</span>${createCourseVO.enrlStartDttm } ~ ${createCourseVO.enrlEndDttm }</li>
+					<li>
+						<span>교육기간</span>
+						<c:choose>
+							<c:when test="${createCourseVO.crsOperType eq 'S' }">
+								<meditag:dateformat type="1" delimeter="." property="${courseList[0].startDttm }"/> ~ <meditag:dateformat type="1" delimeter="." property="${courseList[0].endDttm }"/> 
+							</c:when>
+							<c:otherwise>
+								${createCourseVO.enrlStartDttm } ~ ${createCourseVO.enrlEndDttm }
+							</c:otherwise>
+						</c:choose>
+					</li>
 					<c:if test="${createCourseVO.crsOperType eq 'R' }">
 						<li><span>성적열람 시작일</span>${createCourseVO.scoreOpenDttm }</li>
 					</c:if>

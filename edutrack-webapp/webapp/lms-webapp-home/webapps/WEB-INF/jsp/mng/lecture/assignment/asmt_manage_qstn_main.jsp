@@ -33,11 +33,29 @@
 			</tr>
 			<tr>
 				<th scope="row"><spring:message code="lecture.title.assignment.duration"/></th>
-				<td colspan="3">${vo.asmtStartDttm} ${vo.asmtStartHour}:${vo.asmtStartMin} ~ ${vo.asmtEndDttm} ${vo.asmtEndHour}:${vo.asmtEndMin}</td>
+				<td colspan="3">
+				<c:choose>
+					<c:when test="${vo.asmtStareTypeCd eq 'S'}">
+						-
+					</c:when>
+					<c:otherwise>
+						${vo.asmtStartDttm} ${vo.asmtStartHour}:${vo.asmtStartMin} ~ ${vo.asmtEndDttm} ${vo.asmtEndHour}:${vo.asmtEndMin}
+					</c:otherwise>
+				</c:choose>
+				</td>
 			</tr>
 			<tr>
 				<th scope="row"><spring:message code="lecture.title.assignment.delaydate"/></th>
-				<td>${vo.extSendDttm} ${vo.extSendHour}:${vo.extSendMin}</td>
+				<td>
+					<c:choose>
+					<c:when test="${vo.asmtStareTypeCd eq 'S'}">
+						-
+					</c:when>
+					<c:otherwise>
+							${vo.extSendDttm} ${vo.extSendHour}:${vo.extSendMin}
+					</c:otherwise>
+				</c:choose>
+				</td>
 				<th scope="row"><spring:message code="lecture.title.assignment.send.cnt"/></th>
 				<td>${vo.asmtLimitCnt} <spring:message code="common.title.times.postfix"/></td>
 			</tr>
