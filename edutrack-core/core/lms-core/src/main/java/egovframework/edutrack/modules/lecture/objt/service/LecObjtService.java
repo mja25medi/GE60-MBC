@@ -14,13 +14,15 @@ public interface LecObjtService {
 	
 	public abstract LecObjtVO getObjection(LecObjtVO vo) throws Exception;
 	
-	public abstract int modifyObjection(LecObjtVO vo);
+	public abstract int modifyObjection(LecObjtVO vo) throws Exception;
 	
-	public abstract int deleteObjection(LecObjtVO vo);
+	public abstract int deleteObjection(LecObjtVO vo) throws Exception;
 	
 	public abstract List<LecObjtCmntVO> getCmntList(LecObjtVO vo);
 	
 	public abstract int makeObjectionCmnt(LecObjtCmntVO vo);
 	
 	public abstract int deleteCmnt(LecObjtCmntVO vo);
+	
+	public abstract LecObjtVO viewObjection(LecObjtVO vo) throws Exception;
 }

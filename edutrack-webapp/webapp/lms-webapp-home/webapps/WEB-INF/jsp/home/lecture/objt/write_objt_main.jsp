@@ -7,6 +7,7 @@
            </div>
        </div>
 	<form id="objtWriteForm" name="objtWriteForm">
+		<input type="hidden" name="objtSn" id="objtSn" value="${vo.objtSn}" />
 		<input type="hidden" name="crsCreCd" value="${sessionScope.CRSCRECD }">
 		<input type="hidden" name="attachFileSns" value="${vo.attachFileSns}" />
 		<fieldset>
@@ -18,7 +19,7 @@
                                     <label for="titleInput" class="form-label col-sm-2">제목</label>
                                     <div class="col-sm-10">
                                         <div class="form-row">
-                                            <input class="form-control" type="text" name="title" id="objtTitle" value="" maxlength="100" placeholder="제목을 입력하세요"> 
+                                            <input class="form-control" type="text" name="title" id="objtTitle" value="${vo.title }" maxlength="100" placeholder="제목을 입력하세요"> 
                                         </div>             
                                     </div>
                                 </div>
@@ -28,7 +29,7 @@
                                     <label for="objtCts" class="form-label col-sm-2">내용</label>
                                     <div class="col-sm-10">
                                         <div class="form-row">
-                                            <textarea class="form-control" rows="10" name="cts" id="objtCts" ></textarea>
+                                             <textarea class="form-control" rows="10" name="cts" id="objtCts" >${vo.cts }</textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -50,8 +51,14 @@
                         </ul>
                     </div>
                     <div class="btns mt30">
-                        <button type="button" class="btn gray2" onclick="addObjt()">저장</button>
-                        <button type="button" class="btn type5" onclick="listObjt()">취소</button>
+                          <c:if test="${gubun ne 'E'}">
+							<button type="button" class="btn gray2" onclick="addObjt()">저장</button>
+                       		 <button type="button" class="btn type5" onclick="listObjt()">취소</button>
+						</c:if>
+						<c:if test="${gubun eq 'E'}">
+							<button type="button" onclick="editObjt();" class="btn gray2">수정</button>
+							<button type="button" onclick="viewObjt();" class="btn type5">취소</button>
+						</c:if>
                     </div>
                 </div>
 		</fieldset>
@@ -63,7 +70,7 @@
 	$(document).ready(function() {
 		atchFiles = new $M.JqueryFileUpload({
 			"varName"			: "atchFiles",
-			"files" 			: $.parseJSON('${lecObjtVO.attachFilesJson}'),
+			"files" 			: $.parseJSON('${vo.attachFilesJson}'),
 			"uploaderId"		: "atchuploader",
 			"fileListId"		: "atchfiles",
 			"progressId"		: "atchprogress",
@@ -99,6 +106,30 @@
 		}
 	}
 	
+	function editObjt() {
+		process("editObjt");
+	}
+	
+	/* 서브밋 처리 */
+	function process(cmd) {
+		$('#objtWriteForm').attr("action","/lec/objt/"+cmd);
+ 		
+		var _paramFiles = atchFiles.getFileSnAll();
+		
+		$(':input:hidden[name=attachFileSns]').val(_paramFiles); 
+		
+		$('#objtWriteForm').ajaxSubmit(processCallback);
+	}
+	
+	function processCallback(resultDTO) {
+		alert(resultDTO.message);
+		if(resultDTO.result == 1) {
+			document.location.href = "/lec/objt/objtMain";
+		} else {
+			
+		}
+	}
+	
 	function checkValid() {
 		if(isNull($("#objtTitle").val())) return false;
 		if(isNull($("#objtCts").val())) return false;
@@ -112,6 +143,12 @@
 	/** 목록 화면으로 이동 */
 	function listObjt(){
 		var url = "/lec/objt/objtMain";
+		document.location.href = url;
+	}
+	
+	function viewObjt(){
+		var objtSn = '${vo.objtSn}';
+		var url = generateUrl("/lec/objt/viewObjtMain", {"objtSn" : objtSn});
 		document.location.href = url;
 	}
 

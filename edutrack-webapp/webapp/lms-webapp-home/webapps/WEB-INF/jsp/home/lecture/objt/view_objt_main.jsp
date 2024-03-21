@@ -7,6 +7,12 @@
                         <h3>이의제기 내용</h3>
                     </div>
                 </div>
+                <div class="right_btn">
+                   	<c:if test="${CLASSUSERTYPE eq 'STU' && objtVO.stsCd eq 'I' }">
+						<button type="button" class="btn type3" onclick="editObjection();">수정</button>
+						<button type="button" class="btn type9" onclick="deleteObjection();">삭제</button>
+					</c:if>
+                </div>
                 <div class="segment">
                     <div class="tstyle_view">
                         <div class="title">${objtVO.title }</div>
@@ -104,6 +110,41 @@
 			} else
 				alert(data.message);
 		})
+	}
+	
+	
+	/** 글 삭제 */
+	function deleteObjection(){
+		var objtSn = '${objtVO.objtSn}';
+		if(confirm("<spring:message code="board.message.bbs.atcl.confirm.delete"/>")){
+			$.ajax({
+				url : '/lec/objt/deleteObjt',
+				data : {
+					"objtSn" : objtSn
+				}
+				,method : "post"
+				,success : function(data) {
+					if(data.result > 0) {
+						alert("정상 처리 되었습니다.");
+						toList();
+					} else {
+						alert(data.message);
+						document.location.reload();
+					}
+				}
+				,error : function(request, status, error) {
+					alert("삭제 중 오류가 발생했습니다. " + error);
+					document.location.reload();
+				}
+			});
+		}
+	}
+	
+	/** 글 수정 화면 */
+	function editObjection(){
+		var objtSn = '${objtVO.objtSn}';
+		var url = generateUrl("/lec/objt/editObjtMain",{"objtSn" : objtSn});
+		document.location.href = url;
 	}
 
 </script>

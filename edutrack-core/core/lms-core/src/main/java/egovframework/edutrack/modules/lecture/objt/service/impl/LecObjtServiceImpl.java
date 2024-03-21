@@ -111,12 +111,23 @@ public class LecObjtServiceImpl implements LecObjtService {
 	}
 
 	@Override
-	public int modifyObjection(LecObjtVO vo) {
+	public LecObjtVO viewObjection(LecObjtVO vo) throws Exception {
+		LecObjtVO objection = lecObjtMapper.select(vo);
+		if(objection != null) {
+			objection = fileService.getFile(objection, new lecObjtFileHandler());
+		} 
+		return objection;
+	}
+	
+	@Override
+	public int modifyObjection(LecObjtVO vo) throws Exception {
+		fileService.bindFileUpdate(vo, new lecObjtFileHandler());
 		return lecObjtMapper.update(vo);
 	}
 
 	@Override
-	public int deleteObjection(LecObjtVO vo) {
+	public int deleteObjection(LecObjtVO vo) throws Exception {
+		fileService.removeFile(vo, new lecObjtFileHandler());
 		return lecObjtMapper.delete(vo);
 	}
 	

@@ -28,6 +28,15 @@
 		WHERE
 			CRS_CRE_CD = #{crsCreCd}
 	</sql>
+	
+	<select id="select" parameterType="lecObjtVO" resultType="lecObjtVO">
+		SELECT
+			<include refid="selectColumnQuery" />
+		FROM
+			tb_lec_objt 
+		WHERE
+			OBJT_SN = #{objtSn}
+	</select>
 
 	<select id="selectKey" resultType="integer">
 		SELECT nextval(SQ_LEC_OBJT)
@@ -107,6 +116,20 @@
 			,	DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
 		)
 	</insert>
+	
+	<update id="update" parameterType="lecObjtVO">
+		UPDATE tb_lec_objt
+		SET TITLE = #{title}
+			,CTS = #{cts}
+			,MOD_NO = #{modNo}
+			,MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+		WHERE OBJT_SN = #{objtSn}
+	</update>
+
+	<delete id="delete" parameterType="lecObjtVO">
+		DELETE FROM tb_lec_objt					 
+			   WHERE OBJT_SN = #{objtSn}
+	</delete>
 	
 	<update id="updateSts" parameterType="lecObjtVO">
 		UPDATE 	

@@ -15,6 +15,8 @@ public interface LecObjtMapper {
 	
 	public LecObjtVO selectBySn(LecObjtVO vo);
 	
+	public LecObjtVO select(LecObjtVO vo);
+	
 	public List<LecObjtVO> listByCreCd(LecObjtVO vo);
 	
 	public List<LecObjtVO> listPageingByCreCd(LecObjtVO vo);

@@ -99,6 +99,50 @@ public class LecObjtController extends GenericController {
 		return result;
 	}
 	
+	@RequestMapping(value="/editObjtMain")
+	public String editQstnMain(LecObjtVO vo, HttpServletRequest request) throws Exception {
+		LecObjtVO objt = lecObjtService.viewObjection(vo);
+		request.setAttribute("vo", objt);
+		request.setAttribute("gubun","E");
+		request.setAttribute("fileupload", "Y");
+
+		return "home/lecture/objt/write_objt_main";
+	}
+
+	@RequestMapping("/editObjt")
+	@ResponseBody
+	public AbstractResult editObjt(LecObjtVO vo, HttpServletRequest request) throws Exception	 {
+		commonVOProcessing(vo, request);
+		vo.setRegNm(UserBroker.getUserName(request));
+
+		AbstractResult result = new AbstractResult();
+		try {
+			lecObjtService.modifyObjection(vo);
+			result.setResult(1);
+			result.setMessage("정상 처리 되었습니다.");
+		} catch (Exception e) {
+			result.setResult(-1);
+			result.setMessage("등록 중 오류가 발생했습니다.");
+		}
+
+		return result;
+	}
+
+	@RequestMapping(value="deleteObjt")
+	@ResponseBody
+	public AbstractResult deleteQstn(LecObjtVO vo, HttpServletRequest request) throws Exception {
+		AbstractResult result = new AbstractResult();
+		try {
+			lecObjtService.deleteObjection(vo);
+			result.setResult(1);
+			result.setMessage("정상 처리 되었습니다.");
+		} catch(Exception e) {
+			result.setResult(-1);
+			result.setMessage("삭제 중 오류가 발생 했습니다.");
+		}
+		return result;
+	}
+	
 	@RequestMapping("/writeCmnt")
 	@ResponseBody
 	public ProcessResultVO<LecObjtCmntVO> writeCmnt(LecObjtCmntVO vo, HttpServletRequest request) {
