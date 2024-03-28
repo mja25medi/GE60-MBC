@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/jsp/common/page_init.jsp" %>
 
 <c:url var="imageBase" value="/img/"/>
-<c:url var="imageTpl" value="/tpl/003/img"/>
+<c:url var="imageTpl" value="/tpl/${COLOR_TPL}/img"/>
 
 				<div class="learn_top">
                     <div class="left_title">

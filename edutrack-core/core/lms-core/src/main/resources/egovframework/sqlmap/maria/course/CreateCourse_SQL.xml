@@ -1209,7 +1209,7 @@
 			</if>	
 		</if>	
 		<if test = "enrlSts == null or enrlSts == ''">  
-			ORDER BY A.OFLN_START_DTTM DESC, A.CRS_CRE_NM 
+			ORDER BY C.ENRL_START_DTTM DESC, A.CRS_CRE_NM 
 		</if>	
 
 	</select>

@@ -10,40 +10,40 @@
 	    <title>${system_name}</title>
 	    <meta name="viewport" content="width=device-width,initial-scale=1.0">
 	    <meta name="description" content="페이지 설명">
-	    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/tpl/003/img/common/apple-touch-icon-57x57.png">
-	    <link rel="icon" type="image/png" href="/tpl/003/img/common/favicon-16x16.png" sizes="16x16">
-	    <link rel="stylesheet" href="/tpl/003/css/hrd_common.css">
-	    <link rel="stylesheet" href="/tpl/003/css/webfonts.css">
-	    <link rel="stylesheet" href="/tpl/003/css/board.css">
-	    <link rel="stylesheet" href="/tpl/003/css/contents.css">
-	    <link rel="stylesheet" href="/tpl/003/css/class_layout.css">
-	    <link rel="stylesheet" href="/tpl/003/css/class_content.css">
-	    <link rel="stylesheet" href="/tpl/003/js/codemirror/lib/codemirror.css">
-		<link rel="stylesheet" href="/tpl/003/js/codemirror/theme/darcula.css">
+	    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/tpl/${COLOR_TPL}/img/common/apple-touch-icon-57x57.png">
+	    <link rel="icon" type="image/png" href="/tpl/${COLOR_TPL}/img/common/favicon-16x16.png" sizes="16x16">
+	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/hrd_common.css">
+	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/webfonts.css">
+	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/board.css">
+	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/contents.css">
+	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/class_layout.css">
+	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/class_content.css">
+	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/codemirror/lib/codemirror.css">
+		<link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/codemirror/theme/darcula.css">
 	
-	    <script src="/tpl/003/jquery/jquery-3.2.1.min.js"></script>
-	    <script defer src="/tpl/003/js/func.min.js"></script>
-	    <script defer src="/tpl/003/js/class.js"></script>
+	    <script src="/tpl/${COLOR_TPL}/jquery/jquery-3.2.1.min.js"></script>
+	    <script defer src="/tpl/${COLOR_TPL}/js/func.min.js"></script>
+	    <script defer src="/tpl/${COLOR_TPL}/js/class.js"></script>
 		<script src="/js/jquery/jquery-1.11.1.js"></script>
 		<script src="/js/jquery/jquery-1.11.1.min.js"></script>
 	    <script src="/js/jquery/jquery-custom/jquery.input-1.0.js"></script>
     	<script src="/app/js/Context.js"></script>
 	    <script defer src="/js/common.js"></script>
-	    <script defer src="/tpl/003/js/common_function.js"></script>
+	    <script defer src="/tpl/${COLOR_TPL}/js/common_function.js"></script>
 		<meditag:js src="/js/jquery/jquery.form.js"/>
-		<script src="/tpl/003/js/iframeResizer.min.js"></script>
+		<script src="/tpl/${COLOR_TPL}/js/iframeResizer.min.js"></script>
 	    
-	    <script src="/tpl/003/js/common_conf.js"></script>
-		<script src="/tpl/003/js/common_util.js"></script>
+	    <script src="/tpl/${COLOR_TPL}/js/common_conf.js"></script>
+		<script src="/tpl/${COLOR_TPL}/js/common_util.js"></script>
 		<meditag:js src="/js/modaldialog1.js"/>
 		
-		<script src="/tpl/003/js/codemirror/lib/codemirror.js"></script>
-		<script src="/tpl/003/js/codemirror/mode/sql/sql.js"></script>
-		<script src="/tpl/003/js/jquery-resizable.js"></script>
-		<script src="/tpl/003/js/pdfobject.js"></script>
+		<script src="/tpl/${COLOR_TPL}/js/codemirror/lib/codemirror.js"></script>
+		<script src="/tpl/${COLOR_TPL}/js/codemirror/mode/sql/sql.js"></script>
+		<script src="/tpl/${COLOR_TPL}/js/jquery-resizable.js"></script>
+		<script src="/tpl/${COLOR_TPL}/js/pdfobject.js"></script>
 		
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.6.6/lottie.min.js"></script><!-- Animation 추가 -->
-		<script src="/tpl/003/js/iframeResizer.contentWindow.min.js"></script>
+		<script src="/tpl/${COLOR_TPL}/js/iframeResizer.contentWindow.min.js"></script>
 
 <c:if test="${not empty popup}">
 	<meditag:js src="/js/popupbox.js"/>
@@ -66,18 +66,18 @@
 		<script type="text/JavaScript" src="/libs/summernote/lang/summernote-ja-JP.js"></script> -->
 		<script type="text/JavaScript" src="/js/common_summernote.js"></script>
 			<!-- Summernote Editor -->
-	    <link rel="stylesheet" href="/tpl/003/js/summernote/summernote-lite.css" />
-	    <link rel="stylesheet" href="/tpl/003/js/summernote/plugin/math/katex.min.css" />
-	    <link rel="stylesheet" href="/tpl/003/js/summernote/plugin/emoji/css/emoji.css" />
+	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/summernote-lite.css" />
+	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/plugin/math/katex.min.css" />
+	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/css/emoji.css" />
 	
 		<!-- Summernote Editor -->
-	    <script src="/tpl/003/js/summernote/summernote-lite.js"></script>
-	    <script src="/tpl/003/js/summernote/lang/summernote-ko-KR.js"></script>
-	    <script src="/tpl/003/js/summernote/plugin/math/katex.min.js"></script>
-	    <script src="/tpl/003/js/summernote/plugin/math/summernote-math.js"></script>
-	    <script src="/tpl/003/js/summernote/plugin/emoji/js/config.js"></script>
-	    <script src="/tpl/003/js/summernote/plugin/emoji/js/tam-emoji.js"></script>
-		<script src="/tpl/003/js/summernote/plugin/uploadcare.js"></script>
+	    <script src="/tpl/${COLOR_TPL}/js/summernote/summernote-lite.js"></script>
+	    <script src="/tpl/${COLOR_TPL}/js/summernote/lang/summernote-ko-KR.js"></script>
+	    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/math/katex.min.js"></script>
+	    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/math/summernote-math.js"></script>
+	    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/js/config.js"></script>
+	    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/js/tam-emoji.js"></script>
+		<script src="/tpl/${COLOR_TPL}/js/summernote/plugin/uploadcare.js"></script>
 </c:if><c:if test="${not empty uploadify}">
 	<meditag:css href="css/uploadify.css"/>
 	<meditag:js src="/js/jquery/jquery.uploadify.v2.1.4.min.js"/>

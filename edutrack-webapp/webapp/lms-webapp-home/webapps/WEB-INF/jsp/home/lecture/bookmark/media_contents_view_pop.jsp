@@ -28,15 +28,15 @@
 <link rel="stylesheet" href="/libs/flowplayer7/skin/skin.css">
 <meditag:css href="tpl/bootstrap/bower_components/bootstrap/dist/css/bootstrap.min.css"/>
 <!-- <link rel="stylesheet" href="/tpl/002/css/video.css"> -->
-<link rel="stylesheet" href="/tpl/003/fonts/xeicon.min.css"> 
+<link rel="stylesheet" href="/tpl/${COLOR_TPL}/fonts/xeicon.min.css"> 
 
-    <link rel="stylesheet" href="/tpl/003/css/hrd_common.css">
-    <link rel="stylesheet" href="/tpl/003/css/webfonts.css">
-    <link rel="stylesheet" href="/tpl/003/css/board.css">
-    <link rel="stylesheet" href="/tpl/003/css/contents.css">
-    <link rel="stylesheet" href="/tpl/003/css/class_layout.css">
-    <link rel="stylesheet" href="/tpl/003/css/class_content.css">
-	<link rel="stylesheet" href="/tpl/003/css/sidebar.min.css"> 
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/hrd_common.css">
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/webfonts.css">
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/board.css">
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/contents.css">
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/class_layout.css">
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/class_content.css">
+	<link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/sidebar.min.css"> 
 
 <style type="text/css">
 	/* custom player skin */
@@ -48,7 +48,7 @@
 </style>
 
 <meditag:js src="/js/jquery/jquery-1.11.1.min.js"/>
-<script src="/tpl/003/js/sidebar.min.js"></script>
+<script src="/tpl/${COLOR_TPL}/js/sidebar.min.js"></script>
 <meditag:js src="/js/jquery/jquery.form.js"/>
 <meditag:js	src="/app/js/Context.js" />
 <meditag:js src="/js/modaldialog.js"/>
@@ -60,12 +60,12 @@
 <!-- 배속 기능 -->
 <script src="/libs/flowplayer7/flowplayer.speed-menu.min.js"></script>
 
-    <script src="/tpl/003/jquery/jquery-3.2.1.min.js"></script>
-    <script src="/tpl/003/js/func.min.js"></script>
-    <script src="/tpl/003/js/common.js"></script>
-    <script src="/tpl/003/js/class.js"></script>
-    <script src="/tpl/003/js/iframeResizer.min.js"></script>
-    <script src="/tpl/003/js/sidebar.min.js"></script>
+    <script src="/tpl/${COLOR_TPL}/jquery/jquery-3.2.1.min.js"></script>
+    <script src="/tpl/${COLOR_TPL}/js/func.min.js"></script>
+    <script src="/tpl/${COLOR_TPL}/js/common.js"></script>
+    <script src="/tpl/${COLOR_TPL}/js/class.js"></script>
+    <script src="/tpl/${COLOR_TPL}/js/iframeResizer.min.js"></script>
+    <script src="/tpl/${COLOR_TPL}/js/sidebar.min.js"></script>
 
 	<script src="/js/common.js"></script>
 	<script src="/js/jquery/jquery.form.js"></script>

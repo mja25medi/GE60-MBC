@@ -15,7 +15,7 @@
     <section class="extras errorBasic">
         <div class="flex-container">
             <div class="cont-none">
-                <img src="/tpl/003/img/error_img.png" alt="알림" aria-hidden="true"/>
+                <img src="/tpl/${COLOR_TPL}/img/error_img.png" alt="알림" aria-hidden="true"/>
                 <div class="tit-header"><strong>이용에 불편을 드려 죄송합니다.</strong></div>
                 <div class="text">
                     <p class="fcBlue">정상적인 홈페이지 접속이 아니거나 세션이 종료 되었습니다.</p>

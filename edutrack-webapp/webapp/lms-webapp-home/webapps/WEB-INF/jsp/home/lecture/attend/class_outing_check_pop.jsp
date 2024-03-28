@@ -1,12 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@include file="/WEB-INF/jsp/common/page_init.jsp" %>
 
-    <link rel="stylesheet" href="/tpl/003/css/hrd_common.css">
-    <link rel="stylesheet" href="/tpl/003/css/webfonts.css">
-    <link rel="stylesheet" href="/tpl/003/css/board.css">
-    <link rel="stylesheet" href="/tpl/003/css/contents.css">
-    <link rel="stylesheet" href="/tpl/003/css/class_layout.css">
-    <link rel="stylesheet" href="/tpl/003/css/class_content.css">
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/hrd_common.css">
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/webfonts.css">
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/board.css">
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/contents.css">
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/class_layout.css">
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/class_content.css">
 
     
     <div class="modal_cont">

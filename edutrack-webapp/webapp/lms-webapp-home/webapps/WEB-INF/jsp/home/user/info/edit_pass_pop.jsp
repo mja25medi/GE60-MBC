@@ -7,11 +7,11 @@
 	<script src="/js/nuguya/nice.nuguya.oivs.util.js"></script>	
 	<script src="/tpl/002/js/jquery/jquery.form.js"></script>
 
-    <link rel="stylesheet" href="/tpl/003/css/hrd_common.css">
-    <link rel="stylesheet" href="/tpl/003/css/webfonts.css">
-    <link rel="stylesheet" href="/tpl/003/css/layout.css">    
-    <link rel="stylesheet" href="/tpl/003/css/effect_slick.css">
-    <link rel="stylesheet" href="/tpl/003/css/sub.css"><!-- sub 페이지에서 사용 -->
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/hrd_common.css">
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/webfonts.css">
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/layout.css">    
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/effect_slick.css">
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/sub.css"><!-- sub 페이지에서 사용 -->
 
 			<div class="modal_pad">
 				<div class="well well-sm">

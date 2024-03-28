@@ -87,14 +87,14 @@
                                         <input class="form-control w80" id="unitNm" name="subList[${status.index}].unitNm"  type="text" value="${item.unitNm}">
                                         <c:choose>
                                         	<c:when test="${item.unitLvl == 1 && item.prgrChkType eq 'PAGE'}"><button onclick="cntsWrite('2' ,'${item.unitCd}')" class="btn type3">페이지 추가</button></c:when>
-                                        	<c:when test="${item.cntsTypeCd eq 'CDN' }"><img src="/tpl/003/img/class/icon_course_cdn.svg" alt="icon" title="CDN"></c:when>
-                                        	<c:when test="${item.cntsTypeCd eq 'VOD' }"><img src="/tpl/003/img/class/icon_course_play.svg" alt="icon" title="VOD"></c:when>
+                                        	<c:when test="${item.cntsTypeCd eq 'CDN' }"><img src="/tpl/${COLOR_TPL}/img/class/icon_course_cdn.svg" alt="icon" title="CDN"></c:when>
+                                        	<c:when test="${item.cntsTypeCd eq 'VOD' }"><img src="/tpl/${COLOR_TPL}/img/class/icon_course_play.svg" alt="icon" title="VOD"></c:when>
                                         	<c:when test="${item.cntsTypeCd eq 'LECTURE' }"><i class="fa fa-desktop ml5" title="코딩강의"></i></c:when>
                                         	<c:when test="${item.cntsTypeCd eq 'PRACTICE' }"><i class="fa fa-code ml5" title="코딩실습"></i></c:when>
                                         </c:choose>
-                                        <!--  <img src="/tpl/003/img/class/icon_course_link.svg" alt="icon" title="영상링크">
-                                        <img src="/tpl/003/img/class/icon_course_video.svg" alt="icon" title="Zoom">
-                                        <img src="/tpl/003/img/class/icon_course_code.svg" alt="icon" title="코딩학습"> -->
+                                        <!--  <img src="/tpl/${COLOR_TPL}/img/class/icon_course_link.svg" alt="icon" title="영상링크">
+                                        <img src="/tpl/${COLOR_TPL}/img/class/icon_course_video.svg" alt="icon" title="Zoom">
+                                        <img src="/tpl/${COLOR_TPL}/img/class/icon_course_code.svg" alt="icon" title="코딩학습"> -->
                                     </td>
                                     <c:if test="${osVO.sbjType eq 'OF' && osVO.sbjType eq 'BL' }">
                                     <td class="time_setting" data-label="시간">

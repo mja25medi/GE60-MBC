@@ -22,6 +22,7 @@
 	<input type="hidden" name="attachFileSns" id="attachFileSns" value="${vo.attachFileSns}" />
 	<input type="hidden" name="attachImageSns" id="attachImageSns" value="${vo.attachImageSns}" />
 	<input type="hidden" name="editorYn" id="editorYn" value="N" />
+	<input type="hidden" name="lockYn" id="lockYn" value="${vo.lockYn}" />
                        
                         <div class="tstyle">
                             <ul class="dbody">
@@ -253,6 +254,7 @@
 				return;
 			}
 			var encrypt = makeSendInfo(password);
+			 $('#lockYn').val("Y"); 
 		
 			$('#encryptData').val(encrypt);
 		</c:if>

@@ -409,6 +409,11 @@ public class BrdBbsHomeController extends GenericController {
 
 		// 스크립트, 스타일 태그 제거
 		vo.setAtclCts( HtmlCleaner.cleanScript(vo.getAtclCts()) );
+		
+		if(StringUtil.isNotNull(vo.getEncryptData())) {
+			String decrypt[] = CryptoUtil.descrypt(vo.getEncryptData());
+			vo.setPassword(KISASeed.seed256HashEncryption(decrypt[0]));
+		}
 
 		try {
 			brdBbsAtclService.editAtcl(vo);

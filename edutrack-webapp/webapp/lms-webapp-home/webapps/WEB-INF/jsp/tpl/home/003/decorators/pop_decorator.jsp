@@ -10,29 +10,29 @@
 	    <title>${system_name}</title>
 	    <meta name="viewport" content="width=device-width,initial-scale=1.0">
 	    <meta name="description" content="페이지 설명">
-	    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/tpl/003/img/common/apple-touch-icon-57x57.png">
-	    <link rel="icon" type="image/png" href="/tpl/003/img/common/favicon-16x16.png" sizes="16x16">
-	    <link rel="stylesheet" href="/tpl/003/css/hrd_common.css">
-	    <link rel="stylesheet" href="/tpl/003/css/webfonts.css">
-	    <link rel="stylesheet" href="/tpl/003/css/layout.css">    
-	    <link rel="stylesheet" href="/tpl/003/css/effect_slick.css">
-	    <link rel="stylesheet" href="/tpl/003/css/sub.css"><!-- sub 페이지에서 사용 -->
+	    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/tpl/${COLOR_TPL}/img/common/apple-touch-icon-57x57.png">
+	    <link rel="icon" type="image/png" href="/tpl/${COLOR_TPL}/img/common/favicon-16x16.png" sizes="16x16">
+	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/hrd_common.css">
+	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/webfonts.css">
+	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/layout.css">    
+	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/effect_slick.css">
+	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/sub.css"><!-- sub 페이지에서 사용 -->
 	
     	<script src="/app/js/Context.js"></script>
 	    <script defer src="/js/common.js"></script>
-	    <script defer src="/tpl/003/js/common_function.js"></script>
-	    <script defer src="/tpl/003/js/common_util.js"></script>
-	    <script src="/tpl/003/js/common_conf.js"></script>
-	    <script src="/tpl/003/jquery/jquery-3.2.1.min.js"></script>
-	    <script defer src="/tpl/003/jquery/slick.min.js"></script>
-	    <script defer src="/tpl/003/js/func.min.js"></script>
-	    <script defer src="/tpl/003/js/common.js"></script>
-	    <script defer src="/tpl/003/js/main.js"></script>
-	    <script src="/tpl/003/jquery/jquery.cycle2.js"></script>
-	    <script defer src="/tpl/003/js/sub.js"></script>
-		<script src="/tpl/003/js/iframeResizer.contentWindow.min.js"></script>
-		<script defer src="/tpl/003/jquery/jquery.form.js"></script>
-		<script src="/tpl/003/js/iframeResizer.min.js"></script>
+	    <script defer src="/tpl/${COLOR_TPL}/js/common_function.js"></script>
+	    <script defer src="/tpl/${COLOR_TPL}/js/common_util.js"></script>
+	    <script src="/tpl/${COLOR_TPL}/js/common_conf.js"></script>
+	    <script src="/tpl/${COLOR_TPL}/jquery/jquery-3.2.1.min.js"></script>
+	    <script defer src="/tpl/${COLOR_TPL}/jquery/slick.min.js"></script>
+	    <script defer src="/tpl/${COLOR_TPL}/js/func.min.js"></script>
+	    <script defer src="/tpl/${COLOR_TPL}/js/common.js"></script>
+	    <script defer src="/tpl/${COLOR_TPL}/js/main.js"></script>
+	    <script src="/tpl/${COLOR_TPL}/jquery/jquery.cycle2.js"></script>
+	    <script defer src="/tpl/${COLOR_TPL}/js/sub.js"></script>
+		<script src="/tpl/${COLOR_TPL}/js/iframeResizer.contentWindow.min.js"></script>
+		<script defer src="/tpl/${COLOR_TPL}/jquery/jquery.form.js"></script>
+		<script src="/tpl/${COLOR_TPL}/js/iframeResizer.min.js"></script>
 <c:if test="${not empty popup}">
 	<meditag:js src="/js/popupbox.js"/>
 </c:if><c:if test="${not empty daumeditor}">

@@ -118,14 +118,14 @@ page import="java.util.Map"%>
                     <option value="${creitem.crsCreCd}" value2="${creitem.stdNo}" <c:if test="${creitem.crsCreCd eq CRSCRECD}">selected</c:if>>${creitem.crsCreNm}</option>
                     </c:forEach>
 		        </select>
-		        <button type="button" class="active" onclick="goMenuPage();"><img src="/tpl/003/img/class/icon_util_home.svg" alt="icon" /><span class="sr-only">홈</span></button>
-		        <button type="button" onclick="viewRecvMsgPop('','');"><img src="/tpl/003/img/class/icon_util_msg.svg" alt="icon" /><span class="sr-only">쪽지</span><label class="count">${msgCnt}</label></button>
+		        <button type="button" class="active" onclick="goMenuPage();"><img src="/tpl/${COLOR_TPL}/img/class/icon_util_home.svg" alt="icon" /><span class="sr-only">홈</span></button>
+		        <button type="button" onclick="viewRecvMsgPop('','');"><img src="/tpl/${COLOR_TPL}/img/class/icon_util_msg.svg" alt="icon" /><span class="sr-only">쪽지</span><label class="count">${msgCnt}</label></button>
 		        <c:choose>
 		        	<c:when  test="${authGrpCd eq 'TCH' || 'TEACHER'}">
-				        <button type="button" onclick="logout();"><img src="/tpl/003/img/class/icon_util_out.svg" alt="icon" /><span class="sr-only">나가기</span></button>
+				        <button type="button" onclick="logout();"><img src="/tpl/${COLOR_TPL}/img/class/icon_util_out.svg" alt="icon" /><span class="sr-only">나가기</span></button>
 		        	</c:when>
 		        	<c:otherwise>
-				        <button type="button" onclick="location.href='/home/main/goMenuPage?mcd=MC00000051';"><img src="/tpl/003/img/class/icon_util_out.svg" alt="icon" /><span class="sr-only">나가기</span></button>
+				        <button type="button" onclick="location.href='/home/main/goMenuPage?mcd=MC00000051';"><img src="/tpl/${COLOR_TPL}/img/class/icon_util_out.svg" alt="icon" /><span class="sr-only">나가기</span></button>
 		        	</c:otherwise>
 		        </c:choose>
 		    </div>

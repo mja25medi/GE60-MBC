@@ -4,17 +4,17 @@
 <head>
 <link rel="apple-touch-icon-precomposed" sizes="57x57" href="../img/common/apple-touch-icon-57x57.png">
 <link rel="icon" type="image/png" href="/img/common/favicon-16x16.png" sizes="16x16">
-<link rel="stylesheet" href="/tpl/003/css/hrd_common.css">
-<link rel="stylesheet" href="/tpl/003/css/webfonts.css">
-<link rel="stylesheet" href="/tpl/003/css/board.css">
-<link rel="stylesheet" href="/tpl/003/css/contents.css">
-<link rel="stylesheet" href="/tpl/003/css/class_layout.css">
-<link rel="stylesheet" href="/tpl/003/css/class_content.css">
+<link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/hrd_common.css">
+<link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/webfonts.css">
+<link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/board.css">
+<link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/contents.css">
+<link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/class_layout.css">
+<link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/class_content.css">
 
-<script src="/tpl/003/jquery/jquery-3.2.1.min.js"></script>
-<script src="/tpl/003/js/func.min.js"></script>
-<script src="/tpl/003/js/class.js"></script>
-<script src="/tpl/003/js/iframeResizer.min.js"></script>
+<script src="/tpl/${COLOR_TPL}/jquery/jquery-3.2.1.min.js"></script>
+<script src="/tpl/${COLOR_TPL}/js/func.min.js"></script>
+<script src="/tpl/${COLOR_TPL}/js/class.js"></script>
+<script src="/tpl/${COLOR_TPL}/js/iframeResizer.min.js"></script>
 
 <script src="/app/js/Context.js"></script>
 <script type="text/javascript">
@@ -29,7 +29,7 @@
 <script src="/js/common_function.js"></script>
 
 <!-- jQuery	-->
-<script src="/tpl/003/jquery/jquery.form.js"></script>
+<script src="/tpl/${COLOR_TPL}/jquery/jquery.form.js"></script>
 
 <script src="/js/jquery/jquery-1.11.1.min.js"></script>
 <script src="/js/jquery/jquery-ui-1.11.0.custom/jquery-ui.min.js"></script>

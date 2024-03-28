@@ -14,15 +14,15 @@
 <link rel="stylesheet" href="/libs/flowplayer7/skin/skin.css">
 <meditag:css href="tpl/bootstrap/bower_components/bootstrap/dist/css/bootstrap.min.css"/>
 <!-- <link rel="stylesheet" href="/tpl/002/css/video.css"> -->
-<link rel="stylesheet" href="/tpl/003/fonts/xeicon.min.css"> 
+<link rel="stylesheet" href="/tpl/${COLOR_TPL}/fonts/xeicon.min.css"> 
 
-	<link rel="stylesheet" href="/tpl/005/css/hrd_common.css" />
-	<link rel="stylesheet" href="/tpl/005/css/webfonts.css" />
-	<link rel="stylesheet" href="/tpl/005/css/board.css" />
-	<link rel="stylesheet" href="/tpl/005/css/contents.css" />
-	<link rel="stylesheet" href="/tpl/005/css/class_layout.css" />
-	<link rel="stylesheet" href="/tpl/005/css/class_content.css" />
-	<link rel="stylesheet" href="/tpl/005/css/sidebar.min.css">
+	<link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/hrd_common.css" />
+	<link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/webfonts.css" />
+	<link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/board.css" />
+	<link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/contents.css" />
+	<link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/class_layout.css" />
+	<link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/class_content.css" />
+	<link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/sidebar.min.css">
 <style type="text/css">
 	/* custom player skin */
 		#lecQnaForm {padding-bottom: 30px;}
@@ -37,12 +37,12 @@
 <meditag:js src="/tpl/bootstrap/bower_components/bootstrap/dist/js/bootstrap.min.js"/>
 
 
-    <script src="/tpl/005/jquery/jquery-3.2.1.min.js"></script>
-    <script src="/tpl/005/js/func.min.js"></script>
-    <script src="/tpl/005/js/common.js"></script>
-    <script src="/tpl/005/js/class.js"></script>
-    <script src="/tpl/005/js/iframeResizer.min.js"></script>
-	<script src="/tpl/005/js/sidebar.min.js"></script>
+    <script src="/tpl/${COLOR_TPL}/jquery/jquery-3.2.1.min.js"></script>
+    <script src="/tpl/${COLOR_TPL}/js/func.min.js"></script>
+    <script src="/tpl/${COLOR_TPL}/js/common.js"></script>
+    <script src="/tpl/${COLOR_TPL}/js/class.js"></script>
+    <script src="/tpl/${COLOR_TPL}/js/iframeResizer.min.js"></script>
+	<script src="/tpl/${COLOR_TPL}/js/sidebar.min.js"></script>
 
 	<script src="/js/common.js"></script>
 	<script src="/js/jquery/jquery.form.js"></script>

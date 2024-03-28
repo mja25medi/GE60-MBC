@@ -29,15 +29,15 @@
 
         <div class="footer_inner">
             <div class="left">
-                <div class="footer_logo"><img src="/tpl/003/img/common/logo_w.svg"></div>
+                <div class="footer_logo"><img src="/tpl/${COLOR_TPL}/img/common/logo_w.svg"></div>
             </div>
             <div class="right">
                 <ul class="sns">
-                    <li class="kakao"><a href="https://pf.kakao.com/_VYlpM" target="_blank"><img src="/tpl/003/img/common/sns1.png"></a></li>
-                    <li class="naver"><a href="https://blog.naver.com/smhrd_official" target="_blank"><img src="/tpl/003/img/common/sns2.png"></a></li>
-                    <li class="youtube"><a href="https://www.youtube.com/channel/UCubIpLB7cA9tWIUZ26WFKPg" target="_blank"><img src="/tpl/003/img/common/sns3.png"></a></li>
-                    <li class="instagram"><a href="https://www.instagram.com/smhrd0317/" target="_blank"><img src="/tpl/003/img/common/sns4.png"></a></li>
-                    <li class="facebook"><a href="https://www.facebook.com/smhrd0317" target="_blank"><img src="/tpl/003/img/common/sns5.png"></a></li>
+                    <li class="kakao"><a href="https://pf.kakao.com/_VYlpM" target="_blank"><img src="/tpl/${COLOR_TPL}/img/common/sns1.png"></a></li>
+                    <li class="naver"><a href="https://blog.naver.com/smhrd_official" target="_blank"><img src="/tpl/${COLOR_TPL}/img/common/sns2.png"></a></li>
+                    <li class="youtube"><a href="https://www.youtube.com/channel/UCubIpLB7cA9tWIUZ26WFKPg" target="_blank"><img src="/tpl/${COLOR_TPL}/img/common/sns3.png"></a></li>
+                    <li class="instagram"><a href="https://www.instagram.com/smhrd0317/" target="_blank"><img src="/tpl/${COLOR_TPL}/img/common/sns4.png"></a></li>
+                    <li class="facebook"><a href="https://www.facebook.com/smhrd0317" target="_blank"><img src="/tpl/${COLOR_TPL}/img/common/sns5.png"></a></li>
                 </ul>
             </div>
         </div>

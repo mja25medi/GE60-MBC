@@ -89,12 +89,12 @@
 	</form>
 
 <script type="text/javascript">
+var creOperTypeCd ="${vo.creOperTypeCd}";
 
 	$(document).ready(function() {
 		$('.inputDate').inputDate();  // 날짜 형식만 입력되도록 설정.
 		$('.inputNumber').inputNumber();
 		
-		var creOperTypeCd ="${vo.creOperTypeCd}";
 		if (creOperTypeCd == 'S') {
 			$('#reshDuration').css("display", "none");
 		}else{
@@ -125,7 +125,6 @@
 	 */
 	function process(cmd) {
 		var f = document.creCrsReshForm;
-		var creOperTypeCd ="${vo.creOperTypeCd}";
 		if (creOperTypeCd == 'S') {
 			f["reshStareTypeCd"].value="S";
 		}else{
@@ -171,10 +170,11 @@
 	function add() {
 		var reshSn = $("#reshSn opiton:selected").val();
 		var reshDayCnt = $("#reshDayCnt").find('input').val();
-		
-		if(reshDayCnt == 0 || reshDayCnt == '') {
-			alert("<spring:message code="lecture.message.research.alert.daycnt"/>")
-			return;
+		if (creOperTypeCd == 'S') {
+			if(reshDayCnt == 0 || reshDayCnt == '') {
+				alert("<spring:message code="lecture.message.research.alert.daycnt"/>")
+				return;
+			}
 		}
 		
 		if(!parent.subWorkFrame.chk_reshSn($("#reshSn").val()) ){
@@ -187,16 +187,16 @@
 		}
 		
 		
-		
 		process("add");	// cmd
 	}
 
 	function edit() {
 		var reshDayCnt = $("#reshDayCnt").find('input').val();
-		
-		if(reshDayCnt == 0 || reshDayCnt == '') {
-			alert("<spring:message code="lecture.message.research.alert.daycnt"/>")
-			return;
+		if (creOperTypeCd == 'S') {
+			if(reshDayCnt == 0 || reshDayCnt == '') {
+				alert("<spring:message code="lecture.message.research.alert.daycnt"/>")
+				return;
+			}
 		}
 		process("edit");	// cmd
 	}

@@ -69,28 +69,28 @@
 											</td>
 										</tr>
 										</c:if>
-										
-										<tr>
-											<th scope="row"><spring:message code="board.title.qna.private"/></th>
-											<td>
-												<label>
-													<input type="checkbox" name="lockYn" id="lockYn" value="Y" <c:if test="${vo.lockYn eq 'Y'}">checked</c:if> />&nbsp;<spring:message code="board.title.qna.private.info"/>
-													<div class="Row" id="pwBox">
-														<label for="hashInput" class="form-label col-sm-2">패스워드</label>
-														<input type="hidden" id="encryptData" name="encryptData">
-														<div class="col-sm-10">
-															<div class="form-row">
-																<input type="password" id="password" value="${vo.password}" class="form-control" <c:if test="${vo.lockYn eq 'Y'}"> disabled</c:if>>
-																<c:if test="${vo.lockYn eq 'Y'}">
-																	<button type="button" id="editPw"><spring:message code="button.edit.password"/></button>
-																</c:if>
+										<c:if test="${bbsInfoVO.lockUseYn eq 'Y' }">
+											<tr>
+												<th scope="row"><spring:message code="board.title.qna.private"/></th>
+												<td>
+													<label>
+														<input type="checkbox" name="lockYn" id="lockYn" value="Y" <c:if test="${vo.lockYn eq 'Y'}">checked</c:if> />&nbsp;<spring:message code="board.title.qna.private.info"/>
+														<div class="Row" id="pwBox">
+															<label for="hashInput" class="form-label col-sm-2">패스워드</label>
+															<input type="hidden" id="encryptData" name="encryptData">
+															<div class="col-sm-10">
+																<div class="form-row">
+																	<input type="password" id="password" value="${vo.password}" class="form-control" <c:if test="${vo.lockYn eq 'Y'}"> disabled</c:if>>
+																	<c:if test="${vo.lockYn eq 'Y'}">
+																		<button type="button" id="editPw"><spring:message code="button.edit.password"/></button>
+																	</c:if>
+																</div>
 															</div>
 														</div>
-													</div>
-												</label>
-											</td>
-										</tr>
-										
+													</label>
+												</td>
+											</tr>
+										</c:if>
 										<tr>
 											<c:set var="fontFamily" value="Helvetica"/>
 											<c:if test="${LOCALEKEY eq 'jp' }"><c:set var="fontFamily" value="Meiryo"/></c:if>

@@ -7,7 +7,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>스마트인재개발원</title>
+    <title>${USER_ORGNM }</title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <meta name="description" content="페이지 설명">
     <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/tpl/${COLOR_TPL}/img/common/apple-touch-icon-57x57.png">

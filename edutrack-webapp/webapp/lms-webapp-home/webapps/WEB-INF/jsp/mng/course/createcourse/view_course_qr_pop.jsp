@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/jsp/mng/common/page_init.jsp" %>
-	<link rel="stylesheet" href="/tpl/003/css/class_content.css">
-    <link rel="stylesheet" href="/tpl/003/css/hrd_common.css">
-    <link rel="stylesheet" href="/tpl/003/css/board.css">
+	<link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/class_content.css">
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/hrd_common.css">
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/board.css">
 <c:url var="img_base" value="/img/home" />
 <mhtml:mng_html>
 <mhtml:mng_head titleName="${MENUNAME}">

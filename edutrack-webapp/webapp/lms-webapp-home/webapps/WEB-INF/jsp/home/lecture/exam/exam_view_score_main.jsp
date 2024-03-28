@@ -14,15 +14,15 @@
 							<thead>
 								<tr>
 									<th scope="col">과정명</th>
-									<c:if test="${stdScoreList[0].prgrRatio ne 0 }"><th scope="col">진도</th></c:if>
-									<c:if test="${stdScoreList[0].examRatio ne 0 }"><th scope="col">시험</th></c:if>
-									<c:if test="${stdScoreList[0].semiExamRatio ne 0 }"><th scope="col">진행단계평가</th></c:if>
-									<c:if test="${stdScoreList[0].asmtRatio ne 0 }"><th scope="col">과제</th></c:if>
-									<c:if test="${stdScoreList[0].etcRatio ne 0 }"><th scope="col">${stdScoreList[0].etcNm }</th></c:if>
-									<c:if test="${stdScoreList[0].etcRatio2 ne 0 }"><th scope="col">${stdScoreList[0].etcNm2 }</th></c:if>
-									<c:if test="${stdScoreList[0].etcRatio3 ne 0 }"><th scope="col">${stdScoreList[0].etcNm3 }</th></c:if>
-									<c:if test="${stdScoreList[0].etcRatio4 ne 0 }"><th scope="col">${stdScoreList[0].etcNm4 }</th></c:if>
-									<c:if test="${stdScoreList[0].etcRatio5 ne 0 }"><th scope="col">${stdScoreList[0].etcNm5 }</th></c:if>
+									<c:if test="${createCourseVO.prgrRatio ne 0 }"><th scope="col">진도</th></c:if>
+									<c:if test="${createCourseVO.examRatio ne 0 }"><th scope="col">시험</th></c:if>
+									<c:if test="${createCourseVO.semiExamRatio ne 0}"><th scope="col">진행단계평가</th></c:if>
+									<c:if test="${createCourseVO.asmtRatio ne 0 }"><th scope="col">과제</th></c:if>
+									<c:if test="${createCourseVO.etcRatio ne 0 }"><th scope="col">${createCourseVO.etcNm }</th></c:if>
+									<c:if test="${createCourseVO.etcRatio2 ne 0 }"><th scope="col">$createCourseVO.etcNm2 }</th></c:if>
+									<c:if test="${createCourseVO.etcRatio3 ne 0 }"><th scope="col">$createCourseVO.etcNm3 }</th></c:if>
+									<c:if test="${createCourseVO.etcRatio4 ne 0 }"><th scope="col">$createCourseVO.etcNm4 }</th></c:if>
+									<c:if test="${createCourseVO.etcRatio5 ne 0 }"><th scope="col">$createCourseVO.etcNm5 }</th></c:if>
 									<th scope="col" width="10%">총점</th>
 									<th scope="col" width="10%">수료여부</th>
 									<th scope="col" width="15%">이의제기</th>
@@ -31,44 +31,73 @@
 							<tbody>
 								<c:if test="${not empty stdScoreList}">
 									<c:forEach items="${stdScoreList}" var="item" varStatus="status">
-									<jsp:useBean id="now" class="java.util.Date" />
-									<c:set value="${vo.scoreOpenDttm }" var="startDate" />
-									<c:set value="${now}" var="nowDate" />             <%-- 오늘날짜 --%>
-									<c:set value="${startDate}"  var="openDate"/>       <%-- 성적공개시작날짜 --%>
-									<fmt:formatNumber type="number"  value = "${item.examScore}" pattern = "0.0" var = "examScore"/>
-									<fmt:formatNumber type="number"  value = "${item.semiExamScore}" pattern = "0.0" var = "semiExamScore"/>
-									<fmt:formatNumber type="number"  value = "${item.asmtScore}" pattern = "0.0" var = "asmtScore"/>
-									<fmt:formatNumber type="number"  value = "${item.prgrScore}" pattern = "0.0" var = "prgrScore"/>
-									<fmt:formatNumber type="number"  value = "${item.etcScore}" pattern = "0.0" var = "etcScore"/>
-									<fmt:formatNumber type="number"  value = "${item.etcScore2}" pattern = "0.0" var = "etcScore2"/>
-									<fmt:formatNumber type="number"  value = "${item.etcScore3}" pattern = "0.0" var = "etcScore3"/>
-									<fmt:formatNumber type="number"  value = "${item.etcScore4}" pattern = "0.0" var = "etcScore4"/>
-									<fmt:formatNumber type="number"  value = "${item.etcScore5}" pattern = "0.0" var = "etcScore5"/>
-									<fmt:formatNumber type="number"  value = "${item.totScore}" pattern = "0.0" var = "totScore"/>
-									<c:set var="isOpen" value="${openDate < nowDate }" />
-									<tr>
-										<td scope="row" class="title" data-label="과정명" style="text-align: center;">${item.crsCreNm }</td>
-											<c:if test="${isOpen == true}">
-												<c:if test="${item.prgrRatio ne 0 }"><td data-label="진도">${prgrScore }점</td></c:if>
-												<c:if test="${item.examRatio ne 0 }"><td data-label="시험">${examScore }점</td></c:if>
-												<c:if test="${item.semiExamRatio ne 0 }"><td data-label="진행단계평가">${semiExamScore}점</td></c:if>
-												<c:if test="${item.asmtRatio ne 0 }"><td data-label="과제">${asmtScore }점</td></c:if>
-												<c:if test="${item.etcRatio ne 0 }"><td data-label="${item.etcNm}">${etcScore}점</td></c:if>
-												<c:if test="${item.etcRatio2 ne 0 }"><td data-label="${item.etcNm2}">${etcScore2}점</td></c:if>
-												<c:if test="${item.etcRatio3 ne 0 }"><td data-label="${item.etcNm3}">${etcScore3}점</td></c:if>
-												<c:if test="${item.etcRatio4 ne 0 }"><td data-label="${item.etcNm4}">${etcScore4}점</td></c:if>
-												<c:if test="${item.etcRatio5 ne 0 }"><td data-label="${item.etcNm5}">${etcScore5}점</td></c:if>
-												<td data-label="총점">${totScore }점</td>
-											</c:if>
-											<c:if test="${isOpen == false}">
-												<td data-label="시험">-</td>
-												<td data-label="진행단계평가">-</td>
-												<td data-label="과제">-</td>
-												<td data-label="총점">-</td>
-											</c:if>
-										<td data-label="수료여부">${item.enrlStsNm }</td>
-										<td data-label="이의제기"><button class="btn-line" onclick="javascript:goObjtMenu();">이의제기</button></td>
-									</tr>
+										<jsp:useBean id="now" class="java.util.Date" />
+										<c:set value="${vo.scoreOpenDttm }" var="startDate" />
+										<c:set var="nowDate"><fmt:formatDate value="${now}" pattern="yyyy.MM.dd" /></c:set>          <%-- 오늘날짜 --%>
+										<c:set value="${startDate}"  var="openDate"/>       <%-- 성적공개시작날짜 --%>
+										<fmt:formatNumber type="number"  value = "${item.examScore}" pattern = "0.0" var = "examScore"/>
+										<fmt:formatNumber type="number"  value = "${item.semiExamScore}" pattern = "0.0" var = "semiExamScore"/>
+										<fmt:formatNumber type="number"  value = "${item.asmtScore}" pattern = "0.0" var = "asmtScore"/>
+										<fmt:formatNumber type="number"  value = "${item.prgrScore}" pattern = "0.0" var = "prgrScore"/>
+										<fmt:formatNumber type="number"  value = "${item.etcScore}" pattern = "0.0" var = "etcScore"/>
+										<fmt:formatNumber type="number"  value = "${item.etcScore2}" pattern = "0.0" var = "etcScore2"/>
+										<fmt:formatNumber type="number"  value = "${item.etcScore3}" pattern = "0.0" var = "etcScore3"/>
+										<fmt:formatNumber type="number"  value = "${item.etcScore4}" pattern = "0.0" var = "etcScore4"/>
+										<fmt:formatNumber type="number"  value = "${item.etcScore5}" pattern = "0.0" var = "etcScore5"/>
+										<fmt:formatNumber type="number"  value = "${item.totScore}" pattern = "0.0" var = "totScore"/>
+										<c:choose>
+											<c:when test="${createCourseVO.creOperTypeCd eq 'R'}">
+												<c:set var="isOpen" value="${nowDate >= openDate}" />
+												<tr>
+													<td scope="row" class="title" data-label="과정명" style="text-align: center;">${item.crsCreNm }</td>
+														<c:choose>
+															<c:when test="${isOpen == true}">
+																<c:if test="${item.prgrRatio ne 0 }"><td data-label="진도">${prgrScore }점</td></c:if>
+																<c:if test="${item.examRatio ne 0 }"><td data-label="시험">${examScore }점</td></c:if>
+																<c:if test="${item.semiExamRatio ne 0 }"><td data-label="진행단계평가">${semiExamScore}점</td></c:if>
+																<c:if test="${item.asmtRatio ne 0 }"><td data-label="과제">${asmtScore }점</td></c:if>
+																<c:if test="${item.etcRatio ne 0 }"><td data-label="${item.etcNm}">${etcScore}점</td></c:if>
+																<c:if test="${item.etcRatio2 ne 0 }"><td data-label="${item.etcNm2}">${etcScore2}점</td></c:if>
+																<c:if test="${item.etcRatio3 ne 0 }"><td data-label="${item.etcNm3}">${etcScore3}점</td></c:if>
+																<c:if test="${item.etcRatio4 ne 0 }"><td data-label="${item.etcNm4}">${etcScore4}점</td></c:if>
+																<c:if test="${item.etcRatio5 ne 0 }"><td data-label="${item.etcNm5}">${etcScore5}점</td></c:if>
+																<td data-label="총점">${totScore }점</td>
+															</c:when>
+															<c:when test="${isOpen == false }">
+																<c:if test="${item.prgrRatio ne 0 }"><td data-label="진도">-</td></c:if>
+																<c:if test="${item.examRatio ne 0 }"><td data-label="시험">-</td></c:if>
+																<c:if test="${item.semiExamRatio ne 0 }"><td data-label="진행단계평가">-</td></c:if>
+																<c:if test="${item.asmtRatio ne 0 }"><td data-label="과제">-</td></c:if>
+																<c:if test="${item.etcRatio ne 0 }"><td data-label="${item.etcNm}">-</td></c:if>
+																<c:if test="${item.etcRatio2 ne 0 }"><td data-label="${item.etcNm2}">-</td></c:if>
+																<c:if test="${item.etcRatio3 ne 0 }"><td data-label="${item.etcNm3}">-</td></c:if>
+																<c:if test="${item.etcRatio4 ne 0 }"><td data-label="${item.etcNm4}">-</td></c:if>
+																<c:if test="${item.etcRatio5 ne 0 }"><td data-label="${item.etcNm5}">-</td></c:if>
+																<td data-label="총점">-</td>
+															</c:when>
+														</c:choose>
+													<td data-label="수료여부">${item.enrlStsNm }</td>
+													<td data-label="이의제기"><button class="btn-line" onclick="javascript:goObjtMenu();">이의제기</button></td>
+												</tr>
+											</c:when>
+											<c:when test="${createCourseVO.creOperTypeCd eq 'S'}">
+												<tr>
+													<td scope="row" class="title" data-label="과정명" style="text-align: center;">${item.crsCreNm }</td>
+													<c:if test="${item.prgrRatio ne 0 }"><td data-label="진도">${prgrScore }점</td></c:if>
+													<c:if test="${item.examRatio ne 0 }"><td data-label="시험">${examScore }점</td></c:if>
+													<c:if test="${item.semiExamRatio ne 0 }"><td data-label="진행단계평가">${semiExamScore}점</td></c:if>
+													<c:if test="${item.asmtRatio ne 0 }"><td data-label="과제">${asmtScore }점</td></c:if>
+													<c:if test="${item.etcRatio ne 0 }"><td data-label="${item.etcNm}">${etcScore}점</td></c:if>
+													<c:if test="${item.etcRatio2 ne 0 }"><td data-label="${item.etcNm2}">${etcScore2}점</td></c:if>
+													<c:if test="${item.etcRatio3 ne 0 }"><td data-label="${item.etcNm3}">${etcScore3}점</td></c:if>
+													<c:if test="${item.etcRatio4 ne 0 }"><td data-label="${item.etcNm4}">${etcScore4}점</td></c:if>
+													<c:if test="${item.etcRatio5 ne 0 }"><td data-label="${item.etcNm5}">${etcScore5}점</td></c:if>
+													<td data-label="총점">${totScore }점</td>
+													<td data-label="수료여부">${item.enrlStsNm }</td>
+													<td data-label="이의제기"><button class="btn-line" onclick="javascript:goObjtMenu();">이의제기</button></td>
+												</tr>
+											</c:when>
+										</c:choose>			
 									</c:forEach>
 								</c:if>
 								<c:if test="${empty stdScoreList}">

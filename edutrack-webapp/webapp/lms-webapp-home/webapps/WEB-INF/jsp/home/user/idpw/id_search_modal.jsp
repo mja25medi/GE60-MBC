@@ -2,11 +2,11 @@
 
 <%@ include file="/WEB-INF/jsp/common/page_init.jsp" %>
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-    <link rel="stylesheet" href="/tpl/003/css/hrd_common.css">
-    <link rel="stylesheet" href="/tpl/003/css/webfonts.css">
-    <link rel="stylesheet" href="/tpl/003/css/layout.css">    
-    <link rel="stylesheet" href="/tpl/003/css/effect_slick.css">
-    <link rel="stylesheet" href="/tpl/003/css/sub.css"><!-- sub 페이지에서 사용 -->
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/hrd_common.css">
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/webfonts.css">
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/layout.css">    
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/effect_slick.css">
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/sub.css"><!-- sub 페이지에서 사용 -->
 
 	<div class="modal_cont">
 	    <div class="modal_pad">

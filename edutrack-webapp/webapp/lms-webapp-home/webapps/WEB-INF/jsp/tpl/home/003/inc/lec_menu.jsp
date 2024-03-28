@@ -77,9 +77,9 @@ include file="/WEB-INF/jsp/common/page_init.jsp" %>
                 </c:forEach>
 		    </select>
             <div class="button-box">
- 		        <button type="button" class="active" onclick="goMenuPage('/home/main/goMenuPage?mcd=MC00000000');"><img src="/tpl/003/img/class/icon_util_home.svg" alt="icon" /><span class="sr-only">홈</span></button>
-		        <button type="button" onclick="viewRecvMsgPop('','');"><img src="/tpl/003/img/class/icon_util_msg.svg" alt="icon" /><span class="sr-only">쪽지</span><label class="count">${msgCnt}</label></button>
-		        <button type="button" onclick="goMenuPage('/home/user/logout');"><img src="/tpl/003/img/class/icon_util_out.svg" alt="icon" /><span class="sr-only">나가기</span></button>
+ 		        <button type="button" class="active" onclick="goMenuPage('/home/main/goMenuPage?mcd=MC00000000');"><img src="/tpl/${COLOR_TPL}/img/class/icon_util_home.svg" alt="icon" /><span class="sr-only">홈</span></button>
+		        <button type="button" onclick="viewRecvMsgPop('','');"><img src="/tpl/${COLOR_TPL}/img/class/icon_util_msg.svg" alt="icon" /><span class="sr-only">쪽지</span><label class="count">${msgCnt}</label></button>
+		        <button type="button" onclick="goMenuPage('/home/user/logout');"><img src="/tpl/${COLOR_TPL}/img/class/icon_util_out.svg" alt="icon" /><span class="sr-only">나가기</span></button>
             </div>
         </div>
 	            <c:forEach items="${menuList}" var="item">
@@ -106,10 +106,10 @@ include file="/WEB-INF/jsp/common/page_init.jsp" %>
 								<c:url var="linkUrl" value="/lec/main/goMenuPage?mcd=${item.menuCd}" />
 							</c:if>
 							<c:if test="${ empty item.subList}">
-			            		<li <c:if test="${chkedmenu1 eq item.menuCd }">class="on"</c:if>><a href="${linkUrl }"><img src="/tpl/003/img/class/icon_${item.leftMenuImg}.svg" alt="icon" />${menuName1 }</a></li>
+			            		<li <c:if test="${chkedmenu1 eq item.menuCd }">class="on"</c:if>><a href="${linkUrl }"><img src="/tpl/${COLOR_TPL}/img/class/icon_${item.leftMenuImg}.svg" alt="icon" />${menuName1 }</a></li>
 			            	</c:if>
 			            	<c:if test="${not empty item.subList}">
-			            		<li <c:if test="${fn:contains(item.subList, chkedmenu1)}">class="on"</c:if>><a href="#0"><img src="/tpl/003/img/class/icon_${item.leftMenuImg}.svg" alt="icon" />${menuName1 }<i class="xi-angle-down-min" aria-hidden="true"></i></a>
+			            		<li <c:if test="${fn:contains(item.subList, chkedmenu1)}">class="on"</c:if>><a href="#0"><img src="/tpl/${COLOR_TPL}/img/class/icon_${item.leftMenuImg}.svg" alt="icon" />${menuName1 }<i class="xi-angle-down-min" aria-hidden="true"></i></a>
 					                <ul class="sub">
 										<c:forEach items="${item.subList}" var="item1">
 											<c:set var="menuName2" value="${item1.menuNm}"/>
