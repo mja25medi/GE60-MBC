@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@include file="/WEB-INF/jsp/common/page_init.jsp" %>
-	   
+	   					<ul class="slider_list">
                              <c:forEach items="${courseList}" var="item" varStatus="status">
 							            <li>
 			                              	<a href="javascript:readCourse('${item.crsCreCd}','${item.crsCd}')">
@@ -23,8 +23,8 @@
 			                                    </div>
 			                                </a>
 			                            </li>                   
-							</c:forEach>
-						                   
+								</c:forEach>
+						   </ul>             
 <script type="text/javascript">
 $(document).ready(function () { 
 	

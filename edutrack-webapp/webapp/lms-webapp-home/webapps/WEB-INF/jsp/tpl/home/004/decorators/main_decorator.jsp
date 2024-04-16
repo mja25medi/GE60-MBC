@@ -14,7 +14,7 @@
 	    <link rel="icon" type="image/png" href="/tpl/${COLOR_TPL}/img/common/favicon-16x16.png" sizes="16x16">
 	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/hrd_common.css">
 	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/webfonts.css">
-	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/layout.css">    
+	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/layout2.css">    
         <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/main.css"><!-- main 페이지에서 사용 -->
 	    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/css/effect_slick.css">
 	
@@ -24,6 +24,7 @@
 	    <script defer src="/tpl/${COLOR_TPL}/js/common.js"></script>
 	    <script defer src="/tpl/${COLOR_TPL}/js/main.js"></script>
 	    <script src="/tpl/${COLOR_TPL}/jquery/jquery.cycle2.js"></script>
+	    <script defer src="/tpl/${COLOR_TPL}/js/sub.js"></script>
     	<script src="/tpl/${COLOR_TPL}/js/iframeResizer.min.js"></script>
 
     <!-- Summernote Editor -->

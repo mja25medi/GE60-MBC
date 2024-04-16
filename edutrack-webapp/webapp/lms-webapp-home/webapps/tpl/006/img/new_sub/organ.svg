@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="858" height="665" viewBox="0 0 858 665">
+  <g id="Group_28" data-name="Group 28" transform="translate(-496 -105)">
+    <g id="Group_2" data-name="Group 2">
+      <g id="Rectangle_1" data-name="Rectangle 1" transform="translate(800 105)" fill="#1b317a" stroke="#ffcf6a" stroke-width="5">
+        <rect width="250" height="70" rx="35" stroke="none"/>
+        <rect x="2.5" y="2.5" width="245" height="65" rx="32.5" fill="none"/>
+      </g>
+      <text id="대표이사" transform="translate(890 147)" fill="#fff" font-size="20" font-family="Pretendard-Bold, Pretendard" font-weight="700"><tspan x="0" y="0">대표이사</tspan></text>
+    </g>
+    <g id="Group_1" data-name="Group 1" transform="translate(542 235)">
+      <rect id="Rectangle_2" data-name="Rectangle 2" width="200" height="60" rx="30" fill="#1b317a"/>
+      <text id="이사" transform="translate(83 37)" fill="#fff" font-size="20" font-family="Pretendard-Bold, Pretendard" font-weight="700"><tspan x="0" y="0">이사</tspan></text>
+    </g>
+    <g id="Group_3" data-name="Group 3" transform="translate(15 2)">
+      <rect id="Rectangle_3" data-name="Rectangle 3" width="200" height="60" rx="30" transform="translate(1081 233)" fill="#606177"/>
+      <text id="고문" transform="translate(1163.923 270.439)" fill="#fff" font-size="20" font-family="Pretendard-Bold, Pretendard" font-weight="700"><tspan x="0" y="0">고문</tspan></text>
+    </g>
+    <g id="Group_4" data-name="Group 4" transform="translate(15)">
+      <rect id="Rectangle_4" data-name="Rectangle 4" width="200" height="60" rx="30" transform="translate(1081 339)" fill="#606177"/>
+      <text id="자문위원" transform="translate(1146.907 376.439)" fill="#fff" font-size="20" font-family="Pretendard-Bold, Pretendard" font-weight="700"><tspan x="0" y="0">자문위원</tspan></text>
+    </g>
+    <g id="Group_23" data-name="Group 23">
+      <g id="Component_1_2" data-name="Component 1 – 2" transform="translate(718 545)">
+        <g id="Rectangle_5" data-name="Rectangle 5" fill="#ffcf6a" stroke="#d5a170" stroke-width="1">
+          <rect width="192" height="155" rx="36" stroke="none"/>
+          <rect x="0.5" y="0.5" width="191" height="154" rx="35.5" fill="none"/>
+        </g>
+        <g id="Rectangle_6" data-name="Rectangle 6" transform="translate(0 58)" fill="#fff" stroke="#d5a170" stroke-width="1">
+          <rect width="192" height="167" stroke="none"/>
+          <rect x="0.5" y="0.5" width="191" height="166" fill="none"/>
+        </g>
+      </g>
+      <text id="운영" transform="translate(797 585)" fill="#fff" font-size="20" font-family="Pretendard-Bold, Pretendard" font-weight="700"><tspan x="0" y="0">운영</tspan></text>
+      <text id="교육일정관리_수강생_관리_교육운영_HDR행정" data-name="교육일정관리
+수강생 관리
+교육운영
+HDR행정" transform="translate(762 624)" fill="#d5a170" font-size="18" font-family="Pretendard-Medium, Pretendard" font-weight="500"><tspan x="5.344" y="17">교육일정관리</tspan><tspan x="10.924" y="47">수강생 관리</tspan><tspan x="20.896" y="77">교육운영</tspan><tspan x="18.304" y="107">HDR행정</tspan></text>
+    </g>
+    <g id="Group_24" data-name="Group 24">
+      <g id="Component_1_3" data-name="Component 1 – 3" transform="translate(940 545)">
+        <g id="Rectangle_5-2" data-name="Rectangle 5" fill="#ffcf6a" stroke="#d5a170" stroke-width="1">
+          <rect width="192" height="155" rx="36" stroke="none"/>
+          <rect x="0.5" y="0.5" width="191" height="154" rx="35.5" fill="none"/>
+        </g>
+        <g id="Rectangle_6-2" data-name="Rectangle 6" transform="translate(0 58)" fill="#fff" stroke="#d5a170" stroke-width="1">
+          <rect width="192" height="167" stroke="none"/>
+          <rect x="0.5" y="0.5" width="191" height="166" fill="none"/>
+        </g>
+      </g>
+      <text id="마케팅" transform="translate(1010 585)" fill="#fff" font-size="20" font-family="Pretendard-Bold, Pretendard" font-weight="700"><tspan x="0" y="0">마케팅</tspan></text>
+      <text id="고객관리_계약관리_홍보관리" data-name="고객관리
+계약관리
+홍보관리" transform="translate(984 624)" fill="#d5a170" font-size="18" font-family="Pretendard-Medium, Pretendard" font-weight="500"><tspan x="20.896" y="17">고객관리</tspan><tspan x="20.896" y="47">계약관리</tspan><tspan x="20.896" y="77">홍보관리</tspan></text>
+    </g>
+    <g id="Group_25" data-name="Group 25">
+      <g id="Component_1_4" data-name="Component 1 – 4" transform="translate(1162 545)">
+        <g id="Rectangle_5-3" data-name="Rectangle 5" fill="#ffcf6a" stroke="#d5a170" stroke-width="1">
+          <rect width="192" height="155" rx="36" stroke="none"/>
+          <rect x="0.5" y="0.5" width="191" height="154" rx="35.5" fill="none"/>
+        </g>
+        <g id="Rectangle_6-3" data-name="Rectangle 6" transform="translate(0 58)" fill="#fff" stroke="#d5a170" stroke-width="1">
+          <rect width="192" height="167" stroke="none"/>
+          <rect x="0.5" y="0.5" width="191" height="166" fill="none"/>
+        </g>
+      </g>
+      <text id="기획_및_총무" data-name="기획 및 총무" transform="translate(1210 585)" fill="#fff" font-size="20" font-family="Pretendard-Bold, Pretendard" font-weight="700"><tspan x="0" y="0">기획 및 총무</tspan></text>
+      <text id="과정기획_과정관리_경영지원" data-name="과정기획
+과정관리
+경영지원" transform="translate(1206 624)" fill="#d5a170" font-size="18" font-family="Pretendard-Medium, Pretendard" font-weight="500"><tspan x="20.896" y="17">과정기획</tspan><tspan x="20.896" y="47">과정관리</tspan><tspan x="20.896" y="77">경영지원</tspan></text>
+    </g>
+    <g id="Group_27" data-name="Group 27">
+      <g id="Group_6" data-name="Group 6">
+        <circle id="Ellipse_1" data-name="Ellipse 1" cx="6.5" cy="6.5" r="6.5" transform="translate(919 187)" fill="#ccc"/>
+        <circle id="Ellipse_2" data-name="Ellipse 2" cx="3.5" cy="3.5" r="3.5" transform="translate(922 190)" fill="#fff"/>
+      </g>
+      <g id="Group_26" data-name="Group 26">
+        <line id="Line_10" data-name="Line 10" x1="152" transform="translate(925.5 369.5)" fill="none" stroke="#ccc" stroke-width="1"/>
+        <line id="Line_9" data-name="Line 9" x2="311" transform="translate(766.5 265.5)" fill="none" stroke="#ccc" stroke-width="1"/>
+        <line id="Line_8" data-name="Line 8" y2="79" transform="translate(592.5 439.5)" fill="none" stroke="#ccc" stroke-width="1"/>
+        <line id="Line_5" data-name="Line 5" y2="79" transform="translate(814.5 439.5)" fill="none" stroke="#ccc" stroke-width="1"/>
+        <line id="Line_7" data-name="Line 7" y2="79" transform="translate(1258.5 439.5)" fill="none" stroke="#ccc" stroke-width="1"/>
+        <line id="Line_6" data-name="Line 6" y2="79" transform="translate(1036.5 439.5)" fill="none" stroke="#ccc" stroke-width="1"/>
+        <line id="Line_3" data-name="Line 3" x2="333" transform="translate(925.5 439.5)" fill="none" stroke="#ccc" stroke-linecap="round" stroke-width="1"/>
+        <line id="Line_4" data-name="Line 4" x1="327" transform="translate(592.5 439.5)" fill="none" stroke="#ccc" stroke-linecap="round" stroke-width="1"/>
+        <line id="Line_1" data-name="Line 1" y2="246" transform="translate(925.5 193.5)" fill="none" stroke="#ccc" stroke-width="1"/>
+        <g id="Group_18" data-name="Group 18" transform="translate(0 246)">
+          <circle id="Ellipse_1-2" data-name="Ellipse 1" cx="6.5" cy="6.5" r="6.5" transform="translate(919 187)" fill="#ccc"/>
+          <circle id="Ellipse_2-2" data-name="Ellipse 2" cx="3.5" cy="3.5" r="3.5" transform="translate(922 190)" fill="#fff"/>
+        </g>
+      </g>
+      <g id="Group_7" data-name="Group 7" transform="translate(758 259)">
+        <circle id="Ellipse_1-3" data-name="Ellipse 1" cx="6.5" cy="6.5" r="6.5" fill="#ccc"/>
+        <circle id="Ellipse_2-3" data-name="Ellipse 2" cx="3.5" cy="3.5" r="3.5" transform="translate(3 3)" fill="#fff"/>
+      </g>
+      <g id="Group_8" data-name="Group 8" transform="translate(153 72)">
+        <circle id="Ellipse_1-4" data-name="Ellipse 1" cx="6.5" cy="6.5" r="6.5" transform="translate(919 187)" fill="#ccc"/>
+        <circle id="Ellipse_2-4" data-name="Ellipse 2" cx="3.5" cy="3.5" r="3.5" transform="translate(922 190)" fill="#fff"/>
+      </g>
+      <g id="Group_9" data-name="Group 9" transform="translate(153 176)">
+        <circle id="Ellipse_1-5" data-name="Ellipse 1" cx="6.5" cy="6.5" r="6.5" transform="translate(919 187)" fill="#ccc"/>
+        <circle id="Ellipse_2-5" data-name="Ellipse 2" cx="3.5" cy="3.5" r="3.5" transform="translate(922 190)" fill="#fff"/>
+      </g>
+      <g id="Group_12" data-name="Group 12" transform="translate(-111 326)">
+        <circle id="Ellipse_1-6" data-name="Ellipse 1" cx="6.5" cy="6.5" r="6.5" transform="translate(919 187)" fill="#ccc"/>
+        <circle id="Ellipse_2-6" data-name="Ellipse 2" cx="3.5" cy="3.5" r="3.5" transform="translate(922 190)" fill="#fff"/>
+      </g>
+      <g id="Group_11" data-name="Group 11" transform="translate(111 326)">
+        <circle id="Ellipse_1-7" data-name="Ellipse 1" cx="6.5" cy="6.5" r="6.5" transform="translate(919 187)" fill="#ccc"/>
+        <circle id="Ellipse_2-7" data-name="Ellipse 2" cx="3.5" cy="3.5" r="3.5" transform="translate(922 190)" fill="#fff"/>
+      </g>
+      <g id="Group_10" data-name="Group 10" transform="translate(333 326)">
+        <circle id="Ellipse_1-8" data-name="Ellipse 1" cx="6.5" cy="6.5" r="6.5" transform="translate(919 187)" fill="#ccc"/>
+        <circle id="Ellipse_2-8" data-name="Ellipse 2" cx="3.5" cy="3.5" r="3.5" transform="translate(922 190)" fill="#fff"/>
+      </g>
+      <g id="Group_13" data-name="Group 13" transform="translate(-333 326)">
+        <circle id="Ellipse_1-9" data-name="Ellipse 1" cx="6.5" cy="6.5" r="6.5" transform="translate(919 187)" fill="#ccc"/>
+        <circle id="Ellipse_2-9" data-name="Ellipse 2" cx="3.5" cy="3.5" r="3.5" transform="translate(922 190)" fill="#fff"/>
+      </g>
+    </g>
+    <g id="Group_22" data-name="Group 22">
+      <g id="Component_1_1" data-name="Component 1 – 1" transform="translate(496 545)">
+        <g id="Rectangle_5-4" data-name="Rectangle 5" fill="#ffcf6a" stroke="#d5a170" stroke-width="1">
+          <rect width="192" height="155" rx="36" stroke="none"/>
+          <rect x="0.5" y="0.5" width="191" height="154" rx="35.5" fill="none"/>
+        </g>
+        <g id="Rectangle_6-4" data-name="Rectangle 6" transform="translate(0 58)" fill="#fff" stroke="#d5a170" stroke-width="1">
+          <rect width="192" height="167" stroke="none"/>
+          <rect x="0.5" y="0.5" width="191" height="166" fill="none"/>
+        </g>
+      </g>
+      <text id="전산" transform="translate(575 585)" fill="#fff" font-size="20" font-family="Pretendard-Bold, Pretendard" font-weight="700"><tspan x="0" y="0">전산</tspan></text>
+      <text id="LMS관리_홈페이지_관리" data-name="LMS관리
+홈페이지 관리" transform="translate(524 624)" fill="#d5a170" font-size="18" font-family="Pretendard-Medium, Pretendard" font-weight="500"><tspan x="34.322" y="17">LMS관리</tspan><tspan x="19.148" y="47">홈페이지 관리</tspan></text>
+    </g>
+  </g>
+</svg>
