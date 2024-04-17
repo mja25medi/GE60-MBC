@@ -264,15 +264,15 @@
 		$("input:radio[name ='cntsTypeCd']:input[value='${vo.cntsTypeCd}']").trigger("click");
 		
 		// 코딩 실습인 경우 코딩과제 경로 추가
-		<c:if test="${vo.cntsTypeCd eq 'CODING_T'}">
+		if("${vo.cntsTypeCd}" == "CODING_T"){
 			$("#codingUrlTr").css("display", "");
-		</c:if>
+		}
 		
 		// 메타버스 콘텐츠 활성화
-		<c:if test="${vo.cntsTypeCd eq 'META'}">
+		if("${vo.cntsTypeCd}" == "META"){
 			$("#metaTr").css("display", "");
 			getMetaScenes('${vo.sceneId}');
-		</c:if>
+		}
 		
 		
 		
@@ -335,14 +335,14 @@
 				$("#cntsTypeSel").hide();
 				$("#unitFilePathTr").hide();
 				$("#zoomUrlTr").hide();
-				$("#mobileFilePathTr").show();
+				$("#mobileFilePathTr").hide();
 			}
 			else{
 				$("#unitLvNm").text('페이지명');
 				$("#prgrChkTypeTr").hide();
 				$("#prgrChkYnTd").hide();
 				$("#atchFilePathTr").hide();
-				$("#mobileFilePathTr").hide();
+				$("#mobileFilePathTr").show();
 				$("#cntsTypeSel").hide();
 				$("#zoomUrlTr").hide();
 				$("#prgrChkYnTd").hide();

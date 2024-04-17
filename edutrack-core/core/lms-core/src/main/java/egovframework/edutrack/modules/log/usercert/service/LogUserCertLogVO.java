@@ -20,6 +20,7 @@ public class LogUserCertLogVO extends DefaultVO {
 	private String certEvalNm;
 	private String connIp;
 	private String certDttm;
+	private String creTerm;
 
 	
 	public String getCrsCd() {
@@ -105,6 +106,12 @@ public class LogUserCertLogVO extends DefaultVO {
 	}
 	public void setCertDttm(String certDttm) {
 		this.certDttm = certDttm;
+	}
+	public String getCreTerm() {
+		return creTerm;
+	}
+	public void setCreTerm(String creTerm) {
+		this.creTerm = creTerm;
 	}
 	
 }

@@ -10,7 +10,7 @@
 										<a href="javascript:previewShareCnts('${item.cntsCd}')" class="btn btn-xs btn-default"><spring:message code="button.preview"/></a>
 										<a href="javascript:selectShareCnts('${item.cntsCd}','${item.cntsNm}')" class="btn btn-xs btn-default"><spring:message code="button.choice"/></a>
 										<c:if test="${sbjType eq 'ON'}">
-										<a href="javascript:selectMobileShareCnts('${item.cntsCd}','${item.cntsNm}')" class="btn btn-xs btn-default">모바일<spring:message code="button.choice"/></a>
+										<a href="javascript:selectMobileShareCnts('${item.cntsCd}','${item.cntsNm}','${item.filePath}')" class="btn btn-xs btn-default">모바일<spring:message code="button.choice"/></a>
 										</c:if>
 									</span>
 									<div style="clear:both;"></div>

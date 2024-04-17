@@ -40,19 +40,22 @@
 		<script src="/tpl/${COLOR_TPL}/js/common_util.js"></script>
 		<script src="/tpl/${COLOR_TPL}/js/common_function.js"></script>
 	
-		<!-- Summernote Editor -->
-		<link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/summernote-lite.css" />
-		<link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/plugin/math/katex.min.css" />
-		<link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/css/emoji.css" />
-	
-		<!-- Summernote Editor -->
-		<script src="/tpl/${COLOR_TPL}/js/summernote/summernote-lite.js"></script>
-		<script src="/tpl/${COLOR_TPL}/js/summernote/lang/summernote-ko-KR.js"></script>
-		<script src="/tpl/${COLOR_TPL}/js/summernote/plugin/math/katex.min.js"></script>
-		<script src="/tpl/${COLOR_TPL}/js/summernote/plugin/math/summernote-math.js"></script>
-		<script src="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/js/config.js"></script>
-		<script src="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/js/tam-emoji.js"></script>
-		<script src="/tpl/${COLOR_TPL}/js/summernote/plugin/uploadcare.js"></script>
+ <c:if test="${not empty summernote}">
+		<meditag:js src="/js/common_summernote.js"/>
+		
+		 <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/summernote-lite.css" />
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/plugin/math/katex.min.css" />
+    <link rel="stylesheet" href="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/css/emoji.css" />
+
+	<!-- Summernote Editor -->
+    <script src="/tpl/${COLOR_TPL}/js/summernote/summernote-lite.js"></script>
+    <script src="/tpl/${COLOR_TPL}/js/summernote/lang/summernote-ko-KR.js"></script>
+    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/math/katex.min.js"></script>
+    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/math/summernote-math.js"></script>
+    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/js/config.js"></script>
+    <script src="/tpl/${COLOR_TPL}/js/summernote/plugin/emoji/js/tam-emoji.js"></script>
+	<script src="/tpl/${COLOR_TPL}/js/summernote/plugin/uploadcare.js"></script>
+	</c:if>
 	
     <c:if test="${not empty fileupload}">
 		<meditag:js src="/js/jquery/jquery-fileupload/vendor/jquery.ui.widget.js"/>

@@ -601,7 +601,7 @@
 		SELECT LLU.LOGIN_DTTM ,LLU.DEVICE_TYPE ,LLU.BROWSER_TYPE ,LLU.CONN_IP	                                
 		,CSC.UNIT_NM	                                                                                        
 		,(SELECT CRE.CRS_CRE_NM FROM tb_crs_cre_crs CRE WHERE CRE.CRS_CRE_CD = STD.CRS_CRE_CD ) AS CRS_CRE_NM	
-		FROM tb_log_lec_unit LLU, tb_crs_sbj_cnts CSC , tb_std_std STD	                                        
+		FROM tb_log_lec_unit LLU, tb_crs_cre_sbj_cnts CSC , tb_std_std STD	                                        
 		WHERE 1=1	                                                                                            
 		AND LLU.SBJ_CD = CSC.SBJ_CD	                                                                            
 		AND LLU.UNIT_CD = CSC.UNIT_CD	                                                                        

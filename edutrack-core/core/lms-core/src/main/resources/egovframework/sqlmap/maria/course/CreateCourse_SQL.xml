@@ -789,6 +789,7 @@
 		       , B.CRS_YEAR
 		       , B.CRS_TERM
 		       , B.CRS_NM
+		       , B.CRS_SVC_TYPE
 		       , B.THUMB_FILE_SN
 		       ,  IFNULL(FN_GET_NULL(B.EDU_NOP),0) AS EDU_NOP
 		       , ( SELECT COUNT(*) 
@@ -2026,7 +2027,7 @@
 			, A.CRE_YEAR 
 			, A.CRE_TERM 
 			, A.CRS_CRE_NM 
-			, A.SBJ_CD
+			, (SELECT SBJ_CD FROM tb_crs_cre_sbj_cnts WHERE CRS_CRE_CD = A.CRS_CRE_CD GROUP BY CRS_CRE_CD) AS SBJ_CD
 			, C.STD_NO
 		FROM
 			tb_crs_cre_crs A, tb_std_std C

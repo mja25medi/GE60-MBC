@@ -1691,8 +1691,8 @@ public class BookmarkLectureController
 		 004 : 진행단계 평가 응시 후 수강 가능 알림
 		*/
 		
-		if(!(checkVO.getCrsSvcType().equals("R") && checkVO.getCrsOperMthd().equals("OF"))) {
-			//국비지원(산인공 연계 과정)이며 온라인 과정인 경우
+		if(!(checkVO.getCrsSvcType().equals("R") && checkVO.getCrsOperMthd().equals("ON"))) {
+			//국비지원(산인공 연계 과정)이며 온라인과정이 아닌 경우
 			returnVO.setReturnValueCheck("002");
 		}else{
 			//1. 입과이면

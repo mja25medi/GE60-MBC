@@ -6,8 +6,8 @@
 
 		<table class="table table-bordered wordbreak" id="stdEduTable" style="margin-top: 10px;">
 			<colgroup>
-				<col style="width:11%;"/>
 				<col style="width:auto;"/>
+				<col style="width:11%;"/>
 				<col style="width:8%;"/>
 				<col style="width:8%;"/>
 				<col style="width:8%;"/>
@@ -19,8 +19,8 @@
 			</colgroup>
 			<thead>
 				<tr>
-					<th>기수</th>
 					<th>과정</th>
+					<th>회차</th>
 					<th>진도</th>
 					<th>시험</th>
 					<th>과제</th>
@@ -34,8 +34,8 @@
 			<tbody>
 				<c:forEach items="${eduResultList}" var="item" varStatus="status">
 					<tr>
-						<td class="text-center">${item.crsYear}년도 ${item.crsTerm}기</td>
 						<td class="text-center">${item.crsCreNm}</td>
+						<td class="text-center">${item.creTerm}회차</td>
 						<td class="text-center">${meditag:round(item.prgrScore,1)}점</td>
 						<td class="text-center">${meditag:round(item.examScore,1)}점</td>
 						<td class="text-center">${meditag:round(item.asmtScore,1)}점</td>

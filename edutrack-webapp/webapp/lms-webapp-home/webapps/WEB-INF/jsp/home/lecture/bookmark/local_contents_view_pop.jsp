@@ -26,8 +26,8 @@
 <style type="text/css">
 	/* custom player skin */
 		#lecQnaForm {padding-bottom: 30px;}
-		/* .vod_header .top_inner .title {padding-left: 308px;} */
-		.vod_header {margin-top: -24px;}
+		/* .vod_header .top_inner .title {padding-left: 308px;} 
+		.vod_header {margin-top: -24px;}*/
 </style>
 
 <meditag:js src="/js/jquery/jquery-1.11.1.min.js"/>
@@ -49,7 +49,7 @@
 	
 
 
-<iframe id='edutrackAPIFrame' name='edutrackAPIFrame' width='0' height='0' frameborder='0' src="<c:url value="/jsp/bookmark/study_edutrack_adapter.jsp"/>" onload="onloadApiFrame()"></iframe>
+<iframe  id="edutrackAPIFrame" name="edutrackAPIFrame" style="display:none; width:0; height:0;" frameborder="0" src="<c:url value="/jsp/bookmark/study_edutrack_adapter.jsp"/>" onload="onloadApiFrame()"></iframe>
 <script type="text/javascript" defer="defer">
 
 var isPlayed = 0;
@@ -98,7 +98,6 @@ $(document).on("click","#qnaSave",function(){
 	$('#qnaTitle').focus();
 })
 
-<c:if test="${review ne 'Y'}">
 	var edutrackAPI = null;
 	
 	function initEdutrackAPI() {
@@ -126,9 +125,6 @@ $(document).on("click","#qnaSave",function(){
 		}
 	}
 	
-	function onloadApiFrame() {
-		initEdutrackAPI();
-	}
 	
 	window.onunload = onunloadFunction;
 	window.onbeforeunload = onunloadFunction;
@@ -178,7 +174,6 @@ $(document).on("click","#qnaSave",function(){
 		opener.location.reload();
 	}
 	
-	</c:if>
 
 //문의하기
 function unloadForm() {
@@ -394,30 +389,7 @@ var viewTime = 0;
 	//var edutrackAPI = opener.edutrackAPI;
 	//var edutrackAPI = edutrackAPIFrame.edutrackAPI;
 	//var edutrackAPI = $("#edutrackAPIFrame").contentWindow.document.edutrackAPI;
-	var edutrackAPI = null;
-
-	function initEdutrackAPI() {
-		if(edutrackAPI != null) {
-			var api = edutrackAPI;
-			api.SetStdNo("${STUDENTNO}");
-			api.SetSbjCd("${bookmarkVO.sbjCd}");
-			api.SetUnitCd("${bookmarkVO.unitCd}");
-			api.SetRegNo("${USERNO}");
-			api.SetBookmarkType("${bookmarkVO.prgrChkType}");
-			api.SetTotalPageCnt("${bookmarkVO.subCnt}");
-			api.SetShowTime("${bookmarkVO.critTm}");
-			api.SetCredit("${credit}");
-			try {
-				result = api.Initialize("");
-				seekTime = api.GetSeekTime();
-				prgrRatio = api.GetValue("prgrRatio");
-			} catch (e) {
-				alert("<spring:message code="lecture.message.bookmark.alert.isnot.initialized.edutrackadaptor"/> 1");
-			}
-		} else {
-			alert("<spring:message code="lecture.message.bookmark.alert.isnot.called.edutrackadaptor"/> 2");
-		}
-	}
+	
 	function setSeekTime(time) {
 		edutrackAPI.SetSeekTime(time);
 	}
@@ -649,7 +621,7 @@ $(document).ready(function() {
             </div>
         </div>
         <div class="vod_content">
-			<iframe src="" id="contentsMain" name="contentsMain" marginheight="0" marginwidth="0" scrolling="no" width="100%" height="80%" frameborder="0" style="padding:0px;" allowfullscreen></iframe>
+			<iframe src="" id="contentsMain" name="contentsMain" marginheight="0" marginwidth="0" scrolling="no" width="100%" height="100%" frameborder="0" style="padding:0px;" allowfullscreen></iframe>
 			<div class="vod_btnArea">
 					<div class="btn_box">
 						 <button onclick="moveBeforeChapter()" id="before" type="button" class="btn type4 "><i class="xi-arrow-left"></i>이전</button>

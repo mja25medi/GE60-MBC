@@ -288,7 +288,7 @@
 			$("#atchFilePathTr").hide();
 			$("#cntsTypeSel").hide();
 			$("#unitFilePathTr").hide();
-			$("#mobileFilePathTr").show();
+			$("#mobileFilePathTr").hide();
 		}
 		
 	}
@@ -633,7 +633,7 @@
 						$("#prgrChkTypeTr").show();
 						$("#prgrChkYnTd").show();
 						$("#atchFilePathTr").show();
-						$("#mobileFilePathTr").show();
+						$("#mobileFilePathTr").hide();
 						$("#cntsTypeSel").show();
 					}
 				}else{
@@ -641,7 +641,7 @@
 					$("#prgrChkTypeTr").hide();
 					$("#prgrChkYnTd").hide();
 					$("#atchFilePathTr").hide();
-					$("#mobileFilePathTr").hide();
+					$("#mobileFilePathTr").show();
 					$("#cntsTypeSel").hide();
 				} 
 				/* $("#unitLvNm").text('차시명');
@@ -667,7 +667,7 @@
 				
 				if(item.unitType == "C") {
 					$("#unitFilePathTr").hide();
-					$("#mobileFilePathTr").show();
+					$("#mobileFilePathTr").hide();
 				} else {
 					if (item.cntsTypeCd == "MEDIA") {
 						$("#contentsForm").find('input[id="prgrChkTypeTIME"]').prop("disabled", false);
@@ -678,7 +678,6 @@
 					}
 					
 					$("#unitFilePathTr").show();
-					$("#mobileFilePathTr").hide();
 				}
 				
 				$("#contentsForm").find('input[id="prgrChkTypeTIME"]').prop("checked", false);

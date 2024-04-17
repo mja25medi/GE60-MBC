@@ -19,8 +19,8 @@
 					<th>번호</th>
 					<th>아이디</th>
 					<th>인증방법</th>
-					<th>기수</th>
 					<th>과정</th>
+					<th>회차</th>
 					<th>유형</th>
 					<th>IP주소</th>
 					<th>인증일시</th>
@@ -32,8 +32,8 @@
 						<td class="text-center">${pageInfo.totalRecordCount - ((pageInfo.currentPageNo- 1) * pageInfo.recordCountPerPage) - status.index }</td>
 						<td class="text-center">${item.userId}</td>
 						<td class="text-center">${item.certMthdNm}</td>
-						<td class="text-center">${item.crsYear}년도 ${item.crsTerm}기</td>
 						<td class="text-center">${item.crsCreNm}</td>
+						<td class="text-center">${item.creTerm}회차</td>
 						<td class="text-center">${item.certEvalNm}</td>
 						<td class="text-center">${item.connIp}</td>
 						<td class="text-center"><meditag:dateformat type="8" delimeter="." property="${item.certDttm}"/></td>

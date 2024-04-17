@@ -7,21 +7,21 @@
 <div style="width: 40%; float: left;">
 	<table summary="수강 내역" class="table table-bordered wordbreak custom-table" style="margin-top: 10px;" id="creListTable">
 		<colgroup>
-			<col style="width:30%"/>
 			<col style="width:auto"/>
+			<col style="width:30%"/>
 		</colgroup>
 		<thead>
 			<tr>
-				<th scope="col">기수</th>
 				<th scope="col">과정명</th>	
+				<th scope="col">회차</th>
 			</tr>
 		</thead>
 		<tbody>
 			<c:if test="${not empty myCreList }">
 				<c:forEach var="item" items="${myCreList }" varStatus="status">
 					<tr class="text-center">
-						<td><a href="javascript:listContents('${item.stdNo }','${item.sbjCd }');">${item.creYear }년도 ${item.creTerm }기</a></td>
-						<td><a href="javascript:listContents('${item.stdNo }','${item.sbjCd }');">${item.crsCreNm }</a></td>
+						<td><a href="javascript:listContents('${item.stdNo }','${item.sbjCd }','${item.crsCreCd}');">${item.crsCreNm }</a></td>
+						<td><a href="javascript:listContents('${item.stdNo }','${item.sbjCd }',${item.crsCreCd}');">${item.creTerm }회차</a></td>
 					</tr>
 				</c:forEach>
 			</c:if>
@@ -39,14 +39,15 @@
 
 <script type="text/javascript">
 	//수강이력
-	function listContents(stdNo, sbjCd){
+	function listContents(stdNo, sbjCd, crsCreCd){
 		var goUrl ="/mng/course/contents/listContentsForCrm";
 		$("#contentsListDiv")
 		.load(
 			cUrl(goUrl),		
 			{
 				'stdNo':stdNo,
-				'sbjCd':sbjCd
+				'sbjCd':sbjCd,
+				'crsCreCd':crsCreCd,
 			}
 		);
 	}

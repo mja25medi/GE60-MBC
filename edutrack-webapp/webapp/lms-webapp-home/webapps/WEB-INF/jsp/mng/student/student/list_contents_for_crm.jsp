@@ -16,10 +16,7 @@
 		<thead>
 			<tr>
 				<th scope="col">차시</th>
-				<th scope="col">강의명</th>	
-				<th scope="col">수강여부</th>	
-				<th scope="col">진도체크</th>	
-				<th scope="col">진도율</th>	
+				<th scope="col">목차명</th>		
 				<th scope="col">상세이력</th>	
 			</tr>
 		</thead>
@@ -30,27 +27,6 @@
 						<tr class="text-center">
 							<td>${item.unitOdr }회차</td>
 							<td>${item.unitNm }</td>
-							<td>
-								<c:choose>
-									<c:when test="${item.studyYn eq 'Y'}">
-										O
-									</c:when>
-									<c:otherwise>
-										X
-									</c:otherwise>
-								</c:choose>
-							</td>
-							<td>
-								<c:choose>
-									<c:when test="${item.subCnt > 0}">
-										${item.connPageCnt }페이지/${item.subCnt }페이지
-									</c:when>
-									<c:otherwise>
-										-
-									</c:otherwise>
-								</c:choose>
-							</td>
-							<td>${item.prgrRatio }%</td>
 							<td>
 							<c:if test="${not empty item.stdNo }">
 								<button class="btn btn-default btn-sm" onclick="listBookmarkLog('${item.stdNo }','${item.unitCd }');">상세이력</button>

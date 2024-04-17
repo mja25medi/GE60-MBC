@@ -58,6 +58,7 @@ public class EduResultVO  extends DefaultVO implements HrdStdSearchable {
 	private String	deptNm;
 	
 	private String crsCreNm;
+	private String creTerm;
 	private String crsCd;
 	private String crsYear;
 	private String crsTerm;
@@ -464,6 +465,13 @@ public class EduResultVO  extends DefaultVO implements HrdStdSearchable {
 	public void setPrgrRate(int prgrRate) {
 		this.prgrRate = prgrRate;
 	}
-	
+
+	public String getCreTerm() {
+		return creTerm;
+	}
+
+	public void setCreTerm(String creTerm) {
+		this.creTerm = creTerm;
+	}
 	
 }

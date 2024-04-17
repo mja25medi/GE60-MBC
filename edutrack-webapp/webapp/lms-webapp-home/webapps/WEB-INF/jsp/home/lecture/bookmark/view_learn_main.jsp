@@ -90,7 +90,7 @@
 			                                    <div class="circletype" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="--value:${contentsItem.prgrRatio } "></div> ${contentsItem.prgrRatio }%
 			                                </div> --%>
 			                            <c:if test="${not empty contentsItem.atchFilePath}">
-			                                <button type="button" class="basic data" onclick="fileDownload('${contentsItem.atchFilePath}')">학습자료</button>     
+			                                <a href="${contentsItem.atchFilePath}" download ><button type="button" class="basic data">학습자료</button></a>   
 			                            </c:if>
 			                            
 			                            <c:if test="${contentsItem.cntsTypeCd eq 'CODING_T'}">
@@ -102,7 +102,9 @@
 	                            		<c:if test="${not empty contentsItem.zoomUrl}">
 	                            			<button type="button" class="gcolor" onclick="window.open('${contentsItem.zoomUrl}');">Zoom 입장</button>			                            	
 	                            		</c:if>
-	
+	                            		<c:if test="${sbjVO.sbjType eq 'ON'}">
+											<button type="button" class="basic history"  onclick="listBookmarkLogPop('${contentsItem.sbjCd}','${contentsItem.unitCd}')">수강기록</button>
+										</c:if>
 			                            <c:choose>
 			                            	<c:when test="${contentsItem.cntsTypeCd eq 'CODING_L'}"> <!-- 코딩강의 -->
 				                            	<c:choose>
@@ -447,19 +449,6 @@
 		  }
 		}
 		return blnMobile;
-	}
-	
-	function fileDownload(url) {
-		// download용 iframe이 없으면 만든다.
-		if ( $("#_m_download_iframe").length == 0 ) {
-			iframeHtml =
-				'<iframe id="_m_download_iframe" name="_m_download_iframe" style="visibility: none; display: none;"></iframe>' +
-				'<form name="_m_download_form" id="_m_download_form" target="_m_download_iframe"></form>';
-			$("body").append(iframeHtml);
-		}
-		//_m_download_iframe.document.location.href = url;
-		// 폼에 action을 설정하고 submit시킨다.
-		$("#_m_download_form").attr('action', url).submit();
 	}
 	
 	/* 학습영상 미리보기 */

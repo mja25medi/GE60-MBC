@@ -43,8 +43,8 @@
 		.flowplayer { width: 100%; background-color: #222; background-size: cover;  }
 		.flowplayer.fp-controls {background-color: rgba(0, 0, 0, 0.4)}/* 소리 조절 보여주기*/
 		#lecQnaForm {padding-bottom: 30px;}
-		/* .vod_header .top_inner .title {padding-left: 308px;} */
-		.vod_header {margin-top: -24px;}
+		/* .vod_header .top_inner .title {padding-left: 308px;} 
+		.vod_header {margin-top: -24px;}*/
 </style>
 
 <meditag:js src="/js/jquery/jquery-1.11.1.min.js"/>

@@ -128,7 +128,7 @@
 									//$("#contentsForm").find('input[name="prgrChkYn"]').prop("checked", true);
 								}
 
-								function selectMobileShareCnts(cntsCd, cntsNm) {
+								function selectMobileShareCnts(cntsCd, cntsNm, filePath) {
 									var unitCd = $("#contentsForm").find('input[name="unitCd"]').val();
 									var unitType = $("#contentsForm").find('input[name="unitType"]').val();
 									if(unitCd == "" || unitCd == undefined) {
@@ -141,7 +141,7 @@
 									} */
 
 									//$("#contentsForm").find('input[name="unitNm"]').val(cntsNm);
-									$("#contentsForm").find('input[name="mobileFilePath"]').val(cntsCd);
+									$("#contentsForm").find('input[name="mobileFilePath"]').val(filePath);
 									//$("#contentsForm").find('input[name="cntsTypeCd"]').val("MEDIA");
 									$("input:radio[name=cntsTypeCd]").prop("checked", false);
 									$("input:radio[name=cntsTypeCd][value="+cntsTypeCd+"]").prop("checked", true);

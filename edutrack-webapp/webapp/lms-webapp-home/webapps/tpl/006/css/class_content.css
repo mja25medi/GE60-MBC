@@ -810,6 +810,8 @@ table td .btn:hover {
     background: #3a3a3a;
 }
 
+.course_list .item .button_group button.history:after {content: "\eb2a";}
+
 .course_list .item ul.info_disc {
     flex: 1;
 }

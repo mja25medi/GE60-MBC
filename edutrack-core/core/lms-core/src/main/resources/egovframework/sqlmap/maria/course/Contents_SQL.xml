@@ -803,9 +803,7 @@
 		       <if test = 'prgrChkType != null and prgrChkType != ""'>   
 		       , PRGR_CHK_TYPE = #{prgrChkType}
 		       </if>
-		       <if test = 'critTm != null and critTm != ""'>   
 		       , CRIT_TM = #{critTm}
-		       </if>
 		       <if test = 'totalPage != null and totalPage != ""'>   
 		       , TOTAL_PAGE = #{totalPage}
 		       </if>
