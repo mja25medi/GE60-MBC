@@ -68,13 +68,13 @@ function crsSvcTypeCheck(){
 	$.getJSON( 
 		"/home/course/selectCrsSvcTypeCheck",{ "crsCreCd":"${vo.crsCreCd}"},			
 		function(data) {
-			/* if(data.crsSvcType == 'R' && data.crsOperMthd == 'ON') {
+			 if(data.crsSvcType == 'R' && data.crsOperMthd == 'ON') {
 				exceptIdCheck();
-			} else { */
+			} else { 
 				var agreeYn = $("input[name=examAgree]:checked").val();
 				var examSn  = $("#examSn").val();
 				parent.examPaperStare(examSn, agreeYn);
-			/* } */
+			 } 
 		}
 	);
 }
