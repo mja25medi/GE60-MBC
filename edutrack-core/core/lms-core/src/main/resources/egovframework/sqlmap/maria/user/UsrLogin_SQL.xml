@@ -124,7 +124,7 @@
 		) VALUES (
 		       #{userNo}
 		     , #{userId}
-		     , PASSWORD(#{userPass})
+		     ,  SHA2(#{userPass},256) 
 		     , #{adminLoginAcptDivCd}
 		     , #{gpkiInfo}
 		     , ''
@@ -200,7 +200,7 @@
 			 설  명 : 사용자의 비밀번호 변경
 	 	*/
 		UPDATE tb_usr_login
-		   SET USER_PASS = IFNULL(FN_GET_NULL(PASSWORD(#{userPass})), USER_PASS)
+		   SET USER_PASS = IFNULL(FN_GET_NULL(SHA2(#{userPass},256)), USER_PASS)
 		     , MOD_NO = #{modNo}
 		     , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
 		     , PSWD_CHG_REQ_DTTM =  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL FN_GET_CONFIG_VALUE('LOGIN','PSWDCHG') DAY),'%Y%m%d%H%i%s')
@@ -273,13 +273,13 @@
 	</update>
 	
 	<select id="getEncryptPassword" parameterType="String" resultType="String">
-		SELECT PASSWORD(#{value}) as encUserPass
+		SELECT SHA2(#{value},256) as encUserPass
 	</select>
 	
 	<update id="updatePassAndVerified" parameterType="usrLoginVO">
 		UPDATE tb_usr_login
 		SET
-			USER_PASS = NVL((PASSWORD(#{userPass})), USER_PASS)
+			USER_PASS = NVL((SHA2(#{userPass},256)), USER_PASS)
 		     , MOD_NO = #{modNo}
 		     , MOD_DTTM = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
 		     , PSWD_CHG_REQ_DTTM = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 90 DAY),'%Y%m%d%H%i%s')

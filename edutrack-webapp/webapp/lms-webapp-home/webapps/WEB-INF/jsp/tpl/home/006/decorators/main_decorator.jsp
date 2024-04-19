@@ -27,6 +27,7 @@
 		<script src="/tpl/${COLOR_TPL}/jquery/jquery.cycle2.js"></script>
 		<script defer src="/tpl/${COLOR_TPL}/js/sub.js"></script>
 		<script src="/tpl/${COLOR_TPL}/js/iframeResizer.min.js"></script>
+		<script defer src="/js/common.js"></script>
 
 
 	    <meditag:js src="/app/js/Context.js"/>

@@ -447,7 +447,7 @@
 			</if>
 		</if>
 		<if test = "userPass != null and userPass != ''">
-		   	AND B.USER_PASS = PASSWORD(#{userPass})
+		   	AND B.USER_PASS = SHA2(#{userPass},256)
 		</if>
 	</select>	
 	
@@ -705,7 +705,7 @@
 				<if test = "orgCd != null and orgCd != ''">
 				   AND A.ORG_CD = #{orgCd}
 				</if>
-		           AND B.USER_PASS = PASSWORD(#{userPass})) as TB
+		           AND B.USER_PASS = SHA2(#{userPass},256)) as TB
         WHERE
           	TB.ROWNUM = 1
 	</select>

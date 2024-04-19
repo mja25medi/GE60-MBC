@@ -26,6 +26,7 @@
 		<script src="/tpl/${COLOR_TPL}/jquery/jquery.cycle2.js"></script>
 		<script defer src="/tpl/${COLOR_TPL}/js/sub.js"></script>
 		<script src="/tpl/${COLOR_TPL}/js/iframeResizer.min.js"></script>
+		<script defer src="/js/common.js"></script>
 	
 		<script src="/js/nuguya/nice.nuguya.oivs.crypto.js"></script>
 		<script src="/js/nuguya/nice.nuguya.oivs.msg.js"></script>

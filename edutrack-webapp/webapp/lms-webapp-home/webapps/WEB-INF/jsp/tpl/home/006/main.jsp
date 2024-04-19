@@ -89,7 +89,7 @@
 															
 															<!-- 태그구조수정 및 위치이동함_240408 -->
 															<div class="login_foot">
-																<a href="javascript:searchIdModal();" class="btn"><span>ID/PW 찾기</span></a>
+																<a href="/home/user/loginForm?mcd=HM04001000" class="btn"><span>ID/PW 찾기</span></a>
 																<a href="/home/main/goMenuPage?mcd=HM04002000" class="btn"><span>회원가입</span></a>
 															</div>
 															<!-- //태그구조수정 및 위치이동함_240408 -->
